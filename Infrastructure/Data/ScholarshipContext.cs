@@ -1,11 +1,11 @@
-using Model;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace DAO;
+namespace Infrastructure.Data;
 
-public partial class ScholarshipContext :IdentityDbContext<User, Role, int>
+public class ScholarshipContext :IdentityDbContext<User, Role, int>
 {
     public ScholarshipContext()
     {
@@ -14,7 +14,6 @@ public partial class ScholarshipContext :IdentityDbContext<User, Role, int>
     public ScholarshipContext(DbContextOptions<ScholarshipContext> options)
         : base(options)
     {
-
     }
 
     // public virtual DbSet<Credential> Credentials { get; set; }
@@ -35,13 +34,15 @@ public partial class ScholarshipContext :IdentityDbContext<User, Role, int>
 
     // public virtual DbSet<Transaction> Transactions { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("appsettings.Development.json")
+            .AddJsonFile("appsettings.json")
             .Build();
-        optionsBuilder.UseMySQL(configuration.GetConnectionString("Db"));
+        
+        optionsBuilder.UseMySQL(configuration.GetConnectionString("Db") ?? string.Empty);
     }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -99,14 +100,14 @@ public partial class ScholarshipContext :IdentityDbContext<User, Role, int>
         //     entity.Property(e => e.StartTime).HasColumnType("time");
         // });
 
-        /*modelBuilder.Entity<Service>()
+        /*modelBuilder.Entity<Application>()
             .HasOne(f => f.Subject)
             .WithMany(x => x.Services)
             .HasForeignKey(f => f.SubjectId)
             .OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<Schedule>()
-            .HasOne(f => f.Service)
+            .HasOne(f => f.Application)
             .WithMany(x => x.Schedules)
             .HasForeignKey(f => f.ServiceId)
             .OnDelete(DeleteBehavior.NoAction);*/
@@ -123,10 +124,5 @@ public partial class ScholarshipContext :IdentityDbContext<User, Role, int>
             .WithOne()
             .HasForeignKey(f => f.TutorId)
             .OnDelete(DeleteBehavior.NoAction);*/
-        
-       
-        OnModelCreatingPartial(modelBuilder);
     }
-
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
