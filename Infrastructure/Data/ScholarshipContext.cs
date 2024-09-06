@@ -37,7 +37,7 @@ public class ScholarshipContext :IdentityDbContext<User, Role, int>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("appsettings.json")
+            .AddJsonFile("appsettings.json", true, true)
             .Build();
         
         optionsBuilder.UseMySQL(configuration.GetConnectionString("Db") ?? string.Empty);

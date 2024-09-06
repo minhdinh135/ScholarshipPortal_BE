@@ -15,3 +15,7 @@ This is the repository that provides APIs for developing SSAP system.
 │   └── API.Tests                # Contains unit tests for the API layer
 └── README.md                   # Project documentation (you are here!)
 ```
+
+### Reference
+
+[Project Structure](https://binarybytez.com/understanding-clean-architecture/)
