@@ -1,4 +1,5 @@
 using Infrastructure.Data;
+using Infrastructure.ExternalService;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 

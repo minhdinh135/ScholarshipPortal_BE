@@ -1,3 +1,4 @@
+using Infrastructure.ExternalService;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

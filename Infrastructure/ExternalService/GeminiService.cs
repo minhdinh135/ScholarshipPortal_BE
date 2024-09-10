@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
+namespace Infrastructure.ExternalService;
 public class GeminiService
 {
     private readonly HttpClient _httpClient;
