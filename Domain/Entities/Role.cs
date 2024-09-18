@@ -1,15 +1,8 @@
-using Microsoft.AspNetCore.Identity;
-
 namespace Domain.Entities;
 
-public partial class Role : IdentityRole<int>
+public partial class Role : BaseEntity
 {
-    public Role() : base()
-    { 
-    }
+  public string Name { get; set; }
 
-    public Role(string roleName)
-    {
-        Name = roleName;
-    }
+  public List<User> Users { get; set; }
 }

@@ -1,11 +1,10 @@
 using Domain.Entities;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Data;
 
-public class ScholarshipContext :IdentityDbContext<User, Role, int>
+public class ScholarshipContext :DbContext
 {
     public ScholarshipContext()
     {
@@ -31,8 +30,9 @@ public class ScholarshipContext :IdentityDbContext<User, Role, int>
     // public virtual DbSet<Subject> Subjects { get; set; }
     // 
     // public virtual DbSet<Post> Posts { get; set; }
+    public virtual DbSet<User> Users { get; set; }
 
-    // public virtual DbSet<Transaction> Transactions { get; set; }
+    public virtual DbSet<Role> Role { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         IConfigurationRoot configuration = new ConfigurationBuilder()
