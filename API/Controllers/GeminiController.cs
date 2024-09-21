@@ -1,7 +1,7 @@
 using Infrastructure.ExternalService;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
+namespace API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class GeminiController : ControllerBase

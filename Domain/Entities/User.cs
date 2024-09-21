@@ -8,6 +8,8 @@ public partial class User : BaseEntity
 
     public string Email { get; set; }
 
+    public string PhoneNumber { get; set; }
+
     public string HashedPassword { get; set; }
 
     public string Address { get; set; }
