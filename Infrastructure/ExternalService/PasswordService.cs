@@ -1,5 +1,9 @@
 namespace Infrastructure.ExternalService;
 public class PasswordService{
+  //Generate random password 10 chars
+  public static string GeneratePassword(){
+    return BCrypt.Net.BCrypt.GenerateSalt(10);
+  }
   // Function to hash a password
   public static string HashPassword(string password)
   {

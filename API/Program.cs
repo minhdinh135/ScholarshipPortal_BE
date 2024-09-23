@@ -53,12 +53,18 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 //Service injection
 builder.Services.AddScoped(typeof(IGenericService<,,>), typeof(GenericService<,,>));
 builder.Services.AddScoped<JwtService>();
-//Console.WriteLine(builder.Configuration["OpenAI:ApiKey"].ToString());
+
 builder.Services.AddHttpClient<GeminiService>();
 builder.Services.AddSingleton(sp => new GeminiService(
     sp.GetRequiredService<HttpClient>(),
     builder.Configuration["OpenAI:ApiKey"]
 ));
+
+builder.Services.AddScoped<GoogleService>(s => new GoogleService(
+      builder.Configuration["Google:ClientId"],
+      builder.Configuration["Google:ClientSecret"],
+      builder.Configuration["Google:RedirectUri"]
+  ));
 
 //Add Jwt
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -103,9 +109,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]
             )),
+            RoleClaimType = "role",
             ValidateIssuer = true,
             ValidateAudience = true,
-            ValidateLifetime = true,
+            // ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
         };
     });

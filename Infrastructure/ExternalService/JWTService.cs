@@ -1,11 +1,11 @@
 using System.Security.Claims;
 using Domain.Entities;
 using Domain.DTOs;
-using Domain.Constants;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Domain.Constants;
 
 namespace Infrastructure.ExternalService;
 public class JwtService{
@@ -30,7 +30,7 @@ public class JwtService{
         config["Jwt:Issuer"],
         config["Jwt:Audience"],
         claims,
-        expires: DateTime.UtcNow.AddMinutes(10),
+        expires: DateTime.UtcNow.AddMinutes(30),
         signingCredentials: signIn);
 
     string Token = new JwtSecurityTokenHandler().WriteToken(token);
