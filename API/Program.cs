@@ -109,10 +109,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]
             )),
-            RoleClaimType = "role",
+            // RoleClaimType = "role",
             ValidateIssuer = true,
             ValidateAudience = true,
-            // ValidateLifetime = true,
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
         };
     });

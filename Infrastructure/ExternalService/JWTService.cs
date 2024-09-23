@@ -26,14 +26,16 @@ public class JwtService{
         Encoding.UTF8.GetBytes(config["Jwt:Key"]));
     var signIn = new SigningCredentials(
         key, SecurityAlgorithms.HmacSha256);
-    var token = new JwtSecurityToken(
-        config["Jwt:Issuer"],
-        config["Jwt:Audience"],
-        claims,
-        expires: DateTime.UtcNow.AddMinutes(30),
-        signingCredentials: signIn);
-
-    string Token = new JwtSecurityTokenHandler().WriteToken(token);
-    return new JwtDTO{Token = Token};
+    var tokenDescriptor = new SecurityTokenDescriptor
+    {
+      Subject = new ClaimsIdentity(claims),
+      Expires = DateTime.UtcNow.AddDays(int.Parse(config["JWT:ExpireInDays"])),
+      SigningCredentials = signIn,
+      Issuer = config["JWT:Issuer"],
+      Audience = config["JWT:Audience"]
+    };
+    var tokenHandler = new JwtSecurityTokenHandler();
+    var jwt = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
+    return new JwtDTO{Token = tokenHandler.WriteToken(jwt)};
   }
 }
