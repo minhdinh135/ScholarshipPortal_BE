@@ -1,4 +1,4 @@
-namespace Infrastructure.ExternalService;
+namespace Application.ExternalService;
 public class PasswordService{
   //Generate random password 10 chars
   public static string GeneratePassword(){

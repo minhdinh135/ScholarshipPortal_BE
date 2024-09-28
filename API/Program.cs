@@ -2,7 +2,8 @@ using System.Text.Json.Serialization;
 using AutoMapper;
 using Domain.Automapper;
 using Infrastructure.Data;
-using Infrastructure.ExternalService;
+using Application.ExternalService;
+using Application.ExternalService.Google;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -11,7 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Application.Interfaces.IRepositories;
-using Domain.Services;
+using Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +54,7 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 //Service injection
 builder.Services.AddScoped(typeof(IGenericService<,,>), typeof(GenericService<,,>));
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddHttpClient<GeminiService>();
 builder.Services.AddSingleton(sp => new GeminiService(

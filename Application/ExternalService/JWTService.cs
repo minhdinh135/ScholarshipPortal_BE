@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Domain.Constants;
 
-namespace Infrastructure.ExternalService;
+namespace Application.ExternalService;
 public class JwtService{
   public static JwtDTO CreateJwt(IConfiguration config, User user, string role = RoleEnum.APPLICANT){
     //create claims details based on the user information

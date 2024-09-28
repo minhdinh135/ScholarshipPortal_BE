@@ -4,7 +4,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 
-namespace Domain.Services;
+namespace Application.Services;
 public class GenericService<T, AD, UD> : IGenericService<T, AD, UD> where T : class
 {
   protected readonly IGenericRepository<T> _genericRepository;

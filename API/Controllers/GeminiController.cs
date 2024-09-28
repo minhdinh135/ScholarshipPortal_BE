@@ -1,4 +1,4 @@
-using Infrastructure.ExternalService;
+using Application.ExternalService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;

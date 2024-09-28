@@ -1,7 +1,7 @@
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 
-namespace Infrastructure.ExternalService;
+namespace Application.ExternalService.Google;
 public class GoogleService
 {
   private readonly string _clientId;
@@ -61,30 +61,4 @@ public class GoogleService
       return userInfo;
     }
   }
-}
-
-public class TokenResponse
-{
-    [JsonProperty("access_token")]
-    public string AccessToken { get; set; }
-}
-
-public class UserInfo
-{
-  public string Id { get; set; }
-
-  public string Email { get; set; }
-
-  [JsonProperty("verified_email")]
-  public string VerifiedEmail { get; set; }
-
-  public string Name { get; set; }
-
-  [JsonProperty("given_name")]
-  public string GivenName { get; set; }
-
-  [JsonProperty("family_name")]
-  public string FamilyName { get; set; }
-
-  public string Picture { get; set; }
 }
