@@ -1,15 +1,16 @@
-using System.Security.Claims;
-using Domain.Entities;
-using Domain.DTOs;
-using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
+using Application.Interfaces.IServices;
 using Domain.Constants;
+using Domain.DTOs.Authentication;
+using Domain.Entities;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
-namespace Application.ExternalService;
-public class JwtService{
-  public static JwtDTO CreateJwt(IConfiguration config, User user, string role = RoleEnum.APPLICANT){
+namespace Infrastructure.ExternalServices.Token;
+public class JwtService : ITokenService{
+  public JwtDTO CreateToken(IConfiguration config, Account account, string role = RoleEnum.APPLICANT){
     //create claims details based on the user information
     var claims = new[] {
       new Claim(JwtRegisteredClaimNames.Sub,
@@ -18,8 +19,8 @@ public class JwtService{
               , Guid.NewGuid().ToString()),
           new Claim(JwtRegisteredClaimNames.Iat
               , DateTime.UtcNow.ToString()),
-          new Claim("id", user.Id.ToString()),
-          new Claim("email", user.Email),
+          new Claim("id", account.Id.ToString()),
+          new Claim("email", account.Email),
           new Claim("role", role),
     };
     var key = new SymmetricSecurityKey(
@@ -36,6 +37,8 @@ public class JwtService{
     };
     var tokenHandler = new JwtSecurityTokenHandler();
     var jwt = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
-    return new JwtDTO{Token = tokenHandler.WriteToken(jwt)};
+    
+    // return new JwtDTO{Token = tokenHandler.WriteToken(jwt)};
+    return new JwtDTO(tokenHandler.WriteToken(jwt));
   }
 }

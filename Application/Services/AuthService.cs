@@ -1,163 +1,187 @@
-using Application.ExternalService;
+using Application.Helper;
 using Application.Interfaces.IServices;
 using Domain.Constants;
-using Domain.DTOs;
+using Domain.DTOs.Account;
+using Domain.DTOs.Authentication;
+using Domain.DTOs.Google;
+using Domain.DTOs.Role;
 using Domain.Entities;
-using Application.ErrorHandles;
 using Microsoft.Extensions.Configuration;
-using Application.ExternalService.Google;
 
 namespace Application.Services;
+
 public class AuthService
 {
-  private readonly JwtService _jwtService;
-  private readonly IGenericService<User, UserAddDTO, UserUpdateDTO> _userService;
-  private readonly IGenericService<Role, RoleAddDTO, RoleUpdateDTO> _roleService;
+    private readonly ITokenService _tokenService;
+    private readonly IPasswordService _passwordService;
+    private readonly IGenericService<Account, AccountAddDTO, AccountUpdateDTO> _userService;
+    private readonly IGenericService<Role, RoleAddDTO, RoleUpdateDTO> _roleService;
 
-  private readonly IConfiguration _configuration;
+    private readonly IConfiguration _configuration;
 
-  public AuthService(JwtService jwtService, 
-      IGenericService<User, UserAddDTO, UserUpdateDTO> userService,
-      IGenericService<Role, RoleAddDTO, RoleUpdateDTO> roleService,
-      IConfiguration configuration)
-  {
-    _jwtService = jwtService;
-    _userService = userService;
-    _roleService = roleService;
-    _configuration = configuration;
-  }
-
-  public async Task<JwtDTO> Login(LoginDTO login) {
-    if (!ErrorHandler.Validate(login, out var validationResults))
+    public AuthService(ITokenService tokenService,
+        IPasswordService passwordService,
+        IGenericService<Account, AccountAddDTO, AccountUpdateDTO> userService,
+        IGenericService<Role, RoleAddDTO, RoleUpdateDTO> roleService,
+        IConfiguration configuration)
     {
-        var error = ErrorHandler.GetErrorMessage(validationResults);
-        throw new Exception(error);
+        _tokenService = tokenService;
+        _passwordService = passwordService;
+        _userService = userService;
+        _roleService = roleService;
+        _configuration = configuration;
     }
-    var users = await _userService.GetAll();
-    var userLogin = users.Where(u => u.Email == login.Email).FirstOrDefault();
-    if(userLogin == null) {
-      throw new Exception("Email not found");
-    }
-    var roles = await _roleService.GetAll();
-    // roles = roles.Where(r => r.UserId == userLogin.Id).ToList();
-    if(PasswordService.VerifyPassword(login.Password, userLogin.HashedPassword)){
-      if(roles.Count() == 0) 
-      {
-        await _roleService.Add(new RoleAddDTO { 
-            Name = RoleEnum.APPLICANT,
-            CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now,
-            Status = "Active"
-        });
-        JwtDTO token = JwtService.CreateJwt(_configuration, userLogin);
-        return token;
-      }
-      else if(roles.Any(r => r.Name == RoleEnum.ADMIN))
-      {
-        JwtDTO token = JwtService.CreateJwt(_configuration, userLogin, RoleEnum.ADMIN);
-        return token;
-      }
-      else if(roles.Any(r => r.Name == RoleEnum.APPLICANT))
-      {
-        JwtDTO token = JwtService.CreateJwt(_configuration, userLogin);
-        return token;
-      }
-    }
-    throw new Exception("Wrong password");
-  }
-  
-  public async Task<JwtDTO> Register(RegisterDTO register) {
-    if (!ErrorHandler.Validate(register, out var validationResults))
+
+    public async Task<JwtDTO> Login(LoginDTO login)
     {
-        var error = ErrorHandler.GetErrorMessage(validationResults);
-        throw new Exception(error);
+        if (!ErrorHandler.Validate(login, out var validationResults))
+        {
+            var error = ErrorHandler.GetErrorMessage(validationResults);
+            throw new Exception(error);
+        }
+
+        var users = await _userService.GetAll();
+        var userLogin = users.Where(u => u.Email == login.Email).FirstOrDefault();
+        if (userLogin == null)
+        {
+            throw new Exception("Email not found");
+        }
+
+        var roles = await _roleService.GetAll();
+        // roles = roles.Where(r => r.UserId == userLogin.Id).ToList();
+        if (_passwordService.VerifyPassword(login.Password, userLogin.HashedPassword))
+        {
+            if (roles.Count() == 0)
+            {
+                await _roleService.Add(new RoleAddDTO
+                (
+                    RoleEnum.APPLICANT,
+                    DateTime.Now,
+                    DateTime.Now,
+                    StatusEnum.ACTIVE
+                ));
+                JwtDTO token = _tokenService.CreateToken(_configuration, userLogin, null);
+                return token;
+            }
+            else if (roles.Any(r => r.Name == RoleEnum.ADMIN))
+            {
+                JwtDTO token = _tokenService.CreateToken(_configuration, userLogin, RoleEnum.ADMIN);
+                return token;
+            }
+            else if (roles.Any(r => r.Name == RoleEnum.APPLICANT))
+            {
+                JwtDTO token = _tokenService.CreateToken(_configuration, userLogin, RoleEnum.APPLICANT);
+                return token;
+            }
+        }
+
+        throw new Exception("Wrong password");
     }
-    //check if user exist
-    var users = await _userService.GetAll();
-    users = users.Where(u => u.Email == register.Email).ToList();
-    if(users.Count() > 0) 
-      throw new Exception("Email already exist");
-    //check if role exist
-    var roles = await _roleService.GetAll();
-    roles = roles.Where(r => r.Name == RoleEnum.APPLICANT).ToList();
-    if(roles.Count() == 0){
-      await _roleService.Add(new RoleAddDTO { 
-          Name = RoleEnum.APPLICANT,
-          CreatedAt = DateTime.Now,
-          UpdatedAt = DateTime.Now,
-          Status = "Active"
-      });
-    }
-    //Get roles
-    roles = await _roleService.GetAll();
-    roles = roles.Where(r => r.Name == RoleEnum.APPLICANT).ToList();
 
-    var userDTO = new UserAddDTO {
-      Email = register.Email,
-            UserName = register.UserName,
-            FullName = register.FullName,
-            PhoneNumber = register.PhoneNumber,
-            HashedPassword = PasswordService.HashPassword(register.Password),
-            Address = register.Address,
-            Avatar = register.Avatar,
-            Gender = register.Gender,
-            RoleId = roles.FirstOrDefault().Id.Value,
-            CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now,
-            Status = "Active"
-    };
-    var user = await _userService.Add(userDTO);
-    JwtDTO token = JwtService.CreateJwt(_configuration, user);
-
-    return token;
-  }
-
-
-  public async Task<JwtDTO> GoogleAuth(UserInfo userInfo) {
-    if (!ErrorHandler.Validate(userInfo, out var validationResults))
+    public async Task<JwtDTO> Register(RegisterDTO register)
     {
-        var error = ErrorHandler.GetErrorMessage(validationResults);
-        throw new Exception(error);
-    }
-    //check if user exist
-    var users = await _userService.GetAll();
-    users = users.Where(u => u.Email == userInfo.Email).ToList();
-    if(users.Count() > 0) {
-      JwtDTO jwt = JwtService.CreateJwt(_configuration, users.FirstOrDefault());
-      return jwt; 
-    }
-    //check if role exist
-    var roles = await _roleService.GetAll();
-    roles = roles.Where(r => r.Name == RoleEnum.APPLICANT).ToList();
-    if(roles.Count() == 0){
-      await _roleService.Add(new RoleAddDTO { 
-          Name = RoleEnum.APPLICANT,
-          CreatedAt = DateTime.Now,
-          UpdatedAt = DateTime.Now,
-          Status = "Active"
-      });
-    }
-    //Get roles
-    roles = await _roleService.GetAll();
-    roles = roles.Where(r => r.Name == RoleEnum.APPLICANT).ToList();
+        if (!ErrorHandler.Validate(register, out var validationResults))
+        {
+            var error = ErrorHandler.GetErrorMessage(validationResults);
+            throw new Exception(error);
+        }
 
-    var userDTO = new UserAddDTO {
-      Email = userInfo.Email,
-            UserName = userInfo.Name,
-            FullName = userInfo.Name,
-            PhoneNumber = "",
-            HashedPassword = PasswordService.HashPassword(PasswordService.GeneratePassword()),
-            Address = "",
-            Avatar = userInfo.Picture,
-            Gender = "",
-            RoleId = roles.FirstOrDefault().Id.Value,
-            CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now,
-            Status = "Active"
-    };
-    var user = await _userService.Add(userDTO);
-    JwtDTO jwt1 = JwtService.CreateJwt(_configuration, user);
+        //check if user exist
+        var users = await _userService.GetAll();
+        users = users.Where(u => u.Email == register.Email).ToList();
+        if (users.Count() > 0)
+            throw new Exception("Email already exist");
+        //check if role exist
+        var roles = await _roleService.GetAll();
+        roles = roles.Where(r => r.Name == RoleEnum.APPLICANT).ToList();
+        if (roles.Count() == 0)
+        {
+            await _roleService.Add(new RoleAddDTO
+            (
+                RoleEnum.APPLICANT,
+                DateTime.Now,
+                DateTime.Now,
+                StatusEnum.ACTIVE
+            ));
+        }
 
-    return jwt1;
-  }
+        //Get roles
+        roles = await _roleService.GetAll();
+        roles = roles.Where(r => r.Name == RoleEnum.APPLICANT).ToList();
+
+        var userDTO = new AccountAddDTO
+        (
+            register.Username,
+            register.FullName,
+            register.PhoneNumber,
+            register.Email,
+            _passwordService.HashPassword(register.Password),
+            register.Address,
+            register.Avatar,
+            register.Gender,
+            roles.FirstOrDefault()?.Id,
+            DateTime.Now,
+            DateTime.Now,
+            StatusEnum.ACTIVE
+        );
+        var user = await _userService.Add(userDTO);
+        JwtDTO token = _tokenService.CreateToken(_configuration, user, RoleEnum.APPLICANT);
+
+        return token;
+    }
+
+
+    public async Task<JwtDTO> GoogleAuth(UserInfo userInfo)
+    {
+        if (!ErrorHandler.Validate(userInfo, out var validationResults))
+        {
+            var error = ErrorHandler.GetErrorMessage(validationResults);
+            throw new Exception(error);
+        }
+
+        //check if user exist
+        var users = await _userService.GetAll();
+        users = users.Where(u => u.Email == userInfo.Email).ToList();
+        if (users.Count() > 0)
+        {
+            JwtDTO jwt = _tokenService.CreateToken(_configuration, users.FirstOrDefault(), RoleEnum.APPLICANT);
+            return jwt;
+        }
+
+        //check if role exist
+        var roles = await _roleService.GetAll();
+        roles = roles.Where(r => r.Name == RoleEnum.APPLICANT).ToList();
+        if (roles.Count() == 0)
+        {
+            await _roleService.Add(new RoleAddDTO(
+                RoleEnum.APPLICANT,
+                DateTime.Now,
+                DateTime.Now,
+                StatusEnum.ACTIVE)
+            );
+        }
+
+        //Get roles
+        roles = await _roleService.GetAll();
+        roles = roles.Where(r => r.Name == RoleEnum.APPLICANT).ToList();
+
+        var userDTO = new AccountAddDTO(
+            userInfo.Name,
+            userInfo.Name,
+            "",
+            userInfo.Email,
+            _passwordService.HashPassword(_passwordService.GeneratePassword()),
+            "",
+            userInfo.Picture,
+            "",
+            roles.FirstOrDefault()?.Id,
+            DateTime.Now,
+            DateTime.Now,
+            StatusEnum.ACTIVE
+        );
+        var user = await _userService.Add(userDTO);
+        JwtDTO jwt1 = _tokenService.CreateToken(_configuration, user, RoleEnum.APPLICANT);
+
+        return jwt1;
+    }
 }

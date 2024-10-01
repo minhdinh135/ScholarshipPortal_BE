@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace Application.ErrorHandles;
-public class ErrorHandler{
+namespace Application.Helper;
+public class ErrorHandler {
   public static string? GetErrorMessage(ModelStateDictionary modelState){
     foreach (var modelStateEntry in modelState)
     {

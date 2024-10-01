@@ -4,7 +4,6 @@
     <Folder Include="Common\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Interfaces\IRepositories\" />
-    <Folder Include="Interfaces\IServices\" />
   </ItemGroup>
 
   <ItemGroup>

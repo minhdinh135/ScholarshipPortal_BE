@@ -1,7 +1,7 @@
-using Application.ExternalService;
+using Infrastructure.ExternalServices.Gemini;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers;
+namespace SSAP.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class GeminiController : ControllerBase
