@@ -1,18 +1,21 @@
+using System.Text;
 using System.Text.Json.Serialization;
+using Application.Interfaces.IRepositories;
+using Application.Interfaces.IServices;
+using Application.Services;
 using AutoMapper;
 using Domain.Automapper;
 using Infrastructure.Data;
-using Application.ExternalService;
-using Application.ExternalService.Google;
+using Infrastructure.ExternalServices.Gemini;
+using Infrastructure.ExternalServices.Google;
+using Infrastructure.ExternalServices.Password;
+using Infrastructure.ExternalServices.Token;
+using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using Application.Interfaces.IServices;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Application.Interfaces.IRepositories;
-using Application.Services;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +29,8 @@ builder.Services.AddControllers(options => options.SuppressInputFormatterBufferi
       options.JsonSerializerOptions.MaxDepth = 64;
   });
 
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
 //Not throw errors imidiately
 builder.Services.Configure<ApiBehaviorOptions>(options
     => options.SuppressModelStateInvalidFilter = true);
@@ -35,8 +40,8 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Scholarship API", Version = "v1" });
 });
 
-//Add dbContext
-builder.Services.AddScholarshipDbContext(builder.Configuration);
+builder.Services.AddDbContext<ScholarshipContext>(options =>
+    options.UseMySQL(builder.Configuration.GetConnectionString("Db") ?? string.Empty));
 
 //Add autoMapper
 builder.Services.AddSingleton<IMapper>(sp =>
@@ -49,12 +54,17 @@ builder.Services.AddSingleton<IMapper>(sp =>
 
     return config.CreateMapper();
     });
+
 //Repository injection
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 //Service injection
 builder.Services.AddScoped(typeof(IGenericService<,,>), typeof(GenericService<,,>));
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<AuthService>();
+
+// Add external services
+builder.Services.AddScoped<IPasswordService, PasswordService>();
+builder.Services.AddScoped<ITokenService, JwtService>();
 
 builder.Services.AddHttpClient<GeminiService>();
 builder.Services.AddSingleton(sp => new GeminiService(
@@ -69,8 +79,6 @@ builder.Services.AddScoped<GoogleService>(s => new GoogleService(
   ));
 
 //Add Jwt
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(
     c => {
         c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -118,6 +126,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
         };
     });
+
+builder.Services.AddAuthorization();
+
 //Add Cors
 builder.Services.AddCors(options => {
     options.AddPolicy(name: "MyAllowPolicy", policy =>{
@@ -128,7 +139,6 @@ builder.Services.AddCors(options => {
             });  
 });
 
-builder.Services.AddAuthorization();
 
 var app = builder.Build();
 

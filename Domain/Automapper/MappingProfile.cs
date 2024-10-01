@@ -1,5 +1,6 @@
 using AutoMapper;
-using Domain.DTOs;
+using Domain.DTOs.Account;
+using Domain.DTOs.Role;
 using Domain.Entities;
 
 namespace Domain.Automapper
@@ -8,8 +9,8 @@ namespace Domain.Automapper
     {
         public MappingProfile()
         {
-            CreateMap<User, UserAddDTO>().ReverseMap();
-            CreateMap<User, UserUpdateDTO>().ReverseMap();
+            CreateMap<Account, AccountAddDTO>().ReverseMap();
+            CreateMap<Account, AccountUpdateDTO>().ReverseMap();
 
             CreateMap<Role, RoleAddDTO>().ReverseMap();
             CreateMap<Role, RoleUpdateDTO>().ReverseMap();

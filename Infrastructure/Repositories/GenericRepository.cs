@@ -1,7 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using Application.Interfaces.IRepositories;
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Data;
+namespace Infrastructure.Repositories;
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
   private readonly ScholarshipContext _dbContext;

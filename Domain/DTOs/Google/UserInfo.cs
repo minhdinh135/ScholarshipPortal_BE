@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Application.ExternalService.Google;
+namespace Domain.DTOs.Google;
 public class UserInfo
 {
   public string Id { get; set; }
