@@ -1,7 +1,8 @@
 using System.Net.Http.Headers;
+using Domain.DTOs.Google;
 using Newtonsoft.Json;
 
-namespace Application.ExternalService.Google;
+namespace Infrastructure.ExternalServices.Google;
 public class GoogleService
 {
   private readonly string _clientId;

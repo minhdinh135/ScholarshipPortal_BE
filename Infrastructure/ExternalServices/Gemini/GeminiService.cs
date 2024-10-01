@@ -1,10 +1,7 @@
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace Application.ExternalService;
+namespace Infrastructure.ExternalServices.Gemini;
 public class GeminiService
 {
     private readonly HttpClient _httpClient;
