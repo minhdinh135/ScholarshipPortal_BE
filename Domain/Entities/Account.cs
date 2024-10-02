@@ -1,3 +1,5 @@
+using System.Collections;
+
 namespace Domain.Entities;
 
 public class Account : BaseEntity
@@ -21,4 +23,18 @@ public class Account : BaseEntity
     public int? RoleId { get; set; }
 
     public Role? Role { get; set; }
+    
+    public ApplicantProfile? ApplicantProfile { get; set; }
+    
+    public ICollection<ScholarshipProgram>? FunderCreatedScholarshipPrograms { get; set; }
+    
+    public ICollection<ScholarshipProgram>? ProviderAssignedScholarshipPrograms { get; set; }
+    
+    public ICollection<Application>? Applications { get; set; }
+    
+    public ICollection<Review>? Reviews { get; set; }
+    
+    public ICollection<Feedback>? FunderFeedbacks { get; set; }
+    
+    public ICollection<Feedback>? ProviderFeedbacks { get; set; }
 }
