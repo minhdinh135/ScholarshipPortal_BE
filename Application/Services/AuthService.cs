@@ -48,7 +48,7 @@ public class AuthService
         }
 
         var roles = await _roleService.GetAll();
-        // roles = roles.Where(r => r.UserId == userLogin.Id).ToList();
+        roles = roles.Where(r => r.Id == userLogin.RoleId).ToList();
         if (_passwordService.VerifyPassword(login.Password, userLogin.HashedPassword))
         {
             if (roles.Count() == 0)
@@ -60,7 +60,7 @@ public class AuthService
                     DateTime.Now,
                     StatusEnum.ACTIVE
                 ));
-                JwtDTO token = _tokenService.CreateToken(_configuration, userLogin, null);
+                JwtDTO token = _tokenService.CreateToken(_configuration, userLogin, RoleEnum.APPLICANT);
                 return token;
             }
             else if (roles.Any(r => r.Name == RoleEnum.ADMIN))
