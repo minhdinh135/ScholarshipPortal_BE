@@ -16,7 +16,7 @@ namespace SSAP.API.Controllers;
 [ApiController]
 public class AuthenticationController : ControllerBase
 {
-    private readonly JwtService _jwtService;
+    private readonly ITokenService _jwtService;
     private readonly IGenericService<Account, AccountAddDTO, AccountUpdateDTO> _userService;
     private readonly IGenericService<Role, RoleAddDTO, RoleUpdateDTO> _roleService;
     private readonly AuthService _authService;
@@ -24,7 +24,7 @@ public class AuthenticationController : ControllerBase
     private readonly IConfiguration _configuration;
     private readonly GoogleService _googleService;
 
-    public AuthenticationController(JwtService jwtService,
+    public AuthenticationController(ITokenService jwtService,
         IGenericService<Account, AccountAddDTO, AccountUpdateDTO> userService,
         IGenericService<Role, RoleAddDTO, RoleUpdateDTO> roleService,
         IConfiguration configuration,
