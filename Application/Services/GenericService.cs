@@ -1,8 +1,8 @@
+using Application.Helper;
 using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using MySql.Data.MySqlClient;
 
 namespace Application.Services;
 public class GenericService<T, AD, UD> : IGenericService<T, AD, UD> where T : class
@@ -25,33 +25,11 @@ public class GenericService<T, AD, UD> : IGenericService<T, AD, UD> where T : cl
     }
     catch (DbUpdateException ex)
     {
-      Exception innerEx = ex;
-      while(innerEx != null)
-      {
-        if (innerEx is MySqlException sqlEx)
-        {
-          // Check the SQL error number for specific constraint violations
-          if (sqlEx.Number == 547) // Foreign key constraint violation
-          {
-            throw new Exception("Foreign key not found");
-          }
-          else if (sqlEx.Number == 2627 || sqlEx.Number == 2601) // Unique constraint violation
-          {
-            throw new Exception("Id is duplicated");
-          }
-          else
-          {
-            // Handle other types of SQL exceptions
-            throw new Exception("An error occurred while saving changes. Please try again later.");
-          }
-        }
-        innerEx = innerEx.InnerException;
-      }
-      throw new Exception("An error occurred while saving changes. Please try again later.");
+      throw new Exception(ErrorHandler.GetDbError(ex));
     }
   }
 
-  public async Task<T> Delete(params Guid[] keys)
+  public async Task<T> Delete(params int[] keys)
   {
     var entity = await _genericRepository.Get(keys);
     if (entity == null) return null;
@@ -65,7 +43,7 @@ public class GenericService<T, AD, UD> : IGenericService<T, AD, UD> where T : cl
     return entities;
   }
 
-  public async Task<T> Get(params Guid[] keys)
+  public async Task<T> Get(params int[] keys)
   {
     var entity = await _genericRepository.Get(keys);     
     return entity;
