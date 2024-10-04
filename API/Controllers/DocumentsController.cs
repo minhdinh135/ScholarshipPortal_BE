@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Domain.DTOs;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Application.Interfaces.IServices;
 
 namespace SSAP.API.Controllers
 {
@@ -10,22 +11,21 @@ namespace SSAP.API.Controllers
 	[Route("api/[controller]")]
 	public class DocumentsController : ControllerBase
 	{
-		private readonly IGenericRepository<Document> _documentRepo;
+		private readonly IDocumentsService _documentService;
 		private readonly ILogger<DocumentsController> _logger;
 
-		public DocumentsController(IGenericRepository<Document> documentRepo, ILogger<DocumentsController> logger)
+		public DocumentsController(IDocumentsService documentService, ILogger<DocumentsController> logger)
 		{
-			_documentRepo = documentRepo;
+			_documentService = documentService;
 			_logger = logger;
 		}
 
-		// Get all documents
 		[HttpGet]
 		public async Task<IActionResult> GetAllDocuments()
 		{
 			try
 			{
-				var documents = await _documentRepo.GetAll(x => x.Include(d => d.Application));
+				var documents = await _documentService.GetAll();
 				return Ok(documents);
 			}
 			catch (Exception ex)
@@ -35,17 +35,12 @@ namespace SSAP.API.Controllers
 			}
 		}
 
-		// Get document by ID
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetDocumentById(Guid id)
+		public async Task<IActionResult> GetDocumentById(int id)
 		{
 			try
 			{
-				var document = await _documentRepo.Get(id);
-				if (document == null)
-				{
-					return NotFound("Document not found.");
-				}
+				var document = await _documentService.Get(id);
 				return Ok(document);
 			}
 			catch (Exception ex)
@@ -55,26 +50,15 @@ namespace SSAP.API.Controllers
 			}
 		}
 
-		// Add new document
 		[HttpPost("Add")]
-		public async Task<IActionResult> AddDocument([FromBody] DocumentDTO documentDto)
+		public async Task<IActionResult> AddDocument([FromBody] AddDocumentDTO documentDto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
 			try
 			{
-				var newDocument = new Document
-				{
-					Name = documentDto.Name,
-					Description = documentDto.Description,
-					Content = documentDto.Content,
-					Type = documentDto.Type,
-					FilePath = documentDto.FilePath,
-					ApplicationId = documentDto.ApplicationId
-				};
-
-				var addedDocument = await _documentRepo.Add(newDocument);
+				var addedDocument = await _documentService.Add(documentDto);
 				return Ok(addedDocument);
 			}
 			catch (Exception ex)
@@ -84,45 +68,30 @@ namespace SSAP.API.Controllers
 			}
 		}
 
-		// Update existing document
-		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateDocument(Guid id, [FromBody] DocumentDTO documentDto)
+		[HttpPut]
+		public async Task<IActionResult> UpdateDocument([FromBody] UpdateDocumentDTO documentDto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
 			try
 			{
-				var document = await _documentRepo.Get(id);
-				if (document == null)
-					return NotFound("Document not found.");
-
-				document.Name = documentDto.Name;
-				document.Description = documentDto.Description;
-				document.Content = documentDto.Content;
-				document.Type = documentDto.Type;
-				document.FilePath = documentDto.FilePath;
-				document.ApplicationId = documentDto.ApplicationId;
-
-				var updatedDocument = await _documentRepo.Update(document);
+				var updatedDocument = await _documentService.Update(documentDto);
 				return Ok(updatedDocument);
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"Failed to update document: {ex.Message}");
-				return StatusCode(StatusCodes.Status500InternalServerError, "Error updating data in the database.");
+				return BadRequest(new { Message = ex.Message });
 			}
 		}
 
-		// Delete document by ID
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteDocument(Guid id)
+		public async Task<IActionResult> DeleteDocument(int id)
 		{
 			try
 			{
-				var deletedDocument = await _documentRepo.Delete(id);
-				if (deletedDocument == null)
-					return NotFound("Document not found.");
+				var deletedDocument = await _documentService.Delete(id);
 
 				return Ok(deletedDocument);
 			}

@@ -21,7 +21,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     return entity;
   }
 
-  public async Task<T> Delete(params Guid[] keys)
+  public async Task<T> Delete(params int[] keys)
   {
     var entity = await Get(keys);
     _dbSet.Remove(entity);
@@ -41,11 +41,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
       }
     }
 
-    var list = await query.ToListAsync();
+    var list = await query.AsNoTracking().ToListAsync();
     return list;
   }
 
-  public async Task<T> Get(params Guid[] keys)
+  public async Task<T> Get(params int[] keys)
   {
     if (keys.Length == 1)
     {

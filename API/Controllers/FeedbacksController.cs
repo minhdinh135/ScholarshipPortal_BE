@@ -3,6 +3,7 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Domain.DTOs;
+using Application.Interfaces.IServices;
 
 namespace SSAP.API.Controllers
 {
@@ -10,12 +11,12 @@ namespace SSAP.API.Controllers
 	[Route("api/[controller]")]
 	public class FeedbacksController : ControllerBase
 	{
-		private readonly IGenericRepository<Feedback> _feedbackRepo;
+		private readonly IFeedbacksService _feedbackService;
 		private readonly ILogger<FeedbacksController> _logger;
 
-		public FeedbacksController(IGenericRepository<Feedback> feedbackRepo, ILogger<FeedbacksController> logger)
+		public FeedbacksController(IFeedbacksService feedbackService, ILogger<FeedbacksController> logger)
 		{
-			_feedbackRepo = feedbackRepo;
+			_feedbackService = feedbackService;
 			_logger = logger;
 		}
 
@@ -24,9 +25,7 @@ namespace SSAP.API.Controllers
 		{
 			try
 			{
-				var feedbacks = await _feedbackRepo.GetAll(
-					x => x.Include(f => f.Funder).Include(f => f.Provider)
-				);
+				var feedbacks = await _feedbackService.GetAll();
 				return Ok(feedbacks);
 			}
 			catch (Exception ex)
@@ -37,11 +36,11 @@ namespace SSAP.API.Controllers
 		}
 
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetFeedbackById(Guid id)
+		public async Task<IActionResult> GetFeedbackById(int id)
 		{
 			try
 			{
-				var feedback = await _feedbackRepo.Get(id);
+				var feedback = await _feedbackService.Get(id);
 				if (feedback == null)
 				{
 					return NotFound("Feedback not found.");
@@ -56,23 +55,14 @@ namespace SSAP.API.Controllers
 		}
 
 		[HttpPost("Add")]
-		public async Task<IActionResult> AddFeedback([FromBody] FeedbackDTO feedbackDto)
+		public async Task<IActionResult> AddFeedback([FromBody] AddFeedbackDTO feedbackDto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
 			try
 			{
-				var newFeedback = new Feedback
-				{
-					Content = feedbackDto.Content,
-					Rating = feedbackDto.Rating,
-					FeedbackDate = feedbackDto.FeedbackDate,
-					FunderId = feedbackDto.FunderId,
-					ProviderId = feedbackDto.ProviderId
-				};
-
-				var addedFeedback = await _feedbackRepo.Add(newFeedback);
+				var addedFeedback = await _feedbackService.Add(feedbackDto);
 				return Ok(addedFeedback);
 			}
 			catch (Exception ex)
@@ -82,40 +72,31 @@ namespace SSAP.API.Controllers
 			}
 		}
 
-		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateFeedback(Guid id, [FromBody] FeedbackDTO feedbackDto)
+		[HttpPut]
+		public async Task<IActionResult> UpdateFeedback([FromBody] UpdateFeedbackDTO feedbackDto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
 			try
 			{
-				var feedback = await _feedbackRepo.Get(id);
-				if (feedback == null)
-					return NotFound("Feedback not found.");
 
-				feedback.Content = feedbackDto.Content;
-				feedback.Rating = feedbackDto.Rating;
-				feedback.FeedbackDate = feedbackDto.FeedbackDate;
-				feedback.FunderId = feedbackDto.FunderId;
-				feedback.ProviderId = feedbackDto.ProviderId;
-
-				var updatedFeedback = await _feedbackRepo.Update(feedback);
+				var updatedFeedback = await _feedbackService.Update(feedbackDto);
 				return Ok(updatedFeedback);
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"Failed to update feedback: {ex.Message}");
-				return StatusCode(StatusCodes.Status500InternalServerError, "Error updating data in the database.");
+				return BadRequest(new { Message = ex.Message });
 			}
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteFeedback(Guid id)
+		public async Task<IActionResult> DeleteFeedback(int id)
 		{
 			try
 			{
-				var deletedFeedback = await _feedbackRepo.Delete(id);
+				var deletedFeedback = await _feedbackService.Delete(id);
 				if (deletedFeedback == null)
 					return NotFound("Feedback not found.");
 
