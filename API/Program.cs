@@ -59,6 +59,7 @@ builder.Services.AddSingleton<IMapper>(sp =>
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 //Service injection
 builder.Services.AddScoped(typeof(IGenericService<,,>), typeof(GenericService<,,>));
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<AuthService>();
 
 // Add external services
