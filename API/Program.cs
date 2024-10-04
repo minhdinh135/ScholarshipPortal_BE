@@ -5,6 +5,7 @@ using Application.Interfaces.IServices;
 using Application.Services;
 using AutoMapper;
 using Domain.Automapper;
+using Domain.Entities;
 using Infrastructure.Data;
 using Infrastructure.ExternalServices.Gemini;
 using Infrastructure.ExternalServices.Google;
@@ -59,6 +60,14 @@ builder.Services.AddSingleton<IMapper>(sp =>
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 //Service injection
 builder.Services.AddScoped(typeof(IGenericService<,,>), typeof(GenericService<,,>));
+builder.Services.AddScoped<IReviewsService,ReviewService>();
+builder.Services.AddScoped<ICountriesService,CountriesService>();
+builder.Services.AddScoped<IAwardsService, AwardsService>();
+builder.Services.AddScoped<IFeedbacksService, FeedbackService>();
+builder.Services.AddScoped<IApplicantProfileService, ApplicantProfileService>();
+builder.Services.AddScoped<IUniversityService, UniversityService>();
+builder.Services.AddScoped<IDocumentsService, DocumentsService>();
+
 builder.Services.AddScoped<AuthService>();
 
 // Add external services

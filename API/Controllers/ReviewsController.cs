@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.IRepositories;
+using Application.Interfaces.IServices;
 using Domain.DTOs;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,10 @@ namespace SSAP.API.Controllers
 	[Route("api/[controller]")]
 	public class ReviewsController : ControllerBase
 	{
-		private readonly IGenericRepository<Review> _reviewRepo;
+		private readonly IReviewsService _reviewRepo;
 		private readonly ILogger<ReviewsController> _logger;
 
-		public ReviewsController(IGenericRepository<Review> reviewRepo, ILogger<ReviewsController> logger)
+		public ReviewsController(IReviewsService reviewRepo, ILogger<ReviewsController> logger)
 		{
 			_reviewRepo = reviewRepo;
 			_logger = logger;
@@ -25,9 +26,7 @@ namespace SSAP.API.Controllers
 		{
 			try
 			{
-				var reviews = await _reviewRepo.GetAll(
-					x => x.Include(r => r.Provider).Include(r => r.Application)
-				);
+				var reviews = await _reviewRepo.GetAll();
 				return Ok(reviews);
 			}
 			catch (Exception ex)
@@ -38,7 +37,7 @@ namespace SSAP.API.Controllers
 		}
 
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetReviewById(Guid id)
+		public async Task<IActionResult> GetReviewById(int id)
 		{
 			try
 			{
@@ -57,23 +56,14 @@ namespace SSAP.API.Controllers
 		}
 
 		[HttpPost("Add")]
-		public async Task<IActionResult> AddReview([FromBody] ReviewDTO reviewDto)
+		public async Task<IActionResult> AddReview([FromBody] AddReviewDTO reviewDto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
 			try
 			{
-				var newReview = new Review
-				{
-					Comment = reviewDto.Comment,
-					Score = reviewDto.Score,
-					ReviewedDate = reviewDto.ReviewedDate,
-					ProviderId = reviewDto.ProviderId,
-					ApplicationId = reviewDto.ApplicationId
-				};
-
-				var addedReview = await _reviewRepo.Add(newReview);
+				var addedReview = await _reviewRepo.Add(reviewDto);
 				return Ok(addedReview);
 			}
 			catch (Exception ex)
@@ -83,36 +73,26 @@ namespace SSAP.API.Controllers
 			}
 		}
 
-		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateReview(Guid id, [FromBody] ReviewDTO reviewDto)
+		[HttpPut]
+		public async Task<IActionResult> UpdateReview([FromBody] UpdateReviewDTO reviewDto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
 			try
 			{
-				var review = await _reviewRepo.Get(id);
-				if (review == null)
-					return NotFound("Review not found.");
-
-				review.Comment = reviewDto.Comment;
-				review.Score = reviewDto.Score;
-				review.ReviewedDate = reviewDto.ReviewedDate;
-				review.ProviderId = reviewDto.ProviderId;
-				review.ApplicationId = reviewDto.ApplicationId;
-
-				var updatedReview = await _reviewRepo.Update(review);
+				var updatedReview = await _reviewRepo.Update(reviewDto);
 				return Ok(updatedReview);
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"Failed to update review: {ex.Message}");
-				return StatusCode(StatusCodes.Status500InternalServerError, "Error updating data in the database.");
+				return BadRequest(new { Message = ex.Message });
 			}
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteReview(Guid id)
+		public async Task<IActionResult> DeleteReview(int id)
 		{
 			try
 			{

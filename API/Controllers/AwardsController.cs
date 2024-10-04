@@ -3,6 +3,7 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Domain.DTOs;
+using Application.Interfaces.IServices;
 
 namespace SSAP.API.Controllers
 {
@@ -10,124 +11,98 @@ namespace SSAP.API.Controllers
 	[Route("api/[controller]")]
 	public class AwardsController : ControllerBase
 	{
-		private readonly IGenericRepository<Award> _awardRepo;
+		private readonly IAwardsService _awardService;
 		private readonly ILogger<AwardsController> _logger;
 
-		public AwardsController(IGenericRepository<Award> awardRepo, ILogger<AwardsController> logger)
+		public AwardsController(IAwardsService awardService, ILogger<AwardsController> logger)
 		{
-			_awardRepo = awardRepo;
+			_awardService = awardService;
 			_logger = logger;
 		}
 
-		// Get all awards
 		[HttpGet]
 		public async Task<IActionResult> GetAllAwards()
 		{
 			try
 			{
-				var awards = await _awardRepo.GetAll(x => x.Include(a => a.Application));
+				var awards = await _awardService.GetAll();
 				return Ok(awards);
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"Failed to get all awards: {ex.Message}");
-				return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database.");
+				return StatusCode(500, "Error retrieving data from the database.");
 			}
 		}
 
-		// Get award by ID
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetAwardById(Guid id)
+		public async Task<IActionResult> GetAwardById(int id)
 		{
 			try
 			{
-				var award = await _awardRepo.Get(id);
-				if (award == null)
-				{
-					return NotFound("Award not found.");
-				}
+				var award = await _awardService.Get(id);
+				if (award == null) return NotFound("Award not found.");
 				return Ok(award);
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"Failed to get award by id {id}: {ex.Message}");
-				return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database.");
+				return StatusCode(500, "Error retrieving data from the database.");
 			}
 		}
 
-		// Add new award
 		[HttpPost("Add")]
-		public async Task<IActionResult> AddAward([FromBody] AwardDTO awardDto)
+		public async Task<IActionResult> AddAward([FromBody] AddAwardDTO dto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
 			try
 			{
-				var newAward = new Award
-				{
-					Description = awardDto.Description,
-					Amount = awardDto.Amount,
-					Image = awardDto.Image,
-					AwardedDate = awardDto.AwardedDate,
-					ApplicationId = awardDto.ApplicationId
-				};
-
-				var addedAward = await _awardRepo.Add(newAward);
+				var addedAward = await _awardService.Add(dto);
 				return Ok(addedAward);
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"Failed to add award: {ex.Message}");
-				return StatusCode(StatusCodes.Status500InternalServerError, "Error adding data to the database.");
+				return StatusCode(500, "Error adding data to the database.");
 			}
 		}
 
-		// Update existing award
-		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateAward(Guid id, [FromBody] AwardDTO awardDto)
+		[HttpPut]
+		public async Task<IActionResult> UpdateAward([FromBody] UpdateAwardDTO dto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
 			try
 			{
-				var award = await _awardRepo.Get(id);
-				if (award == null)
-					return NotFound("Award not found.");
 
-				award.Description = awardDto.Description;
-				award.Amount = awardDto.Amount;
-				award.Image = awardDto.Image;
-				award.AwardedDate = awardDto.AwardedDate;
-				award.ApplicationId = awardDto.ApplicationId;
 
-				var updatedAward = await _awardRepo.Update(award);
+				var updatedAward = await _awardService.Update(dto);
 				return Ok(updatedAward);
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"Failed to update award: {ex.Message}");
-				return StatusCode(StatusCodes.Status500InternalServerError, "Error updating data in the database.");
+				return BadRequest(new { Message = ex.Message });
 			}
 		}
 
-		// Delete award by ID
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteAward(Guid id)
+		public async Task<IActionResult> DeleteAward(int id)
 		{
 			try
 			{
-				var deletedAward = await _awardRepo.Delete(id);
-				if (deletedAward == null)
-					return NotFound("Award not found.");
+				var deletedAward = await _awardService.Delete(id);
+				if (deletedAward == null) return NotFound("Award not found.");
 
 				return Ok(deletedAward);
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"Failed to delete award: {ex.Message}");
-				return StatusCode(StatusCodes.Status500InternalServerError, "Error deleting data from the database.");
+				return StatusCode(500, "Error deleting data from the database.");
 			}
 		}
 	}
