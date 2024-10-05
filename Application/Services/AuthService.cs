@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Application.Services;
 
-public class AuthService
+public class AuthService : IAuthService
 {
     private readonly ITokenService _tokenService;
     private readonly IPasswordService _passwordService;

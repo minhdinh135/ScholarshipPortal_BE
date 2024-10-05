@@ -35,7 +35,7 @@ public class ScholarshipContext : DbContext
 
     public virtual DbSet<Award> Awards { get; set; }
 
-    public virtual DbSet<Criterion> Criteria { get; set; }
+    public virtual DbSet<Criteria> Criteria { get; set; }
 
     public virtual DbSet<Category> Categories { get; set; }
 
@@ -124,7 +124,7 @@ public class ScholarshipContext : DbContext
             .HasForeignKey(review => review.ApplicationId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Criterion>()
+        modelBuilder.Entity<Criteria>()
             .HasOne(criterion => criterion.ScholarshipProgram)
             .WithMany(scholarshipProgram => scholarshipProgram.Criteria)
             .HasForeignKey(criterion => criterion.ScholarshipProgramId)
@@ -152,7 +152,6 @@ public class ScholarshipContext : DbContext
             .HasMany(scholarshipProgram => scholarshipProgram.Categories)
             .WithMany(category => category.ScholarshipPrograms)
             .UsingEntity("scholarship_program_category");
-
 
         modelBuilder.Entity<ScholarshipProgram>()
             .HasMany(scholarshipProgram => scholarshipProgram.Universities)

@@ -6,5 +6,5 @@ namespace Application.Interfaces.IServices;
 
 public interface ITokenService
 {
-    public JwtDTO CreateToken(IConfiguration config, Account account, string? role);
+    JwtDTO CreateToken(IConfiguration config, Account account, string? role);
 }

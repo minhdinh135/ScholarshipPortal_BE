@@ -2,18 +2,12 @@
 using Application.Interfaces.IServices;
 using AutoMapper;
 using Domain.DTOs;
+using Domain.DTOs.Review;
 using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
-	public class ReviewService : IReviewsService
+	public class ReviewService : IReviewService
 	{
 		private readonly IGenericRepository<Review> _repository;
 		protected readonly IMapper _mapper;
@@ -30,15 +24,15 @@ namespace Application.Services
 
 		public async Task<Review> Delete(int keys)
 		{
-			var entity = await _repository.Get(keys);
+			var entity = await _repository.GetById(keys);
 			if (entity == null) return null;
-			await _repository.Delete(keys);
+			await _repository.DeleteById(keys);
 			return entity;
 		}
 
 		public async Task<Review> Get(int keys)
 		{
-			var entity = await _repository.Get(keys);
+			var entity = await _repository.GetById(keys);
 			return entity;
 		}
 

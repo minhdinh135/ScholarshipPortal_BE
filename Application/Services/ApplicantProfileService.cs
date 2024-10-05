@@ -2,12 +2,8 @@
 using Application.Interfaces.IServices;
 using AutoMapper;
 using Domain.DTOs;
+using Domain.DTOs.ApplicantProfile;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -31,15 +27,15 @@ namespace Application.Services
 
 		public async Task<ApplicantProfile> Delete(int id)
 		{
-			var entity = await _repository.Get(id);
+			var entity = await _repository.GetById(id);
 			if (entity == null) return null;
-			await _repository.Delete(id);
+			await _repository.DeleteById(id);
 			return entity;
 		}
 
 		public async Task<ApplicantProfile> Get(int id)
 		{
-			return await _repository.Get(id);
+			return await _repository.GetById(id);
 		}
 
 		public async Task<IEnumerable<ApplicantProfile>> GetAll()
