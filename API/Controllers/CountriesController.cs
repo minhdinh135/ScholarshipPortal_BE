@@ -35,11 +35,11 @@ namespace SSAP.API.Controllers
 		}
 
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetCountryById(Guid id)
+		public async Task<IActionResult> GetCountryById(int id)
 		{
 			try
 			{
-				var country = await _countryRepo.Get(id);
+				var country = await _countryRepo.GetById(id);
 				if (country == null)
 				{
 					return NotFound("Country not found.");
@@ -78,14 +78,14 @@ namespace SSAP.API.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateCountry(Guid id, [FromBody] CountryDTO countryDto)
+		public async Task<IActionResult> UpdateCountry(int id, [FromBody] CountryDTO countryDto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
 			try
 			{
-				var country = await _countryRepo.Get(id);
+				var country = await _countryRepo.GetById(id);
 				if (country == null)
 					return NotFound("Country not found.");
 
@@ -103,11 +103,11 @@ namespace SSAP.API.Controllers
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteCountry(Guid id)
+		public async Task<IActionResult> DeleteCountry(int id)
 		{
 			try
 			{
-				var deletedCountry = await _countryRepo.Delete(id);
+				var deletedCountry = await _countryRepo.DeleteById(id);
 				if (deletedCountry == null)
 					return NotFound("Country not found.");
 

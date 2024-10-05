@@ -38,11 +38,11 @@ namespace SSAP.API.Controllers
 		}
 
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetReviewById(Guid id)
+		public async Task<IActionResult> GetReviewById(int id)
 		{
 			try
 			{
-				var review = await _reviewRepo.Get(id);
+				var review = await _reviewRepo.GetById(id);
 				if (review == null)
 				{
 					return NotFound("Review not found.");
@@ -84,14 +84,14 @@ namespace SSAP.API.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateReview(Guid id, [FromBody] ReviewDTO reviewDto)
+		public async Task<IActionResult> UpdateReview(int id, [FromBody] ReviewDTO reviewDto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
 			try
 			{
-				var review = await _reviewRepo.Get(id);
+				var review = await _reviewRepo.GetById(id);
 				if (review == null)
 					return NotFound("Review not found.");
 
@@ -112,11 +112,11 @@ namespace SSAP.API.Controllers
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteReview(Guid id)
+		public async Task<IActionResult> DeleteReview(int id)
 		{
 			try
 			{
-				var deletedReview = await _reviewRepo.Delete(id);
+				var deletedReview = await _reviewRepo.DeleteById(id);
 				if (deletedReview == null)
 					return NotFound("Review not found.");
 

@@ -37,11 +37,11 @@ namespace SSAP.API.Controllers
 
 		// Get award by ID
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetAwardById(Guid id)
+		public async Task<IActionResult> GetAwardById(int id)
 		{
 			try
 			{
-				var award = await _awardRepo.Get(id);
+				var award = await _awardRepo.GetById(id);
 				if (award == null)
 				{
 					return NotFound("Award not found.");
@@ -85,14 +85,14 @@ namespace SSAP.API.Controllers
 
 		// Update existing award
 		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateAward(Guid id, [FromBody] AwardDTO awardDto)
+		public async Task<IActionResult> UpdateAward(int id, [FromBody] AwardDTO awardDto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
 			try
 			{
-				var award = await _awardRepo.Get(id);
+				var award = await _awardRepo.GetById(id);
 				if (award == null)
 					return NotFound("Award not found.");
 
@@ -114,11 +114,11 @@ namespace SSAP.API.Controllers
 
 		// Delete award by ID
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteAward(Guid id)
+		public async Task<IActionResult> DeleteAward(int id)
 		{
 			try
 			{
-				var deletedAward = await _awardRepo.Delete(id);
+				var deletedAward = await _awardRepo.DeleteById(id);
 				if (deletedAward == null)
 					return NotFound("Award not found.");
 

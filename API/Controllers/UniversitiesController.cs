@@ -35,11 +35,11 @@ namespace SSAP.API.Controllers
 		}
 
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetUniversityById(Guid id)
+		public async Task<IActionResult> GetUniversityById(int id)
 		{
 			try
 			{
-				var university = await _universityRepo.Get(id);
+				var university = await _universityRepo.GetById(id);
 				if (university == null)
 				{
 					return NotFound("University not found.");
@@ -80,14 +80,14 @@ namespace SSAP.API.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateUniversity(Guid id, [FromBody] UniversityDTO universityDto)
+		public async Task<IActionResult> UpdateUniversity(int id, [FromBody] UniversityDTO universityDto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
 			try
 			{
-				var university = await _universityRepo.Get(id);
+				var university = await _universityRepo.GetById(id);
 				if (university == null)
 					return NotFound("University not found.");
 
@@ -107,11 +107,11 @@ namespace SSAP.API.Controllers
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteUniversity(Guid id)
+		public async Task<IActionResult> DeleteUniversity(int id)
 		{
 			try
 			{
-				var deletedUniversity = await _universityRepo.Delete(id);
+				var deletedUniversity = await _universityRepo.DeleteById(id);
 				if (deletedUniversity == null)
 					return NotFound("University not found.");
 

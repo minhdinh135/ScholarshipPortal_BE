@@ -37,11 +37,11 @@ namespace SSAP.API.Controllers
 
 		// Get applicant profile by ID
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetApplicantProfileById(Guid id)
+		public async Task<IActionResult> GetApplicantProfileById(int id)
 		{
 			try
 			{
-				var profile = await _applicantProfileRepo.Get(id);
+				var profile = await _applicantProfileRepo.GetById(id);
 				if (profile == null)
 				{
 					return NotFound("Applicant profile not found.");
@@ -88,14 +88,14 @@ namespace SSAP.API.Controllers
 
 		// Update existing applicant profile
 		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateApplicantProfile(Guid id, [FromBody] ApplicantProfileDTO profileDto)
+		public async Task<IActionResult> UpdateApplicantProfile(int id, [FromBody] ApplicantProfileDTO profileDto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
 			try
 			{
-				var profile = await _applicantProfileRepo.Get(id);
+				var profile = await _applicantProfileRepo.GetById(id);
 				if (profile == null)
 					return NotFound("Applicant profile not found.");
 
@@ -120,11 +120,11 @@ namespace SSAP.API.Controllers
 
 		// Delete applicant profile by ID
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteApplicantProfile(Guid id)
+		public async Task<IActionResult> DeleteApplicantProfile(int id)
 		{
 			try
 			{
-				var deletedProfile = await _applicantProfileRepo.Delete(id);
+				var deletedProfile = await _applicantProfileRepo.DeleteById(id);
 				if (deletedProfile == null)
 					return NotFound("Applicant profile not found.");
 

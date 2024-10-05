@@ -37,11 +37,11 @@ namespace SSAP.API.Controllers
 		}
 
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetFeedbackById(Guid id)
+		public async Task<IActionResult> GetFeedbackById(int id)
 		{
 			try
 			{
-				var feedback = await _feedbackRepo.Get(id);
+				var feedback = await _feedbackRepo.GetById(id);
 				if (feedback == null)
 				{
 					return NotFound("Feedback not found.");
@@ -83,14 +83,14 @@ namespace SSAP.API.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateFeedback(Guid id, [FromBody] FeedbackDTO feedbackDto)
+		public async Task<IActionResult> UpdateFeedback(int id, [FromBody] FeedbackDTO feedbackDto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
 			try
 			{
-				var feedback = await _feedbackRepo.Get(id);
+				var feedback = await _feedbackRepo.GetById(id);
 				if (feedback == null)
 					return NotFound("Feedback not found.");
 
@@ -111,11 +111,11 @@ namespace SSAP.API.Controllers
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteFeedback(Guid id)
+		public async Task<IActionResult> DeleteFeedback(int id)
 		{
 			try
 			{
-				var deletedFeedback = await _feedbackRepo.Delete(id);
+				var deletedFeedback = await _feedbackRepo.DeleteById(id);
 				if (deletedFeedback == null)
 					return NotFound("Feedback not found.");
 

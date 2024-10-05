@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities;
 
-public class Criterion : BaseEntity
+public class Criteria : BaseEntity
 {
     public string? Title { get; set; }
     

@@ -37,11 +37,11 @@ namespace SSAP.API.Controllers
 
 		// Get document by ID
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetDocumentById(Guid id)
+		public async Task<IActionResult> GetDocumentById(int id)
 		{
 			try
 			{
-				var document = await _documentRepo.Get(id);
+				var document = await _documentRepo.GetById(id);
 				if (document == null)
 				{
 					return NotFound("Document not found.");
@@ -86,14 +86,14 @@ namespace SSAP.API.Controllers
 
 		// Update existing document
 		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateDocument(Guid id, [FromBody] DocumentDTO documentDto)
+		public async Task<IActionResult> UpdateDocument(int id, [FromBody] DocumentDTO documentDto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
 			try
 			{
-				var document = await _documentRepo.Get(id);
+				var document = await _documentRepo.GetById(id);
 				if (document == null)
 					return NotFound("Document not found.");
 
@@ -116,11 +116,11 @@ namespace SSAP.API.Controllers
 
 		// Delete document by ID
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteDocument(Guid id)
+		public async Task<IActionResult> DeleteDocument(int id)
 		{
 			try
 			{
-				var deletedDocument = await _documentRepo.Delete(id);
+				var deletedDocument = await _documentRepo.DeleteById(id);
 				if (deletedDocument == null)
 					return NotFound("Document not found.");
 

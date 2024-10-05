@@ -26,7 +26,7 @@ public class ScholarshipProgram : BaseEntity
     
     public ICollection<Application>? Applications { get; set; }
     
-    public ICollection<Criterion>? Criteria { get; set; }
+    public ICollection<Criteria>? Criteria { get; set; }
     
     public ICollection<Category>? Categories { get; }
     
