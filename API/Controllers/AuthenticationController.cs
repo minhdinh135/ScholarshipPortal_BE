@@ -1,12 +1,10 @@
 using Application.Interfaces.IServices;
-using Application.Services;
 using Domain.Constants;
 using Domain.DTOs.Account;
 using Domain.DTOs.Authentication;
 using Domain.DTOs.Role;
 using Domain.Entities;
 using Infrastructure.ExternalServices.Google;
-using Infrastructure.ExternalServices.Token;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +14,7 @@ namespace SSAP.API.Controllers;
 [ApiController]
 public class AuthenticationController : ControllerBase
 {
-    private readonly JwtService _jwtService;
+    private readonly ITokenService _jwtService;
     private readonly IGenericService<Account, AccountAddDTO, AccountUpdateDTO> _userService;
     private readonly IGenericService<Role, RoleAddDTO, RoleUpdateDTO> _roleService;
     private readonly IAuthService _authService;
@@ -24,7 +22,7 @@ public class AuthenticationController : ControllerBase
     private readonly IConfiguration _configuration;
     private readonly GoogleService _googleService;
 
-    public AuthenticationController(JwtService jwtService,
+    public AuthenticationController(ITokenService jwtService,
         IGenericService<Account, AccountAddDTO, AccountUpdateDTO> userService,
         IGenericService<Role, RoleAddDTO, RoleUpdateDTO> roleService,
         IConfiguration configuration,

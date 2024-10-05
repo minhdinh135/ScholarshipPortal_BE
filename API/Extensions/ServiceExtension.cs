@@ -31,6 +31,18 @@ public static class ServiceExtension
 
         services.AddScoped<IMajorService, MajorService>();
         services.AddScoped<IMajorRepository, MajorRepository>();
+        
+        services.AddScoped<IReviewService,ReviewService>();
+        services.AddScoped<ICountryService,CountryService>();
+        services.AddScoped<IAwardService, AwardService>();
+        services.AddScoped<IFeedbackService, FeedbackService>();
+        services.AddScoped<IApplicantProfileService, ApplicantProfileService>();
+        services.AddScoped<IUniversityService, UniversityService>();
+        services.AddScoped<IDocumentService, DocumentService>();
+        services.AddScoped<IAccountsService, AccountService>();
+        services.AddScoped<IRoleService, RoleService>();
+        services.AddScoped<IAchievementService, AchievementService>();
+        services.AddScoped<IApplicationService, ApplicationService>();
 
         services.AddHttpClient<GeminiService>();
         services.AddSingleton(sp => new GeminiService(

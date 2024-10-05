@@ -20,6 +20,8 @@ public class JwtService : ITokenService{
           new Claim(JwtRegisteredClaimNames.Iat
               , DateTime.UtcNow.ToString()),
           new Claim("id", account.Id.ToString()),
+          new Claim("username", account.Username.ToString()),
+          new Claim("fullname", account.FullName.ToString()),
           new Claim("email", account.Email),
           new Claim("role", role),
     };

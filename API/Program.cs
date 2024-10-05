@@ -47,7 +47,20 @@ builder.Services.AddSingleton<IMapper>(sp =>
 // Register services and inject dependencies
 builder.Services.AddApplicationServices(builder.Configuration);
 
-//Add Jwt for Swagger
+// //Add Jwt for Swagger
+// builder.Services.AddHttpClient<GeminiService>();
+// builder.Services.AddSingleton(sp => new GeminiService(
+//     sp.GetRequiredService<HttpClient>(),
+//     builder.Configuration["OpenAI:ApiKey"]??""
+// ));
+//
+// builder.Services.AddScoped<GoogleService>(s => new GoogleService(
+//       builder.Configuration["Google:ClientId"]??"",
+//       builder.Configuration["Google:ClientSecret"]??"",
+//       builder.Configuration["Google:RedirectUri"]??""
+//   ));
+
+//Add Jwt
 builder.Services.AddSwaggerGen(
     c =>
     {
@@ -88,8 +101,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = builder.Configuration["Jwt:Audience"],
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]
-                )),
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]??""
+            )),
             // RoleClaimType = "role",
             ValidateIssuer = true,
             ValidateAudience = true,

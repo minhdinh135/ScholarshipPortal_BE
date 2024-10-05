@@ -1,6 +1,7 @@
 ﻿namespace Domain.DTOs.Account;
 
 public record AccountUpdateDTO(
+    int Id,
     string? Username,
     string? FullName,
     string? PhoneNumber,
