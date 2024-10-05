@@ -67,6 +67,10 @@ builder.Services.AddScoped<IFeedbacksService, FeedbackService>();
 builder.Services.AddScoped<IApplicantProfileService, ApplicantProfileService>();
 builder.Services.AddScoped<IUniversityService, UniversityService>();
 builder.Services.AddScoped<IDocumentsService, DocumentsService>();
+builder.Services.AddScoped<IAccountsService, AccountsService>();
+builder.Services.AddScoped<IRolesService, RolesService>();
+builder.Services.AddScoped<IAchievementsService, AchievementsService>();
+builder.Services.AddScoped<IApplicationsService, ApplicationsService>();
 
 builder.Services.AddScoped<AuthService>();
 
@@ -77,13 +81,13 @@ builder.Services.AddScoped<ITokenService, JwtService>();
 builder.Services.AddHttpClient<GeminiService>();
 builder.Services.AddSingleton(sp => new GeminiService(
     sp.GetRequiredService<HttpClient>(),
-    builder.Configuration["OpenAI:ApiKey"]
+    builder.Configuration["OpenAI:ApiKey"]??""
 ));
 
 builder.Services.AddScoped<GoogleService>(s => new GoogleService(
-      builder.Configuration["Google:ClientId"],
-      builder.Configuration["Google:ClientSecret"],
-      builder.Configuration["Google:RedirectUri"]
+      builder.Configuration["Google:ClientId"]??"",
+      builder.Configuration["Google:ClientSecret"]??"",
+      builder.Configuration["Google:RedirectUri"]??""
   ));
 
 //Add Jwt
@@ -125,7 +129,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = builder.Configuration["Jwt:Audience"],
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]??""
             )),
             // RoleClaimType = "role",
             ValidateIssuer = true,

@@ -1,6 +1,7 @@
 using AutoMapper;
 using Domain.DTOs;
 using Domain.DTOs.Account;
+using Domain.DTOs.Achievement;
 using Domain.DTOs.Role;
 using Domain.DTOs.University;
 using Domain.Entities;
@@ -37,6 +38,10 @@ namespace Domain.Automapper
 
 			CreateMap<Country, AddCountryDTO>().ReverseMap();
 			CreateMap<Country, UpdateCountryDTO>().ReverseMap();
+
+			CreateMap<Achievement, AchievementAddDTO>().ReverseMap();
+			CreateMap<Achievement, AchievementUpdateDTO>().ReverseMap();
+
 		}
     }
 }
