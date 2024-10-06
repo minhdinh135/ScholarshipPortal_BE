@@ -9,10 +9,13 @@ using Domain.DTOs.Achievement;
 using Domain.DTOs.ApplicantProfile;
 using Domain.DTOs.Award;
 using Domain.DTOs.Country;
+using Domain.DTOs.Criteria;
 using Domain.DTOs.Document;
 using Domain.DTOs.Feedback;
+using Domain.DTOs.Major;
 using Domain.DTOs.Review;
 using Domain.DTOs.Role;
+using Domain.DTOs.ScholarshipProgram;
 using Domain.DTOs.University;
 using Domain.Entities;
 
@@ -74,6 +77,30 @@ namespace Domain.Automapper
             CreateMap<CreateCategoryRequest, Category>()
                 .IncludeBase<BaseCreateRequest, BaseEntity>();
             CreateMap<UpdateCategoryRequest, Category>()
+                .IncludeBase<BaseUpdateRequest, BaseEntity>();
+
+            CreateMap<Major, MajorDto>()
+                .IncludeBase<BaseEntity, BaseDto>()
+                .ReverseMap();
+            CreateMap<CreateMajorRequest, Major>()
+                .IncludeBase<BaseCreateRequest, BaseEntity>();
+            CreateMap<UpdateMajorRequest, Major>()
+                .IncludeBase<BaseUpdateRequest, BaseEntity>();
+
+            CreateMap<Criteria, CriteriaDto>()
+                .IncludeBase<BaseEntity, BaseDto>()
+                .ReverseMap();
+            CreateMap<CreateCriteriaRequest, Criteria>()
+                .IncludeBase<BaseCreateRequest, BaseEntity>();
+            CreateMap<UpdateCriteriaRequest, Criteria>()
+                .IncludeBase<BaseUpdateRequest, BaseEntity>();
+
+            CreateMap<ScholarshipProgram, ScholarshipProgramDto>()
+                .IncludeBase<BaseEntity, BaseDto>()
+                .ReverseMap();
+            CreateMap<CreateScholarshipProgramRequest, ScholarshipProgram>()
+                .IncludeBase<BaseCreateRequest, BaseEntity>();
+            CreateMap<UpdateScholarshipProgramRequest, ScholarshipProgram>()
                 .IncludeBase<BaseUpdateRequest, BaseEntity>();
 
             CreateMap<Achievement, AchievementAddDTO>().ReverseMap();

@@ -36,8 +36,6 @@ public class CategoryService : ICategoryService
 
         var createdCategory = await _categoryRepository.Add(category);
 
-        if (createdCategory == null) return null;
-
         return _mapper.Map<CategoryDto>(createdCategory);
     }
 
@@ -45,13 +43,9 @@ public class CategoryService : ICategoryService
     {
         var existingCategory = await _categoryRepository.GetById(id);
 
-        if (existingCategory == null) return null;
-
         _mapper.Map(updateCategoryRequest, existingCategory);
         
         var updatedCategory = await _categoryRepository.Update(existingCategory);
-
-        if (updatedCategory == null) return null;
 
         return _mapper.Map<CategoryDto>(updatedCategory);
     }
