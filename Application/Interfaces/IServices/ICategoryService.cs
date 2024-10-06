@@ -1,5 +1,4 @@
 ﻿using Domain.DTOs.Category;
-using Domain.Entities;
 
 namespace Application.Interfaces.IServices;
 
