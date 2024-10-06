@@ -1,12 +1,14 @@
 using Domain.DTOs.Account;
 using Domain.Entities;
 
-namespace Application.Interfaces.IServices;
-public interface IAccountService
+namespace Application.Interfaces.IServices
 {
-  Task<IEnumerable<Account>> GetAll();
-  Task<Account> Get(int keys);
-  Task<Account> Add(AccountAddDTO dto);
-  Task<Account> Update(AccountUpdateDTO dto);
-  Task<Account> Delete(int keys);
+	public interface IAccountsService
+	{
+		Task<IEnumerable<Account>> GetAll();
+		Task<Account> Get(int id);
+		Task<Account> Add(AccountAddDTO dto);
+		Task<Account> Update(AccountUpdateDTO dto);
+		Task<Account> Delete(int id);
+	}
 }

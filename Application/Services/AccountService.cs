@@ -1,60 +1,55 @@
-using Application.Helper;
 using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
 using Domain.DTOs.Account;
 using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 
-namespace Application.Services;
-public class AccountService : IAccountService
+namespace Application.Services
 {
-    private readonly IGenericRepository<Account> _accountRepository;
-    private readonly IMapper _mapper;
+	public class AccountService : IAccountsService
+	{
+		private readonly IGenericRepository<Account> _repository;
+		private readonly IMapper _mapper;
 
-    public AccountService(IMapper mapper, IGenericRepository<Account> accountRepository)
-    {
-        _accountRepository = accountRepository;
-        _mapper = mapper;
-    }
+		public AccountService(IGenericRepository<Account> repository, IMapper mapper)
+		{
+			_repository = repository;
+			_mapper = mapper;
+		}
 
-    public async Task<Account> Add(AccountAddDTO dto)
-    {
-        try{
-            var entity = _mapper.Map<Account>(dto);
-            await _accountRepository.Add(entity);
-            return entity;
-        }
-        catch (DbUpdateException ex)
-        {
-            throw new Exception(ErrorHandler.GetDbError(ex));
-        }
-    }
+		public async Task<Account> Add(AccountAddDTO dto)
+		{
+			var entity = _mapper.Map<Account>(dto);
+			await _repository.Add(entity);
+			return entity;
+		}
 
-    public async Task<Account> Delete(int keys)
-    {
-        var entity = await _accountRepository.Get(keys);
-        if (entity == null) return null;
-        await _accountRepository.Delete(keys);
-        return entity;
-    }
+		public async Task<Account> Delete(int id)
+		{
+			var entity = await _repository.GetById(id);
+			if (entity == null) return null;
+			await _repository.DeleteById(id);
+			return entity;
+		}
 
-    public async Task<Account> Get(int keys)
-    { 
-        var entity = await _accountRepository.Get(keys);     
-        return entity;
-    }
+		public async Task<Account> Get(int id)
+		{
+			return await _repository.GetById(id);
+		}
 
-    public async Task<IEnumerable<Account>> GetAll()
-    {
-        var entities = await _accountRepository.GetAll();
-        return entities;
-    }
+		public async Task<IEnumerable<Account>> GetAll()
+		{
+			return await _repository.GetAll();
+		}
 
-    public async Task<Account> Update(AccountUpdateDTO dto)
-    {
-        var entity = _mapper.Map<Account>(dto);
-        await _accountRepository.Update(entity);
-        return entity;
-    }
+		public async Task<Account> Update(AccountUpdateDTO dto)
+		{
+			var university = await _repository.GetAll();
+			var exist = university.Any(u => u.Id == dto.Id);
+			if (!exist) throw new Exception("Account not found.");
+			var entity = _mapper.Map<Account>(dto);
+			await _repository.Update(entity);
+			return entity;
+		}
+	}
 }

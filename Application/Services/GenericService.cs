@@ -31,9 +31,9 @@ public class GenericService<T, AD, UD> : IGenericService<T, AD, UD> where T : cl
 
   public async Task<T> Delete(params int[] keys)
   {
-    var entity = await _genericRepository.Get(keys);
+    var entity = await _genericRepository.GetById(keys);
     if (entity == null) return null;
-    await _genericRepository.Delete(keys);
+    await _genericRepository.DeleteById(keys);
     return entity;
   }
 
@@ -45,7 +45,7 @@ public class GenericService<T, AD, UD> : IGenericService<T, AD, UD> where T : cl
 
   public async Task<T> Get(params int[] keys)
   {
-    var entity = await _genericRepository.Get(keys);     
+    var entity = await _genericRepository.GetById(keys);     
     return entity;
   }
 
