@@ -272,7 +272,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Criterion", b =>
+            modelBuilder.Entity("Domain.Entities.Criteria", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -654,7 +654,7 @@ namespace Infrastructure.Migrations
                     b.Navigation("Application");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Criterion", b =>
+            modelBuilder.Entity("Domain.Entities.Criteria", b =>
                 {
                     b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
                         .WithMany("Criteria")

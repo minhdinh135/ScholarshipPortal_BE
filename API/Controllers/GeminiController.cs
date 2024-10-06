@@ -2,7 +2,7 @@ using Infrastructure.ExternalServices.Gemini;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SSAP.API.Controllers;
-[Route("api/[controller]")]
+[Route("api/gemini")]
 [ApiController]
 public class GeminiController : ControllerBase
 {
