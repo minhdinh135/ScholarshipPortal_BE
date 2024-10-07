@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using AutoMapper;
+using CloudinaryDotNet;
 using Domain.Automapper;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -42,6 +43,17 @@ builder.Services.AddSingleton<IMapper>(sp =>
     });
 
     return config.CreateMapper();
+});
+
+// Configure Cloudinary account from appsettings
+builder.Services.AddSingleton(_ =>
+{
+    var cloudinarySettings = builder.Configuration.GetSection("Cloudinary");
+    return new Cloudinary(new Account(
+        cloudinarySettings["CloudName"],
+        cloudinarySettings["ApiKey"],
+        cloudinarySettings["ApiSecret"]
+    ));
 });
 
 // Register services and inject dependencies
