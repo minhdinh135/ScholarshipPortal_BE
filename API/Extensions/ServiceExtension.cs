@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using Application.Services;
+using Infrastructure.ExternalServices.Cloudnary;
 using Infrastructure.ExternalServices.Gemini;
 using Infrastructure.ExternalServices.Google;
 using Infrastructure.ExternalServices.Password;
@@ -55,6 +56,8 @@ public static class ServiceExtension
             config.GetSection("Google").GetSection("ClientSecret").Value ?? string.Empty,
             config.GetSection("Google").GetSection("RedirectUri").Value ?? string.Empty
         ));
+
+        services.AddScoped<CloudinaryService>();
         
         return services;
     }

@@ -4,5 +4,4 @@ namespace Application.Interfaces.IRepositories;
 
 public interface ICriteriaRepository : IGenericRepository<Criteria>
 {
-    
 }
