@@ -1,8 +1,12 @@
 using System.Text;
 using System.Text.Json.Serialization;
+using Application.Common;
+using Application.Validators.Category;
 using AutoMapper;
 using CloudinaryDotNet;
 using Domain.Automapper;
+using Domain.DTOs.Category;
+using FluentValidation;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -33,17 +37,21 @@ builder.Services.Configure<ApiBehaviorOptions>(options
 builder.Services.AddDbContext<ScholarshipContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("Db") ?? string.Empty));
 
-//Add autoMapper
-builder.Services.AddSingleton<IMapper>(sp =>
-{
-    var config = new MapperConfiguration(cfg =>
-    {
-        // Configure your mapping profiles
-        cfg.AddProfile<MappingProfile>();
-    });
+//Add AutoMapper
+// builder.Services.AddSingleton<IMapper>(sp =>
+// {
+//     var config = new MapperConfiguration(cfg =>
+//     {
+//         // Configure your mapping profiles
+//         cfg.AddProfile<MappingProfile>();
+//     });
+//
+//     return config.CreateMapper();
+// });
+builder.Services.AddMapperServices();
 
-    return config.CreateMapper();
-});
+// Add FluentValidation validators
+builder.Services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
 
 // Configure Cloudinary account from appsettings
 builder.Services.AddSingleton(_ =>
@@ -58,19 +66,6 @@ builder.Services.AddSingleton(_ =>
 
 // Register services and inject dependencies
 builder.Services.AddApplicationServices(builder.Configuration);
-
-// //Add Jwt for Swagger
-// builder.Services.AddHttpClient<GeminiService>();
-// builder.Services.AddSingleton(sp => new GeminiService(
-//     sp.GetRequiredService<HttpClient>(),
-//     builder.Configuration["OpenAI:ApiKey"]??""
-// ));
-//
-// builder.Services.AddScoped<GoogleService>(s => new GoogleService(
-//       builder.Configuration["Google:ClientId"]??"",
-//       builder.Configuration["Google:ClientSecret"]??"",
-//       builder.Configuration["Google:RedirectUri"]??""
-//   ));
 
 //Add Jwt
 builder.Services.AddSwaggerGen(

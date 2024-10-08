@@ -1,7 +1,10 @@
-﻿using Application.Interfaces.IServices;
+﻿using Application.Helper;
+using Application.Interfaces.IServices;
 using Domain.DTOs.Category;
 using Domain.DTOs.Common;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using ValidationResult = FluentValidation.Results.ValidationResult;
 
 namespace SSAP.API.Controllers;
 
@@ -15,13 +18,22 @@ public class CategoryController : ControllerBase
     {
         _categoryService = categoryService;
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> GetAllCategories()
     {
         var allCategories = await _categoryService.GetAllCategories();
-        
+
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all categories successfully", allCategories));
+    }
+
+    [HttpGet("paginated")]
+    public async Task<IActionResult> GetCategories([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10,
+        [FromQuery] string sortBy = default, [FromQuery] string sortOrder = default)
+    {
+        var categories = await _categoryService.GetCategories(pageIndex, pageSize, sortBy, sortOrder);
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get categories successfully", categories));
     }
 
     [HttpGet("{id}")]
@@ -36,25 +48,46 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequest createCategoryRequest)
+    public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequest createCategoryRequest,
+        [FromServices] IValidator<CreateCategoryRequest> validator)
     {
+        ValidationResult validationResult = validator.Validate(createCategoryRequest);
+
+        if (!validationResult.IsValid)
+        {
+            var modelStateDictionary = ModelStateHelper.AddErrors(validationResult);
+
+            return ValidationProblem(modelStateDictionary);
+        }
+
         var createdCategory = await _categoryService.CreateCategory(createCategoryRequest);
 
         if (createdCategory == null)
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Create category failed", null));
 
-        return Created("/api/categories/" + createdCategory.Id, new ApiResponse(StatusCodes.Status201Created, "Create category successfully", createdCategory));
+        return Created("/api/categories/" + createdCategory.Id,
+            new ApiResponse(StatusCodes.Status201Created, "Create category successfully", createdCategory));
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateCategory([FromRoute] int id,
-        [FromBody] UpdateCategoryRequest updateCategoryRequest)
+        [FromBody] UpdateCategoryRequest updateCategoryRequest,
+        [FromServices] IValidator<UpdateCategoryRequest> validator)
     {
+        ValidationResult validationResult = validator.Validate(updateCategoryRequest);
+
+        if (!validationResult.IsValid)
+        {
+            var modelStateDictionary = ModelStateHelper.AddErrors(validationResult);
+
+            return ValidationProblem(modelStateDictionary);
+        }
+
         var updatedCategory = await _categoryService.UpdateCategory(id, updateCategoryRequest);
 
         if (updatedCategory == null)
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Update category failed", null));
-        
+
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Update category successfully", updatedCategory));
     }
 

@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
+using Domain.DTOs.Common;
 using Domain.DTOs.Major;
 using Domain.Entities;
 
@@ -22,6 +23,13 @@ public class MajorService : IMajorService
         var allMajors = await _majorRepository.GetAll();
 
         return _mapper.Map<IEnumerable<MajorDto>>(allMajors);
+    }
+
+    public async Task<PaginatedList<MajorDto>> GetMajors(int pageIndex, int pageSize, string sortBy, string sortOrder)
+    {
+        var majors = await _majorRepository.GetPaginatedList(pageIndex, pageSize, sortBy, sortOrder);
+
+        return _mapper.Map<PaginatedList<MajorDto>>(majors);
     }
 
     public async Task<MajorDto> GetMajorById(int id)

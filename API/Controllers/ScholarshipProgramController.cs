@@ -1,6 +1,9 @@
-﻿using Application.Interfaces.IServices;
+﻿using Application.Helper;
+using Application.Interfaces.IServices;
 using Domain.DTOs.Common;
 using Domain.DTOs.ScholarshipProgram;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SSAP.API.Controllers;
@@ -25,6 +28,18 @@ public class ScholarshipProgramController : ControllerBase
             allScholarshipPrograms));
     }
 
+    [HttpGet("paginated")]
+    public async Task<IActionResult> GetScholarshipPrograms([FromQuery] int pageIndex = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string sortBy = default, [FromQuery] string sortOrder = default)
+    {
+        var scholarshipPrograms =
+            await _scholarshipProgramService.GetScholarshipPrograms(pageIndex, pageSize, sortBy, sortOrder);
+
+        return Ok(
+            new ApiResponse(StatusCodes.Status200OK, "Get scholarship programs successfully", scholarshipPrograms));
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetScholarshipProgramById([FromRoute] int id)
     {
@@ -39,8 +54,18 @@ public class ScholarshipProgramController : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> CreateScholarshipProgram(
-        [FromBody] CreateScholarshipProgramRequest createScholarshipProgramRequest)
+        [FromBody] CreateScholarshipProgramRequest createScholarshipProgramRequest,
+        [FromServices] IValidator<CreateScholarshipProgramRequest> validator)
     {
+        ValidationResult validationResult = validator.Validate(createScholarshipProgramRequest);
+
+        if (!validationResult.IsValid)
+        {
+            var modelStateDictionary = ModelStateHelper.AddErrors(validationResult);
+
+            return ValidationProblem(modelStateDictionary);
+        }
+
         var createdScholarshipProgram =
             await _scholarshipProgramService.CreateScholarshipProgram(createScholarshipProgramRequest);
 
@@ -55,8 +80,18 @@ public class ScholarshipProgramController : ControllerBase
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateScholarshipProgram([FromRoute] int id,
-        [FromBody] UpdateScholarshipProgramRequest updateScholarshipProgramRequest)
+        [FromBody] UpdateScholarshipProgramRequest updateScholarshipProgramRequest,
+        [FromServices] IValidator<UpdateScholarshipProgramRequest> validator)
     {
+        ValidationResult validationResult = validator.Validate(updateScholarshipProgramRequest);
+
+        if (!validationResult.IsValid)
+        {
+            var modelStateDictionary = ModelStateHelper.AddErrors(validationResult);
+
+            return ValidationProblem(modelStateDictionary);
+        }
+
         var updatedScholarshipProgram =
             await _scholarshipProgramService.UpdateScholarshipProgram(id, updateScholarshipProgramRequest);
 
