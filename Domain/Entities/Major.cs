@@ -6,5 +6,5 @@ public class Major : BaseEntity
     
     public string? Description { get; set; }
     
-    public ICollection<ScholarshipProgram>? ScholarshipPrograms { get; }
+    public ICollection<ScholarshipProgramMajor>? ScholarshipProgramMajors { get; set; }
 }

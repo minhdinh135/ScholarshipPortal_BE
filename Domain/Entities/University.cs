@@ -12,5 +12,5 @@ public class University : BaseEntity
    
     public Country? Country { get; set; }
     
-    public ICollection<ScholarshipProgram>? ScholarshipPrograms { get; }
+    public ICollection<ScholarshipProgramUniversity>? ScholarshipProgramUniversities { get; set; }
 }
