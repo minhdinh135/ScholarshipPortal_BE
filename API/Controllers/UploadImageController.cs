@@ -1,5 +1,5 @@
 using Domain.DTOs.UploadImage;
-using Infrastructure.ExternalServices.Cloudnary;
+using Infrastructure.ExternalServices.Cloudinary;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SSAP.API.Controllers

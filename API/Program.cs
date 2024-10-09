@@ -147,6 +147,24 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ScholarshipContext>();
+    var logger = services.GetService<ILogger<Program>>();
+
+    try
+    {
+        await context.Database.MigrateAsync();
+        await ScholarshipContextSeed.SeedAsync(context);
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred during migration or seeding.");
+    }
+}
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

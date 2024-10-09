@@ -2,12 +2,12 @@ using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Domain.DTOs.UploadImage;
 
-namespace Infrastructure.ExternalServices.Cloudnary;
+namespace Infrastructure.ExternalServices.Cloudinary;
 public class CloudinaryService
 {
-  private readonly Cloudinary _cloudinary;
+  private readonly CloudinaryDotNet.Cloudinary _cloudinary;
 
-  public CloudinaryService(Cloudinary cloudinary)
+  public CloudinaryService(CloudinaryDotNet.Cloudinary cloudinary)
   {
     _cloudinary = cloudinary;
   }
