@@ -45,6 +45,12 @@ public class ScholarshipContext : DbContext
 
     public virtual DbSet<Major> Majors { get; set; }
 
+    public virtual DbSet<ScholarshipProgramCategory> ScholarshipProgramCategories { get; set; }
+
+    public virtual DbSet<ScholarshipProgramUniversity> ScholarshipProgramUniversities { get; set; }
+
+    public virtual DbSet<ScholarshipProgramMajor> ScholarshipProgramMajors { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         IConfigurationRoot configuration = new ConfigurationBuilder()
@@ -68,6 +74,15 @@ public class ScholarshipContext : DbContext
 
         modelBuilder.Entity<ScholarshipProgram>()
             .ToTable("scholarship_programs");
+
+        modelBuilder.Entity<ScholarshipProgramCategory>()
+            .ToTable("scholarship_program_categories");
+
+        modelBuilder.Entity<ScholarshipProgramUniversity>()
+            .ToTable("scholarship_program_universities");
+
+        modelBuilder.Entity<ScholarshipProgramMajor>()
+            .ToTable("scholarship_program_majors");
 
         // Configure relationships
         modelBuilder.Entity<Account>()
@@ -148,20 +163,51 @@ public class ScholarshipContext : DbContext
             .HasForeignKey(scholarshipProgram => scholarshipProgram.ProviderId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<ScholarshipProgram>()
-            .HasMany(scholarshipProgram => scholarshipProgram.Categories)
-            .WithMany(category => category.ScholarshipPrograms)
-            .UsingEntity("scholarship_program_category");
+        modelBuilder.Entity<ScholarshipProgramCategory>(entity =>
+        {
+            entity.HasKey(spc => new { spc.ScholarshipProgramId, spc.CategoryId });
 
-        modelBuilder.Entity<ScholarshipProgram>()
-            .HasMany(scholarshipProgram => scholarshipProgram.Universities)
-            .WithMany(university => university.ScholarshipPrograms)
-            .UsingEntity("scholarship_program_university");
+            entity.HasOne(spc => spc.ScholarshipProgram)
+                .WithMany(sp => sp.ScholarshipProgramCategories)
+                .HasForeignKey(spc => spc.ScholarshipProgramId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<ScholarshipProgram>()
-            .HasMany(scholarshipProgram => scholarshipProgram.Majors)
-            .WithMany(major => major.ScholarshipPrograms)
-            .UsingEntity("scholarship_program_major");
+            entity.HasOne(spc => spc.Category)
+                .WithMany(c => c.ScholarshipProgramCategories)
+                .HasForeignKey(spc => spc.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+
+        modelBuilder.Entity<ScholarshipProgramUniversity>(entity =>
+        {
+            entity.HasKey(spu => new { spu.ScholarshipProgramId, spu.UniversityId });
+
+            entity.HasOne(spu => spu.ScholarshipProgram)
+                .WithMany(sp => sp.ScholarshipProgramUniversities)
+                .HasForeignKey(spu => spu.ScholarshipProgramId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(spu => spu.University)
+                .WithMany(u => u.ScholarshipProgramUniversities)
+                .HasForeignKey(spu => spu.UniversityId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<ScholarshipProgramMajor>(entity =>
+        {
+            entity.HasKey(spm => new { spm.ScholarshipProgramId, spm.MajorId });
+
+            entity.HasOne(spm => spm.ScholarshipProgram)
+                .WithMany(sp => sp.ScholarshipProgramMajors)
+                .HasForeignKey(spm => spm.ScholarshipProgramId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(spm => spm.Major)
+                .WithMany(m => m.ScholarshipProgramMajors)
+                .HasForeignKey(spm => spm.MajorId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
 
         modelBuilder.Entity<Feedback>()
             .HasOne(feedback => feedback.Funder)

@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
+using Domain.DTOs.Common;
 using Domain.DTOs.Criteria;
 using Domain.Entities;
 
@@ -22,6 +23,13 @@ public class CriteriaService : ICriteriaService
         var allCriteria = await _criteriaRepository.GetAll();
 
         return _mapper.Map<IEnumerable<CriteriaDto>>(allCriteria);
+    }
+
+    public async Task<PaginatedList<CriteriaDto>> GetCriteria(int pageIndex, int pageSize, string sortBy, string sortOrder)
+    {
+        var criteria = await _criteriaRepository.GetPaginatedList(pageIndex, pageSize, sortBy, sortOrder);
+
+        return _mapper.Map<PaginatedList<CriteriaDto>>(criteria);
     }
 
     public async Task<CriteriaDto> GetCriteriaById(int id)

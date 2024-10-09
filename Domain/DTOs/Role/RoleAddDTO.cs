@@ -1,13 +1,14 @@
-﻿namespace Domain.DTOs.Role;
+﻿using System.ComponentModel.DataAnnotations;
 
-public record RoleAddDTO(
-    string? Name,
-    DateTime? CreatedAt,
-    DateTime? UpdatedAt,
-    string? Status
-);
+namespace Domain.DTOs.Role;
 
-// public class RoleAddDTO
-// {
-//     public string? Name { get; set; }
-// }
+public class RoleAddDTO{
+    [Required]
+    public string? Name { get; set; }
+
+    public DateTime? CreatedAt { get; set; } = DateTime.Now;
+
+    public DateTime? UpdatedAt { get; set; } = DateTime.Now;
+
+    public string? Status { get; set; }
+}

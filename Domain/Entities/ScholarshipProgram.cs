@@ -28,9 +28,9 @@ public class ScholarshipProgram : BaseEntity
     
     public ICollection<Criteria>? Criteria { get; set; }
     
-    public ICollection<Category>? Categories { get; }
+    public ICollection<ScholarshipProgramCategory>? ScholarshipProgramCategories { get; set; }
     
-    public ICollection<University>? Universities { get; }
+    public ICollection<ScholarshipProgramUniversity>? ScholarshipProgramUniversities { get; set; }
     
-    public ICollection<Major>? Majors { get; }
+    public ICollection<ScholarshipProgramMajor>? ScholarshipProgramMajors { get; set; }
 }

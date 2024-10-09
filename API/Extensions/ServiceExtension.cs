@@ -1,7 +1,7 @@
 ﻿using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using Application.Services;
-using Infrastructure.ExternalServices.Cloudnary;
+using Infrastructure.ExternalServices.Cloudinary;
 using Infrastructure.ExternalServices.Gemini;
 using Infrastructure.ExternalServices.Google;
 using Infrastructure.ExternalServices.Password;

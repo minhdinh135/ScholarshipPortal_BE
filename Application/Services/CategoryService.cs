@@ -2,6 +2,7 @@
 using Application.Interfaces.IServices;
 using AutoMapper;
 using Domain.DTOs.Category;
+using Domain.DTOs.Common;
 using Domain.Entities;
 
 namespace Application.Services;
@@ -21,6 +22,13 @@ public class CategoryService : ICategoryService
         var allCategories = await _categoryRepository.GetAll();
 
          return _mapper.Map<IEnumerable<CategoryDto>>(allCategories);
+    }
+
+    public async Task<PaginatedList<CategoryDto>> GetCategories(int pageIndex, int pageSize, string sortBy, string sortOrder)
+    {
+        var categories = await _categoryRepository.GetPaginatedList(pageIndex, pageSize, sortBy, sortOrder);
+
+        return _mapper.Map<PaginatedList<CategoryDto>>(categories);
     }
 
     public async Task<CategoryDto> GetCategoryById(int id)

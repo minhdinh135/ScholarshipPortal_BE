@@ -54,12 +54,12 @@ public class AuthService : IAuthService
             if (roles.Count() == 0)
             {
                 await _roleService.Add(new RoleAddDTO
-                (
-                    RoleEnum.APPLICANT,
-                    DateTime.Now,
-                    DateTime.Now,
-                    StatusEnum.ACTIVE
-                ));
+                {
+                    Name = RoleEnum.APPLICANT,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
+                    Status = StatusEnum.ACTIVE
+                });
                 JwtDTO token = _tokenService.CreateToken(_configuration, userLogin, RoleEnum.APPLICANT);
                 return token;
             }
@@ -97,12 +97,12 @@ public class AuthService : IAuthService
         if (roles.Count() == 0)
         {
             await _roleService.Add(new RoleAddDTO
-            (
-                RoleEnum.APPLICANT,
-                DateTime.Now,
-                DateTime.Now,
-                StatusEnum.ACTIVE
-            ));
+            {
+                Name = RoleEnum.APPLICANT,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                Status = StatusEnum.ACTIVE
+            });
         }
 
         //Get roles
@@ -110,20 +110,20 @@ public class AuthService : IAuthService
         roles = roles.Where(r => r.Name == RoleEnum.APPLICANT).ToList();
 
         var userDTO = new AccountAddDTO
-        (
-            register.Username,
-            register.FullName,
-            register.PhoneNumber,
-            register.Email,
-            _passwordService.HashPassword(register.Password),
-            register.Address,
-            register.Avatar,
-            register.Gender,
-            roles.FirstOrDefault()?.Id,
-            DateTime.Now,
-            DateTime.Now,
-            StatusEnum.ACTIVE
-        );
+        {
+            Username = register.Username,
+            FullName = register.FullName,
+            PhoneNumber = register.PhoneNumber,
+            Email = register.Email,
+            HashedPassword = _passwordService.HashPassword(register.Password),
+            Address = register.Address,
+            Avatar = register.Avatar,
+            Gender = register.Gender,
+            RoleId = roles.FirstOrDefault()?.Id,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now,
+            Status = StatusEnum.ACTIVE
+        };
         var user = await _userService.Add(userDTO);
         JwtDTO token = _tokenService.CreateToken(_configuration, user, RoleEnum.APPLICANT);
 
@@ -153,32 +153,32 @@ public class AuthService : IAuthService
         roles = roles.Where(r => r.Name == RoleEnum.APPLICANT).ToList();
         if (roles.Count() == 0)
         {
-            await _roleService.Add(new RoleAddDTO(
-                RoleEnum.APPLICANT,
-                DateTime.Now,
-                DateTime.Now,
-                StatusEnum.ACTIVE)
-            );
+            await _roleService.Add(new RoleAddDTO{
+                Name = RoleEnum.APPLICANT,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                Status = StatusEnum.ACTIVE
+            });
         }
 
         //Get roles
         roles = await _roleService.GetAll();
         roles = roles.Where(r => r.Name == RoleEnum.APPLICANT).ToList();
 
-        var userDTO = new AccountAddDTO(
-            userInfo.Name,
-            userInfo.Name,
-            "",
-            userInfo.Email,
-            _passwordService.HashPassword(_passwordService.GeneratePassword()),
-            "",
-            userInfo.Picture,
-            "",
-            roles.FirstOrDefault()?.Id,
-            DateTime.Now,
-            DateTime.Now,
-            StatusEnum.ACTIVE
-        );
+        var userDTO = new AccountAddDTO{
+            Username = userInfo.Name,
+            FullName = userInfo.Name,
+            PhoneNumber = "",
+            Email = userInfo.Email,
+            HashedPassword = _passwordService.HashPassword(_passwordService.GeneratePassword()),
+            Address = "",
+            Avatar = userInfo.Picture,
+            Gender = "",
+            RoleId = roles.FirstOrDefault()?.Id,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now,
+            Status = StatusEnum.ACTIVE
+        };
         var user = await _userService.Add(userDTO);
         JwtDTO jwt1 = _tokenService.CreateToken(_configuration, user, RoleEnum.APPLICANT);
 
