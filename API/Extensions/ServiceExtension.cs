@@ -44,8 +44,9 @@ public static class ServiceExtension
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IAchievementService, AchievementService>();
         services.AddScoped<IApplicationService, ApplicationService>();
+		services.AddScoped<IEmailService, EmailService>();
 
-        services.AddHttpClient<GeminiService>();
+		services.AddHttpClient<GeminiService>();
         services.AddSingleton(sp => new GeminiService(
             sp.GetRequiredService<HttpClient>(),
             config.GetSection("OpenAI").GetSection("ApiKey").Value ?? string.Empty
