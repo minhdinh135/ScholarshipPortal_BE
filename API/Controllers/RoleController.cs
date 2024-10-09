@@ -1,4 +1,5 @@
 using Application.Interfaces.IServices;
+using Domain.DTOs.Common;
 using Domain.DTOs.Role;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +32,15 @@ namespace SSAP.API.Controllers
 				return StatusCode(500, "Error retrieving data from the database.");
 			}
 		}
+
+    [HttpGet("paginated")]
+    public async Task<IActionResult> GetAll([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10,
+        [FromQuery] string sortBy = default, [FromQuery] string sortOrder = default)
+    {
+        var categories = await _roleService.GetAll(pageIndex, pageSize, sortBy, sortOrder);
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get roles successfully", categories));
+    }
 
 		[HttpGet("{id}")]
 		public async Task<IActionResult> Get(int id)

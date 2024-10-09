@@ -1,14 +1,15 @@
 using Domain.DTOs.Application;
-using Domain.Entities;
+using Domain.DTOs.Common;
 
 namespace Application.Interfaces.IServices
 {
 	public interface IApplicationService
 	{
-		Task<IEnumerable<Domain.Entities.Application>> GetAll();
-		Task<Domain.Entities.Application> Get(int id);
-		Task<Domain.Entities.Application> Add(ApplicationAddDTO dto);
-		Task<Domain.Entities.Application> Update(ApplicationUpdateDTO dto);
-		Task<Domain.Entities.Application> Delete(int id);
+		Task<IEnumerable<ApplicationDTO>> GetAll();
+    Task<PaginatedList<ApplicationDTO>> GetAll(int pageIndex, int pageSize, string sortBy, string sortOrder);
+		Task<ApplicationDTO> Get(int id);
+		Task<ApplicationDTO> Add(ApplicationAddDTO dto);
+		Task<ApplicationDTO> Update(ApplicationUpdateDTO dto);
+		Task<ApplicationDTO> Delete(int id);
 	}
 }
