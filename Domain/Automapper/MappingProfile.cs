@@ -2,6 +2,7 @@ using AutoMapper;
 using Domain.DTOs.Account;
 using Domain.DTOs.Achievement;
 using Domain.DTOs.ApplicantProfile;
+using Domain.DTOs.Application;
 using Domain.DTOs.Award;
 using Domain.DTOs.Country;
 using Domain.DTOs.Document;
@@ -19,9 +20,11 @@ namespace Domain.Automapper
         {
             CreateMap<Account, AccountAddDTO>().ReverseMap();
             CreateMap<Account, AccountUpdateDTO>().ReverseMap();
+            CreateMap<Account, AccountDTO>().ReverseMap();
 
             CreateMap<Role, RoleAddDTO>().ReverseMap();
             CreateMap<Role, RoleUpdateDTO>().ReverseMap();
+            CreateMap<Role, RoleDTO>().ReverseMap();
 
             CreateMap<Review, AddReviewDTO>().ReverseMap();
             CreateMap<Review, UpdateReviewDTO>().ReverseMap();
@@ -47,6 +50,11 @@ namespace Domain.Automapper
 
             CreateMap<Achievement, AchievementAddDTO>().ReverseMap();
             CreateMap<Achievement, AchievementUpdateDTO>().ReverseMap();
+            CreateMap<Achievement, AchievementDTO>().ReverseMap();
+
+            CreateMap<Application, ApplicationAddDTO>().ReverseMap();
+            CreateMap<Application, ApplicationUpdateDTO>().ReverseMap();
+            CreateMap<Application, ApplicationDTO>().ReverseMap();
         }
     }
 }

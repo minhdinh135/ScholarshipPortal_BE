@@ -1,14 +1,12 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Domain.DTOs.Application;
 
-public class ApplicationAddDTO{
+public class ApplicationDTO{
+    public int Id { get; set; }
+
     public DateTime? AppliedDate { get; set; }
 
-    [Required]
     public int ApplicantId { get; set; }
 
-    [Required]
     public int ScholarshipProgramId { get; set; }
 
     public DateTime? CreatedAt { get; set; } = DateTime.Now;
