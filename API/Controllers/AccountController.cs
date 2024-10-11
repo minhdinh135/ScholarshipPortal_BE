@@ -33,7 +33,22 @@ namespace SSAP.API.Controllers
 			}
 		}
 
-    [HttpGet("paginated")]
+		[HttpGet("with-role")]
+		public async Task<IActionResult> GetAllWithRole()
+		{
+			try
+			{
+				var profiles = await _accountService.GetAllWithRole();
+				return Ok(profiles);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Failed to get all applicant profiles: {ex.Message}");
+				return StatusCode(500, "Error retrieving data from the database.");
+			}
+		}
+
+		[HttpGet("paginated")]
     public async Task<IActionResult> GetAll([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10,
         [FromQuery] string sortBy = default, [FromQuery] string sortOrder = default)
     {
