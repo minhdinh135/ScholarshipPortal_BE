@@ -4,6 +4,7 @@ using AutoMapper;
 using Domain.DTOs.Account;
 using Domain.DTOs.Common;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
 {
@@ -46,7 +47,35 @@ namespace Application.Services
       return _mapper.Map<IEnumerable<AccountDTO>>(entities);
 		}
 
-    public async Task<PaginatedList<AccountDTO>> GetAll(int pageIndex, int pageSize, string sortBy, string sortOrder)
+
+		public async Task<IEnumerable<AccountWithRoleDTO>> GetAllWithRole()
+		{
+			var entities = await _repository.GetAll(x => x.Include(x => x.Role));
+			List<AccountWithRoleDTO> res = new();
+            foreach (var acc in entities)
+            {
+				res.Add(new AccountWithRoleDTO
+				{
+					Id = acc.Id,
+					Username = acc.Username,
+					FullName = acc.FullName,
+					PhoneNumber = acc.PhoneNumber,
+					Email = acc.Email,
+					HashedPassword = acc.HashedPassword,
+					Address = acc.Address,
+					Avatar = acc.Avatar,
+					Gender = acc.Gender,
+					RoleId = acc.RoleId,
+					RoleName = acc.Role!=null ? acc.Role.Name : "",
+					CreatedAt = acc.CreatedAt,
+					UpdatedAt = acc.UpdatedAt,
+					Status = acc.Status,
+	});
+            }
+            return res;
+		}
+
+		public async Task<PaginatedList<AccountDTO>> GetAll(int pageIndex, int pageSize, string sortBy, string sortOrder)
     {
         var categories = await _repository.GetPaginatedList(pageIndex, pageSize, sortBy, sortOrder);
 
