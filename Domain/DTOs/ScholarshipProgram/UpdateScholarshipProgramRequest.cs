@@ -19,4 +19,10 @@ public class UpdateScholarshipProgramRequest : BaseUpdateRequest
     public int? FunderId { get; set; }
 
     public int? ProviderId { get; set; }
+    
+    public List<int>? CategoryIds { get; set; }
+    
+    public List<int>? UniversityIds { get; set; } 
+    
+    public List<int>? MajorIds { get; set; }
 }

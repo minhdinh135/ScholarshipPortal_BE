@@ -518,6 +518,51 @@ namespace Infrastructure.Migrations
                     b.ToTable("scholarship_programs", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.ScholarshipProgramCategory", b =>
+                {
+                    b.Property<int?>("ScholarshipProgramId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ScholarshipProgramId", "CategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("scholarship_program_categories", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.ScholarshipProgramMajor", b =>
+                {
+                    b.Property<int?>("ScholarshipProgramId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MajorId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ScholarshipProgramId", "MajorId");
+
+                    b.HasIndex("MajorId");
+
+                    b.ToTable("scholarship_program_majors", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.ScholarshipProgramUniversity", b =>
+                {
+                    b.Property<int?>("ScholarshipProgramId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UniversityId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ScholarshipProgramId", "UniversityId");
+
+                    b.HasIndex("UniversityId");
+
+                    b.ToTable("scholarship_program_universities", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entities.University", b =>
                 {
                     b.Property<int>("Id")
@@ -550,51 +595,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("CountryId");
 
                     b.ToTable("Universities");
-                });
-
-            modelBuilder.Entity("scholarship_program_category", b =>
-                {
-                    b.Property<int>("CategoriesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ScholarshipProgramsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CategoriesId", "ScholarshipProgramsId");
-
-                    b.HasIndex("ScholarshipProgramsId");
-
-                    b.ToTable("scholarship_program_category");
-                });
-
-            modelBuilder.Entity("scholarship_program_major", b =>
-                {
-                    b.Property<int>("MajorsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ScholarshipProgramsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MajorsId", "ScholarshipProgramsId");
-
-                    b.HasIndex("ScholarshipProgramsId");
-
-                    b.ToTable("scholarship_program_major");
-                });
-
-            modelBuilder.Entity("scholarship_program_university", b =>
-                {
-                    b.Property<int>("ScholarshipProgramsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UniversitiesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ScholarshipProgramsId", "UniversitiesId");
-
-                    b.HasIndex("UniversitiesId");
-
-                    b.ToTable("scholarship_program_university");
                 });
 
             modelBuilder.Entity("Domain.Entities.Account", b =>
@@ -725,6 +725,63 @@ namespace Infrastructure.Migrations
                     b.Navigation("Provider");
                 });
 
+            modelBuilder.Entity("Domain.Entities.ScholarshipProgramCategory", b =>
+                {
+                    b.HasOne("Domain.Entities.Category", "Category")
+                        .WithMany("ScholarshipProgramCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
+                        .WithMany("ScholarshipProgramCategories")
+                        .HasForeignKey("ScholarshipProgramId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("ScholarshipProgram");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ScholarshipProgramMajor", b =>
+                {
+                    b.HasOne("Domain.Entities.Major", "Major")
+                        .WithMany("ScholarshipProgramMajors")
+                        .HasForeignKey("MajorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
+                        .WithMany("ScholarshipProgramMajors")
+                        .HasForeignKey("ScholarshipProgramId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Major");
+
+                    b.Navigation("ScholarshipProgram");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ScholarshipProgramUniversity", b =>
+                {
+                    b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
+                        .WithMany("ScholarshipProgramUniversities")
+                        .HasForeignKey("ScholarshipProgramId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.University", "University")
+                        .WithMany("ScholarshipProgramUniversities")
+                        .HasForeignKey("UniversityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ScholarshipProgram");
+
+                    b.Navigation("University");
+                });
+
             modelBuilder.Entity("Domain.Entities.University", b =>
                 {
                     b.HasOne("Domain.Entities.Country", "Country")
@@ -733,51 +790,6 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Country");
-                });
-
-            modelBuilder.Entity("scholarship_program_category", b =>
-                {
-                    b.HasOne("Domain.Entities.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.ScholarshipProgram", null)
-                        .WithMany()
-                        .HasForeignKey("ScholarshipProgramsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("scholarship_program_major", b =>
-                {
-                    b.HasOne("Domain.Entities.Major", null)
-                        .WithMany()
-                        .HasForeignKey("MajorsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.ScholarshipProgram", null)
-                        .WithMany()
-                        .HasForeignKey("ScholarshipProgramsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("scholarship_program_university", b =>
-                {
-                    b.HasOne("Domain.Entities.ScholarshipProgram", null)
-                        .WithMany()
-                        .HasForeignKey("ScholarshipProgramsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.University", null)
-                        .WithMany()
-                        .HasForeignKey("UniversitiesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.Account", b =>
@@ -811,9 +823,19 @@ namespace Infrastructure.Migrations
                     b.Navigation("Reviews");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Category", b =>
+                {
+                    b.Navigation("ScholarshipProgramCategories");
+                });
+
             modelBuilder.Entity("Domain.Entities.Country", b =>
                 {
                     b.Navigation("Universities");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Major", b =>
+                {
+                    b.Navigation("ScholarshipProgramMajors");
                 });
 
             modelBuilder.Entity("Domain.Entities.Role", b =>
@@ -826,6 +848,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("Applications");
 
                     b.Navigation("Criteria");
+
+                    b.Navigation("ScholarshipProgramCategories");
+
+                    b.Navigation("ScholarshipProgramMajors");
+
+                    b.Navigation("ScholarshipProgramUniversities");
+                });
+
+            modelBuilder.Entity("Domain.Entities.University", b =>
+                {
+                    b.Navigation("ScholarshipProgramUniversities");
                 });
 #pragma warning restore 612, 618
         }

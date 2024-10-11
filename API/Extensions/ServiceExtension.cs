@@ -1,7 +1,7 @@
 ﻿using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using Application.Services;
-using Infrastructure.ExternalServices.Cloudnary;
+using Infrastructure.ExternalServices.Cloudinary;
 using Infrastructure.ExternalServices.Gemini;
 using Infrastructure.ExternalServices.Google;
 using Infrastructure.ExternalServices.Password;
@@ -44,8 +44,9 @@ public static class ServiceExtension
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IAchievementService, AchievementService>();
         services.AddScoped<IApplicationService, ApplicationService>();
+		services.AddScoped<IEmailService, EmailService>();
 
-        services.AddHttpClient<GeminiService>();
+		services.AddHttpClient<GeminiService>();
         services.AddSingleton(sp => new GeminiService(
             sp.GetRequiredService<HttpClient>(),
             config.GetSection("OpenAI").GetSection("ApiKey").Value ?? string.Empty
