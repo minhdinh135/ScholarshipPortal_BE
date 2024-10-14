@@ -1,0 +1,42 @@
+[
+  {
+    "Id": 1,
+    "Name": "Computer Science",
+    "Description": "The study of computer systems, programming, and software development.",
+    "CreatedAt": "2024-10-12T13:39:01.695",
+    "UpdatedAt": "2024-10-12T13:39:01.695001",
+    "Status": "ACTIVE"
+  },
+  {
+    "Id": 2,
+    "Name": "Mechanical Engineering",
+    "Description": "The application of engineering principles to the design and manufacture of mechanical systems.",
+    "CreatedAt": "2024-10-12T13:39:01.695",
+    "UpdatedAt": "2024-10-12T13:39:01.695001",
+    "Status": "ACTIVE"
+  },
+  {
+    "Id": 3,
+    "Name": "Business Administration",
+    "Description": "The study of managing and overseeing business operations and strategies.",
+    "CreatedAt": "2024-10-12T13:39:01.695",
+    "UpdatedAt": "2024-10-12T13:39:01.695001",
+    "Status": "ACTIVE"
+  },
+  {
+    "Id": 4,
+    "Name": "Psychology",
+    "Description": "The scientific study of the mind and behavior.",
+    "CreatedAt": "2024-10-12T13:39:01.695",
+    "UpdatedAt": "2024-10-12T13:39:01.695001",
+    "Status": "ACTIVE"
+  },
+  {
+    "Id": 5,
+    "Name": "Electrical Engineering",
+    "Description": "The study of electrical systems, electronics, and electromagnetism.",
+    "CreatedAt": "2024-10-12T13:39:01.695",
+    "UpdatedAt": "2024-10-12T13:39:01.695001",
+    "Status": "ACTIVE"
+  }
+]
