@@ -73,6 +73,16 @@ public class AuthService : IAuthService
                 JwtDTO token = _tokenService.CreateToken(_configuration, userLogin, RoleEnum.APPLICANT);
                 return token;
             }
+            else if (roles.Any(r => r.Name == RoleEnum.FUNDER))
+            {
+                JwtDTO token = _tokenService.CreateToken(_configuration, userLogin, RoleEnum.FUNDER);
+                return token;
+            }
+            else if (roles.Any(r => r.Name == RoleEnum.PROVIDER))
+            {
+                JwtDTO token = _tokenService.CreateToken(_configuration, userLogin, RoleEnum.PROVIDER);
+                return token;
+            }
         }
 
         throw new Exception("Wrong password");
