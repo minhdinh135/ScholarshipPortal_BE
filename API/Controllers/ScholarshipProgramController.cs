@@ -28,6 +28,15 @@ public class ScholarshipProgramController : ControllerBase
             allScholarshipPrograms));
     }
 
+    [HttpGet("by-funder-id/{id}")]
+    public async Task<IActionResult> GetAllScholarshipProgramsByFunderId([FromRoute] int id)
+    {
+        var allScholarshipPrograms = await _scholarshipProgramService.GetScholarshipProgramsByFunderId(id);
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all scholarship programs successfully",
+            allScholarshipPrograms));
+    }
+
     [HttpGet("paginated")]
     public async Task<IActionResult> GetScholarshipPrograms([FromQuery] int pageIndex = 1,
         [FromQuery] int pageSize = 10,

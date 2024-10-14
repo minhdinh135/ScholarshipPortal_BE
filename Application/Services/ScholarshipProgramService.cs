@@ -36,6 +36,16 @@ public class ScholarshipProgramService : IScholarshipProgramService
         return _mapper.Map<PaginatedList<ScholarshipProgramDto>>(scholarshipPrograms);
     }
 
+    public async Task<IEnumerable<ScholarshipProgramDto>> GetScholarshipProgramsByFunderId(int funderId)
+    {
+        var scholarshipPrograms =
+            await _scholarshipProgramRepository.GetAll();
+        scholarshipPrograms = 
+            scholarshipPrograms.Where(scholarshipProgram => scholarshipProgram.FunderId == funderId);
+
+        return _mapper.Map<IEnumerable<ScholarshipProgramDto>>(scholarshipPrograms);
+    }
+
     public async Task<ScholarshipProgramDto> GetScholarshipProgramById(int id)
     {
         var scholarshipProgram = await _scholarshipProgramRepository.GetById(id);
