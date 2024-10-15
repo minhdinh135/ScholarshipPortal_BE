@@ -19,15 +19,18 @@ public class ScholarshipContextSeed
 
         if (!context.Countries.Any())
         {
-            var categories = CsvUtils.ReadFile<Country>(basePath + "/countries.csv");
-            context.Countries.AddRange(categories);
+            // var countriesData = File.ReadAllText(basePath + "/countries.json");
+            // var countries = JsonSerializer.Deserialize<List<Country>>(countriesData);
+
+            var countries = CsvUtils.ReadFile<Country>(basePath + "/countries.csv");
+            context.Countries.AddRange(countries);
         }
-        
+
         if (!context.Universities.Any())
         {
-            var universitiesData = File.ReadAllText(basePath + "/universities.json");
-            var universities = JsonSerializer.Deserialize<List<University>>(universitiesData);
-            context.Universities.AddRange(universities);
+            var countriesData = File.ReadAllText(basePath + "/universities.json");
+            var countries = JsonSerializer.Deserialize<List<University>>(countriesData);
+            context.Universities.AddRange(countries);
         }
 
         if (!context.Majors.Any())
