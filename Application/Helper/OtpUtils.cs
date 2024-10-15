@@ -1,8 +1,8 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace PRN231.Services.Implementations;
-public class OtpService
+namespace Application.Helper;
+public class OtpUtils
 {
     public string GenerateOtp(int length = 6)
     {
