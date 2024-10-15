@@ -5,7 +5,7 @@
     "Description": "A prestigious Ivy League university known for its strong programs in law, business, and medicine.",
     "City": "Cambridge",
     "CountryId": 2,
-    "Status": "Active"
+    "Status": "ACTIVE"
   },
   {
     "Id": 2,
@@ -13,7 +13,7 @@
     "Description": "Renowned for its entrepreneurial spirit and leading programs in technology and engineering.",
     "City": "Stanford",
     "CountryId": 2,
-    "Status": "Active"
+    "Status": "ACTIVE"
   },
   {
     "Id": 3,
@@ -21,7 +21,7 @@
     "Description": "One of the oldest universities in the world, known for its strong research and liberal arts programs.",
     "City": "Oxford",
     "CountryId": 1,
-    "Status": "Active"
+    "Status": "ACTIVE"
   },
   {
     "Id": 4,
@@ -29,7 +29,7 @@
     "Description": "A historic institution known for its academic excellence in sciences and humanities.",
     "City": "Cambridge",
     "CountryId": 1,
-    "Status": "Active"
+    "Status": "ACTIVE"
   },
   {
     "Id": 5,
@@ -37,7 +37,7 @@
     "Description": "A world leader in scientific and technological education and research.",
     "City": "Cambridge",
     "CountryId": 2,
-    "Status": "Active"
+    "Status": "ACTIVE"
   },
   {
     "Id": 6,
@@ -45,7 +45,7 @@
     "Description": "A small but highly focused institution known for its cutting-edge research in science and engineering.",
     "City": "Pasadena",
     "CountryId": 2,
-    "Status": "Active"
+    "Status": "ACTIVE"
   },
   {
     "Id": 7,
@@ -53,7 +53,7 @@
     "Description": "Japan’s leading university, excelling in research and education across various fields.",
     "City": "Tokyo",
     "CountryId": 3,
-    "Status": "Active"
+    "Status": "ACTIVE"
   },
   {
     "Id": 8,
@@ -61,7 +61,7 @@
     "Description": "One of China's top universities, recognized for its strong liberal arts and research programs.",
     "City": "Beijing",
     "CountryId": 4,
-    "Status": "Active"
+    "Status": "ACTIVE"
   },
   {
     "Id": 9,
@@ -69,7 +69,7 @@
     "Description": "A leading science and technology university in Switzerland, known for engineering and natural sciences.",
     "City": "Zurich",
     "CountryId": 5,
-    "Status": "Active"
+    "Status": "ACTIVE"
   },
   {
     "Id": 10,
@@ -77,7 +77,7 @@
     "Description": "Australia's top university, with strong research programs in medicine, engineering, and social sciences.",
     "City": "Melbourne",
     "CountryId": 6,
-    "Status": "Active"
+    "Status": "ACTIVE"
   },
   {
     "Id": 11,
@@ -85,6 +85,6 @@
     "Description": "Vietnam's top university, with strong research programs in medicine, engineering, and social sciences.",
     "City": "Ho Chi Minh City",
     "CountryId": 21,
-    "Status": "Active"
+    "Status": "ACTIVE"
   }
 ]
