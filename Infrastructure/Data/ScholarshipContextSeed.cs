@@ -9,6 +9,13 @@ public class ScholarshipContextSeed
     public static async Task SeedAsync(ScholarshipContext context)
     {
         var basePath = "../Infrastructure/SeedData";
+
+        if (!context.Roles.Any())
+        {
+            var rolesData = File.ReadAllText(basePath + "/roles.json");
+            var roles = JsonSerializer.Deserialize<List<Role>>(rolesData);
+            context.Roles.AddRange(roles);
+        }
         
         if (!context.Categories.Any())
         {
