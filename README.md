@@ -16,6 +16,26 @@ This is the repository that provides APIs for developing SSAP system.
 └── README.md                   # Project documentation (you are here!)
 ```
 
+## Usage
+
+First, navigate to `API` directory by running the following command:
+
+```bash
+cd ./API
+```
+
+Most of the time this is the only command you'll run:
+
+```bash
+dotnet run
+```
+
+To launch with a specific profile, run the following command:
+
+```bash
+dotnet run --launch-profile {profile_name}
+```
+
 ### Reference
 
 [Project Structure](https://binarybytez.com/understanding-clean-architecture/)

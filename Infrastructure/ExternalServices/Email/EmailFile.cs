@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.ExternalServices.Email
 {
-	public class EmailFile
-	{
-		public IFormFile? file { get; set; }
-
-
-	}
+    public class EmailFile
+    {
+        public IFormFile? file { get; set; }
+    }
 }
