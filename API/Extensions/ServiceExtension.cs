@@ -2,6 +2,7 @@
 using Application.Interfaces.IServices;
 using Application.Services;
 using Infrastructure.ExternalServices.Cloudinary;
+using Infrastructure.ExternalServices.Email;
 using Infrastructure.ExternalServices.Gemini;
 using Infrastructure.ExternalServices.Google;
 using Infrastructure.ExternalServices.Password;
@@ -44,21 +45,23 @@ public static class ServiceExtension
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IAchievementService, AchievementService>();
         services.AddScoped<IApplicationService, ApplicationService>();
-		services.AddScoped<IEmailService, EmailService>();
 
 		services.AddHttpClient<GeminiService>();
         services.AddSingleton(sp => new GeminiService(
             sp.GetRequiredService<HttpClient>(),
             config.GetSection("OpenAI").GetSection("ApiKey").Value ?? string.Empty
         ));
-
+        
         services.AddScoped<GoogleService>(s => new GoogleService(
             config.GetSection("Google").GetSection("ClientId").Value ?? string.Empty,
             config.GetSection("Google").GetSection("ClientSecret").Value ?? string.Empty,
             config.GetSection("Google").GetSection("RedirectUri").Value ?? string.Empty
         ));
 
-        services.AddScoped<CloudinaryService>();
+        services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
+        services.AddScoped<ICloudinaryService, CloudinaryService>();
+        
+		services.AddScoped<IEmailService, EmailService>();
         
         return services;
     }

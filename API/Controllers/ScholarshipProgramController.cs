@@ -112,6 +112,22 @@ public class ScholarshipProgramController : ControllerBase
             updatedScholarshipProgram));
     }
 
+    [HttpPut("{id}/image")]
+    public async Task<IActionResult> UpdateScholarshipProgramImage(int id, IFormFile file)
+    {
+        try
+        {
+            await _scholarshipProgramService.UploadScholarshipProgramImage(id, file);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Upload image successfully", null));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest,
+                "Error uploading program image: " + e.Message, null));
+        }
+    }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteScholarshipProgram([FromRoute] int id)
     {

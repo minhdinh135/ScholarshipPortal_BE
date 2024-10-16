@@ -1,8 +1,9 @@
 using System.Text;
 using System.Text.Json;
+using Application.Interfaces.IServices;
 
 namespace Infrastructure.ExternalServices.Gemini;
-public class GeminiService
+public class GeminiService : IGeminiService
 {
     private readonly HttpClient _httpClient;
     private readonly string _apiKey;

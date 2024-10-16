@@ -4,6 +4,7 @@ using AutoMapper;
 using Domain.DTOs.Common;
 using Domain.DTOs.ScholarshipProgram;
 using Domain.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Services;
 
@@ -11,18 +12,17 @@ public class ScholarshipProgramService : IScholarshipProgramService
 {
     private readonly IMapper _mapper;
     private readonly IScholarshipProgramRepository _scholarshipProgramRepository;
-    private readonly ICategoryService _categoryService;
+    private readonly ICloudinaryService _cloudinaryService;
 
-    public ScholarshipProgramService(IMapper mapper, IScholarshipProgramRepository scholarshipProgramRepository, ICategoryService categoryService)
+    public ScholarshipProgramService(IMapper mapper, IScholarshipProgramRepository scholarshipProgramRepository, ICloudinaryService cloudinaryService)
     {
         _mapper = mapper;
         _scholarshipProgramRepository = scholarshipProgramRepository;
-        _categoryService = categoryService;
+        _cloudinaryService = cloudinaryService;
     }
     
     public async Task<IEnumerable<ScholarshipProgramDto>> GetAllScholarshipPrograms()
     {
-        // var allScholarshipPrograms = await _scholarshipProgramRepository.GetAll();
         var allScholarshipPrograms = await _scholarshipProgramRepository.GetAllScholarshipPrograms();
 
         return _mapper.Map<IEnumerable<ScholarshipProgramDto>>(allScholarshipPrograms);
@@ -75,6 +75,34 @@ public class ScholarshipProgramService : IScholarshipProgramService
         var updatedScholarshipProgram = await _scholarshipProgramRepository.Update(existingScholarshipProgram);
 
         return _mapper.Map<ScholarshipProgramDto>(updatedScholarshipProgram);
+    }
+
+    public async Task UploadScholarshipProgramImage(int id, IFormFile file)
+    {
+        var existingScholarshipProgram = await _scholarshipProgramRepository.GetById(id);
+
+        if (existingScholarshipProgram == null)
+        {
+            throw new Exception("No scholarship program found");
+        }
+        
+        try
+        {
+            var imageUrl = await _cloudinaryService.UploadImage(file);
+
+            if (string.IsNullOrEmpty(imageUrl))
+            {
+                throw new Exception("Error uploading to Cloudinary");
+            }
+
+            existingScholarshipProgram.ImageUrl = imageUrl;
+
+            await _scholarshipProgramRepository.Update(existingScholarshipProgram);
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Error uploading image to Cloudinary: " + e.Message);
+        }
     }
 
     public async Task<ScholarshipProgramDto> DeleteScholarshipProgramById(int id)

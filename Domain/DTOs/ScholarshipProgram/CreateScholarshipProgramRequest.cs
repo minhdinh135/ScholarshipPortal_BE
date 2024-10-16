@@ -1,11 +1,12 @@
 ﻿using Domain.DTOs.Common;
+using Microsoft.AspNetCore.Http;
 
 namespace Domain.DTOs.ScholarshipProgram;
 
 public class CreateScholarshipProgramRequest : BaseCreateRequest
 {
     public string? Name { get; set; }
-
+    
     public string? Description { get; set; }
 
     public decimal? ScholarshipAmount { get; set; }

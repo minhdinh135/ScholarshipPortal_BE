@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SSAP.API.Extensions;
+using SSAP.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,17 +38,6 @@ builder.Services.Configure<ApiBehaviorOptions>(options
 builder.Services.AddDbContext<ScholarshipContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("Db") ?? string.Empty));
 
-//Add AutoMapper
-// builder.Services.AddSingleton<IMapper>(sp =>
-// {
-//     var config = new MapperConfiguration(cfg =>
-//     {
-//         // Configure your mapping profiles
-//         cfg.AddProfile<MappingProfile>();
-//     });
-//
-//     return config.CreateMapper();
-// });
 builder.Services.AddMapperServices();
 
 // Add FluentValidation validators
@@ -66,6 +56,10 @@ builder.Services.AddSingleton(_ =>
 
 // Register services and inject dependencies
 builder.Services.AddApplicationServices(builder.Configuration);
+
+// Register exception handler service
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 //Add Jwt
 builder.Services.AddSwaggerGen(
@@ -182,6 +176,8 @@ app.UseCors("MyAllowPolicy");
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseExceptionHandler();
 
 app.MapControllers();
 app.Run();
