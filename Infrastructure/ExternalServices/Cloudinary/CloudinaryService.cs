@@ -1,112 +1,122 @@
+using System.Net;
+using Application.Interfaces.IServices;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using Domain.DTOs.UploadImage;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace Infrastructure.ExternalServices.Cloudinary;
-public class CloudinaryService
+
+public class CloudinaryService : ICloudinaryService
 {
-  private readonly CloudinaryDotNet.Cloudinary _cloudinary;
+    private readonly CloudinaryDotNet.Cloudinary _cloudinary;
 
-  public CloudinaryService(CloudinaryDotNet.Cloudinary cloudinary)
-  {
-    _cloudinary = cloudinary;
-  }
-
-  public async Task<string> UploadImage(UploadImageDTO imageUploadDto)
-  {
-    if (imageUploadDto.File == null || imageUploadDto.File.Length == 0)
+    public CloudinaryService(IOptions<CloudinarySettings> cloudinarySettings)
     {
-      throw new Exception("No file provided.");
+        var account = new Account(
+            cloudinarySettings.Value.CloudName,
+            cloudinarySettings.Value.ApiKey,
+            cloudinarySettings.Value.ApiSecret
+        );
+
+        _cloudinary = new CloudinaryDotNet.Cloudinary(account);
     }
 
-    using (var stream = imageUploadDto.File.OpenReadStream())
+    public async Task<string> UploadImage(IFormFile file)
     {
-      var uploadParams = new ImageUploadParams
-      {
-        File = new FileDescription(imageUploadDto.File.FileName, stream),
-        Transformation = new Transformation().Crop("limit").Width(1000).Height(1000)
-      };
+        if (file == null || file.Length == 0)
+        {
+            throw new Exception("No file provided.");
+        }
 
-      var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+        using (var stream = file.OpenReadStream())
+        {
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(file.FileName, stream),
+                Transformation = new Transformation().Crop("limit").Width(1000).Height(1000)
+            };
 
-      if (uploadResult.StatusCode == System.Net.HttpStatusCode.OK)
-      {
-        var imageUrl = uploadResult.SecureUrl.ToString();
-        var publicId = uploadResult.PublicId;
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
-        return imageUrl;
-      }
-      else
-      {
-         throw new Exception("Image upload failed. "+uploadResult.Error.Message);
-      }
+            if (uploadResult.StatusCode == HttpStatusCode.OK)
+            {
+                var imageUrl = uploadResult.SecureUrl.ToString();
+                var publicId = uploadResult.PublicId;
+
+                return imageUrl;
+            }
+            else
+            {
+                throw new Exception("Image upload failed. " + uploadResult.Error.Message);
+            }
+        }
     }
-  }
 
-  public async Task<string> UploadRaw(UploadImageDTO imageUploadDto)
-  {
-    if (imageUploadDto.File == null || imageUploadDto.File.Length == 0)
+    public async Task<string> UploadRaw(IFormFile file)
     {
-      throw new Exception("No file provided.");
+        if (file == null || file.Length == 0)
+        {
+            throw new Exception("No file provided.");
+        }
+
+        using (var stream = file.OpenReadStream())
+        {
+            var uploadParams = new RawUploadParams // Use RawUploadParams for non-media files
+            {
+                File = new FileDescription(file.FileName, stream)
+            };
+
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+            if (uploadResult.StatusCode == HttpStatusCode.OK)
+            {
+                var imageUrl = uploadResult.SecureUrl.ToString();
+                var publicId = uploadResult.PublicId;
+
+                return imageUrl;
+            }
+            else
+            {
+                throw new Exception("File upload failed. " + uploadResult.Error.Message);
+            }
+        }
     }
 
-    using (var stream = imageUploadDto.File.OpenReadStream())
+    // Delete Image Endpoint
+    public async Task<string> DeleteImage(string publicId)
     {
-      var uploadParams = new RawUploadParams // Use RawUploadParams for non-media files
-      {
-        File = new FileDescription(imageUploadDto.File.FileName, stream)
-      };
+        var deletionParams = new DeletionParams(publicId);
 
-      var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+        var deletionResult = await _cloudinary.DestroyAsync(deletionParams);
 
-      if (uploadResult.StatusCode == System.Net.HttpStatusCode.OK)
-      {
-        var imageUrl = uploadResult.SecureUrl.ToString();
-        var publicId = uploadResult.PublicId;
-
-        return imageUrl;
-      }
-      else
-      {
-         throw new Exception("File upload failed. "+uploadResult.Error.Message);
-      }
+        if (deletionResult.Result == "ok")
+        {
+            return "Image deleted successfully.";
+        }
+        else
+        {
+            throw new Exception("Failed to delete image." + deletionResult.Error.Message);
+        }
     }
-  }
 
-  // Delete Image Endpoint
-  public async Task<string> DeleteImage(string publicId)
-  {
-    var deletionParams = new DeletionParams(publicId);
-
-    var deletionResult = await _cloudinary.DestroyAsync(deletionParams);
-
-    if (deletionResult.Result == "ok")
+    // Delete Image Endpoint
+    public async Task<string> DeleteFile(string publicId)
     {
-      return "Image deleted successfully.";
+        var deletionParams = new DeletionParams(publicId)
+        {
+            ResourceType = ResourceType.Raw // Specify the resource type as 'raw' for non-media files
+        };
+
+        var deletionResult = await _cloudinary.DestroyAsync(deletionParams);
+
+        if (deletionResult.Result == "ok")
+        {
+            return "File deleted successfully.";
+        }
+        else
+        {
+            throw new Exception("Failed to delete file." + deletionResult.Error.Message);
+        }
     }
-    else
-    {
-      throw new Exception("Failed to delete image."+deletionResult.Error.Message);
-    }
-  }
-
-  // Delete Image Endpoint
-  public async Task<string> DeleteFile(string publicId)
-  {
-    var deletionParams = new DeletionParams(publicId)
-    {
-        ResourceType = ResourceType.Raw // Specify the resource type as 'raw' for non-media files
-    };
-
-    var deletionResult = await _cloudinary.DestroyAsync(deletionParams);
-
-    if (deletionResult.Result == "ok")
-    {
-      return "File deleted successfully.";
-    }
-    else
-    {
-      throw new Exception("Failed to delete file."+deletionResult.Error.Message);
-    }
-  }
 }

@@ -4,7 +4,7 @@ using MailKit.Security;
 using Microsoft.AspNetCore.Http;
 using MimeKit;
 
-namespace Application.Services
+namespace Infrastructure.ExternalServices.Email
 {
 	public class EmailService : IEmailService
 	{
