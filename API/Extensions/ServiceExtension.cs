@@ -51,7 +51,7 @@ public static class ServiceExtension
             sp.GetRequiredService<HttpClient>(),
             config.GetSection("OpenAI").GetSection("ApiKey").Value ?? string.Empty
         ));
-
+        
         services.AddScoped<GoogleService>(s => new GoogleService(
             config.GetSection("Google").GetSection("ClientId").Value ?? string.Empty,
             config.GetSection("Google").GetSection("ClientSecret").Value ?? string.Empty,
