@@ -1,0 +1,241 @@
+﻿Id,Name,Code
+1,Afghanistan,4
+2,Albania,8
+3,Algeria,12
+4,American Samoa,16
+5,Andorra,20
+6,Angola,24
+7,Anguilla,660
+8,Antarctica,10
+9,Antigua and Barbuda,28
+10,Argentina,32
+11,Armenia,51
+12,Aruba,533
+13,Australia,36
+14,Austria,40
+15,Azerbaijan,31
+16,Bahamas,44
+17,Bahrain,48
+18,Bangladesh,50
+19,Barbados,52
+20,Belarus,112
+21,Belgium,56
+22,Belize,84
+23,Benin,204
+24,Bermuda,60
+25,Bhutan,64
+26,Bolivia,68
+27,Bosnia and Herzegovina,70
+28,Botswana,72
+29,Brazil,76
+30,British Indian Ocean Territory,86
+31,British Virgin Islands,92
+32,Brunei,96
+33,Bulgaria,100
+34,Burkina Faso,854
+35,Burundi,108
+36,Cambodia,116
+37,Cameroon,120
+38,Canada,124
+39,Cape Verde,132
+40,Cayman Islands,136
+41,Central African Republic,140
+42,Chad,148
+43,Chile,152
+44,China,156
+45,Christmas Island,162
+46,Cocos Islands,166
+47,Colombia,170
+48,Comoros,174
+49,Cook Islands,184
+50,Costa Rica,188
+51,Croatia,191
+52,Cuba,192
+53,Curacao,531
+54,Cyprus,196
+55,Czech Republic,203
+56,Democratic Republic of the Congo,180
+57,Denmark,208
+58,Djibouti,262
+59,Dominica,212
+60,Dominican Republic,214
+61,East Timor,626
+62,Ecuador,218
+63,Egypt,818
+64,El Salvador,222
+65,Equatorial Guinea,226
+66,Eritrea,232
+67,Estonia,233
+68,Ethiopia,231
+69,Falkland Islands,238
+70,Faroe Islands,234
+71,Fiji,242
+72,Finland,246
+73,France,250
+74,French Polynesia,258
+75,Gabon,266
+76,Gambia,270
+77,Georgia,268
+78,Germany,276
+79,Ghana,288
+80,Gibraltar,292
+81,Greece,300
+82,Greenland,304
+83,Grenada,308
+84,Guam,316
+85,Guatemala,320
+86,Guernsey,831
+87,Guinea,324
+88,Guinea-Bissau,624
+89,Guyana,328
+90,Haiti,332
+91,Honduras,340
+92,Hong Kong,344
+93,Hungary,348
+94,Iceland,352
+95,India,356
+96,Indonesia,360
+97,Iran,364
+98,Iraq,368
+99,Ireland,372
+100,Isle of Man,833
+101,Israel,376
+102,Italy,380
+103,Ivory Coast,384
+104,Jamaica,388
+105,Japan,392
+106,Jersey,832
+107,Jordan,400
+108,Kazakhstan,398
+109,Kenya,404
+110,Kiribati,296
+111,Kosovo,0
+112,Kuwait,414
+113,Kyrgyzstan,417
+114,Laos,418
+115,Latvia,428
+116,Lebanon,422
+117,Lesotho,426
+118,Liberia,430
+119,Libya,434
+120,Liechtenstein,438
+121,Lithuania,440
+122,Luxembourg,442
+123,Macau,446
+124,Macedonia,807
+125,Madagascar,450
+126,Malawi,454
+127,Malaysia,458
+128,Maldives,462
+129,Mali,466
+130,Malta,470
+131,Marshall Islands,584
+132,Mauritania,478
+133,Mauritius,480
+134,Mayotte,175
+135,Mexico,484
+136,Micronesia,583
+137,Moldova,498
+138,Monaco,492
+139,Mongolia,496
+140,Montenegro,499
+141,Montserrat,500
+142,Morocco,504
+143,Mozambique,508
+144,Myanmar,104
+145,Namibia,516
+146,Nauru,520
+147,Nepal,524
+148,Netherlands,528
+149,Netherlands Antilles,530
+150,New Caledonia,540
+151,New Zealand,554
+152,Nicaragua,558
+153,Niger,562
+154,Nigeria,566
+155,Niue,570
+156,North Korea,408
+157,Northern Mariana Islands,580
+158,Norway,578
+159,Oman,512
+160,Pakistan,586
+161,Palau,585
+162,Palestine,275
+163,Panama,591
+164,Papua New Guinea,598
+165,Paraguay,600
+166,Peru,604
+167,Philippines,608
+168,Pitcairn,612
+169,Poland,616
+170,Portugal,620
+171,Puerto Rico,630
+172,Qatar,634
+173,Republic of the Congo,178
+174,Reunion,638
+175,Romania,642
+176,Russia,643
+177,Rwanda,646
+178,Saint Barthelemy,652
+179,Saint Helena,654
+180,Saint Kitts and Nevis,659
+181,Saint Lucia,662
+182,Saint Martin,663
+183,Saint Pierre and Miquelon,666
+184,Saint Vincent and the Grenadines,670
+185,Samoa,882
+186,San Marino,674
+187,Sao Tome and Principe,678
+188,Saudi Arabia,682
+189,Senegal,686
+190,Serbia,688
+191,Seychelles,690
+192,Sierra Leone,694
+193,Singapore,702
+194,Sint Maarten,534
+195,Slovakia,703
+196,Slovenia,705
+197,Solomon Islands,90
+198,Somalia,706
+199,South Africa,710
+200,South Korea,410
+201,South Sudan,728
+202,Spain,724
+203,Sri Lanka,144
+204,Sudan,729
+205,Suriname,740
+206,Svalbard and Jan Mayen,744
+207,Swaziland,748
+208,Sweden,752
+209,Switzerland,756
+210,Syria,760
+211,Taiwan,158
+212,Tajikistan,762
+213,Tanzania,834
+214,Thailand,764
+215,Togo,768
+216,Tokelau,772
+217,Tonga,776
+218,Trinidad and Tobago,780
+219,Tunisia,788
+220,Turkey,792
+221,Turkmenistan,795
+222,Turks and Caicos Islands,796
+223,Tuvalu,798
+224,U.S. Virgin Islands,850
+225,Uganda,800
+226,Ukraine,804
+227,United Arab Emirates,784
+228,United Kingdom,826
+229,United States,840
+230,Uruguay,858
+231,Uzbekistan,860
+232,Vanuatu,548
+233,Vatican,336
+234,Venezuela,862
+235,Vietnam,704
+236,Wallis and Futuna,876
+237,Western Sahara,732
+238,Yemen,887
+239,Zambia,894
+240,Zimbabwe,716

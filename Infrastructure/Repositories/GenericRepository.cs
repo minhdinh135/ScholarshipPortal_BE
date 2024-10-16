@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using System.Reflection;
 using Application.Interfaces.IRepositories;
 using Domain.DTOs.Common;
@@ -54,34 +55,39 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public async Task<PaginatedList<T>> GetPaginatedList(int pageIndex, int pageSize, string sortBy, string sortOrder)
     {
-        var items = await _dbContext.Set<T>()
-            .Skip((pageIndex - 1) * pageSize)
-            .Take(pageSize)
-            .AsNoTracking()
-            .AsSplitQuery()
-            .ToListAsync();
+        // var items = await _dbContext.Set<T>()
+        //     .Skip((pageIndex - 1) * pageSize)
+        //     .Take(pageSize)
+        //     .AsNoTracking()
+        //     .AsSplitQuery()
+        //     .ToListAsync();
 
+        var query = _dbContext.Set<T>().AsNoTracking().AsSplitQuery();
+        
         if (!string.IsNullOrEmpty(sortBy))
         {
-            var propertyInfo = typeof(T).GetProperty(sortBy,
-                BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-            if (propertyInfo == null)
-                throw new ArgumentException($"Property {sortBy} not found on type {typeof(T).Name}");
-
-            if (sortOrder.ToLower() == "desc")
-            {
-                items.OrderByDescending(e => propertyInfo.GetValue(e, null));
-            }
-            else
-            {
-                items.OrderBy(e => propertyInfo.GetValue(e, null));
-            }
+            var orderByExpression = GetOrderByExpression<T>(sortBy);
+            query = sortOrder?.ToLower() == "desc" ? query.OrderByDescending(orderByExpression) : query.OrderBy(orderByExpression);
         }
+
+        var items = await query
+            .Skip((pageIndex - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
 
         var totalCount = await _dbContext.Set<T>().CountAsync();
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
         return new PaginatedList<T>(items, pageIndex, totalPages);
+    }
+
+    private Expression<Func<T, object>> GetOrderByExpression<T>(string propertyName)
+    {
+        var parameter = Expression.Parameter(typeof(T), "x");
+        var property = Expression.Property(parameter, propertyName);
+        var conversion = Expression.Convert(property, typeof(object));
+
+        return Expression.Lambda<Func<T, object>>(conversion, parameter);
     }
 
     public async Task<T> GetById(params int[] keys)
