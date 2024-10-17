@@ -5,6 +5,7 @@ using Domain.DTOs.Common;
 using Domain.DTOs.ScholarshipProgram;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services;
 
@@ -42,6 +43,19 @@ public class ScholarshipProgramService : IScholarshipProgramService
             await _scholarshipProgramRepository.GetAll();
         scholarshipPrograms = 
             scholarshipPrograms.Where(scholarshipProgram => scholarshipProgram.FunderId == funderId);
+
+        return _mapper.Map<IEnumerable<ScholarshipProgramDto>>(scholarshipPrograms);
+    }
+
+
+    public async Task<IEnumerable<ScholarshipProgramDto>> GetScholarshipProgramsByMajorId(int majorId)
+    {
+        var scholarshipPrograms =
+            await _scholarshipProgramRepository.GetAll(x => x.Include(x => x.ScholarshipProgramMajors));
+        scholarshipPrograms = 
+            scholarshipPrograms.Where(scholarshipProgram => scholarshipProgram
+                    .ScholarshipProgramMajors
+                    .Any(x => x.MajorId == majorId));
 
         return _mapper.Map<IEnumerable<ScholarshipProgramDto>>(scholarshipPrograms);
     }
