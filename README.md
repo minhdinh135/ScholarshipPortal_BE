@@ -16,26 +16,64 @@ This is the repository that provides APIs for developing SSAP system.
 └── README.md                   # Project documentation (you are here!)
 ```
 
-## Usage
+## Getting started
 
-First, navigate to `API` directory by running the following command:
+### Prerequisites
 
-```bash
-cd ./API
-```
+- .NET 8.0 SDK
+- Docker
+- MySQL
 
-Most of the time this is the only command you'll run:
+### Installation
 
-```bash
-dotnet run
-```
+1. Clone the repository:
 
-To launch with a specific profile, run the following command:
+   ```bash
+   git clone https://github.com/SSAP-SEP490-FA24/ssap-server.git
+   ```
 
-```bash
-dotnet run --launch-profile {profile_name}
-```
+2. Build and run:
 
-### Reference
+   - Docker:
+
+     - To run services defined in `docker-compose.yml`, run the following command:
+
+       ```bash
+       docker-compose up
+       ```
+
+     - To shutdown services defined in `docker-compose.yml`, run the following command:
+
+       ```
+       docker-compose down
+       ```
+
+   - Local:
+
+     - First, navigate to `API` directory by running the following command:
+
+     ```bash
+     cd ./API
+     ```
+
+   - Most of the time this is the only command you'll run:
+
+     ```bash
+     dotnet run
+     ```
+
+   - To launch with a specific profile, run the following command:
+
+     ```bash
+     dotnet run --launch-profile {profile_name}
+     ```
+
+### Usage
+
+Access the API via:
+
+- Local: `http://localhost:5254/swagger/index.html`
+
+## Reference
 
 [Project Structure](https://binarybytez.com/understanding-clean-architecture/)
