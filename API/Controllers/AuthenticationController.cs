@@ -79,7 +79,8 @@ public class AuthenticationController : ControllerBase
     {
         if (string.IsNullOrEmpty(code))
         {
-            return BadRequest("Authorization code is missing.");
+            return Redirect("http://localhost:5173/login-google?result=fail");
+            //return BadRequest("Authorization code is missing.");
         }
 
         var token = await _googleService.ExchangeCodeForToken(code);
@@ -87,7 +88,23 @@ public class AuthenticationController : ControllerBase
         try
         {
             var jwt = await _authService.GoogleAuth(userInfo);
-            return Ok(jwt);
+            return Redirect("http://localhost:5173/login-google?result=success&jwt=" + jwt.Token);
+            //return Ok(jwt);
+        }
+        catch (Exception ex)
+        {
+            return Redirect("http://localhost:5173/login-google?result=fail");
+            //return BadRequest(new { Message = ex.Message });
+        }
+    }
+
+    [HttpPost("Register-applicant")]
+    public async Task<IActionResult> Register(RegisterDTO register)
+    {
+        try
+        {
+            var token = await _authService.Register(register);
+            return Ok(token);
         }
         catch (Exception ex)
         {
@@ -95,12 +112,40 @@ public class AuthenticationController : ControllerBase
         }
     }
 
-    [HttpPost("Register")]
-    public async Task<IActionResult> Register(RegisterDTO register)
+    [HttpPost("Register-admin")]
+    public async Task<IActionResult> RegisterAdmin(RegisterDTO register)
     {
         try
         {
-            var token = await _authService.Register(register);
+            var token = await _authService.Register(register, RoleEnum.ADMIN);
+            return Ok(token);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
+    [HttpPost("Register-funder")]
+    public async Task<IActionResult> RegisterFunder(RegisterDTO register)
+    {
+        try
+        {
+            var token = await _authService.Register(register, RoleEnum.FUNDER);
+            return Ok(token);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
+    [HttpPost("Register-provider")]
+    public async Task<IActionResult> RegisterProvider(RegisterDTO register)
+    {
+        try
+        {
+            var token = await _authService.Register(register, RoleEnum.PROVIDER);
             return Ok(token);
         }
         catch (Exception ex)
