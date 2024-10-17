@@ -51,19 +51,7 @@ public class AuthService : IAuthService
         roles = roles.Where(r => r.Id == userLogin.RoleId).ToList();
         if (_passwordService.VerifyPassword(login.Password, userLogin.HashedPassword))
         {
-            if (roles.Count() == 0)
-            {
-                await _roleService.Add(new RoleAddDTO
-                {
-                    Name = RoleEnum.APPLICANT,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now,
-                    Status = StatusEnum.ACTIVE
-                });
-                JwtDTO token = _tokenService.CreateToken(_configuration, userLogin, RoleEnum.APPLICANT);
-                return token;
-            }
-            else if (roles.Any(r => r.Name == RoleEnum.ADMIN))
+            if (roles.Any(r => r.Name == RoleEnum.ADMIN))
             {
                 JwtDTO token = _tokenService.CreateToken(_configuration, userLogin, RoleEnum.ADMIN);
                 return token;
@@ -88,7 +76,7 @@ public class AuthService : IAuthService
         throw new Exception("Wrong password");
     }
 
-    public async Task<JwtDTO> Register(RegisterDTO register)
+    public async Task<JwtDTO> Register(RegisterDTO register, string role = RoleEnum.APPLICANT)
     {
         if (!ErrorHandler.Validate(register, out var validationResults))
         {
@@ -103,12 +91,12 @@ public class AuthService : IAuthService
             throw new Exception("Email already exist");
         //check if role exist
         var roles = await _roleService.GetAll();
-        roles = roles.Where(r => r.Name == RoleEnum.APPLICANT).ToList();
+        roles = roles.Where(r => r.Name == role).ToList();
         if (roles.Count() == 0)
         {
             await _roleService.Add(new RoleAddDTO
             {
-                Name = RoleEnum.APPLICANT,
+                Name = role,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 Status = StatusEnum.ACTIVE
@@ -117,7 +105,7 @@ public class AuthService : IAuthService
 
         //Get roles
         roles = await _roleService.GetAll();
-        roles = roles.Where(r => r.Name == RoleEnum.APPLICANT).ToList();
+        roles = roles.Where(r => r.Name == role).ToList();
 
         var userDTO = new AccountAddDTO
         {
@@ -135,7 +123,7 @@ public class AuthService : IAuthService
             Status = StatusEnum.ACTIVE
         };
         var user = await _userService.Add(userDTO);
-        JwtDTO token = _tokenService.CreateToken(_configuration, user, RoleEnum.APPLICANT);
+        JwtDTO token = _tokenService.CreateToken(_configuration, user, role);
 
         return token;
     }
