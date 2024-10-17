@@ -98,7 +98,7 @@ public class AuthenticationController : ControllerBase
         }
     }
 
-    [HttpPost("Register-applicant")]
+    [HttpPost("Register")]
     public async Task<IActionResult> Register(RegisterDTO register)
     {
         try
