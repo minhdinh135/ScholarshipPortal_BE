@@ -41,10 +41,10 @@ public class AuthService : IAuthService
         }
 
         var users = await _userService.GetAll();
-        var userLogin = users.Where(u => u.Email == login.Email).FirstOrDefault();
+        var userLogin = users.Where(u => u.Username == login.Email || u.Email == login.Email).FirstOrDefault();
         if (userLogin == null)
         {
-            throw new Exception("Email not found");
+            throw new Exception("Email or User name not found");
         }
 
         var roles = await _roleService.GetAll();
@@ -84,11 +84,19 @@ public class AuthService : IAuthService
             throw new Exception(error);
         }
 
-        //check if user exist
+        //check if email exist
         var users = await _userService.GetAll();
-        users = users.Where(u => u.Email == register.Email).ToList();
-        if (users.Count() > 0)
-            throw new Exception("Email already exist");
+        var existEmail = users.Where(u => u.Email == register.Email).ToList();
+        if (existEmail.Count() > 0)
+            throw new Exception("Email has already been registered to system");
+        //check if user exist
+        var existUsername = users.Where(u => u.Username == register.Username).ToList();
+        if (existUsername.Count() > 0)
+            throw new Exception("Username has already been registered to system");        
+        //check if phone exist
+        var existPhoneNumber = users.Where(u => u.PhoneNumber == register.PhoneNumber).ToList();
+        if (existPhoneNumber.Count() > 0)
+            throw new Exception("Phone number has already been registered to system");
         //check if role exist
         var roles = await _roleService.GetAll();
         roles = roles.Where(r => r.Name == role).ToList();
