@@ -153,4 +153,129 @@ public class AuthenticationController : ControllerBase
             return BadRequest(new { Message = ex.Message });
         }
     }
+
+    [HttpPost("ChangePassword")]
+	public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO model)
+	{
+		if (!ModelState.IsValid)
+		{
+			return BadRequest(new { Message = "Invalid data" });
+		}
+
+		var users = await _accountService.GetAll();
+		var user = users.FirstOrDefault(u => u.Email == model.Email);
+		if (user == null)
+		{
+			return NotFound(new { Message = "User not found" });
+		}
+
+		if (!_passwordService.VerifyPassword(model.OldPassword, user.HashedPassword))
+		{
+			return Unauthorized(new { Message = "Old password is incorrect" });
+		}
+
+		if (model.NewPassword.Length < 6)
+		{
+			return BadRequest(new { Message = "New password must be at least 6 characters long" });
+		}
+
+		// Update password
+		user.HashedPassword = _passwordService.HashPassword(model.NewPassword);
+		await _accountService.Update(new AccountUpdateDTO
+		{
+			Id = user.Id,
+			Username = user.Username,
+			Email = user.Email,
+			FullName = user.FullName,
+			PhoneNumber = user.PhoneNumber,
+			HashedPassword = user.HashedPassword,
+			Address = user.Address,
+			Avatar = user.Avatar,
+			RoleId = user.RoleId,
+			Status = user.Status,
+			CreatedAt = user.CreatedAt,
+			UpdatedAt = user.UpdatedAt,
+		});
+
+		try
+		{
+			await _emailService.SendEmailAsync(user.Email, "Password Changed", "Change password successfully. Thank you!");
+		}
+		catch (Exception ex)
+		{
+			return Ok(new { Message = "Password changed but failed to send email notification." });
+		}
+
+		return Ok(new { Message = "Password changed successfully!" });
+	}
+
+	[HttpPost("ForgotPassword")]
+	public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO model)
+	{
+		var users = await _accountService.GetAll();
+		var user = users.FirstOrDefault(u => u.Email == model.Email);
+
+		if (user == null)
+		{
+			return BadRequest(new { Message = "Incorrect Email!" });
+		}
+
+		var otp = _random.Next(100000, 999999).ToString();
+		_otpStore[user.Email] = otp; 
+
+		await _emailService.SendEmailAsync(user.Email, "Your OTP Code", $"Your OTP code is: {otp}");
+
+		return Ok(new { Message = "OTP has been sent to your email." });
+	}
+
+	[HttpPost("VerifyOtp")]
+	public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDTO model)
+	{
+		if (_otpStore.TryGetValue(model.Email, out var storedOtp))
+		{
+			if (storedOtp == model.Otp)
+			{
+				_otpStore.Remove(model.Email); 
+				return Ok(new { Message = "OTP verified. You can now change your password." });
+			}
+			else
+			{
+				return BadRequest(new { Message = "Incorrect OTP!" });
+			}
+		}
+		return BadRequest(new { Message = "OTP not found for this email." });
+	}
+
+	[HttpPost("ResetPassword")]
+	public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO model)
+	{
+		var users = await _accountService.GetAll();
+		var user = users.FirstOrDefault(u => u.Email == model.Email);
+
+		if (user == null)
+		{
+			return BadRequest(new { Message = "User not found." });
+		}
+
+		user.HashedPassword = _passwordService.HashPassword(model.NewPassword);
+		await _accountService.Update(new AccountUpdateDTO
+		{
+			Id = user.Id,
+			Username = user.Username,
+			Email = user.Email,
+			FullName = user.FullName,
+			PhoneNumber = user.PhoneNumber,
+			HashedPassword = user.HashedPassword,
+			Address = user.Address,
+			Avatar = user.Avatar,
+			RoleId = user.RoleId,
+			Status = user.Status,
+			CreatedAt = user.CreatedAt,
+			UpdatedAt = user.UpdatedAt,
+		});
+
+		await _emailService.SendEmailAsync(user.Email, "Password Reset Successful", "Your password has been reset successfully!");
+
+		return Ok(new { Message = "Password reset successfully!" });
+	}
 }

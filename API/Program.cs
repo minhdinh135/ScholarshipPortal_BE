@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using Application.Common;
+using Application.Interfaces.IServices;
 using Application.Validators.Category;
 using AutoMapper;
 using CloudinaryDotNet;
@@ -15,6 +16,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SSAP.API.Extensions;
 using SSAP.API.Middlewares;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using Microsoft.Extensions.DependencyInjection;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
