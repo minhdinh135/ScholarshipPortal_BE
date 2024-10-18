@@ -15,22 +15,26 @@ namespace SSAP.API.Controllers;
 public class AuthenticationController : ControllerBase
 {
     private readonly ITokenService _jwtService;
-    private readonly IGenericService<Account, AccountAddDTO, AccountUpdateDTO> _userService;
-    private readonly IGenericService<Role, RoleAddDTO, RoleUpdateDTO> _roleService;
+    private readonly IAccountsService _accountService;
+    private readonly IRoleService _roleService;
     private readonly IAuthService _authService;
+	private static readonly Dictionary<string, string> _otpStore = new();
+	private static readonly Random _random = new();
+	private readonly IPasswordService _passwordService;
+	private readonly IEmailService _emailService;
 
-    private readonly IConfiguration _configuration;
+	private readonly IConfiguration _configuration;
     private readonly GoogleService _googleService;
 
     public AuthenticationController(ITokenService jwtService,
-        IGenericService<Account, AccountAddDTO, AccountUpdateDTO> userService,
-        IGenericService<Role, RoleAddDTO, RoleUpdateDTO> roleService,
+        IAccountsService userService,
+        IRoleService roleService,
         IConfiguration configuration,
         IAuthService authService,
         GoogleService googleService)
     {
         _jwtService = jwtService;
-        _userService = userService;
+		_accountService = userService;
         _roleService = roleService;
         _configuration = configuration;
         _googleService = googleService;
@@ -63,7 +67,7 @@ public class AuthenticationController : ControllerBase
     [HttpGet("test-role-applicant")]
     public async Task<IActionResult> GetUsers()
     {
-        var users = await _userService.GetAll();
+        var users = await _accountService.GetAll();
         return Ok(users);
     }
 
