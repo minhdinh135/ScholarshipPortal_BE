@@ -1,4 +1,3 @@
-﻿using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using Domain.Constants;
 using Domain.DTOs.Account;
@@ -6,11 +5,8 @@ using Domain.DTOs.Authentication;
 using Domain.DTOs.Role;
 using Domain.Entities;
 using Infrastructure.ExternalServices.Google;
-using Infrastructure.ExternalServices.Password;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography;
-
 
 namespace SSAP.API.Controllers;
 
@@ -19,33 +15,26 @@ namespace SSAP.API.Controllers;
 public class AuthenticationController : ControllerBase
 {
     private readonly ITokenService _jwtService;
-    private readonly IAccountsService _accountService;
-    private readonly IRoleService _roleService;
+    private readonly IGenericService<Account, AccountAddDTO, AccountUpdateDTO> _userService;
+    private readonly IGenericService<Role, RoleAddDTO, RoleUpdateDTO> _roleService;
     private readonly IAuthService _authService;
-    private readonly IPasswordService _passwordService;
-    private readonly IEmailService _emailService;
-	private static readonly Dictionary<string, string> _otpStore = new();
-	private static readonly Random _random = new();
+
     private readonly IConfiguration _configuration;
     private readonly GoogleService _googleService;
 
     public AuthenticationController(ITokenService jwtService,
-        IAccountsService accountService,
-        IRoleService roleService,
+        IGenericService<Account, AccountAddDTO, AccountUpdateDTO> userService,
+        IGenericService<Role, RoleAddDTO, RoleUpdateDTO> roleService,
         IConfiguration configuration,
         IAuthService authService,
-        GoogleService googleService,
-        IPasswordService passwordService,
-        IEmailService emailService)
+        GoogleService googleService)
     {
         _jwtService = jwtService;
-        _accountService = accountService;
+        _userService = userService;
         _roleService = roleService;
         _configuration = configuration;
         _googleService = googleService;
         _authService = authService;
-        _passwordService = passwordService;
-        _emailService = emailService;
     }
 
     [HttpPost("Login")]
@@ -74,7 +63,7 @@ public class AuthenticationController : ControllerBase
     [HttpGet("test-role-applicant")]
     public async Task<IActionResult> GetUsers()
     {
-        var users = await _accountService.GetAll();
+        var users = await _userService.GetAll();
         return Ok(users);
     }
 
@@ -90,7 +79,8 @@ public class AuthenticationController : ControllerBase
     {
         if (string.IsNullOrEmpty(code))
         {
-            return BadRequest("Authorization code is missing.");
+            return Redirect("http://localhost:5173/login-google?result=fail");
+            //return BadRequest("Authorization code is missing.");
         }
 
         var token = await _googleService.ExchangeCodeForToken(code);
@@ -98,11 +88,13 @@ public class AuthenticationController : ControllerBase
         try
         {
             var jwt = await _authService.GoogleAuth(userInfo);
-            return Ok(jwt);
+            return Redirect("http://localhost:5173/login-google?result=success&jwt=" + jwt.Token);
+            //return Ok(jwt);
         }
         catch (Exception ex)
         {
-            return BadRequest(new { Message = ex.Message });
+            return Redirect("http://localhost:5173/login-google?result=fail");
+            //return BadRequest(new { Message = ex.Message });
         }
     }
 
@@ -120,7 +112,49 @@ public class AuthenticationController : ControllerBase
         }
     }
 
-	[HttpPost("ChangePassword")]
+    [HttpPost("Register-admin")]
+    public async Task<IActionResult> RegisterAdmin(RegisterDTO register)
+    {
+        try
+        {
+            var token = await _authService.Register(register, RoleEnum.ADMIN);
+            return Ok(token);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
+    [HttpPost("Register-funder")]
+    public async Task<IActionResult> RegisterFunder(RegisterDTO register)
+    {
+        try
+        {
+            var token = await _authService.Register(register, RoleEnum.FUNDER);
+            return Ok(token);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
+    [HttpPost("Register-provider")]
+    public async Task<IActionResult> RegisterProvider(RegisterDTO register)
+    {
+        try
+        {
+            var token = await _authService.Register(register, RoleEnum.PROVIDER);
+            return Ok(token);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
+    [HttpPost("ChangePassword")]
 	public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO model)
 	{
 		if (!ModelState.IsValid)

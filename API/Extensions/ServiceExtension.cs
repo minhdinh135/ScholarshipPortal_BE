@@ -2,6 +2,7 @@
 using Application.Interfaces.IServices;
 using Application.Services;
 using Infrastructure.ExternalServices.Cloudinary;
+using Infrastructure.ExternalServices.Elastic;
 using Infrastructure.ExternalServices.Email;
 using Infrastructure.ExternalServices.Gemini;
 using Infrastructure.ExternalServices.Google;
@@ -62,6 +63,9 @@ public static class ServiceExtension
         services.AddScoped<ICloudinaryService, CloudinaryService>();
         
 		services.AddScoped<IEmailService, EmailService>();
+
+        services.Configure<ElasticSettings>(config.GetSection("ElasticSettings"));
+        services.AddSingleton(typeof(IElasticService<>), typeof(ElasticService<>));
         
         return services;
     }
