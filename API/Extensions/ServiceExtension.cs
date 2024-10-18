@@ -34,8 +34,8 @@ public static class ServiceExtension
 
         services.AddScoped<IMajorService, MajorService>();
         services.AddScoped<IMajorRepository, MajorRepository>();
-        
-        services.AddScoped<IReviewService,ReviewService>();
+
+		services.AddScoped<IReviewService,ReviewService>();
         services.AddScoped<ICountryService,CountryService>();
         services.AddScoped<IAwardService, AwardService>();
         services.AddScoped<IFeedbackService, FeedbackService>();
