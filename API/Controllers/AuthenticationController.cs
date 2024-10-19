@@ -18,6 +18,7 @@ public class AuthenticationController : ControllerBase
     private readonly IAccountsService _accountService;
     private readonly IRoleService _roleService;
     private readonly IAuthService _authService;
+    private readonly INotificationService _notificationService;
 	private static readonly Dictionary<string, string> _otpStore = new();
 	private static readonly Random _random = new();
 	private readonly IPasswordService _passwordService;
@@ -31,6 +32,7 @@ public class AuthenticationController : ControllerBase
         IRoleService roleService,
         IConfiguration configuration,
         IAuthService authService,
+        INotificationService notificationService,
         GoogleService googleService)
     {
         _jwtService = jwtService;
@@ -39,6 +41,7 @@ public class AuthenticationController : ControllerBase
         _configuration = configuration;
         _googleService = googleService;
         _authService = authService;
+        _notificationService = notificationService;
     }
 
     [HttpPost("Login")]
@@ -108,6 +111,14 @@ public class AuthenticationController : ControllerBase
         try
         {
             var token = await _authService.Register(register);
+            //get all admins
+            var admins = await _accountService.GetAllWithRole();
+            admins = admins.Where(x => x.RoleName == RoleEnum.ADMIN).ToList();
+
+            foreach (var admin in admins)
+            {
+                await _notificationService.SendNotification(admin.Id.ToString(), "New User", $"{register.Username} has registered.");
+            }
             return Ok(token);
         }
         catch (Exception ex)

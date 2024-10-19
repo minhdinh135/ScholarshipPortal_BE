@@ -9,6 +9,9 @@ using Infrastructure.ExternalServices.Google;
 using Infrastructure.ExternalServices.Password;
 using Infrastructure.ExternalServices.Token;
 using Infrastructure.Repositories;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
+using Infrastructure.ExternalServices.Notification;
 
 namespace SSAP.API.Extensions;
 
@@ -67,6 +70,12 @@ public static class ServiceExtension
         services.Configure<ElasticSettings>(config.GetSection("ElasticSettings"));
         services.AddSingleton(typeof(IElasticService<>), typeof(ElasticService<>));
         
+        FirebaseApp.Create(new AppOptions()
+        {
+            Credential = GoogleCredential.FromFile("./firebase-adminsdk.json"),
+        });
+
+        services.AddScoped<INotificationService, NotificationsService>();
         return services;
     }
 }
