@@ -75,13 +75,12 @@ public class ScholarshipProgramController : ControllerBase
         [FromBody] CreateScholarshipProgramRequest createScholarshipProgramRequest,
         [FromServices] IValidator<CreateScholarshipProgramRequest> validator)
     {
-        ValidationResult validationResult = validator.Validate(createScholarshipProgramRequest);
+        ValidationResult validationResult = await validator.ValidateAsync(createScholarshipProgramRequest);
 
         if (!validationResult.IsValid)
         {
-            var modelStateDictionary = ModelStateHelper.AddErrors(validationResult);
-
-            return ValidationProblem(modelStateDictionary);
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Validation errors occured",
+                ErrorHandler.GetErrors(validationResult)));
         }
 
         var createdScholarshipProgram =
@@ -101,13 +100,12 @@ public class ScholarshipProgramController : ControllerBase
         [FromBody] UpdateScholarshipProgramRequest updateScholarshipProgramRequest,
         [FromServices] IValidator<UpdateScholarshipProgramRequest> validator)
     {
-        ValidationResult validationResult = validator.Validate(updateScholarshipProgramRequest);
+        ValidationResult validationResult = await validator.ValidateAsync(updateScholarshipProgramRequest);
 
         if (!validationResult.IsValid)
         {
-            var modelStateDictionary = ModelStateHelper.AddErrors(validationResult);
-
-            return ValidationProblem(modelStateDictionary);
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Validation errors occured",
+                ErrorHandler.GetErrors(validationResult)));
         }
 
         var updatedScholarshipProgram =

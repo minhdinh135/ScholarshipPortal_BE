@@ -29,7 +29,7 @@ public class CategoryController : ControllerBase
 
     [HttpGet("paginated")]
     public async Task<IActionResult> GetCategories([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10,
-        [FromQuery] string sortBy = default, [FromQuery] string sortOrder = default)
+        [FromQuery] string sortBy = "Id", [FromQuery] string sortOrder = "asc")
     {
         var categories = await _categoryService.GetCategories(pageIndex, pageSize, sortBy, sortOrder);
 
@@ -51,13 +51,12 @@ public class CategoryController : ControllerBase
     public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequest createCategoryRequest,
         [FromServices] IValidator<CreateCategoryRequest> validator)
     {
-        ValidationResult validationResult = validator.Validate(createCategoryRequest);
+        ValidationResult validationResult = await validator.ValidateAsync(createCategoryRequest);
 
         if (!validationResult.IsValid)
         {
-            var modelStateDictionary = ModelStateHelper.AddErrors(validationResult);
-
-            return ValidationProblem(modelStateDictionary);
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Validation errors occured",
+                ErrorHandler.GetErrors(validationResult)));
         }
 
         var createdCategory = await _categoryService.CreateCategory(createCategoryRequest);
@@ -74,13 +73,12 @@ public class CategoryController : ControllerBase
         [FromBody] UpdateCategoryRequest updateCategoryRequest,
         [FromServices] IValidator<UpdateCategoryRequest> validator)
     {
-        ValidationResult validationResult = validator.Validate(updateCategoryRequest);
+        ValidationResult validationResult = await validator.ValidateAsync(updateCategoryRequest);
 
         if (!validationResult.IsValid)
         {
-            var modelStateDictionary = ModelStateHelper.AddErrors(validationResult);
-
-            return ValidationProblem(modelStateDictionary);
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Validation errors occured",
+                ErrorHandler.GetErrors(validationResult)));
         }
 
         var updatedCategory = await _categoryService.UpdateCategory(id, updateCategoryRequest);

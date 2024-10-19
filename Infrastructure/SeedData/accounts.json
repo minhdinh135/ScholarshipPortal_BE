@@ -1,0 +1,156 @@
+﻿[
+  {
+    "Username": "admin",
+    "FullName": "Admin",
+    "Email": "admin@gmail.com",
+    "PhoneNumber": "0123456789",
+    "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
+    "Address": "Ho Chi Minh, Vietnam",
+    "Avatar": "",
+    "Gender": "MALE",
+    "RoleId": 1
+  },
+  {
+    "Username": "ethan",
+    "FullName": "Ethan Carter",
+    "Email": "ethan@gmail.com",
+    "PhoneNumber": "0123456789",
+    "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
+    "Address": "Ho Chi Minh, Vietnam",
+    "Avatar": "",
+    "Gender": "MALE",
+    "RoleId": 2
+  },
+  {
+    "Username": "mia",
+    "FullName": "Mia Thompson",
+    "Email": "mia@gmail.com",
+    "PhoneNumber": "0123456789",
+    "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
+    "Address": "Ho Chi Minh, Vietnam",
+    "Avatar": "",
+    "Gender": "FEMALE",
+    "RoleId": 2
+  },
+  {
+    "Username": "leo",
+    "FullName": "Leo Patel",
+    "Email": "leo@gmail.com",
+    "PhoneNumber": "0123456789",
+    "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
+    "Address": "Ho Chi Minh, Vietnam",
+    "Avatar": "",
+    "Gender": "MALE",
+    "RoleId": 2
+  },
+  {
+    "Username": "zoe",
+    "FullName": "Zoe Johnson",
+    "Email": "zoe@gmail.com",
+    "PhoneNumber": "0123456789",
+    "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
+    "Address": "Ho Chi Minh, Vietnam",
+    "Avatar": "",
+    "Gender": "FEMALE",
+    "RoleId": 3
+  },
+  {
+    "Username": "noah",
+    "FullName": "Noah Kim",
+    "Email": "noah@gmail.com",
+    "PhoneNumber": "0123456789",
+    "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
+    "Address": "Ho Chi Minh, Vietnam",
+    "Avatar": "",
+    "Gender": "MALE",
+    "RoleId": 3
+  },
+  {
+    "Username": "ava",
+    "FullName": "Ava Martinez",
+    "Email": "ava@gmail.com",
+    "PhoneNumber": "0123456789",
+    "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
+    "Address": "Ho Chi Minh, Vietnam",
+    "Avatar": "",
+    "Gender": "FEMALE",
+    "RoleId": 3
+  },
+  {
+    "Username": "lucas",
+    "FullName": "Lucas Brown",
+    "Email": "lucas@gmail.com",
+    "PhoneNumber": "0123456789",
+    "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
+    "Address": "Ho Chi Minh, Vietnam",
+    "Avatar": "",
+    "Gender": "MALE",
+    "RoleId": 4
+  },
+  {
+    "Username": "lily",
+    "FullName": "Lily Chen",
+    "Email": "lily@gmail.com",
+    "PhoneNumber": "0123456789",
+    "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
+    "Address": "Ho Chi Minh, Vietnam",
+    "Avatar": "",
+    "Gender": "FEMALE",
+    "RoleId": 4
+  },
+  {
+    "Username": "mason",
+    "FullName": "Mason Rodriguez",
+    "Email": "mason@gmail.com",
+    "PhoneNumber": "0123456789",
+    "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
+    "Address": "Ho Chi Minh, Vietnam",
+    "Avatar": "",
+    "Gender": "MALE",
+    "RoleId": 4
+  },
+  {
+    "Username": "chloe",
+    "FullName": "Chloe Davis",
+    "Email": "chloe@gmail.com",
+    "PhoneNumber": "0123456789",
+    "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
+    "Address": "Ho Chi Minh, Vietnam",
+    "Avatar": "",
+    "Gender": "FEMALE",
+    "RoleId": 5
+  },
+  {
+    "Username": "oliver",
+    "FullName": "Oliver Garcia",
+    "Email": "oliver@gmail.com",
+    "PhoneNumber": "0123456789",
+    "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
+    "Address": "Ho Chi Minh, Vietnam",
+    "Avatar": "",
+    "Gender": "MALE",
+    "RoleId": 5
+  },
+  {
+    "Username": "emma",
+    "FullName": "Emma Wilson",
+    "Email": "emma@gmail.com",
+    "PhoneNumber": "0123456789",
+    "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
+    "Address": "Ho Chi Minh, Vietnam",
+    "Avatar": "",
+    "Gender": "MALE",
+    "RoleId": 5
+  },
+  {
+    "Username": "grace",
+    "FullName": "Grace Miller",
+    "Email": "grace@gmail.com",
+    "PhoneNumber": "0123456789",
+    "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
+    "Address": "Ho Chi Minh, Vietnam",
+    "Avatar": "",
+    "Gender": "FEMALE",
+    "RoleId": 5
+  }
+]
