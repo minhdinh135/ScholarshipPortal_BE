@@ -49,6 +49,7 @@ public class AuthService : IAuthService
 
         var roles = await _roleService.GetAll();
         roles = roles.Where(r => r.Id == userLogin.RoleId).ToList();
+        if(roles.Count() == 0) throw new Exception("Account doesn't have any role");
         if (_passwordService.VerifyPassword(login.Password, userLogin.HashedPassword))
         {
             if (roles.Any(r => r.Name == RoleEnum.ADMIN))
