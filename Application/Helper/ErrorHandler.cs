@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Domain.DTOs.Common;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
@@ -23,6 +24,17 @@ public class ErrorHandler
     {
         // Return the first error message if available
         return validationResults.FirstOrDefault()?.ErrorMessage;
+    }
+
+    public static List<ValidationError> GetErrors(FluentValidation.Results.ValidationResult validationResult)
+    {
+      return validationResult.Errors
+        .Select(e => new ValidationError
+        {
+          PropertyName = e.PropertyName,
+          ErrorMessage = e.ErrorMessage
+        })
+        .ToList();
     }
 
   public static bool Validate<T>(T obj, out List<ValidationResult> validationResults)
@@ -58,5 +70,4 @@ public class ErrorHandler
       }
       return "An error occurred while saving changes. Please try again later.";
   }
-
 }

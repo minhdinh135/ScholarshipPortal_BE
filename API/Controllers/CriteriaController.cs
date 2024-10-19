@@ -55,9 +55,8 @@ public class CriteriaController : ControllerBase
 
         if (!validationResult.IsValid)
         {
-            var modelStateDictionary = ModelStateHelper.AddErrors(validationResult);
-
-            return ValidationProblem(modelStateDictionary);
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Validation error occured",
+                ErrorHandler.GetErrors(validationResult)));
         }
 
         var createdCriteria = await _criteriaService.CreateCriteria(createCriteriaRequest);
@@ -78,9 +77,8 @@ public class CriteriaController : ControllerBase
 
         if (!validationResult.IsValid)
         {
-            var modelStateDictionary = ModelStateHelper.AddErrors(validationResult);
-
-            return ValidationProblem(modelStateDictionary);
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Validation error occured",
+                ErrorHandler.GetErrors(validationResult)));
         }
 
         var updatedCriteria = await _criteriaService.UpdateCriteria(id, updateCriteriaRequest);
