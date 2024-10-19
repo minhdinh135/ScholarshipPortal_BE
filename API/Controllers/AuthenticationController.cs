@@ -33,11 +33,16 @@ public class AuthenticationController : ControllerBase
         IConfiguration configuration,
         IAuthService authService,
         INotificationService notificationService,
+        IPasswordService passwordService,
+        IEmailService emailService,
         GoogleService googleService)
     {
         _jwtService = jwtService;
 		_accountService = userService;
         _roleService = roleService;
+        _authService = authService;
+        _passwordService = passwordService;
+        _emailService = emailService;
         _configuration = configuration;
         _googleService = googleService;
         _authService = authService;
