@@ -15,26 +15,38 @@ namespace SSAP.API.Controllers;
 public class AuthenticationController : ControllerBase
 {
     private readonly ITokenService _jwtService;
-    private readonly IGenericService<Account, AccountAddDTO, AccountUpdateDTO> _userService;
-    private readonly IGenericService<Role, RoleAddDTO, RoleUpdateDTO> _roleService;
+    private readonly IAccountsService _accountService;
+    private readonly IRoleService _roleService;
     private readonly IAuthService _authService;
+    private readonly INotificationService _notificationService;
+	private static readonly Dictionary<string, string> _otpStore = new();
+	private static readonly Random _random = new();
+	private readonly IPasswordService _passwordService;
+	private readonly IEmailService _emailService;
 
-    private readonly IConfiguration _configuration;
+	private readonly IConfiguration _configuration;
     private readonly GoogleService _googleService;
 
     public AuthenticationController(ITokenService jwtService,
-        IGenericService<Account, AccountAddDTO, AccountUpdateDTO> userService,
-        IGenericService<Role, RoleAddDTO, RoleUpdateDTO> roleService,
+        IAccountsService userService,
+        IRoleService roleService,
         IConfiguration configuration,
         IAuthService authService,
+        INotificationService notificationService,
+        IPasswordService passwordService,
+        IEmailService emailService,
         GoogleService googleService)
     {
         _jwtService = jwtService;
-        _userService = userService;
+		_accountService = userService;
         _roleService = roleService;
+        _authService = authService;
+        _passwordService = passwordService;
+        _emailService = emailService;
         _configuration = configuration;
         _googleService = googleService;
         _authService = authService;
+        _notificationService = notificationService;
     }
 
     [HttpPost("Login")]
@@ -63,7 +75,7 @@ public class AuthenticationController : ControllerBase
     [HttpGet("test-role-applicant")]
     public async Task<IActionResult> GetUsers()
     {
-        var users = await _userService.GetAll();
+        var users = await _accountService.GetAll();
         return Ok(users);
     }
 
@@ -104,6 +116,14 @@ public class AuthenticationController : ControllerBase
         try
         {
             var token = await _authService.Register(register);
+            //get all admins
+            var admins = await _accountService.GetAllWithRole();
+            admins = admins.Where(x => x.RoleName == RoleEnum.ADMIN).ToList();
+
+            foreach (var admin in admins)
+            {
+                await _notificationService.SendNotification(admin.Id.ToString(), "New User", $"{register.Username} has registered.");
+            }
             return Ok(token);
         }
         catch (Exception ex)
@@ -153,4 +173,129 @@ public class AuthenticationController : ControllerBase
             return BadRequest(new { Message = ex.Message });
         }
     }
+
+    [HttpPost("ChangePassword")]
+	public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO model)
+	{
+		if (!ModelState.IsValid)
+		{
+			return BadRequest(new { Message = "Invalid data" });
+		}
+
+		var users = await _accountService.GetAll();
+		var user = users.FirstOrDefault(u => u.Email == model.Email);
+		if (user == null)
+		{
+			return NotFound(new { Message = "User not found" });
+		}
+
+		if (!_passwordService.VerifyPassword(model.OldPassword, user.HashedPassword))
+		{
+			return Unauthorized(new { Message = "Old password is incorrect" });
+		}
+
+		if (model.NewPassword.Length < 6)
+		{
+			return BadRequest(new { Message = "New password must be at least 6 characters long" });
+		}
+
+		// Update password
+		user.HashedPassword = _passwordService.HashPassword(model.NewPassword);
+		await _accountService.Update(new AccountUpdateDTO
+		{
+			Id = user.Id,
+			Username = user.Username,
+			Email = user.Email,
+			FullName = user.FullName,
+			PhoneNumber = user.PhoneNumber,
+			HashedPassword = user.HashedPassword,
+			Address = user.Address,
+			Avatar = user.Avatar,
+			RoleId = user.RoleId,
+			Status = user.Status,
+			CreatedAt = user.CreatedAt,
+			UpdatedAt = user.UpdatedAt,
+		});
+
+		try
+		{
+			await _emailService.SendEmailAsync(user.Email, "Password Changed", "Change password successfully. Thank you!");
+		}
+		catch (Exception ex)
+		{
+			return Ok(new { Message = "Password changed but failed to send email notification." });
+		}
+
+		return Ok(new { Message = "Password changed successfully!" });
+	}
+
+	[HttpPost("ForgotPassword")]
+	public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO model)
+	{
+		var users = await _accountService.GetAll();
+		var user = users.FirstOrDefault(u => u.Email == model.Email);
+
+		if (user == null)
+		{
+			return BadRequest(new { Message = "Incorrect Email!" });
+		}
+
+		var otp = _random.Next(100000, 999999).ToString();
+		_otpStore[user.Email] = otp; 
+
+		await _emailService.SendEmailAsync(user.Email, "Your OTP Code", $"Your OTP code is: {otp}");
+
+		return Ok(new { Message = "OTP has been sent to your email." });
+	}
+
+	[HttpPost("VerifyOtp")]
+	public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDTO model)
+	{
+		if (_otpStore.TryGetValue(model.Email, out var storedOtp))
+		{
+			if (storedOtp == model.Otp)
+			{
+				_otpStore.Remove(model.Email); 
+				return Ok(new { Message = "OTP verified. You can now change your password." });
+			}
+			else
+			{
+				return BadRequest(new { Message = "Incorrect OTP!" });
+			}
+		}
+		return BadRequest(new { Message = "OTP not found for this email." });
+	}
+
+	[HttpPost("ResetPassword")]
+	public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO model)
+	{
+		var users = await _accountService.GetAll();
+		var user = users.FirstOrDefault(u => u.Email == model.Email);
+
+		if (user == null)
+		{
+			return BadRequest(new { Message = "User not found." });
+		}
+
+		user.HashedPassword = _passwordService.HashPassword(model.NewPassword);
+		await _accountService.Update(new AccountUpdateDTO
+		{
+			Id = user.Id,
+			Username = user.Username,
+			Email = user.Email,
+			FullName = user.FullName,
+			PhoneNumber = user.PhoneNumber,
+			HashedPassword = user.HashedPassword,
+			Address = user.Address,
+			Avatar = user.Avatar,
+			RoleId = user.RoleId,
+			Status = user.Status,
+			CreatedAt = user.CreatedAt,
+			UpdatedAt = user.UpdatedAt,
+		});
+
+		await _emailService.SendEmailAsync(user.Email, "Password Reset Successful", "Your password has been reset successfully!");
+
+		return Ok(new { Message = "Password reset successfully!" });
+	}
 }
