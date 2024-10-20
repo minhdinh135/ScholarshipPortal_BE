@@ -31,6 +31,8 @@ public class Account : BaseEntity
     public ICollection<ScholarshipProgram>? ProviderAssignedScholarshipPrograms { get; set; }
     
     public ICollection<Application>? Applications { get; set; }
+
+    public ICollection<Notification>? Notifications { get; set; }
     
     public ICollection<Review>? Reviews { get; set; }
     
