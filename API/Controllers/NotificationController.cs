@@ -18,7 +18,7 @@ public class NotificationController : ControllerBase
     [HttpPost("send-notification")]
     public async Task<IActionResult> SendNotification([FromBody] NotificationRequest request)
     {
-        var response = await _notificationService.SendNotification(request.Topic, request.Title, request.Body);
+        var response = await _notificationService.SendNotification(request.Topic, request.Link, request.Title, request.Body);
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Send notification successfully", response));
     }
@@ -35,6 +35,7 @@ public class NotificationController : ControllerBase
 public class NotificationRequest
 {
     public string Topic { get; set; }
+    public string Link { get; set; }
     public string Title { get; set; }
     public string Body { get; set; }
 }

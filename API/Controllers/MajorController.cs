@@ -51,13 +51,12 @@ public class MajorController : ControllerBase
     public async Task<IActionResult> CreateMajor([FromBody] CreateMajorRequest createMajorRequest,
         [FromServices] IValidator<CreateMajorRequest> validator)
     {
-        ValidationResult validationResult = validator.Validate(createMajorRequest);
+        ValidationResult validationResult = await validator.ValidateAsync(createMajorRequest);
 
         if (!validationResult.IsValid)
         {
-            var modelStateDictionary = ModelStateHelper.AddErrors(validationResult);
-
-            return ValidationProblem(modelStateDictionary);
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Validation errors occured",
+                ErrorHandler.GetErrors(validationResult)));
         }
 
         var createdMajor = await _majorService.CreateMajor(createMajorRequest);
@@ -73,13 +72,12 @@ public class MajorController : ControllerBase
     public async Task<IActionResult> UpdateMajor([FromRoute] int id,
         [FromBody] UpdateMajorRequest updateMajorRequest, [FromServices] IValidator<UpdateMajorRequest> validator)
     {
-        ValidationResult validationResult = validator.Validate(updateMajorRequest);
+        ValidationResult validationResult = await validator.ValidateAsync(updateMajorRequest);
 
         if (!validationResult.IsValid)
         {
-            var modelStateDictionary = ModelStateHelper.AddErrors(validationResult);
-
-            return ValidationProblem(modelStateDictionary);
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Validation errors occured",
+                ErrorHandler.GetErrors(validationResult)));
         }
 
         var updatedMajor = await _majorService.UpdateMajor(id, updateMajorRequest);

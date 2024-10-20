@@ -16,7 +16,14 @@ public class ScholarshipContextSeed
             var roles = JsonSerializer.Deserialize<List<Role>>(rolesData);
             context.Roles.AddRange(roles);
         }
-        
+
+        if (!context.Accounts.Any())
+        {
+            var accountsData = File.ReadAllText(basePath + "/accounts.json");
+            var accounts = JsonSerializer.Deserialize<List<Account>>(accountsData);
+            context.Accounts.AddRange(accounts);
+        }
+
         if (!context.Categories.Any())
         {
             var categoriesData = File.ReadAllText(basePath + "/categories.json");
