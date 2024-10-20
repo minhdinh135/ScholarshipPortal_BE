@@ -50,8 +50,9 @@ public class ScholarshipContext : DbContext
     public virtual DbSet<ScholarshipProgramUniversity> ScholarshipProgramUniversities { get; set; }
 
     public virtual DbSet<ScholarshipProgramMajor> ScholarshipProgramMajors { get; set; }
+	public virtual DbSet<ChatMessage> ChatMessages { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)

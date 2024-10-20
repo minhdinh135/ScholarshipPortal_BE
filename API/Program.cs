@@ -19,6 +19,9 @@ using SSAP.API.Middlewares;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Microsoft.Extensions.DependencyInjection;
+using Infrastructure.ExternalServices.Chat;
+using Application.Interfaces.IRepositories;
+using Infrastructure.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,7 +38,12 @@ builder.Services.AddControllers(options => options.SuppressInputFormatterBufferi
     });
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
+builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
 
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 //Not throw errors imidiately
 builder.Services.Configure<ApiBehaviorOptions>(options
     => options.SuppressModelStateInvalidFilter = true);
@@ -170,6 +178,7 @@ using (var scope = app.Services.CreateScope())
 //     app.UseSwagger();
 //     app.UseSwaggerUI();
 // }
+
 
 app.UseSwagger();
 app.UseSwaggerUI();
