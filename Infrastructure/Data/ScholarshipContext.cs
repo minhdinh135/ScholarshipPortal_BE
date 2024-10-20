@@ -45,6 +45,8 @@ public class ScholarshipContext : DbContext
 
     public virtual DbSet<Major> Majors { get; set; }
 
+    public virtual DbSet<Notification> Notifications { get; set; }
+
     public virtual DbSet<ScholarshipProgramCategory> ScholarshipProgramCategories { get; set; }
 
     public virtual DbSet<ScholarshipProgramUniversity> ScholarshipProgramUniversities { get; set; }

@@ -122,7 +122,7 @@ public class AuthenticationController : ControllerBase
 
             foreach (var admin in admins)
             {
-                await _notificationService.SendNotification(admin.Id.ToString(), "New User", $"{register.Username} has registered.");
+                await _notificationService.SendNotification(admin.Id.ToString(), "http://localhost:5173", "New User", $"{register.Username} has registered.");
             }
             return Ok(token);
         }
