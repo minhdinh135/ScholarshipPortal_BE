@@ -99,8 +99,8 @@ public class AuthenticationController : ControllerBase
         var userInfo = await _googleService.GetUserInfo(token);
         try
         {
-            var jwt = await _authService.GoogleAuth(userInfo);
-            return Redirect("http://localhost:5173/login-google?result=success&jwt=" + jwt.Token);
+            var (jwt, isNewUser) = await _authService.GoogleAuth(userInfo);
+            return Redirect("http://localhost:5173/login-google?result=success&isNewUser=" + isNewUser + "&jwt=" + jwt.Token);
             //return Ok(jwt);
         }
         catch (Exception ex)
@@ -116,14 +116,6 @@ public class AuthenticationController : ControllerBase
         try
         {
             var token = await _authService.Register(register);
-            //get all admins
-            var admins = await _accountService.GetAllWithRole();
-            admins = admins.Where(x => x.RoleName == RoleEnum.ADMIN).ToList();
-
-            foreach (var admin in admins)
-            {
-                await _notificationService.SendNotification(admin.Id.ToString(), "http://localhost:5173", "New User", $"{register.Username} has registered.");
-            }
             return Ok(token);
         }
         catch (Exception ex)
