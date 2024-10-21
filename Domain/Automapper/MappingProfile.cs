@@ -60,6 +60,7 @@ namespace Domain.Automapper
             CreateMap<Notification, NotificationAddDTO>().ReverseMap();
             CreateMap<Notification, NotificationUpdateDTO>().ReverseMap();
             CreateMap<Notification, NotificationDTO>().ReverseMap();
+            CreateMap<NotificationDTO, NotificationUpdateDTO>().ReverseMap();
         }
     }
 }
