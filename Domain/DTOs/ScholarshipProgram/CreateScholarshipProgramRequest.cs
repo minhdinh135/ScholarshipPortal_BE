@@ -1,9 +1,6 @@
-﻿using Domain.DTOs.Common;
-using Microsoft.AspNetCore.Http;
+﻿namespace Domain.DTOs.ScholarshipProgram;
 
-namespace Domain.DTOs.ScholarshipProgram;
-
-public class CreateScholarshipProgramRequest : BaseCreateRequest
+public class CreateScholarshipProgramRequest 
 {
     public string? Name { get; set; }
     

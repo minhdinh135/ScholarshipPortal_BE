@@ -40,7 +40,6 @@ public static class ServiceExtension
 
 		services.AddScoped<IReviewService,ReviewService>();
         services.AddScoped<ICountryService,CountryService>();
-        services.AddScoped<IAwardService, AwardService>();
         services.AddScoped<IFeedbackService, FeedbackService>();
         services.AddScoped<IApplicantProfileService, ApplicantProfileService>();
         services.AddScoped<IUniversityService, UniversityService>();

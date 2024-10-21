@@ -8,7 +8,9 @@
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "",
     "Gender": "MALE",
-    "RoleId": 1
+    "RoleId": 1,
+    "LoginWithGoogle": false,
+    "Status": "ACTIVE"
   },
   {
     "Username": "ethan",
@@ -19,7 +21,9 @@
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "",
     "Gender": "MALE",
-    "RoleId": 2
+    "RoleId": 2,
+    "LoginWithGoogle": false,
+    "Status": "ACTIVE"
   },
   {
     "Username": "mia",
@@ -30,7 +34,9 @@
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "",
     "Gender": "FEMALE",
-    "RoleId": 2
+    "RoleId": 2,
+    "LoginWithGoogle": false,
+    "Status": "ACTIVE"
   },
   {
     "Username": "leo",
@@ -41,7 +47,9 @@
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "",
     "Gender": "MALE",
-    "RoleId": 2
+    "RoleId": 2,
+    "LoginWithGoogle": false,
+    "Status": "ACTIVE"
   },
   {
     "Username": "zoe",
@@ -52,7 +60,9 @@
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "",
     "Gender": "FEMALE",
-    "RoleId": 3
+    "RoleId": 3,
+    "LoginWithGoogle": false,
+    "Status": "ACTIVE"
   },
   {
     "Username": "noah",
@@ -63,7 +73,9 @@
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "",
     "Gender": "MALE",
-    "RoleId": 3
+    "RoleId": 3,
+    "LoginWithGoogle": false,
+    "Status": "ACTIVE"
   },
   {
     "Username": "ava",
@@ -74,7 +86,9 @@
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "",
     "Gender": "FEMALE",
-    "RoleId": 3
+    "RoleId": 3,
+    "LoginWithGoogle": false,
+    "Status": "ACTIVE"
   },
   {
     "Username": "lucas",
@@ -85,7 +99,9 @@
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "",
     "Gender": "MALE",
-    "RoleId": 4
+    "RoleId": 4,
+    "LoginWithGoogle": false,
+    "Status": "ACTIVE"
   },
   {
     "Username": "lily",
@@ -96,7 +112,9 @@
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "",
     "Gender": "FEMALE",
-    "RoleId": 4
+    "RoleId": 4,
+    "LoginWithGoogle": false,
+    "Status": "ACTIVE"
   },
   {
     "Username": "mason",
@@ -107,7 +125,9 @@
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "",
     "Gender": "MALE",
-    "RoleId": 4
+    "RoleId": 4,
+    "LoginWithGoogle": false,
+    "Status": "ACTIVE"
   },
   {
     "Username": "chloe",
@@ -118,7 +138,9 @@
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "",
     "Gender": "FEMALE",
-    "RoleId": 5
+    "RoleId": 5,
+    "LoginWithGoogle": false,
+    "Status": "ACTIVE"
   },
   {
     "Username": "oliver",
@@ -129,7 +151,9 @@
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "",
     "Gender": "MALE",
-    "RoleId": 5
+    "RoleId": 5,
+    "LoginWithGoogle": false,
+    "Status": "ACTIVE"
   },
   {
     "Username": "emma",
@@ -140,7 +164,9 @@
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "",
     "Gender": "MALE",
-    "RoleId": 5
+    "RoleId": 5,
+    "LoginWithGoogle": false,
+    "Status": "ACTIVE"
   },
   {
     "Username": "grace",
@@ -151,6 +177,8 @@
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "",
     "Gender": "FEMALE",
-    "RoleId": 5
+    "RoleId": 5,
+    "LoginWithGoogle": false,
+    "Status": "ACTIVE"
   }
 ]

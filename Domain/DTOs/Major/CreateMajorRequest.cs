@@ -1,8 +1,6 @@
-﻿using Domain.DTOs.Common;
+﻿namespace Domain.DTOs.Major;
 
-namespace Domain.DTOs.Major;
-
-public class CreateMajorRequest : BaseCreateRequest
+public class CreateMajorRequest 
 {
     public string? Name { get; set; }
 

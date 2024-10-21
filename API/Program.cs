@@ -1,12 +1,6 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using Application.Common;
-using Application.Interfaces.IServices;
-using Application.Validators.Category;
-using AutoMapper;
-using CloudinaryDotNet;
-using Domain.Automapper;
-using Domain.DTOs.Category;
 using FluentValidation;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,10 +10,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SSAP.API.Extensions;
 using SSAP.API.Middlewares;
-using Twilio;
-using Twilio.Rest.Api.V2010.Account;
-using Microsoft.Extensions.DependencyInjection;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,17 +37,6 @@ builder.Services.AddMapperServices();
 
 // Add FluentValidation validators
 builder.Services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
-
-// Configure Cloudinary account from appsettings
-builder.Services.AddSingleton(_ =>
-{
-    var cloudinarySettings = builder.Configuration.GetSection("Cloudinary");
-    return new Cloudinary(new Account(
-        cloudinarySettings["CloudName"],
-        cloudinarySettings["ApiKey"],
-        cloudinarySettings["ApiSecret"]
-    ));
-});
 
 // Register services and inject dependencies
 builder.Services.AddApplicationServices(builder.Configuration);
@@ -162,7 +141,6 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "An error occurred during migration or seeding.");
     }
 }
-
 
 // Configure the HTTP request pipeline.
 // if (app.Environment.IsDevelopment())

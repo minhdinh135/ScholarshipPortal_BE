@@ -80,7 +80,6 @@ public class ScholarshipProgramService : IScholarshipProgramService
     {
         var existingScholarshipProgram = await _scholarshipProgramRepository.GetScholarsipProgramById(id);
 
-        await _scholarshipProgramRepository.ClearExistingCategories(existingScholarshipProgram);
         await _scholarshipProgramRepository.ClearExistingUniversities(existingScholarshipProgram);
         await _scholarshipProgramRepository.ClearExistingMajors(existingScholarshipProgram);
 

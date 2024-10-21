@@ -1,12 +1,12 @@
 ﻿namespace Domain.Entities;
 
-public class Feedback : BaseEntity
+public class Request : BaseEntity
 {
-    public string? Content { get; set; }
+    public string? Description { get; set; }
     
-    public double? Rating { get; set; } 
+    public DateTime? RequestDate { get; set; }
     
-    public DateTime? FeedbackDate { get; set; }
+    public string? Status { get; set; }
     
     public int? ApplicantId { get; set; }
     
