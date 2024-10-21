@@ -14,11 +14,13 @@ public class ApplicantProfile : BaseEntity
     
     public string? Ethnicity { get; set; }
     
-    public string? Avatar { get; set; }
-    
     public int? ApplicantId { get; set; }
     
     public Account? Applicant { get; set; }
     
     public ICollection<Achievement>? Achievements { get; set; }
+    
+    public ICollection<ApplicantSkill>? ApplicantSkills { get; set; }
+    
+    public ICollection<ApplicantCertificate>? ApplicantCertificates { get; set; }
 }

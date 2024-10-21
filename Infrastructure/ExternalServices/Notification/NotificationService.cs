@@ -73,16 +73,16 @@ public class NotificationsService : INotificationService
         };
 
         string response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
-        var noti = await _notificationRepository.Add(new Domain.Entities.Notification
-        {
-            AccountId = Int32.Parse(topic),
-            Link = link,
-            Title = title,
-            Body = body,
-            Icon = "",
-            Time = DateTime.Now,
-            Status = "UNREAD"
-        });
+        // var noti = await _notificationRepository.Add(new Domain.Entities.Notification
+        // {
+        //     AccountId = Int32.Parse(topic),
+        //     Link = link,
+        //     Title = title,
+        //     Body = body,
+        //     Icon = "",
+        //     Time = DateTime.Now,
+        //     Status = "UNREAD"
+        // });
         return response;
     }
 

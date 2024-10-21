@@ -12,11 +12,9 @@ public class MajorProfile : Profile
         CreateMap<Major, MajorDto>()
             .IncludeBase<BaseEntity, BaseDto>()
             .ReverseMap();
-        
-        CreateMap<CreateMajorRequest, Major>()
-            .IncludeBase<BaseCreateRequest, BaseEntity>();
-        
-        CreateMap<UpdateMajorRequest, Major>()
-            .IncludeBase<BaseUpdateRequest, BaseEntity>();
+
+        CreateMap<CreateMajorRequest, Major>();
+
+        CreateMap<UpdateMajorRequest, Major>();
     }
 }

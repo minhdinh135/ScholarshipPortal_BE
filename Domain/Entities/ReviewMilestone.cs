@@ -1,10 +1,12 @@
 ﻿namespace Domain.Entities;
 
-public class Criteria : BaseEntity
+public class ReviewMilestone : BaseEntity
 {
-    public string? Name { get; set; }
-    
     public string? Description { get; set; }
+    
+    public DateTime? FromDate { get; set; }
+    
+    public DateTime? ToDate { get; set; }
     
     public int? ScholarshipProgramId { get; set; }
     

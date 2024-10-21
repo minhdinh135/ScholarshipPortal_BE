@@ -9,23 +9,23 @@ namespace Application.Services
 {
 	public class DocumentService : IDocumentService
 	{
-		private readonly IGenericRepository<Document> _repository;
+		private readonly IGenericRepository<ApplicationDocument> _repository;
 		private readonly IMapper _mapper;
 
-		public DocumentService(IGenericRepository<Document> repository, IMapper mapper)
+		public DocumentService(IGenericRepository<ApplicationDocument> repository, IMapper mapper)
 		{
 			_repository = repository;
 			_mapper = mapper;
 		}
 
-		public async Task<Document> Add(AddDocumentDTO dto)
+		public async Task<ApplicationDocument> Add(AddDocumentDTO dto)
 		{
-			var entity = _mapper.Map<Document>(dto);
+			var entity = _mapper.Map<ApplicationDocument>(dto);
 			await _repository.Add(entity);
 			return entity;
 		}
 
-		public async Task<Document> Delete(int id)
+		public async Task<ApplicationDocument> Delete(int id)
 		{
 			var entity = await _repository.GetById(id);
 			if (entity == null) return null;
@@ -33,22 +33,22 @@ namespace Application.Services
 			return entity;
 		}
 
-		public async Task<Document> Get(int id)
+		public async Task<ApplicationDocument> Get(int id)
 		{
 			return await _repository.GetById(id);
 		}
 
-		public async Task<IEnumerable<Document>> GetAll()
+		public async Task<IEnumerable<ApplicationDocument>> GetAll()
 		{
 			return await _repository.GetAll();
 		}
 
-		public async Task<Document> Update(UpdateDocumentDTO dto)
+		public async Task<ApplicationDocument> Update(UpdateDocumentDTO dto)
 		{
 			var university = await _repository.GetAll();
 			var exist = university.Any(u => u.Id == dto.Id);
 			if (!exist) throw new Exception("Document not found.");
-			var entity = _mapper.Map<Document>(dto);
+			var entity = _mapper.Map<ApplicationDocument>(dto);
 			await _repository.Update(entity);
 			return entity;
 		}

@@ -1,27 +1,22 @@
 ﻿[
   {
     "Id": 1,
-    "Name": "ADMIN",
-    "Status": "ACTIVE"
+    "Name": "ADMIN"
   },
   {
     "Id": 2,
-    "Name": "FUNDER",
-    "Status": "ACTIVE"
+    "Name": "FUNDER"
   },
   {
     "Id": 3,
-    "Name": "EXPERT",
-    "Status": "ACTIVE"
+    "Name": "EXPERT"
   },
   {
     "Id": 4,
-    "Name": "PROVIDER",
-    "Status": "ACTIVE"
+    "Name": "PROVIDER"
   },
   {
     "Id": 5,
-    "Name": "APPLICANT",
-    "Status": "ACTIVE"
+    "Name": "APPLICANT"
   }
 ]

@@ -1,8 +1,6 @@
-﻿using Domain.DTOs.Common;
+﻿namespace Domain.DTOs.Criteria;
 
-namespace Domain.DTOs.Criteria;
-
-public class CreateCriteriaRequest : BaseCreateRequest
+public class CreateCriteriaRequest 
 {
     public string? Title { get; set; }
 

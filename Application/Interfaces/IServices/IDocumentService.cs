@@ -12,10 +12,10 @@ namespace Application.Interfaces.IServices
 {
 	public interface IDocumentService
 	{
-		Task<IEnumerable<Document>> GetAll();
-		Task<Document> Get(int id);
-		Task<Document> Add(AddDocumentDTO dto);
-		Task<Document> Update(UpdateDocumentDTO dto);
-		Task<Document> Delete(int id);
+		Task<IEnumerable<ApplicationDocument>> GetAll();
+		Task<ApplicationDocument> Get(int id);
+		Task<ApplicationDocument> Add(AddDocumentDTO dto);
+		Task<ApplicationDocument> Update(UpdateDocumentDTO dto);
+		Task<ApplicationDocument> Delete(int id);
 	}
 }
