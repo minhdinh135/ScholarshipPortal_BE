@@ -6,6 +6,7 @@ using Domain.DTOs.Application;
 using Domain.DTOs.Country;
 using Domain.DTOs.Document;
 using Domain.DTOs.Feedback;
+using Domain.DTOs.Notification;
 using Domain.DTOs.Review;
 using Domain.DTOs.Role;
 using Domain.DTOs.University;
@@ -51,6 +52,11 @@ namespace Domain.Automapper
             CreateMap<Application, ApplicationAddDTO>().ReverseMap();
             CreateMap<Application, ApplicationUpdateDTO>().ReverseMap();
             CreateMap<Application, ApplicationDTO>().ReverseMap();
+
+            CreateMap<Notification, NotificationAddDTO>().ReverseMap();
+            CreateMap<Notification, NotificationUpdateDTO>().ReverseMap();
+            CreateMap<Notification, NotificationDTO>().ReverseMap();
+            CreateMap<NotificationDTO, NotificationUpdateDTO>().ReverseMap();
         }
     }
 }

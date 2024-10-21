@@ -1,5 +1,6 @@
 using Application.Helper;
 using Application.Interfaces.IServices;
+using AutoMapper;
 using Domain.Constants;
 using Domain.DTOs.Account;
 using Domain.DTOs.Authentication;
@@ -138,7 +139,7 @@ public class AuthService : IAuthService
     }
 
 
-    public async Task<JwtDTO> GoogleAuth(UserInfo userInfo)
+    public async Task<(JwtDTO jwt, bool isNewUser)> GoogleAuth(UserInfo userInfo)
     {
         if (!ErrorHandler.Validate(userInfo, out var validationResults))
         {
@@ -152,7 +153,7 @@ public class AuthService : IAuthService
         if (users.Count() > 0)
         {
             JwtDTO jwt = _tokenService.CreateToken(_configuration, users.FirstOrDefault(), RoleEnum.APPLICANT);
-            return jwt;
+            return (jwt, false);
         }
 
         //check if role exist
@@ -189,6 +190,6 @@ public class AuthService : IAuthService
         var user = await _userService.Add(userDTO);
         JwtDTO jwt1 = _tokenService.CreateToken(_configuration, user, RoleEnum.APPLICANT);
 
-        return jwt1;
+        return (jwt1, true);
     }
 }
