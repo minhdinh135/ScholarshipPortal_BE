@@ -16,19 +16,32 @@ namespace Infrastructure.Repositories
 			_context = context;
 		}
 
-		public async Task SaveMessageAsync(ChatMessage message)
+		public async Task SaveMessageAsync(Chat message)
 		{
-			await _context.ChatMessages.AddAsync(message);
+			await _context.Chats.AddAsync(message);
 			await _context.SaveChangesAsync();
 		}
 
-		public async Task<List<ChatMessage>> GetChatHistoryAsync(int userId, int contactId)
+		public async Task<List<Chat>> GetChatHistoryAsync(int userId, int contactId)
 		{
-			return await _context.ChatMessages
+			return await _context.Chats
 				.Where(m => (m.SenderId == userId && m.ReceiverId == contactId) ||
-							 (m.SenderId == contactId && m.ReceiverId == userId))
-				.OrderBy(m => m.Timestamp)
+							(m.SenderId == contactId && m.ReceiverId == userId))
+				.OrderBy(m => m.SentDate)
 				.ToListAsync();
 		}
+
+		public async Task SaveChangesAsync()
+		{
+			await _context.SaveChangesAsync();
+		}
+
+		public async Task<IEnumerable<Chat>> GetMessagesByReceiverId(int receiverId)
+		{
+			return await _context.Chats
+				.Where(chat => chat.ReceiverId == receiverId)
+				.ToListAsync();
+		}
+
 	}
 }

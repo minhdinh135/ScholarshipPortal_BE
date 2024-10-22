@@ -2,7 +2,7 @@
 
 public class PaginatedList<T>
 {
-    public IEnumerable<T> Items { get; }
+    public IEnumerable<T> Items { get; set; }
     public int PageIndex { get; }
     public int TotalPages { get; }
     public bool HasPreviousPage => PageIndex > 1;

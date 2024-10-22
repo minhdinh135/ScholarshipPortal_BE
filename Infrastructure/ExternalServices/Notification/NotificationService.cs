@@ -2,33 +2,57 @@ using FirebaseAdmin.Messaging;
 using Application.Interfaces.IServices;
 using Domain.DTOs.Notification;
 using Domain.DTOs.Common;
+using AutoMapper;
+using Application.Interfaces.IRepositories;
 
 namespace Infrastructure.ExternalServices.Notification;
 public class NotificationsService : INotificationService
 {
-    public Task<NotificationDTO> Add(NotificationAddDTO dto)
+    private readonly IMapper _mapper;
+    private readonly IGenericRepository<Domain.Entities.Notification> _notificationRepository;
+
+    public NotificationsService(IMapper mapper, 
+            IGenericRepository<Domain.Entities.Notification> notificationService)
     {
-        throw new NotImplementedException();
+        _mapper = mapper;
+        _notificationRepository = notificationService;
     }
 
-    public Task<NotificationDTO> DeleteById(int id)
+    public async Task<NotificationDTO> Add(NotificationAddDTO dto)
     {
-        throw new NotImplementedException();
+        var noti = _mapper.Map<Domain.Entities.Notification>(dto);
+
+        var createdNoti = await _notificationRepository.Add(noti);
+
+        return _mapper.Map<NotificationDTO>(createdNoti);
     }
 
-    public Task<IEnumerable<NotificationDTO>> GetAll()
+    public async Task<NotificationDTO> DeleteById(int id)
     {
-        throw new NotImplementedException();
+        var deletedNoti = await _notificationRepository.DeleteById(id);
+
+        return _mapper.Map<NotificationDTO>(deletedNoti);
     }
 
-    public Task<PaginatedList<NotificationDTO>> GetAll(int pageIndex, int pageSize, string sortBy, string sortOrder)
+    public async Task<IEnumerable<NotificationDTO>> GetAll()
     {
-        throw new NotImplementedException();
+        var all = await _notificationRepository.GetAll();
+
+        return _mapper.Map<IEnumerable<NotificationDTO>>(all);
     }
 
-    public Task<NotificationDTO> GetById(int id)
+    public async Task<PaginatedList<NotificationDTO>> GetAll(int pageIndex, int pageSize, string sortBy, string sortOrder)
     {
-        throw new NotImplementedException();
+        var notis = await _notificationRepository.GetPaginatedList(pageIndex, pageSize, sortBy, sortOrder);
+
+        return _mapper.Map<PaginatedList<NotificationDTO>>(notis);
+    }
+
+    public async Task<NotificationDTO> GetById(int id)
+    {
+        var noti = await _notificationRepository.GetById(id);
+
+        return _mapper.Map<NotificationDTO>(noti);
     }
 
     public async Task<string> SendNotification(string topic, string link, string title, string body)
@@ -49,6 +73,16 @@ public class NotificationsService : INotificationService
         };
 
         string response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
+        // var noti = await _notificationRepository.Add(new Domain.Entities.Notification
+        // {
+        //     AccountId = Int32.Parse(topic),
+        //     Link = link,
+        //     Title = title,
+        //     Body = body,
+        //     Icon = "",
+        //     Time = DateTime.Now,
+        //     Status = "UNREAD"
+        // });
         return response;
     }
 
@@ -67,8 +101,14 @@ public class NotificationsService : INotificationService
         }
     }
 
-    public Task<NotificationDTO> Update(int id, NotificationUpdateDTO dto)
+    public async Task<NotificationDTO> Update(int id, NotificationUpdateDTO dto)
     {
-        throw new NotImplementedException();
+        var existingNoti = await _notificationRepository.GetById(id);
+
+        _mapper.Map(dto, existingNoti);
+
+        var updatedMajor = await _notificationRepository.Update(existingNoti);
+
+        return _mapper.Map<NotificationDTO>(updatedMajor);
     }
 }

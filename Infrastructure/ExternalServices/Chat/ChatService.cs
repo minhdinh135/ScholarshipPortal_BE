@@ -1,8 +1,7 @@
 ﻿using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
-using Domain.DTOs.Chat;
-using Domain.Entities;
 using FirebaseAdmin.Messaging;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.ExternalServices.Chat
@@ -11,11 +10,13 @@ namespace Infrastructure.ExternalServices.Chat
 	{
 		private readonly ILogger<ChatService> _logger;
 		private readonly IChatMessageRepository _chatMessageRepository;
+		private readonly IHubContext<ChatHub> _chatHubContext;
 
-		public ChatService(ILogger<ChatService> logger, IChatMessageRepository chatMessageRepository)
+		public ChatService(ILogger<ChatService> logger, IChatMessageRepository chatMessageRepository, IHubContext<ChatHub> chatHubContext)
 		{
 			_logger = logger;
 			_chatMessageRepository = chatMessageRepository;
+			_chatHubContext = chatHubContext;
 		}
 
 		public async Task<string> SendMessage(int senderId, int receiverId, string message)
@@ -29,7 +30,7 @@ namespace Infrastructure.ExternalServices.Chat
 				{ "SenderId", senderId.ToString() },
 				{ "ReceiverId", receiverId.ToString() },
 				{ "Message", message },
-				{ "Timestamp", DateTime.UtcNow.ToString("o") }
+				{ "SentDate", DateTime.Now.ToString("o") }
 			},
 					Topic = $"{receiverId}"
 				};
@@ -38,34 +39,58 @@ namespace Infrastructure.ExternalServices.Chat
 
 				_logger.LogInformation($"Message sent successfully from {senderId} to {receiverId}. Response: {response}");
 
-				var chatMessage = new ChatMessage
+				var chatMessage = new Domain.Entities.Chat
 				{
 					SenderId = senderId,
 					ReceiverId = receiverId,
 					Message = message,
-					Timestamp = DateTime.UtcNow
+					SentDate = DateTime.Now,
+					IsRead = false
 				};
 
 				await SaveMessageAsync(chatMessage);
+				await _chatHubContext.Clients.User(receiverId.ToString()).SendAsync("ReceiveMessage", senderId, message);
 
 				return response;
 			}
-			catch (FirebaseMessagingException ex)
-			{
-				_logger.LogError(ex, "Firebase messaging error while sending message.");
-				throw new Exception("Failed to send message via Firebase.");
-			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, "An unexpected error occurred while sending the message.");
-				throw new Exception("An unexpected error occurred while sending the message.");
+				_logger.LogError(ex, "An error occurred while sending the message.");
+				throw;
 			}
 		}
 
-
-		public async Task SaveMessageAsync(ChatMessage message)
+		public async Task SaveMessageAsync(Domain.Entities.Chat message)
 		{
+			message.IsRead = false; 
 			await _chatMessageRepository.SaveMessageAsync(message);
 		}
+
+
+		public async Task<List<Domain.Entities.Chat>> GetChatHistoryAsync(int userId, int contactId)
+		{
+			var chatHistory = await _chatMessageRepository.GetChatHistoryAsync(userId, contactId);
+
+			foreach (var message in chatHistory.Where(m => m.ReceiverId == userId && !m.IsRead.HasValue || m.IsRead == false))
+			{
+				message.IsRead = true;
+			}
+
+			await _chatMessageRepository.SaveChangesAsync();
+
+			foreach (var message in chatHistory)
+			{
+				message.SentDate = DateTime.SpecifyKind(message.SentDate.Value, DateTimeKind.Local);
+			}
+
+			return chatHistory;
+		}
+
+
+		public async Task<IEnumerable<Domain.Entities.Chat>> GetAllMessagesAsync(int receiverId)
+		{
+			return await _chatMessageRepository.GetMessagesByReceiverId(receiverId);
+		}
+
 	}
 }

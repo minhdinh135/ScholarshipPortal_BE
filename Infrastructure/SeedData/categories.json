@@ -2,19 +2,16 @@
   {
     "Id": 1,
     "Name": "Merit-based",
-    "Description": "For excellent achievements",
-    "Status": "ACTIVE"
+    "Description": "For excellent achievements"
   },
   {
     "Id": 2,
     "Name": "Regional",
-    "Description": "For people at certain areas",
-    "Status" : "ACTIVE"
+    "Description": "For people at certain areas"
   },
   {
     "Id": 3,
     "Name": "Minority and Ethnic",
-    "Description": "For people with certain ethnicity",
-    "Status" : "ACTIVE"
+    "Description": "For people with certain ethnicity"
   }
 ]

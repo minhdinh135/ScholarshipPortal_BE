@@ -9,20 +9,20 @@ namespace Application.Services
 {
 	public class ReviewService : IReviewService
 	{
-		private readonly IGenericRepository<Review> _repository;
+		private readonly IGenericRepository<ApplicationReview> _repository;
 		protected readonly IMapper _mapper;
-		public ReviewService(IGenericRepository<Review> repository, IMapper mapper) {
+		public ReviewService(IGenericRepository<ApplicationReview> repository, IMapper mapper) {
 			_repository = repository;
 			_mapper = mapper;
 		}
-		public async Task<Review> Add(AddReviewDTO dto)
+		public async Task<ApplicationReview> Add(AddReviewDTO dto)
 		{ 
-			var entity = _mapper.Map<Review>(dto);
+			var entity = _mapper.Map<ApplicationReview>(dto);
 			await _repository.Add(entity);
 			return entity;
 		}
 
-		public async Task<Review> Delete(int keys)
+		public async Task<ApplicationReview> Delete(int keys)
 		{
 			var entity = await _repository.GetById(keys);
 			if (entity == null) return null;
@@ -30,24 +30,24 @@ namespace Application.Services
 			return entity;
 		}
 
-		public async Task<Review> Get(int keys)
+		public async Task<ApplicationReview> Get(int keys)
 		{
 			var entity = await _repository.GetById(keys);
 			return entity;
 		}
 
-		public async Task<IEnumerable<Review>> GetAll()
+		public async Task<IEnumerable<ApplicationReview>> GetAll()
 		{
 			var entities = await _repository.GetAll();
 			return entities;
 		}
 
-		public async Task<Review> Update(UpdateReviewDTO dto)
+		public async Task<ApplicationReview> Update(UpdateReviewDTO dto)
 		{
 			var university = await _repository.GetAll();
 			var exist = university.Any(u => u.Id == dto.Id);
 			if (!exist) throw new Exception("Review not found.");
-			var entity = _mapper.Map<Review>(dto);
+			var entity = _mapper.Map<ApplicationReview>(dto);
 			await _repository.Update(entity);
 			return entity;
 		}

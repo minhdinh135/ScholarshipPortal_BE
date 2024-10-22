@@ -1,8 +1,6 @@
-﻿using Domain.DTOs.Common;
+﻿namespace Domain.DTOs.Major;
 
-namespace Domain.DTOs.Major;
-
-public class UpdateMajorRequest : BaseUpdateRequest
+public class UpdateMajorRequest 
 {
     public string? Name { get; set; }
 

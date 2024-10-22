@@ -10,5 +10,5 @@ public interface IAuthService
 
     Task<JwtDTO> Register(RegisterDTO registerDto, string role = RoleEnum.APPLICANT);
 
-    Task<JwtDTO> GoogleAuth(UserInfo userInfo);
+    Task<(JwtDTO jwt, bool isNewUser)> GoogleAuth(UserInfo userInfo);
 }

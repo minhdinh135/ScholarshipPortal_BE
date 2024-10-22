@@ -13,10 +13,8 @@ public class CategoryProfile : Profile
             .IncludeBase<BaseEntity, BaseDto>()
             .ReverseMap();
         
-        CreateMap<CreateCategoryRequest, Category>()
-            .IncludeBase<BaseCreateRequest, BaseEntity>();
+        CreateMap<CreateCategoryRequest, Category>();
         
-        CreateMap<UpdateCategoryRequest, Category>()
-            .IncludeBase<BaseUpdateRequest, BaseEntity>();
+        CreateMap<UpdateCategoryRequest, Category>();
     }
 }

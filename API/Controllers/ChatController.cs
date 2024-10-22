@@ -1,6 +1,5 @@
 ﻿using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
-using Application.Services;
 using Domain.DTOs.Chat;
 using Domain.DTOs.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -47,8 +46,22 @@ namespace SSAP.API.Controllers
 		[HttpPost("history")]
 		public async Task<IActionResult> GetChatHistory([FromBody] ChatHistoryRequest request)
 		{
-			var chatHistory = await _chatMessageRepository.GetChatHistoryAsync(request.UserId, request.ContactId);
+			var chatHistory = await _chatService.GetChatHistoryAsync(request.UserId, request.ContactId);
+
 			return Ok(new ApiResponse(StatusCodes.Status200OK, "Chat history retrieved successfully", chatHistory));
+		}
+
+		[HttpGet("all-messages/{receiverId}")]
+		public async Task<IActionResult> GetAllMessages(int receiverId)
+		{
+			var messages = await _chatService.GetAllMessagesAsync(receiverId);
+
+			if (messages == null || !messages.Any())
+			{
+				return NotFound(new ApiResponse(StatusCodes.Status404NotFound, "No messages found for the specified receiver", null));
+			}
+
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Messages retrieved successfully", messages));
 		}
 	}
 }

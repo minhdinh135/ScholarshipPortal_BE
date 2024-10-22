@@ -11,10 +11,10 @@ namespace Application.Interfaces.IServices
 {
 	public interface IReviewService
 	{
-		Task<IEnumerable<Review>> GetAll();
-		Task<Review> Get(int keys);
-		Task<Review> Add(AddReviewDTO dto);
-		Task<Review> Update(UpdateReviewDTO dto);
-		Task<Review> Delete(int keys);
+		Task<IEnumerable<ApplicationReview>> GetAll();
+		Task<ApplicationReview> Get(int keys);
+		Task<ApplicationReview> Add(AddReviewDTO dto);
+		Task<ApplicationReview> Update(UpdateReviewDTO dto);
+		Task<ApplicationReview> Delete(int keys);
 	}
 }

@@ -2,7 +2,7 @@
 
 namespace Domain.DTOs.ScholarshipProgram;
 
-public class UpdateScholarshipProgramRequest : BaseUpdateRequest
+public class UpdateScholarshipProgramRequest 
 {
     public string? Name { get; set; }
 

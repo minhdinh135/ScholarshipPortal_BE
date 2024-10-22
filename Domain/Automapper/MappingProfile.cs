@@ -3,7 +3,6 @@ using Domain.DTOs.Account;
 using Domain.DTOs.Achievement;
 using Domain.DTOs.ApplicantProfile;
 using Domain.DTOs.Application;
-using Domain.DTOs.Award;
 using Domain.DTOs.Country;
 using Domain.DTOs.Document;
 using Domain.DTOs.Feedback;
@@ -27,17 +26,14 @@ namespace Domain.Automapper
             CreateMap<Role, RoleUpdateDTO>().ReverseMap();
             CreateMap<Role, RoleDTO>().ReverseMap();
 
-            CreateMap<Review, AddReviewDTO>().ReverseMap();
-            CreateMap<Review, UpdateReviewDTO>().ReverseMap();
+            CreateMap<ApplicationReview, AddReviewDTO>().ReverseMap();
+            CreateMap<ApplicationReview, UpdateReviewDTO>().ReverseMap();
 
             CreateMap<Feedback, AddFeedbackDTO>().ReverseMap();
             CreateMap<Feedback, UpdateFeedbackDTO>().ReverseMap();
 
-            CreateMap<Document, AddDocumentDTO>().ReverseMap();
-            CreateMap<Document, UpdateDocumentDTO>().ReverseMap();
-
-            CreateMap<Award, AddAwardDTO>().ReverseMap();
-            CreateMap<Award, UpdateAwardDTO>().ReverseMap();
+            CreateMap<ApplicationDocument, AddDocumentDTO>().ReverseMap();
+            CreateMap<ApplicationDocument, UpdateDocumentDTO>().ReverseMap();
 
             CreateMap<ApplicantProfile, AddApplicantProfileDTO>().ReverseMap();
             CreateMap<ApplicantProfile, UpdateApplicantProfileDTO>().ReverseMap();
@@ -60,6 +56,7 @@ namespace Domain.Automapper
             CreateMap<Notification, NotificationAddDTO>().ReverseMap();
             CreateMap<Notification, NotificationUpdateDTO>().ReverseMap();
             CreateMap<Notification, NotificationDTO>().ReverseMap();
+            CreateMap<NotificationDTO, NotificationUpdateDTO>().ReverseMap();
         }
     }
 }

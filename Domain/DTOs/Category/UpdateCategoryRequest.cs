@@ -1,8 +1,6 @@
-﻿using Domain.DTOs.Common;
+﻿namespace Domain.DTOs.Category;
 
-namespace Domain.DTOs.Category;
-
-public class UpdateCategoryRequest : BaseUpdateRequest
+public class UpdateCategoryRequest 
 {
     public string? Name { get; set; }
     public string? Description { get; set; }
