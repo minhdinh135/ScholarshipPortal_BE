@@ -38,7 +38,6 @@ namespace Infrastructure.ExternalServices.Chat
 
 				_logger.LogInformation($"Message sent successfully from {senderId} to {receiverId}. Response: {response}");
 
-				// Save the message to the database
 				var chatMessage = new ChatMessage
 				{
 					SenderId = senderId,
@@ -68,6 +67,5 @@ namespace Infrastructure.ExternalServices.Chat
 		{
 			await _chatMessageRepository.SaveMessageAsync(message);
 		}
-
 	}
 }
