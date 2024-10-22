@@ -1,6 +1,9 @@
+using Domain.Constants;
 using Domain.Entities;
+using Google.Apis.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Data;
 
@@ -15,27 +18,78 @@ public class ScholarshipContext : DbContext
     {
     }
 
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var entries = ChangeTracker
+            .Entries()
+            .Where(e => e.Entity is BaseEntity && (
+                e.State == EntityState.Added
+                || e.State == EntityState.Modified));
+
+        foreach (var entityEntry in entries)
+        {
+            ((BaseEntity)entityEntry.Entity).UpdatedAt = DateTime.UtcNow;
+
+            if (entityEntry.State == EntityState.Added)
+            {
+                ((BaseEntity)entityEntry.Entity).CreatedAt = DateTime.UtcNow;
+            }
+        }
+
+        return await base.SaveChangesAsync(cancellationToken);
+    }
+
     public virtual DbSet<Account> Accounts { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<ApplicantProfile> ApplicantProfiles { get; set; }
 
+    public virtual DbSet<ApplicationDocument> ApplicationDocuments { get; set; }
+
+    public virtual DbSet<ApplicantSkill> ApplicantSkills { get; set; }
+
+    public virtual DbSet<ApplicantCertificate> ApplicantCertificates { get; set; }
+
+    public virtual DbSet<ProviderProfile> ProviderProfiles { get; set; }
+
+    public virtual DbSet<ProviderDocument> ProviderDocuments { get; set; }
+
+    public virtual DbSet<FunderProfile> FunderProfiles { get; set; }
+
+    public virtual DbSet<FunderDocument> FunderDocuments { get; set; }
+
     public virtual DbSet<Achievement> Achievements { get; set; }
+
+    public virtual DbSet<Transaction> Transactions { get; set; }
+
+    public virtual DbSet<Chat> Chats { get; set; }
+
+    public virtual DbSet<Notification> Notifications { get; set; }
+
+    public virtual DbSet<Service> Services { get; set; }
+
+    public virtual DbSet<Request> Requests { get; set; }
 
     public virtual DbSet<Feedback> Feedbacks { get; set; }
 
     public virtual DbSet<Domain.Entities.Application> Applications { get; set; }
 
+    public virtual DbSet<ApplicationReview> ApplicationReviews { get; set; }
+
     public virtual DbSet<ScholarshipProgram> ScholarshipPrograms { get; set; }
 
-    public virtual DbSet<Review> Reviews { get; set; }
+    public virtual DbSet<AwardMilestone> AwardMilestones { get; set; }
 
-    public virtual DbSet<Document> Documents { get; set; }
+    public virtual DbSet<AwardMilestoneDocument> AwardMilestoneDocuments { get; set; }
 
-    public virtual DbSet<Award> Awards { get; set; }
+    public virtual DbSet<ReviewMilestone> ReviewMilestones { get; set; }
 
     public virtual DbSet<Criteria> Criteria { get; set; }
+
+    public virtual DbSet<Certificate> Certificates { get; set; }
+
+    public virtual DbSet<Skill> Skills { get; set; }
 
     public virtual DbSet<Category> Categories { get; set; }
 
@@ -45,13 +99,11 @@ public class ScholarshipContext : DbContext
 
     public virtual DbSet<Major> Majors { get; set; }
 
-    public virtual DbSet<Notification> Notifications { get; set; }
-
-    public virtual DbSet<ScholarshipProgramCategory> ScholarshipProgramCategories { get; set; }
-
     public virtual DbSet<ScholarshipProgramUniversity> ScholarshipProgramUniversities { get; set; }
 
     public virtual DbSet<ScholarshipProgramMajor> ScholarshipProgramMajors { get; set; }
+
+    public virtual DbSet<ScholarshipProgramCertificate> ScholarshipProgramCertificates { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -64,6 +116,9 @@ public class ScholarshipContext : DbContext
         {
             optionsBuilder.UseMySQL(configuration.GetConnectionString("Db") ?? string.Empty);
         }
+
+        optionsBuilder.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
+            .EnableSensitiveDataLogging();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -74,11 +129,41 @@ public class ScholarshipContext : DbContext
         modelBuilder.Entity<ApplicantProfile>()
             .ToTable("applicant_profiles");
 
+        modelBuilder.Entity<FunderProfile>()
+            .ToTable("funder_profiles");
+
+        modelBuilder.Entity<ProviderProfile>()
+            .ToTable("provider_profiles");
+
+        modelBuilder.Entity<ApplicationDocument>()
+            .ToTable("application_documents");
+
+        modelBuilder.Entity<ApplicantSkill>()
+            .ToTable("applicant_skills");
+
+        modelBuilder.Entity<ApplicantCertificate>()
+            .ToTable("applicant_certificates");
+
+        modelBuilder.Entity<FunderDocument>()
+            .ToTable("funder_documents");
+
+        modelBuilder.Entity<ProviderDocument>()
+            .ToTable("provider_documents");
+
+        modelBuilder.Entity<ApplicationReview>()
+            .ToTable("application_reviews");
+
+        modelBuilder.Entity<AwardMilestone>()
+            .ToTable("award_milestones");
+
+        modelBuilder.Entity<AwardMilestoneDocument>()
+            .ToTable("award_milestone_documents");
+
+        modelBuilder.Entity<ReviewMilestone>()
+            .ToTable("review_milestones");
+
         modelBuilder.Entity<ScholarshipProgram>()
             .ToTable("scholarship_programs");
-
-        modelBuilder.Entity<ScholarshipProgramCategory>()
-            .ToTable("scholarship_program_categories");
 
         modelBuilder.Entity<ScholarshipProgramUniversity>()
             .ToTable("scholarship_program_universities");
@@ -86,18 +171,64 @@ public class ScholarshipContext : DbContext
         modelBuilder.Entity<ScholarshipProgramMajor>()
             .ToTable("scholarship_program_majors");
 
+        modelBuilder.Entity<ScholarshipProgramCertificate>()
+            .ToTable("scholarship_program_certificates");
+
         // Configure relationships
-        modelBuilder.Entity<Account>()
-            .HasOne(account => account.Role)
-            .WithMany(role => role.Accounts)
-            .HasForeignKey(account => account.RoleId)
+        modelBuilder.Entity<Account>(entity =>
+        {
+            entity.HasOne(account => account.Role)
+                .WithMany(role => role.Accounts)
+                .HasForeignKey(account => account.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(account => account.ApplicantProfile)
+                .WithOne(applicantProfile => applicantProfile.Applicant)
+                .HasForeignKey<ApplicantProfile>(applicantProfile => applicantProfile.ApplicantId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(account => account.FunderProfile)
+                .WithOne(funderProfile => funderProfile.Funder)
+                .HasForeignKey<FunderProfile>(funderProfile => funderProfile.FunderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(account => account.ProviderProfile)
+                .WithOne(providerProfile => providerProfile.Provider)
+                .HasForeignKey<ProviderProfile>(providerProfile => providerProfile.ProviderId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Chat>(entity =>
+        {
+            entity.HasOne(chat => chat.Sender)
+                .WithMany(account => account.SenderChats)
+                .HasForeignKey(chat => chat.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(chat => chat.Receiver)
+                .WithMany(account => account.ReceiverChats)
+                .HasForeignKey(chat => chat.ReceiverId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Notification>()
+            .HasOne(notification => notification.Receiver)
+            .WithMany(account => account.Notifications)
+            .HasForeignKey(notification => notification.ReceiverId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Account>()
-            .HasOne(account => account.ApplicantProfile)
-            .WithOne(applicantProfile => applicantProfile.Applicant)
-            .HasForeignKey<ApplicantProfile>(applicantProfile => applicantProfile.ApplicantId)
-            .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<Transaction>(entity =>
+        {
+            entity.HasOne(transaction => transaction.Sender)
+                .WithMany(account => account.SenderTransactions)
+                .HasForeignKey(transaction => transaction.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(transaction => transaction.Receiver)
+                .WithMany(account => account.ReceiverTransactions)
+                .HasForeignKey(transaction => transaction.ReceiverId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
 
         modelBuilder.Entity<Achievement>()
             .HasOne(achievement => achievement.ApplicantProfile)
@@ -105,41 +236,87 @@ public class ScholarshipContext : DbContext
             .HasForeignKey(achievement => achievement.ApplicantProfileId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Domain.Entities.Application>()
-            .HasOne(application => application.Applicant)
-            .WithMany(applicant => applicant.Applications)
-            .HasForeignKey(application => application.ApplicantId)
+        modelBuilder.Entity<ApplicantCertificate>()
+            .HasOne(certificate => certificate.ApplicantProfile)
+            .WithMany(applicantProfile => applicantProfile.ApplicantCertificates)
+            .HasForeignKey(achievement => achievement.ApplicantProfileId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Domain.Entities.Application>()
-            .HasOne(application => application.ScholarshipProgram)
-            .WithMany(scholarshipProgram => scholarshipProgram.Applications)
-            .HasForeignKey(application => application.ScholarshipProgramId)
+        modelBuilder.Entity<ApplicantSkill>()
+            .HasOne(skill => skill.ApplicantProfile)
+            .WithMany(applicantProfile => applicantProfile.ApplicantSkills)
+            .HasForeignKey(skill => skill.ApplicantProfileId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Domain.Entities.Application>()
-            .HasOne(application => application.Award)
-            .WithOne(award => award.Application)
-            .HasForeignKey<Award>(award => award.ApplicationId)
+        modelBuilder.Entity<FunderDocument>()
+            .HasOne(funderDocument => funderDocument.FunderProfile)
+            .WithMany(funderProfile => funderProfile.FunderDocuments)
+            .HasForeignKey(funderDocument => funderDocument.FunderProfileId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Document>()
+        modelBuilder.Entity<ProviderDocument>()
+            .HasOne(providerDocument => providerDocument.ProviderProfile)
+            .WithMany(providerProfile => providerProfile.ProviderDocuments)
+            .HasForeignKey(providerDocument => providerDocument.ProviderProfileId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Domain.Entities.Application>(entity =>
+        {
+            entity.HasOne(application => application.Applicant)
+                .WithMany(applicant => applicant.Applications)
+                .HasForeignKey(application => application.ApplicantId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(application => application.ScholarshipProgram)
+                .WithMany(scholarshipProgram => scholarshipProgram.Applications)
+                .HasForeignKey(application => application.ScholarshipProgramId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<ApplicationDocument>()
             .HasOne(document => document.Application)
-            .WithMany(application => application.Documents)
+            .WithMany(application => application.ApplicationDocuments)
             .HasForeignKey(document => document.ApplicationId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Review>()
-            .HasOne(review => review.Provider)
-            .WithMany(provider => provider.Reviews)
-            .HasForeignKey(review => review.ProviderId)
-            .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<ApplicationReview>(entity =>
+        {
+            entity.HasOne(review => review.Expert)
+                .WithMany(expert => expert.ApplicationReviews)
+                .HasForeignKey(review => review.ExpertId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Review>()
-            .HasOne(review => review.Application)
-            .WithMany(application => application.Reviews)
-            .HasForeignKey(review => review.ApplicationId)
-            .OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(review => review.Application)
+                .WithMany(application => application.ApplicationReviews)
+                .HasForeignKey(review => review.ApplicationId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Feedback>(entity =>
+        {
+            entity.HasOne(feedback => feedback.Applicant)
+                .WithMany(applicant => applicant.Feedbacks)
+                .HasForeignKey(feedback => feedback.ApplicantId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(feedback => feedback.Service)
+                .WithMany(service => service.Feedbacks)
+                .HasForeignKey(feedback => feedback.ServiceId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Request>(entity =>
+        {
+            entity.HasOne(request => request.Applicant)
+                .WithMany(applicant => applicant.Requests)
+                .HasForeignKey(request => request.ApplicantId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(request => request.Service)
+                .WithMany(service => service.Requests)
+                .HasForeignKey(request => request.ServiceId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
 
         modelBuilder.Entity<Criteria>()
             .HasOne(criterion => criterion.ScholarshipProgram)
@@ -153,33 +330,57 @@ public class ScholarshipContext : DbContext
             .HasForeignKey(university => university.CountryId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<ScholarshipProgram>()
-            .HasOne(scholarshipProgram => scholarshipProgram.Funder)
-            .WithMany(funder => funder.FunderCreatedScholarshipPrograms)
-            .HasForeignKey(scholarshipProgram => scholarshipProgram.FunderId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<ScholarshipProgram>()
-            .HasOne(scholarshipProgram => scholarshipProgram.Provider)
-            .WithMany(provider => provider.ProviderAssignedScholarshipPrograms)
-            .HasForeignKey(scholarshipProgram => scholarshipProgram.ProviderId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<ScholarshipProgramCategory>(entity =>
+        modelBuilder.Entity<ScholarshipProgram>(entity =>
         {
-            entity.HasKey(spc => new { spc.ScholarshipProgramId, spc.CategoryId });
-
-            entity.HasOne(spc => spc.ScholarshipProgram)
-                .WithMany(sp => sp.ScholarshipProgramCategories)
-                .HasForeignKey(spc => spc.ScholarshipProgramId)
+            entity.HasOne(scholarshipProgram => scholarshipProgram.Funder)
+                .WithMany(funder => funder.FunderScholarshipPrograms)
+                .HasForeignKey(scholarshipProgram => scholarshipProgram.FunderId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            entity.HasOne(spc => spc.Category)
-                .WithMany(c => c.ScholarshipProgramCategories)
-                .HasForeignKey(spc => spc.CategoryId)
+            entity.HasOne(scholarshipProgram => scholarshipProgram.Category)
+                .WithMany(category => category.ScholarshipPrograms)
+                .HasForeignKey(scholarshipProgram => scholarshipProgram.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
+        modelBuilder.Entity<AwardMilestone>()
+            .HasOne(awardMilestone => awardMilestone.ScholarshipProgram)
+            .WithMany(scholarshipProgram => scholarshipProgram.AwardMilestones)
+            .HasForeignKey(awardMilestone => awardMilestone.ScholarshipProgramId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<AwardMilestoneDocument>()
+            .HasOne(awd => awd.AwardMilestone)
+            .WithMany(aw => aw.AwardMilestoneDocuments)
+            .HasForeignKey(awd => awd.AwardMilestoneId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<ReviewMilestone>()
+            .HasOne(reviewMilestone => reviewMilestone.ScholarshipProgram)
+            .WithMany(scholarshipProgram => scholarshipProgram.ReviewMilestones)
+            .HasForeignKey(reviewMilestone => reviewMilestone.ScholarshipProgramId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Skill>()
+            .HasOne(skill => skill.ScholarshipProgram)
+            .WithMany(scholarshipProgram => scholarshipProgram.Skills)
+            .HasForeignKey(skill => skill.ScholarshipProgramId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<ScholarshipProgramCertificate>(entity =>
+        {
+            entity.HasKey(spc => new { spc.ScholarshipProgramId, spc.CertificateId });
+
+            entity.HasOne(spc => spc.ScholarshipProgram)
+                .WithMany(sp => sp.ScholarshipProgramCertificates)
+                .HasForeignKey(spc => spc.ScholarshipProgramId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(spc => spc.Certificate)
+                .WithMany(c => c.ScholarshipProgramCertificates)
+                .HasForeignKey(spc => spc.CertificateId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
 
         modelBuilder.Entity<ScholarshipProgramUniversity>(entity =>
         {
@@ -210,17 +411,5 @@ public class ScholarshipContext : DbContext
                 .HasForeignKey(spm => spm.MajorId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
-
-        modelBuilder.Entity<Feedback>()
-            .HasOne(feedback => feedback.Funder)
-            .WithMany(funder => funder.FunderFeedbacks)
-            .HasForeignKey(feedback => feedback.FunderId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Feedback>()
-            .HasOne(feedback => feedback.Provider)
-            .WithMany(provider => provider.ProviderFeedbacks)
-            .HasForeignKey(feedback => feedback.ProviderId)
-            .OnDelete(DeleteBehavior.Restrict);
     }
 }

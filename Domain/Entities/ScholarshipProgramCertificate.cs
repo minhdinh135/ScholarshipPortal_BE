@@ -1,12 +1,12 @@
 ﻿namespace Domain.Entities;
 
-public class ScholarshipProgramCategory
+public class ScholarshipProgramCertificate
 {
     public int? ScholarshipProgramId { get; set; }
     
     public ScholarshipProgram? ScholarshipProgram { get; set; }
     
-    public int? CategoryId { get; set; }
+    public int? CertificateId { get; set; }
     
-    public Category? Category { get; set; }
+    public Certificate? Certificate { get; set; }
 }

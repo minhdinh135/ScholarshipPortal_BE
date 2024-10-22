@@ -12,11 +12,9 @@ public class CriteriaProfile : Profile
         CreateMap<Criteria, CriteriaDto>()
             .IncludeBase<BaseEntity, BaseDto>()
             .ReverseMap();
-            
-        CreateMap<CreateCriteriaRequest, Criteria>()
-            .IncludeBase<BaseCreateRequest, BaseEntity>();
-        
-        CreateMap<UpdateCriteriaRequest, Criteria>()
-            .IncludeBase<BaseUpdateRequest, BaseEntity>();
+
+        CreateMap<CreateCriteriaRequest, Criteria>();
+
+        CreateMap<UpdateCriteriaRequest, Criteria>();
     }
 }

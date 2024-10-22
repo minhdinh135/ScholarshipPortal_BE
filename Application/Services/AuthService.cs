@@ -14,7 +14,6 @@ namespace Application.Services;
 public class AuthService : IAuthService
 {
     private readonly ITokenService _tokenService;
-    private readonly IMapper _mapper;
     private readonly IPasswordService _passwordService;
     private readonly IGenericService<Account, AccountAddDTO, AccountUpdateDTO> _userService;
     private readonly IGenericService<Role, RoleAddDTO, RoleUpdateDTO> _roleService;
@@ -25,7 +24,6 @@ public class AuthService : IAuthService
         IPasswordService passwordService,
         IGenericService<Account, AccountAddDTO, AccountUpdateDTO> userService,
         IGenericService<Role, RoleAddDTO, RoleUpdateDTO> roleService,
-        IMapper mapper,
         IConfiguration configuration)
     {
         _tokenService = tokenService;
