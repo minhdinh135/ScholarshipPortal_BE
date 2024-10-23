@@ -1,32 +1,72 @@
-﻿using Application.Interfaces.IServices;
+﻿using Application.Exceptions;
+using Application.Interfaces.IRepositories;
+using Application.Interfaces.IServices;
+using AutoMapper;
 using Domain.DTOs.Applicant;
+using Domain.Entities;
 
 namespace Application.Services;
 
 public class ApplicantService : IApplicantService
 {
-    public Task<IEnumerable<ApplicantProfileDto>> GetAll()
+    private readonly IMapper _mapper;
+    private readonly IApplicantRepository _applicantRepository;
+    private readonly IPdfService _pdfService;
+
+    public ApplicantService(IMapper mapper, IApplicantRepository applicantRepository, IPdfService pdfService)
     {
-        throw new NotImplementedException();
+        _mapper = mapper;
+        _applicantRepository = applicantRepository;
+        _pdfService = pdfService;
+    }
+    
+    public async Task<IEnumerable<ApplicantProfileDto>> GetAllApplicantProfiles()
+    {
+        var applicantProfiles = await _applicantRepository.GetAll();
+
+        return _mapper.Map<IEnumerable<ApplicantProfileDto>>(applicantProfiles);
     }
 
-    public Task<ApplicantProfileDto> Get(int id)
+    public async Task<ApplicantProfileDto> GetApplicantProfile(int applicantId)
     {
-        throw new NotImplementedException();
+        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+
+        if (applicantProfile == null)
+            throw new NotFoundException($"Applicant Profile with applicantId: {applicantId} is not found");
+
+        return _mapper.Map<ApplicantProfileDto>(applicantProfile);
     }
 
-    public Task<AddApplicantProfileDto> Add(AddApplicantProfileDto dto)
+    public async Task<ApplicantProfileDto> AddApplicantProfile(AddApplicantProfileDto dto)
     {
-        throw new NotImplementedException();
+        var applicantProfile = _mapper.Map<ApplicantProfile>(dto);
+        var addedApplicantProfile = await _applicantRepository.Add(applicantProfile);
+
+        return _mapper.Map<ApplicantProfileDto>(addedApplicantProfile);
     }
 
-    public Task<ApplicantProfileDto> Update(int id, UpdateApplicantProfileDto dto)
+    public async Task<ApplicantProfileDto> UpdateApplicantProfile(int applicantId, UpdateApplicantProfileDto dto)
     {
-        throw new NotImplementedException();
+        var existingApplicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (existingApplicantProfile == null)
+            throw new NotFoundException($"Applicant profile with applicantId: {applicantId} is not found");
+
+        _mapper.Map(dto, existingApplicantProfile);
+
+        var updatedScholarshipProgram = await _applicantRepository.Update(existingApplicantProfile);
+
+        return _mapper.Map<ApplicantProfileDto>(updatedScholarshipProgram);
     }
 
-    public Task<ApplicantProfileDto> Delete(int id)
+    public async Task<byte[]> ExportApplicantProfileToPdf(int applicantId)
     {
-        throw new NotImplementedException();
+        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (applicantProfile == null)
+            throw new NotFoundException($"Applicant profile with applicantId: {applicantId} is not found");
+
+        // var pdf =  _pdfService.ExportProfileToPdf(applicantProfile);
+        var pdf = await _pdfService.GenerateProfileInPdf(_mapper.Map<ApplicantProfileDto>(applicantProfile));
+
+        return pdf;
     }
 }

@@ -42,9 +42,9 @@ namespace Domain.Automapper
             CreateMap<Achievement, AchievementDto>().ReverseMap();
 
             CreateMap<ApplicantProfile, AddApplicantProfileDto>().ReverseMap();
-			CreateMap<ApplicantProfile, UpdateApplicantProfileDto>().ReverseMap();
+            CreateMap<ApplicantProfile, UpdateApplicantProfileDto>().ReverseMap();
             CreateMap<ApplicantProfile, ApplicantProfileDto>().ReverseMap();
-			
+
             CreateMap<University, AddUniversityDto>().ReverseMap();
             CreateMap<University, UpdateUniversityDto>().ReverseMap();
             CreateMap<Application, AddApplicationDto>().ReverseMap();

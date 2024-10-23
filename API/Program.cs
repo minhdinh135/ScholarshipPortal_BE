@@ -1,14 +1,11 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using Application.Common;
-using Application.Interfaces.IRepositories;
-using Application.Interfaces.IServices;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Infrastructure.Data;
 using Infrastructure.ExternalServices.Chat;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -30,7 +27,8 @@ builder.Services.AddControllers(options => options.SuppressInputFormatterBufferi
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-builder.Services.AddControllers();
+builder.Services.AddSignalR();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //Not throw errors imidiately

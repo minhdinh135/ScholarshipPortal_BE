@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.IServices;
+﻿using Application.Exceptions;
+using Application.Interfaces.IServices;
 using Domain.DTOs.Applicant;
 using Domain.DTOs.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +10,10 @@ namespace SSAP.API.Controllers;
 [Route("api/applicants")]
 public class ApplicantController : ControllerBase
 {
-    private readonly IApplicantService _applicantService;
     private readonly ILogger<ApplicantController> _logger;
+    private readonly IApplicantService _applicantService;
 
-    public ApplicantController(IApplicantService applicantService, ILogger<ApplicantController> logger)
+    public ApplicantController(ILogger<ApplicantController> logger, IApplicantService applicantService)
     {
         _applicantService = applicantService;
         _logger = logger;
@@ -21,15 +22,15 @@ public class ApplicantController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllApplicants()
     {
-        var applicants = await _applicantService.GetAll();
+        var applicants = await _applicantService.GetAllApplicantProfiles();
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicants successfully", applicants));
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetApplicant(int id)
+    [HttpGet("{applicantId}")]
+    public async Task<IActionResult> GetApplicantPrfile(int applicantId)
     {
-        var applicant = await _applicantService.Get(id);
+        var applicant = await _applicantService.GetApplicantProfile(applicantId);
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicant successfully", applicant));
     }
@@ -39,7 +40,7 @@ public class ApplicantController : ControllerBase
     {
         try
         {
-            var addedProfile = await _applicantService.Add(addApplicantProfileDto);
+            var addedProfile = await _applicantService.AddApplicantProfile(addApplicantProfileDto);
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Add applicant profile successfully", addedProfile));
         }
@@ -49,12 +50,13 @@ public class ApplicantController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateApplicantProfile(int id, UpdateApplicantProfileDto updateApplicantProfileDto)
+    [HttpPut("{applicantId}")]
+    public async Task<IActionResult> UpdateApplicantProfile(int applicantId,
+        UpdateApplicantProfileDto updateApplicantProfileDto)
     {
         try
         {
-            var updatedProfile = await _applicantService.Update(id, updateApplicantProfileDto);
+            var updatedProfile = await _applicantService.UpdateApplicantProfile(applicantId, updateApplicantProfileDto);
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Update applicant profile successfully",
                 updatedProfile));
@@ -63,6 +65,22 @@ public class ApplicantController : ControllerBase
         {
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Update applicant profile failed",
                 null));
+        }
+    }
+
+    [HttpGet("{applicantId}/profile/pdf")]
+    public async Task<IActionResult> ExportApplicantProfileToPdf(int applicantId)
+    {
+        try
+        {
+            var applicantProfile = await _applicantService.GetApplicantProfile(applicantId);
+            var pdf = await _applicantService.ExportApplicantProfileToPdf(applicantId);
+
+            return File(pdf, "application/pdf", $"ApplicantCV_{applicantProfile.FirstName}{applicantProfile.LastName}.pdf");
+        }
+        catch (NotFoundException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message, null));
         }
     }
 }

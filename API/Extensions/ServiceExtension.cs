@@ -13,7 +13,7 @@ using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Infrastructure.ExternalServices.Notification;
 using Infrastructure.ExternalServices.Chat;
-using Infrastructure.ExternalServices.ExportPDF;
+using Infrastructure.ExternalServices.PDF;
 
 namespace SSAP.API.Extensions;
 
@@ -33,6 +33,7 @@ public static class ServiceExtension
         services.AddScoped<IAccountRepository, AccountRepository>();
 
         services.AddScoped<IApplicantService, ApplicantService>();
+        services.AddScoped<IApplicantRepository, ApplicantRepository>();
 
         services.AddScoped<IScholarshipProgramService, ScholarshipProgramService>();
         services.AddScoped<IScholarshipProgramRepository, ScholarshipProgramRepository>();
@@ -49,11 +50,7 @@ public static class ServiceExtension
         services.AddScoped<IApplicationService, ApplicationService>();
         services.AddScoped<IChatService, ChatService>();
         services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
-        services.AddSignalR();
-        services.AddControllers();
-		services.AddScoped<IPdfExportService, PdfExportService>();
-
-
+		
 		services.AddHttpClient<GeminiService>();
         services.AddSingleton(sp => new GeminiService(
             sp.GetRequiredService<HttpClient>(),
@@ -70,6 +67,8 @@ public static class ServiceExtension
         services.AddScoped<ICloudinaryService, CloudinaryService>();
 
         services.AddScoped<IEmailService, EmailService>();
+        
+        services.AddScoped<IPdfService, PdfService>();
 
         services.Configure<ElasticSettings>(config.GetSection("ElasticSettings"));
         services.AddSingleton(typeof(IElasticService<>), typeof(ElasticService<>));
