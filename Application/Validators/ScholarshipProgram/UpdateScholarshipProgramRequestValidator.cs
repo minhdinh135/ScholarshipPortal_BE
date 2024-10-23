@@ -23,14 +23,8 @@ public class UpdateScholarshipProgramRequestValidator : BaseValidator<UpdateScho
         RuleFor(x => x.Deadline)
             .NotEmpty().WithMessage("The deadline is required");
 
-        RuleFor(x => x.NumberOfRenewals)
-            .NotEmpty().WithMessage("The number of scholarship renewals is required");
-
         RuleFor(x => x.FunderId)
             .NotEmpty().WithMessage("The funder id is required");
-
-        RuleFor(x => x.CategoryIds)
-            .NotEmpty().WithMessage("List of category ids is required");
 
         RuleFor(x => x.UniversityIds)
             .NotEmpty().WithMessage("List of university ids is required");

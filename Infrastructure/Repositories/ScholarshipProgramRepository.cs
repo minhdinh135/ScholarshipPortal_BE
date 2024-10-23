@@ -7,11 +7,8 @@ namespace Infrastructure.Repositories;
 
 public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram>, IScholarshipProgramRepository
 {
-    private readonly ScholarshipContext _dbContext;
-    
     public ScholarshipProgramRepository(ScholarshipContext dbContext) : base(dbContext)
     {
-        _dbContext = dbContext;
     }
 
 

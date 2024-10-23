@@ -2,94 +2,72 @@ using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
 using Domain.DTOs.Account;
+using Domain.DTOs.Authentication;
 using Domain.DTOs.Common;
 using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
 {
-    public class AccountService : IAccountsService
+    public class AccountService : IAccountService
     {
-        private readonly IGenericRepository<Account> _repository;
+        private readonly IAccountRepository _accountRepository;
         private readonly IMapper _mapper;
+        private readonly IPasswordService _passwordService;
 
-        public AccountService(IGenericRepository<Account> repository, IMapper mapper)
+        public AccountService(IAccountRepository accountRepository, IMapper mapper, IPasswordService passwordService)
         {
-            _repository = repository;
+            _accountRepository = accountRepository;
             _mapper = mapper;
+            _passwordService = passwordService;
         }
 
-        public async Task<AccountDTO> Add(AccountAddDTO dto)
+        public async Task<AccountDto> AddAccount(RegisterDto dto)
         {
             var entity = _mapper.Map<Account>(dto);
-            await _repository.Add(entity);
-            return _mapper.Map<AccountDTO>(entity);
+            entity.HashedPassword = _passwordService.HashPassword(dto.Password);
+            
+            await _accountRepository.Add(entity);
+            
+            return _mapper.Map<AccountDto>(entity);
         }
 
-        public async Task<AccountDTO> Delete(int id)
+        public async Task<AccountDto> DeleteAccount(int id)
         {
-            var entity = await _repository.GetById(id);
+            var entity = await _accountRepository.GetById(id);
             if (entity == null) return null;
-            await _repository.DeleteById(id);
-            return _mapper.Map<AccountDTO>(entity);
+            await _accountRepository.DeleteById(id);
+            return _mapper.Map<AccountDto>(entity);
         }
 
-        public async Task<AccountDTO> Get(int id)
+        public async Task<AccountDto> GetAccount(int id)
         {
-            var entity = await _repository.GetById(id);
+            var entity = await _accountRepository.GetById(id);
             if (entity == null) return null;
-            return _mapper.Map<AccountDTO>(entity);
+            return _mapper.Map<AccountDto>(entity);
         }
 
-        public async Task<IEnumerable<AccountDTO>> GetAll()
+        public async Task<IEnumerable<AccountDto>> GetAll()
         {
-            var entities = await _repository.GetAll();
-            return _mapper.Map<IEnumerable<AccountDTO>>(entities);
+            var entities = await _accountRepository.GetAllWithRole();
+            return _mapper.Map<IEnumerable<AccountDto>>(entities);
         }
 
-
-        public async Task<IEnumerable<AccountWithRoleDTO>> GetAllWithRole()
-        {
-            var entities = await _repository.GetAll(x => x.Include(x => x.Role));
-            List<AccountWithRoleDTO> res = new();
-            foreach (var acc in entities)
-            {
-                res.Add(new AccountWithRoleDTO
-                {
-                    Id = acc.Id,
-                    Username = acc.Username,
-                    PhoneNumber = acc.PhoneNumber,
-                    Email = acc.Email,
-                    HashedPassword = acc.HashedPassword,
-                    Address = acc.Address,
-                    AvatarUrl = acc.AvatarUrl,
-                    RoleId = acc.RoleId,
-                    RoleName = acc.Role != null ? acc.Role.Name : "",
-                    CreatedAt = acc.CreatedAt,
-                    UpdatedAt = acc.UpdatedAt,
-                    Status = acc.Status,
-                });
-            }
-
-            return res;
-        }
-
-        public async Task<PaginatedList<AccountDTO>> GetAll(int pageIndex, int pageSize, string sortBy,
+        public async Task<PaginatedList<AccountDto>> GetAll(int pageIndex, int pageSize, string sortBy,
             string sortOrder)
         {
-            var categories = await _repository.GetPaginatedList(pageIndex, pageSize, sortBy, sortOrder);
+            var categories = await _accountRepository.GetPaginatedList(pageIndex, pageSize, sortBy, sortOrder);
 
-            return _mapper.Map<PaginatedList<AccountDTO>>(categories);
+            return _mapper.Map<PaginatedList<AccountDto>>(categories);
         }
 
-        public async Task<AccountDTO> Update(AccountUpdateDTO dto)
+        public async Task<AccountDto> UpdateAccount(int id, UpdateAccountDto dto)
         {
-            var university = await _repository.GetAll();
-            var exist = university.Any(u => u.Id == dto.Id);
+            var university = await _accountRepository.GetAll();
+            var exist = university.Any(u => u.Id == id);
             if (!exist) throw new Exception("Account not found.");
             var entity = _mapper.Map<Account>(dto);
-            await _repository.Update(entity);
-            return _mapper.Map<AccountDTO>(entity);
+            await _accountRepository.Update(entity);
+            return _mapper.Map<AccountDto>(entity);
         }
     }
 }

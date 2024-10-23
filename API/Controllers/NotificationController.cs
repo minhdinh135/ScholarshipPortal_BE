@@ -9,15 +9,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace SSAP.API.Controllers;
 
 [ApiController]
-[Route("api/notification")]
+[Route("api/notifications")]
 public class NotificationController : ControllerBase
 {
     private readonly INotificationService _notificationService;
-    private readonly IAccountsService _accountService;
+    private readonly IAccountService _accountService;
     private readonly IMapper _mapper;
 
     public NotificationController(INotificationService notificationService, IMapper mapper,
-        IAccountsService accountService)
+        IAccountService accountService)
     {
         _notificationService = notificationService;
         _mapper = mapper;
@@ -48,12 +48,12 @@ public class NotificationController : ControllerBase
     {
         try
         {
-            var user = await _accountService.Get(userId);
+            var user = await _accountService.GetAccount(userId);
             //send notification
             await _notificationService.SendNotification(user.Id.ToString(), "/account-info", "Welcome", "Update your profile now.");
             await _notificationService.SendNotification(user.Id.ToString(), "/scholarship-program", "Welcome", "Check out our scholarship program.");
             //get all admins
-            var admins = await _accountService.GetAllWithRole();
+            var admins = await _accountService.GetAll();
             admins = admins.Where(x => x.RoleName == RoleEnum.ADMIN).ToList();
 
             foreach (var admin in admins)

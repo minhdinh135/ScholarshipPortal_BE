@@ -4,13 +4,13 @@ using Domain.Entities;
 
 namespace Application.Interfaces.IServices
 {
-	public interface IRoleService
-	{
-		Task<IEnumerable<RoleDTO>> GetAll();
-    Task<PaginatedList<RoleDTO>> GetAll(int pageIndex, int pageSize, string sortBy, string sortOrder);
-		Task<RoleDTO> Get(int id);
-		Task<RoleDTO> Add(RoleAddDTO dto);
-		Task<RoleDTO> Update(RoleUpdateDTO dto);
-		Task<RoleDTO> Delete(int id);
-	}
+    public interface IRoleService
+    {
+        Task<IEnumerable<RoleDto>> GetAll();
+        Task<PaginatedList<RoleDto>> GetAll(int pageIndex, int pageSize, string sortBy, string sortOrder);
+        Task<RoleDto> Get(int id);
+        Task<RoleDto> Add(AddRoleDto dto);
+        Task<RoleDto> Update(int id, UpdateRoleDto dto);
+        Task<RoleDto> Delete(int id);
+    }
 }
