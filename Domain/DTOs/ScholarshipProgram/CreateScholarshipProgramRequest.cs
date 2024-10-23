@@ -1,9 +1,11 @@
 ﻿namespace Domain.DTOs.ScholarshipProgram;
 
-public class CreateScholarshipProgramRequest 
+public class CreateScholarshipProgramRequest
 {
     public string? Name { get; set; }
-    
+
+    public string? ImageUrl { get; set; }
+
     public string? Description { get; set; }
 
     public decimal? ScholarshipAmount { get; set; }
@@ -12,15 +14,13 @@ public class CreateScholarshipProgramRequest
 
     public DateTime? Deadline { get; set; }
 
-    public int? NumberOfRenewals { get; set; }
+    public string? Status { get; set; }
 
     public int? FunderId { get; set; }
 
-    public int? ProviderId { get; set; }
-    
-    public List<int>? CategoryIds { get; set; }
+    public int? CategoryId { get; set; }
     
     public List<int>? UniversityIds { get; set; }
-    
+
     public List<int>? MajorIds { get; set; }
 }

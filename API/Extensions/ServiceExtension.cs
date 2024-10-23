@@ -20,12 +20,18 @@ public static class ServiceExtension
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
     {
-        services.AddScoped(typeof(IGenericService<,,>), typeof(GenericService<,,>));
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<ITokenService, JwtService>();
+
+        services.AddScoped<IRoleService, RoleService>();
+
+        services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<IAccountRepository, AccountRepository>();
+
+        services.AddScoped<IApplicantService, ApplicantService>();
 
         services.AddScoped<IScholarshipProgramService, ScholarshipProgramService>();
         services.AddScoped<IScholarshipProgramRepository, ScholarshipProgramRepository>();
@@ -39,15 +45,6 @@ public static class ServiceExtension
         services.AddScoped<IMajorService, MajorService>();
         services.AddScoped<IMajorRepository, MajorRepository>();
 
-        services.AddScoped<IReviewService, ReviewService>();
-        services.AddScoped<ICountryService, CountryService>();
-        services.AddScoped<IFeedbackService, FeedbackService>();
-        services.AddScoped<IApplicantProfileService, ApplicantProfileService>();
-        services.AddScoped<IUniversityService, UniversityService>();
-        services.AddScoped<IDocumentService, DocumentService>();
-        services.AddScoped<IAccountsService, AccountService>();
-        services.AddScoped<IRoleService, RoleService>();
-        services.AddScoped<IAchievementService, AchievementService>();
         services.AddScoped<IApplicationService, ApplicationService>();
         services.AddScoped<IChatService, ChatService>();
         services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
@@ -81,5 +78,5 @@ public static class ServiceExtension
 
         services.AddScoped<INotificationService, NotificationsService>();
         return services;
-    } 
+    }
 }

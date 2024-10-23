@@ -4,6 +4,7 @@ using Application.Common;
 using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Infrastructure.Data;
 using Infrastructure.ExternalServices.Chat;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -33,8 +34,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //Not throw errors imidiately
-builder.Services.Configure<ApiBehaviorOptions>(options
-    => options.SuppressModelStateInvalidFilter = true);
+// builder.Services.Configure<ApiBehaviorOptions>(options
+//     => options.SuppressModelStateInvalidFilter = true);
 
 builder.Services.AddDbContext<ScholarshipContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("Db") ?? string.Empty));
@@ -42,6 +43,7 @@ builder.Services.AddDbContext<ScholarshipContext>(options =>
 builder.Services.AddMapperServices();
 
 // Add FluentValidation validators
+builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
 
 // Register services and inject dependencies
@@ -92,8 +94,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = builder.Configuration["Jwt:Audience"],
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]??""
-            )),
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? ""
+                )),
             // RoleClaimType = "role",
             ValidateIssuer = true,
             ValidateAudience = true,

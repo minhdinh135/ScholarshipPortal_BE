@@ -1,10 +1,8 @@
-﻿using Application.Helper;
-using Application.Interfaces.IServices;
+﻿using Application.Interfaces.IServices;
 using Domain.DTOs.Category;
 using Domain.DTOs.Common;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using ValidationResult = FluentValidation.Results.ValidationResult;
 
 namespace SSAP.API.Controllers;
 
@@ -48,17 +46,8 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequest createCategoryRequest,
-        [FromServices] IValidator<CreateCategoryRequest> validator)
+    public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequest createCategoryRequest)
     {
-        ValidationResult validationResult = await validator.ValidateAsync(createCategoryRequest);
-
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Validation errors occured",
-                ErrorHandler.GetErrors(validationResult)));
-        }
-
         var createdCategory = await _categoryService.CreateCategory(createCategoryRequest);
 
         if (createdCategory == null)
@@ -69,18 +58,8 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateCategory([FromRoute] int id,
-        [FromBody] UpdateCategoryRequest updateCategoryRequest,
-        [FromServices] IValidator<UpdateCategoryRequest> validator)
+    public async Task<IActionResult> UpdateCategory([FromRoute] int id, [FromBody] UpdateCategoryRequest updateCategoryRequest)
     {
-        ValidationResult validationResult = await validator.ValidateAsync(updateCategoryRequest);
-
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Validation errors occured",
-                ErrorHandler.GetErrors(validationResult)));
-        }
-
         var updatedCategory = await _categoryService.UpdateCategory(id, updateCategoryRequest);
 
         if (updatedCategory == null)

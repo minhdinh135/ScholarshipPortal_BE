@@ -1,5 +1,5 @@
 using System.Net.Http.Headers;
-using Domain.DTOs.Google;
+using Domain.DTOs.Authentication;
 using Newtonsoft.Json;
 
 namespace Infrastructure.ExternalServices.Google;

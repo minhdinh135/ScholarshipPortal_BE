@@ -8,7 +8,7 @@ namespace Infrastructure.Repositories;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
-    private readonly ScholarshipContext _dbContext;
+    protected readonly ScholarshipContext _dbContext;
     private readonly DbSet<T> _dbSet;
 
     public GenericRepository(ScholarshipContext dbContext)

@@ -59,7 +59,7 @@ namespace SSAP.API.Controllers
 		}
 
 		[HttpPost("Add")]
-		public async Task<IActionResult> Add([FromBody] RoleAddDTO dto)
+		public async Task<IActionResult> Add([FromBody] AddRoleDto dto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
@@ -76,15 +76,15 @@ namespace SSAP.API.Controllers
 			}
 		}
 
-		[HttpPut]
-		public async Task<IActionResult> Update( [FromBody] RoleUpdateDTO dto)
+		[HttpPut("{id}")]
+		public async Task<IActionResult> Update(int id, [FromBody] UpdateRoleDto dto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
 			try
 			{
-				var updatedProfile = await _roleService.Update(dto);
+				var updatedProfile = await _roleService.Update(id, dto);
 				return Ok(updatedProfile);
 			}
 			catch (Exception ex)
