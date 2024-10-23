@@ -102,7 +102,5 @@ public class AuthenticationController : ControllerBase
         {
             return BadRequest(new { Message = ex.Message });
         }
-    }
-
-    
+    } 
 }

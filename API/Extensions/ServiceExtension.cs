@@ -12,6 +12,7 @@ using Infrastructure.Repositories;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Infrastructure.ExternalServices.Notification;
+using Infrastructure.ExternalServices.Chat;
 
 namespace SSAP.API.Extensions;
 
@@ -45,6 +46,10 @@ public static class ServiceExtension
         services.AddScoped<IMajorRepository, MajorRepository>();
 
         services.AddScoped<IApplicationService, ApplicationService>();
+        services.AddScoped<IChatService, ChatService>();
+        services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
+        services.AddSignalR();
+        services.AddControllers();
 
         services.AddHttpClient<GeminiService>();
         services.AddSingleton(sp => new GeminiService(

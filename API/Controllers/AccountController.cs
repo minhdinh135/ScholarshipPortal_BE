@@ -14,16 +14,18 @@ public class AccountController : ControllerBase
     private readonly IAccountService _accountService;
     private readonly IPasswordService _passwordService;
     private readonly IEmailService _emailService;
+    private readonly ICloudinaryService _cloudinaryService;
     private static readonly Dictionary<string, string> _otpStore = new();
     private static readonly Random _random = new();
 
     public AccountController(ILogger<AccountController> logger, IAccountService accountService,
-        IPasswordService passwordService, IEmailService emailService)
+        IPasswordService passwordService, IEmailService emailService, ICloudinaryService cloudinaryService)
     {
         _accountService = accountService;
         _logger = logger;
         _passwordService = passwordService;
         _emailService = emailService;
+        _cloudinaryService = cloudinaryService;
     }
 
     [HttpGet]
@@ -142,6 +144,25 @@ public class AccountController : ControllerBase
 
         return Ok(new { Message = "Password changed successfully!" });
     }
+
+    [HttpPost("change-avatar")]
+    public async Task<IActionResult> ChangeAvatar([FromForm] RegisterDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            var addedProfile = await _accountService.AddAccount(dto);
+            return Ok(addedProfile);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Failed to add applicant profile: {ex.Message}");
+            return StatusCode(500, "Error adding data to the database.");
+        }
+    }
+
 
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto model)
