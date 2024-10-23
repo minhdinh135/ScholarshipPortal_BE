@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ScholarshipContext))]
-    [Migration("20241021092701_InitV2")]
+    [Migration("20241023120339_InitV2")]
     partial class InitV2
     {
         /// <inheritdoc />
@@ -430,6 +430,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<bool?>("IsRead")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Message")
                         .HasColumnType("longtext");

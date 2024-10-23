@@ -193,6 +193,7 @@ namespace Infrastructure.Migrations
                     Message = table.Column<string>(type: "longtext", nullable: true),
                     SentDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     SenderId = table.Column<int>(type: "int", nullable: true),
+                    IsRead = table.Column<bool>(type: "tinyint(1)", nullable: true),
                     ReceiverId = table.Column<int>(type: "int", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
