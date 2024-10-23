@@ -6,5 +6,5 @@ public class Category : BaseEntity
     
     public string? Description { get; set; }
     
-    public ICollection<ScholarshipProgramCategory>? ScholarshipProgramCategories { get; set; }
+    public ICollection<ScholarshipProgram>? ScholarshipPrograms{ get; set; }
 }

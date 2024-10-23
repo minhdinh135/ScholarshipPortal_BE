@@ -10,12 +10,15 @@ namespace SSAP.API.Controllers
 	public class AccountController : ControllerBase
 	{
 		private readonly IAccountsService _accountService;
+		private readonly ICloudinaryService _cloudinaryService;
 		private readonly ILogger<AccountController> _logger;
 
-		public AccountController(IAccountsService accountService, ILogger<AccountController> logger)
+		public AccountController(IAccountsService accountService, ILogger<AccountController> logger,
+            ICloudinaryService cloudinaryService)
 		{
-      _accountService = accountService;
+            _accountService = accountService;
 			_logger = logger;
+            _cloudinaryService = cloudinaryService;
 		}
 
 		[HttpGet]
@@ -75,6 +78,24 @@ namespace SSAP.API.Controllers
 
 		[HttpPost("Add")]
 		public async Task<IActionResult> Add([FromBody] AccountAddDTO dto)
+		{
+			if (!ModelState.IsValid)
+				return BadRequest(ModelState);
+
+			try
+			{
+				var addedProfile = await _accountService.Add(dto);
+				return Ok(addedProfile);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Failed to add applicant profile: {ex.Message}");
+				return StatusCode(500, "Error adding data to the database.");
+			}
+		}
+
+        [HttpPost("change-avatar")]
+		public async Task<IActionResult> ChangeAvatar([FromForm] AccountAddDTO dto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);

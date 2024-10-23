@@ -18,8 +18,7 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
     public async Task<IEnumerable<ScholarshipProgram>> GetAllScholarshipPrograms()
     {
         var scholarshipPrograms = await _dbContext.ScholarshipPrograms
-            .Include(sp => sp.ScholarshipProgramCategories)
-            .ThenInclude(spc => spc.Category)
+            .Include(sp => sp.Category)
             .Include(sp => sp.ScholarshipProgramUniversities)
             .ThenInclude(spu => spu.University)
             .Include(sp => sp.ScholarshipProgramMajors)
@@ -34,22 +33,12 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
     public async Task<ScholarshipProgram> GetScholarsipProgramById(int id)
     {
         var scholarshipProgram = await _dbContext.ScholarshipPrograms
-            .Include(sp => sp.ScholarshipProgramCategories)
+            .Include(sp => sp.Category)
             .Include(sp => sp.ScholarshipProgramUniversities)
             .Include(sp => sp.ScholarshipProgramMajors)
             .FirstOrDefaultAsync(sp => sp.Id == id);
 
         return scholarshipProgram;
-    }
-
-    public async Task ClearExistingCategories(ScholarshipProgram scholarshipProgram)
-    {
-        var existingCategories = scholarshipProgram.ScholarshipProgramCategories.ToList();
-        
-        foreach (var existingCategory in existingCategories)
-        {
-            _dbContext.ScholarshipProgramCategories.Remove(existingCategory);
-        }
     }
 
     public async Task ClearExistingUniversities(ScholarshipProgram scholarshipProgram)

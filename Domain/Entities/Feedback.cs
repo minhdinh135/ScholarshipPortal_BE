@@ -8,11 +8,11 @@ public class Feedback : BaseEntity
     
     public DateTime? FeedbackDate { get; set; }
     
-    public int? FunderId { get; set; }
+    public int? ApplicantId { get; set; }
     
-    public Account? Funder { get; set; }
+    public Account? Applicant { get; set; }
     
-    public int? ProviderId { get; set; }
+    public int? ServiceId { get; set; }
     
-    public Account? Provider { get; set; }
+    public Service? Service { get; set; }
 }

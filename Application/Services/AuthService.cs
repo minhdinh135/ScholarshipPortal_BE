@@ -14,7 +14,6 @@ namespace Application.Services;
 public class AuthService : IAuthService
 {
     private readonly ITokenService _tokenService;
-    private readonly IMapper _mapper;
     private readonly IPasswordService _passwordService;
     private readonly IGenericService<Account, AccountAddDTO, AccountUpdateDTO> _userService;
     private readonly IGenericService<Role, RoleAddDTO, RoleUpdateDTO> _roleService;
@@ -25,7 +24,6 @@ public class AuthService : IAuthService
         IPasswordService passwordService,
         IGenericService<Account, AccountAddDTO, AccountUpdateDTO> userService,
         IGenericService<Role, RoleAddDTO, RoleUpdateDTO> roleService,
-        IMapper mapper,
         IConfiguration configuration)
     {
         _tokenService = tokenService;
@@ -94,9 +92,9 @@ public class AuthService : IAuthService
         if (existEmail.Count() > 0)
             throw new Exception("Email has already been registered to system");
         //check if user exist
-        var existUsername = users.Where(u => u.Username == register.Username).ToList();
+        /*var existUsername = users.Where(u => u.Username == register.Username).ToList();
         if (existUsername.Count() > 0)
-            throw new Exception("Username has already been registered to system");        
+            throw new Exception("Username has already been registered to system");*/
         //check if phone exist
         var existPhoneNumber = users.Where(u => u.PhoneNumber == register.PhoneNumber).ToList();
         if (existPhoneNumber.Count() > 0)
@@ -122,13 +120,12 @@ public class AuthService : IAuthService
         var userDTO = new AccountAddDTO
         {
             Username = register.Username,
-            FullName = register.FullName,
             PhoneNumber = register.PhoneNumber,
             Email = register.Email,
             HashedPassword = _passwordService.HashPassword(register.Password),
             Address = register.Address,
-            Avatar = register.Avatar,
-            Gender = register.Gender,
+            AvatarUrl = register.Avatar,
+            LoginWithGoogle = false,
             RoleId = roles.FirstOrDefault()?.Id,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now,
@@ -177,13 +174,12 @@ public class AuthService : IAuthService
 
         var userDTO = new AccountAddDTO{
             Username = userInfo.Name,
-            FullName = userInfo.Name,
             PhoneNumber = "",
             Email = userInfo.Email,
             HashedPassword = _passwordService.HashPassword(_passwordService.GeneratePassword()),
             Address = "",
-            Avatar = userInfo.Picture,
-            Gender = "",
+            AvatarUrl = userInfo.Picture,
+            LoginWithGoogle = true,
             RoleId = roles.FirstOrDefault()?.Id,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now,

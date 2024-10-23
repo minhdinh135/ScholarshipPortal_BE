@@ -28,7 +28,7 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Avatar")
+                    b.Property<string>("AvatarUrl")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("CreatedAt")
@@ -37,14 +37,11 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("FullName")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Gender")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("HashedPassword")
                         .HasColumnType("longtext");
+
+                    b.Property<bool?>("LoginWithGoogle")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("longtext");
@@ -89,9 +86,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -102,6 +96,40 @@ namespace Infrastructure.Migrations
                     b.ToTable("Achievements");
                 });
 
+            modelBuilder.Entity("Domain.Entities.ApplicantCertificate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ApplicantProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicantProfileId");
+
+                    b.ToTable("applicant_certificates", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entities.ApplicantProfile", b =>
                 {
                     b.Property<int>("Id")
@@ -110,9 +138,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<int?>("ApplicantId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Avatar")
-                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("BirthDate")
                         .HasColumnType("datetime(6)");
@@ -135,9 +160,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Nationality")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -147,6 +169,37 @@ namespace Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("applicant_profiles", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.ApplicantSkill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ApplicantProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicantProfileId");
+
+                    b.ToTable("applicant_skills", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Application", b =>
@@ -182,20 +235,48 @@ namespace Infrastructure.Migrations
                     b.ToTable("Applications");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Award", b =>
+            modelBuilder.Entity("Domain.Entities.ApplicationDocument", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int?>("ApplicationId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("FileUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.ToTable("application_documents", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.ApplicationReview", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
                     b.Property<int?>("ApplicationId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("AwardedDate")
-                        .HasColumnType("datetime(6)");
+                    b.Property<string>("Comment")
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -203,8 +284,11 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("longtext");
+                    b.Property<int?>("ExpertId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ReviewDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Status")
                         .HasColumnType("longtext");
@@ -214,10 +298,73 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationId")
-                        .IsUnique();
+                    b.HasIndex("ApplicationId");
 
-                    b.ToTable("Awards");
+                    b.HasIndex("ExpertId");
+
+                    b.ToTable("application_reviews", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.AwardMilestone", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("FromDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("ScholarshipProgramId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ToDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ScholarshipProgramId");
+
+                    b.ToTable("award_milestones", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.AwardMilestoneDocument", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AwardMilestoneId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("FileUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AwardMilestoneId");
+
+                    b.ToTable("award_milestone_documents", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Category", b =>
@@ -235,7 +382,33 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Status")
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Certificate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("ScholarshipProgramId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -243,7 +416,43 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Certificates");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Chat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool?>("IsRead")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("ReceiverId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SenderId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("SentDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Chats");
                 });
 
             modelBuilder.Entity("Domain.Entities.Country", b =>
@@ -259,9 +468,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Status")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -284,14 +490,11 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
                     b.Property<int?>("ScholarshipProgramId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -303,50 +506,13 @@ namespace Infrastructure.Migrations
                     b.ToTable("Criteria");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Document", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ApplicationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("FilePath")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationId");
-
-                    b.ToTable("Documents");
-                });
-
             modelBuilder.Entity("Domain.Entities.Feedback", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ApplicantId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -358,16 +524,43 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("FeedbackDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("FunderId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProviderId")
-                        .HasColumnType("int");
-
                     b.Property<double?>("Rating")
                         .HasColumnType("double");
 
-                    b.Property<string>("Status")
+                    b.Property<int?>("ServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicantId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("Feedbacks");
+                });
+
+            modelBuilder.Entity("Domain.Entities.FunderDocument", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("FileUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("FunderProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Type")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -375,11 +568,38 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FunderId");
+                    b.HasIndex("FunderProfileId");
 
-                    b.HasIndex("ProviderId");
+                    b.ToTable("funder_documents", (string)null);
+                });
 
-                    b.ToTable("Feedbacks");
+            modelBuilder.Entity("Domain.Entities.FunderProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ContactPersonName")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("FunderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OrganizationName")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FunderId")
+                        .IsUnique();
+
+                    b.ToTable("funder_profiles", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Major", b =>
@@ -397,9 +617,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -414,65 +631,111 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Body")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Icon")
+                    b.Property<bool?>("IsRead")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Message")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Link")
-                        .HasColumnType("longtext");
+                    b.Property<int?>("ReceiverId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("Time")
+                    b.Property<DateTime?>("SentDate")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId");
+                    b.HasIndex("ReceiverId");
 
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Review", b =>
+            modelBuilder.Entity("Domain.Entities.ProviderDocument", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ApplicationId")
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("FileUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("ProviderProfileId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Comment")
+                    b.Property<string>("Type")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProviderProfileId");
+
+                    b.ToTable("provider_documents", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProviderProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ContactPersonName")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("OrganizationName")
+                        .HasColumnType("longtext");
+
                     b.Property<int?>("ProviderId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("ReviewedDate")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<double?>("Score")
-                        .HasColumnType("double");
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProviderId")
+                        .IsUnique();
+
+                    b.ToTable("provider_profiles", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.Request", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ApplicantId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("RequestDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("ServiceId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .HasColumnType("longtext");
@@ -482,11 +745,42 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationId");
+                    b.HasIndex("ApplicantId");
 
-                    b.HasIndex("ProviderId");
+                    b.HasIndex("ServiceId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Requests");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ReviewMilestone", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("FromDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("ScholarshipProgramId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ToDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ScholarshipProgramId");
+
+                    b.ToTable("review_milestones", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Role", b =>
@@ -501,9 +795,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -516,6 +807,9 @@ namespace Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
@@ -536,13 +830,7 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("NumberOfRenewals")
-                        .HasColumnType("int");
-
                     b.Property<int?>("NumberOfScholarships")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProviderId")
                         .HasColumnType("int");
 
                     b.Property<decimal?>("ScholarshipAmount")
@@ -556,26 +844,26 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FunderId");
+                    b.HasIndex("CategoryId");
 
-                    b.HasIndex("ProviderId");
+                    b.HasIndex("FunderId");
 
                     b.ToTable("scholarship_programs", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.ScholarshipProgramCategory", b =>
+            modelBuilder.Entity("Domain.Entities.ScholarshipProgramCertificate", b =>
                 {
                     b.Property<int?>("ScholarshipProgramId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<int?>("CertificateId")
                         .HasColumnType("int");
 
-                    b.HasKey("ScholarshipProgramId", "CategoryId");
+                    b.HasKey("ScholarshipProgramId", "CertificateId");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("CertificateId");
 
-                    b.ToTable("scholarship_program_categories", (string)null);
+                    b.ToTable("scholarship_program_certificates", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ScholarshipProgramMajor", b =>
@@ -608,6 +896,116 @@ namespace Infrastructure.Migrations
                     b.ToTable("scholarship_program_universities", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.Service", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("ProviderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProviderId");
+
+                    b.ToTable("Services");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Skill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("ScholarshipProgramId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ScholarshipProgramId");
+
+                    b.ToTable("Skills");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Transaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("ReceiverId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SenderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("TransactionDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Transactions");
+                });
+
             modelBuilder.Entity("Domain.Entities.University", b =>
                 {
                     b.Property<int>("Id")
@@ -627,9 +1025,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Status")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -662,6 +1057,16 @@ namespace Infrastructure.Migrations
                     b.Navigation("ApplicantProfile");
                 });
 
+            modelBuilder.Entity("Domain.Entities.ApplicantCertificate", b =>
+                {
+                    b.HasOne("Domain.Entities.ApplicantProfile", "ApplicantProfile")
+                        .WithMany("ApplicantCertificates")
+                        .HasForeignKey("ApplicantProfileId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ApplicantProfile");
+                });
+
             modelBuilder.Entity("Domain.Entities.ApplicantProfile", b =>
                 {
                     b.HasOne("Domain.Entities.Account", "Applicant")
@@ -670,6 +1075,16 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Applicant");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ApplicantSkill", b =>
+                {
+                    b.HasOne("Domain.Entities.ApplicantProfile", "ApplicantProfile")
+                        .WithMany("ApplicantSkills")
+                        .HasForeignKey("ApplicantProfileId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ApplicantProfile");
                 });
 
             modelBuilder.Entity("Domain.Entities.Application", b =>
@@ -689,14 +1104,68 @@ namespace Infrastructure.Migrations
                     b.Navigation("ScholarshipProgram");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Award", b =>
+            modelBuilder.Entity("Domain.Entities.ApplicationDocument", b =>
                 {
                     b.HasOne("Domain.Entities.Application", "Application")
-                        .WithOne("Award")
-                        .HasForeignKey("Domain.Entities.Award", "ApplicationId")
+                        .WithMany("ApplicationDocuments")
+                        .HasForeignKey("ApplicationId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Application");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ApplicationReview", b =>
+                {
+                    b.HasOne("Domain.Entities.Application", "Application")
+                        .WithMany("ApplicationReviews")
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Entities.Account", "Expert")
+                        .WithMany("ApplicationReviews")
+                        .HasForeignKey("ExpertId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Application");
+
+                    b.Navigation("Expert");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AwardMilestone", b =>
+                {
+                    b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
+                        .WithMany("AwardMilestones")
+                        .HasForeignKey("ScholarshipProgramId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ScholarshipProgram");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AwardMilestoneDocument", b =>
+                {
+                    b.HasOne("Domain.Entities.AwardMilestone", "AwardMilestone")
+                        .WithMany("AwardMilestoneDocuments")
+                        .HasForeignKey("AwardMilestoneId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("AwardMilestone");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Chat", b =>
+                {
+                    b.HasOne("Domain.Entities.Account", "Receiver")
+                        .WithMany("ReceiverChats")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Entities.Account", "Sender")
+                        .WithMany("SenderChats")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("Domain.Entities.Criteria", b =>
@@ -709,93 +1178,132 @@ namespace Infrastructure.Migrations
                     b.Navigation("ScholarshipProgram");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Document", b =>
-                {
-                    b.HasOne("Domain.Entities.Application", "Application")
-                        .WithMany("Documents")
-                        .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Application");
-                });
-
             modelBuilder.Entity("Domain.Entities.Feedback", b =>
                 {
-                    b.HasOne("Domain.Entities.Account", "Funder")
-                        .WithMany("FunderFeedbacks")
-                        .HasForeignKey("FunderId")
+                    b.HasOne("Domain.Entities.Account", "Applicant")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("ApplicantId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Entities.Account", "Provider")
-                        .WithMany("ProviderFeedbacks")
-                        .HasForeignKey("ProviderId")
+                    b.HasOne("Domain.Entities.Service", "Service")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Applicant");
+
+                    b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("Domain.Entities.FunderDocument", b =>
+                {
+                    b.HasOne("Domain.Entities.FunderProfile", "FunderProfile")
+                        .WithMany("FunderDocuments")
+                        .HasForeignKey("FunderProfileId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("FunderProfile");
+                });
+
+            modelBuilder.Entity("Domain.Entities.FunderProfile", b =>
+                {
+                    b.HasOne("Domain.Entities.Account", "Funder")
+                        .WithOne("FunderProfile")
+                        .HasForeignKey("Domain.Entities.FunderProfile", "FunderId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Funder");
-
-                    b.Navigation("Provider");
                 });
 
             modelBuilder.Entity("Domain.Entities.Notification", b =>
                 {
-                    b.HasOne("Domain.Entities.Account", "Account")
+                    b.HasOne("Domain.Entities.Account", "Receiver")
                         .WithMany("Notifications")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Account");
+                    b.Navigation("Receiver");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Review", b =>
+            modelBuilder.Entity("Domain.Entities.ProviderDocument", b =>
                 {
-                    b.HasOne("Domain.Entities.Application", "Application")
-                        .WithMany("Reviews")
-                        .HasForeignKey("ApplicationId")
+                    b.HasOne("Domain.Entities.ProviderProfile", "ProviderProfile")
+                        .WithMany("ProviderDocuments")
+                        .HasForeignKey("ProviderProfileId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.Navigation("ProviderProfile");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProviderProfile", b =>
+                {
                     b.HasOne("Domain.Entities.Account", "Provider")
-                        .WithMany("Reviews")
-                        .HasForeignKey("ProviderId")
+                        .WithOne("ProviderProfile")
+                        .HasForeignKey("Domain.Entities.ProviderProfile", "ProviderId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Application");
 
                     b.Navigation("Provider");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Request", b =>
+                {
+                    b.HasOne("Domain.Entities.Account", "Applicant")
+                        .WithMany("Requests")
+                        .HasForeignKey("ApplicantId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Entities.Service", "Service")
+                        .WithMany("Requests")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Applicant");
+
+                    b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ReviewMilestone", b =>
+                {
+                    b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
+                        .WithMany("ReviewMilestones")
+                        .HasForeignKey("ScholarshipProgramId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ScholarshipProgram");
                 });
 
             modelBuilder.Entity("Domain.Entities.ScholarshipProgram", b =>
                 {
+                    b.HasOne("Domain.Entities.Category", "Category")
+                        .WithMany("ScholarshipPrograms")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Domain.Entities.Account", "Funder")
-                        .WithMany("FunderCreatedScholarshipPrograms")
+                        .WithMany("FunderScholarshipPrograms")
                         .HasForeignKey("FunderId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Entities.Account", "Provider")
-                        .WithMany("ProviderAssignedScholarshipPrograms")
-                        .HasForeignKey("ProviderId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.Navigation("Category");
 
                     b.Navigation("Funder");
-
-                    b.Navigation("Provider");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ScholarshipProgramCategory", b =>
+            modelBuilder.Entity("Domain.Entities.ScholarshipProgramCertificate", b =>
                 {
-                    b.HasOne("Domain.Entities.Category", "Category")
-                        .WithMany("ScholarshipProgramCategories")
-                        .HasForeignKey("CategoryId")
+                    b.HasOne("Domain.Entities.Certificate", "Certificate")
+                        .WithMany("ScholarshipProgramCertificates")
+                        .HasForeignKey("CertificateId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
-                        .WithMany("ScholarshipProgramCategories")
+                        .WithMany("ScholarshipProgramCertificates")
                         .HasForeignKey("ScholarshipProgramId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.Navigation("Certificate");
 
                     b.Navigation("ScholarshipProgram");
                 });
@@ -838,6 +1346,42 @@ namespace Infrastructure.Migrations
                     b.Navigation("University");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Service", b =>
+                {
+                    b.HasOne("Domain.Entities.Account", "Provider")
+                        .WithMany("Services")
+                        .HasForeignKey("ProviderId");
+
+                    b.Navigation("Provider");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Skill", b =>
+                {
+                    b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
+                        .WithMany("Skills")
+                        .HasForeignKey("ScholarshipProgramId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ScholarshipProgram");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Transaction", b =>
+                {
+                    b.HasOne("Domain.Entities.Account", "Receiver")
+                        .WithMany("ReceiverTransactions")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Entities.Account", "Sender")
+                        .WithMany("SenderTransactions")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
+                });
+
             modelBuilder.Entity("Domain.Entities.University", b =>
                 {
                     b.HasOne("Domain.Entities.Country", "Country")
@@ -852,38 +1396,63 @@ namespace Infrastructure.Migrations
                 {
                     b.Navigation("ApplicantProfile");
 
+                    b.Navigation("ApplicationReviews");
+
                     b.Navigation("Applications");
 
-                    b.Navigation("FunderCreatedScholarshipPrograms");
+                    b.Navigation("Feedbacks");
 
-                    b.Navigation("FunderFeedbacks");
+                    b.Navigation("FunderProfile");
+
+                    b.Navigation("FunderScholarshipPrograms");
 
                     b.Navigation("Notifications");
 
-                    b.Navigation("ProviderAssignedScholarshipPrograms");
+                    b.Navigation("ProviderProfile")
+                        .IsRequired();
 
-                    b.Navigation("ProviderFeedbacks");
+                    b.Navigation("ReceiverChats");
 
-                    b.Navigation("Reviews");
+                    b.Navigation("ReceiverTransactions");
+
+                    b.Navigation("Requests");
+
+                    b.Navigation("SenderChats");
+
+                    b.Navigation("SenderTransactions");
+
+                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("Domain.Entities.ApplicantProfile", b =>
                 {
                     b.Navigation("Achievements");
+
+                    b.Navigation("ApplicantCertificates");
+
+                    b.Navigation("ApplicantSkills");
                 });
 
             modelBuilder.Entity("Domain.Entities.Application", b =>
                 {
-                    b.Navigation("Award");
+                    b.Navigation("ApplicationDocuments");
 
-                    b.Navigation("Documents");
+                    b.Navigation("ApplicationReviews");
+                });
 
-                    b.Navigation("Reviews");
+            modelBuilder.Entity("Domain.Entities.AwardMilestone", b =>
+                {
+                    b.Navigation("AwardMilestoneDocuments");
                 });
 
             modelBuilder.Entity("Domain.Entities.Category", b =>
                 {
-                    b.Navigation("ScholarshipProgramCategories");
+                    b.Navigation("ScholarshipPrograms");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Certificate", b =>
+                {
+                    b.Navigation("ScholarshipProgramCertificates");
                 });
 
             modelBuilder.Entity("Domain.Entities.Country", b =>
@@ -891,9 +1460,19 @@ namespace Infrastructure.Migrations
                     b.Navigation("Universities");
                 });
 
+            modelBuilder.Entity("Domain.Entities.FunderProfile", b =>
+                {
+                    b.Navigation("FunderDocuments");
+                });
+
             modelBuilder.Entity("Domain.Entities.Major", b =>
                 {
                     b.Navigation("ScholarshipProgramMajors");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProviderProfile", b =>
+                {
+                    b.Navigation("ProviderDocuments");
                 });
 
             modelBuilder.Entity("Domain.Entities.Role", b =>
@@ -905,13 +1484,26 @@ namespace Infrastructure.Migrations
                 {
                     b.Navigation("Applications");
 
+                    b.Navigation("AwardMilestones");
+
                     b.Navigation("Criteria");
 
-                    b.Navigation("ScholarshipProgramCategories");
+                    b.Navigation("ReviewMilestones");
+
+                    b.Navigation("ScholarshipProgramCertificates");
 
                     b.Navigation("ScholarshipProgramMajors");
 
                     b.Navigation("ScholarshipProgramUniversities");
+
+                    b.Navigation("Skills");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Service", b =>
+                {
+                    b.Navigation("Feedbacks");
+
+                    b.Navigation("Requests");
                 });
 
             modelBuilder.Entity("Domain.Entities.University", b =>
