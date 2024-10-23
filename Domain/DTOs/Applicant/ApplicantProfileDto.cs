@@ -1,4 +1,7 @@
-﻿namespace Domain.DTOs.Applicant;
+﻿using Domain.DTOs.Account;
+using Domain.DTOs.Achievement;
+
+namespace Domain.DTOs.Applicant;
 
 public class ApplicantProfileDto
 {
@@ -17,4 +20,8 @@ public class ApplicantProfileDto
     public string? Ethnicity { get; set; }
 
     public int? ApplicantId { get; set; }
+    
+    public AccountDto? Applicant { get; set; }
+    
+    public List<AchievementDto>? Achievements { get; set; }
 }

@@ -10,7 +10,6 @@ public class ScholarshipProgramProfile : Profile
     public ScholarshipProgramProfile()
     {
         CreateMap<ScholarshipProgram, ScholarshipProgramDto>()
-            .IncludeBase<BaseEntity, BaseDto>()
             .ForMember(dest => dest.Universities, opt =>
                     opt.MapFrom(src => src.ScholarshipProgramUniversities.Select(spu => spu.University)))
             .ForMember(dest => dest.Majors, opt =>
