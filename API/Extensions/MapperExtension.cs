@@ -12,9 +12,6 @@ public static class MapperExtension
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<BaseProfile>();
-                cfg.AddProfile<CategoryProfile>();
-                cfg.AddProfile<CriteriaProfile>();
-                cfg.AddProfile<MajorProfile>();
                 cfg.AddProfile<ScholarshipProgramProfile>();
                 cfg.AddProfile<MappingProfile>();
             });

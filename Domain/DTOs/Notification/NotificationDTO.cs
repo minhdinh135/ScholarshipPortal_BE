@@ -15,6 +15,8 @@ public class NotificationDTO : BaseDto
     public DateTime? Time { get; set; }
     
     public string? Link { get; set; }
+    
+    public string? Status { get; set; }
 
     public int AccountId { get; set; }
 }

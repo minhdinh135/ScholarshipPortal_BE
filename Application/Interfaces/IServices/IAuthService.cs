@@ -1,14 +1,12 @@
-﻿using Domain.Constants;
-using Domain.DTOs.Authentication;
-using Domain.DTOs.Google;
+﻿using Domain.DTOs.Authentication;
 
 namespace Application.Interfaces.IServices;
 
 public interface IAuthService
 {
-    Task<JwtDTO> Login(LoginDTO loginDto);
+    Task<JwtDto> Login(LoginDto loginDto);
 
-    Task<JwtDTO> Register(RegisterDTO registerDto, string role = RoleEnum.APPLICANT);
+    Task<JwtDto> Register(RegisterDto registerDto);
 
-    Task<(JwtDTO jwt, bool isNewUser)> GoogleAuth(UserInfo userInfo);
+    Task<(JwtDto jwt, bool isNewUser)> GoogleAuth(UserInfo userInfo);
 }

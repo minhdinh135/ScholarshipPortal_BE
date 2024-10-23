@@ -1,9 +1,6 @@
-﻿using Application.Helper;
-using Application.Interfaces.IServices;
+﻿using Application.Interfaces.IServices;
 using Domain.DTOs.Common;
 using Domain.DTOs.Criteria;
-using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SSAP.API.Controllers;
@@ -48,17 +45,8 @@ public class CriteriaController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCriteria([FromBody] CreateCriteriaRequest createCriteriaRequest,
-        [FromServices] IValidator<CreateCriteriaRequest> validator)
+    public async Task<IActionResult> CreateCriteria([FromBody] CreateCriteriaRequest createCriteriaRequest)
     {
-        ValidationResult validationResult = validator.Validate(createCriteriaRequest);
-
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Validation error occured",
-                ErrorHandler.GetErrors(validationResult)));
-        }
-
         var createdCriteria = await _criteriaService.CreateCriteria(createCriteriaRequest);
 
         if (createdCriteria == null)
@@ -70,17 +58,8 @@ public class CriteriaController : ControllerBase
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateCriteria([FromRoute] int id,
-        [FromBody] UpdateCriteriaRequest updateCriteriaRequest,
-        [FromServices] IValidator<UpdateCriteriaRequest> validator)
+        [FromBody] UpdateCriteriaRequest updateCriteriaRequest)
     {
-        ValidationResult validationResult = validator.Validate(updateCriteriaRequest);
-
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Validation error occured",
-                ErrorHandler.GetErrors(validationResult)));
-        }
-
         var updatedCriteria = await _criteriaService.UpdateCriteria(id, updateCriteriaRequest);
 
         if (updatedCriteria == null)

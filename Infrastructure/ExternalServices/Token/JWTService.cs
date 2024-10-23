@@ -3,14 +3,14 @@ using System.Security.Claims;
 using System.Text;
 using Application.Interfaces.IServices;
 using Domain.Constants;
+using Domain.DTOs.Account;
 using Domain.DTOs.Authentication;
-using Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.ExternalServices.Token;
 public class JwtService : ITokenService{
-  public JwtDTO CreateToken(IConfiguration config, Account account, string role = RoleEnum.APPLICANT){
+  public JwtDto CreateToken(IConfiguration config, AccountDto account, string role = RoleEnum.APPLICANT){
     //create claims details based on the user information
     var claims = new[] {
       new Claim(JwtRegisteredClaimNames.Sub,
@@ -40,6 +40,6 @@ public class JwtService : ITokenService{
     var jwt = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
     
     // return new JwtDTO{Token = tokenHandler.WriteToken(jwt)};
-    return new JwtDTO(tokenHandler.WriteToken(jwt));
+    return new JwtDto(tokenHandler.WriteToken(jwt));
   }
 }

@@ -3,13 +3,13 @@ using Domain.DTOs.Common;
 
 namespace Application.Interfaces.IServices
 {
-	public interface IApplicationService
-	{
-		Task<IEnumerable<ApplicationDTO>> GetAll();
-    Task<PaginatedList<ApplicationDTO>> GetAll(int pageIndex, int pageSize, string sortBy, string sortOrder);
-		Task<ApplicationDTO> Get(int id);
-		Task<ApplicationDTO> Add(ApplicationAddDTO dto);
-		Task<ApplicationDTO> Update(ApplicationUpdateDTO dto);
-		Task<ApplicationDTO> Delete(int id);
-	}
+    public interface IApplicationService
+    {
+        Task<IEnumerable<ApplicationDto>> GetAll();
+        Task<PaginatedList<ApplicationDto>> GetAll(int pageIndex, int pageSize, string sortBy, string sortOrder);
+        Task<ApplicationDto> Get(int id);
+        Task<ApplicationDto> Add(AddApplicationDto dto);
+        Task<ApplicationDto> Update(int id, UpdateApplicationDto dto);
+        Task<ApplicationDto> Delete(int id);
+    }
 }

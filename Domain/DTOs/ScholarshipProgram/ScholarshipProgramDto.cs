@@ -10,7 +10,7 @@ public class ScholarshipProgramDto : BaseDto
     public int? Id { get; set; }
 
     public string? Name { get; set; }
-    
+
     public string? ImageUrl { get; set; }
 
     public string? Description { get; set; }
@@ -21,15 +21,13 @@ public class ScholarshipProgramDto : BaseDto
 
     public DateTime? Deadline { get; set; }
 
-    public int? NumberOfRenewals { get; set; }
+    public string? Status { get; set; }
 
     public int? FunderId { get; set; }
 
-    public int? ProviderId { get; set; }
-    
-    public ICollection<CategoryDto>? Categories { get; set; }
-    
-    public ICollection<UniversityResponse>? Universities { get; set; }
-    
+    public int? CategoryId { get; set; }
+
+    public ICollection<UniversityDto>? Universities { get; set; }
+
     public ICollection<MajorDto>? Majors { get; set; }
 }

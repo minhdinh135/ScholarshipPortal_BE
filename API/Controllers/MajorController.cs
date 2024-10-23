@@ -1,9 +1,6 @@
-﻿using Application.Helper;
-using Application.Interfaces.IServices;
+﻿using Application.Interfaces.IServices;
 using Domain.DTOs.Common;
 using Domain.DTOs.Major;
-using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SSAP.API.Controllers;
@@ -48,17 +45,8 @@ public class MajorController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateMajor([FromBody] CreateMajorRequest createMajorRequest,
-        [FromServices] IValidator<CreateMajorRequest> validator)
+    public async Task<IActionResult> CreateMajor([FromBody] CreateMajorRequest createMajorRequest)
     {
-        ValidationResult validationResult = await validator.ValidateAsync(createMajorRequest);
-
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Validation errors occured",
-                ErrorHandler.GetErrors(validationResult)));
-        }
-
         var createdMajor = await _majorService.CreateMajor(createMajorRequest);
 
         if (createdMajor == null)
@@ -70,17 +58,9 @@ public class MajorController : ControllerBase
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateMajor([FromRoute] int id,
-        [FromBody] UpdateMajorRequest updateMajorRequest, [FromServices] IValidator<UpdateMajorRequest> validator)
+        [FromBody] UpdateMajorRequest updateMajorRequest)
     {
-        ValidationResult validationResult = await validator.ValidateAsync(updateMajorRequest);
-
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Validation errors occured",
-                ErrorHandler.GetErrors(validationResult)));
-        }
-
-        var updatedMajor = await _majorService.UpdateMajor(id, updateMajorRequest);
+       var updatedMajor = await _majorService.UpdateMajor(id, updateMajorRequest);
 
         if (updatedMajor == null)
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Update major failed", null));
