@@ -1,8 +1,11 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using Application.Common;
+using Application.Interfaces.IRepositories;
+using Application.Interfaces.IServices;
 using FluentValidation;
 using Infrastructure.Data;
+using Infrastructure.ExternalServices.Chat;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +29,9 @@ builder.Services.AddControllers(options => options.SuppressInputFormatterBufferi
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 //Not throw errors imidiately
 builder.Services.Configure<ApiBehaviorOptions>(options
     => options.SuppressModelStateInvalidFilter = true);
@@ -97,17 +103,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
+builder.Services.AddSignalR();
 
 //Add Cors
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "MyAllowPolicy", policy =>
     {
-        //policy.WithOrigins("https://locovn.azurewebsites.net", "https://test-payment.momo.vn")
-        policy.AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
+        policy.WithOrigins(/*"https://locovn.azurewebsites.net", "https://test-payment.momo.vn"*/ "http://localhost:5173");
+        policy.AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+	});
 });
 
 
@@ -149,6 +156,7 @@ using (var scope = app.Services.CreateScope())
 //     app.UseSwaggerUI();
 // }
 
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
@@ -161,6 +169,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseExceptionHandler();
+app.MapHub<ChatHub>("/chat");
 
 app.MapControllers();
 app.Run();

@@ -12,6 +12,7 @@ using Infrastructure.Repositories;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Infrastructure.ExternalServices.Notification;
+using Infrastructure.ExternalServices.Chat;
 
 namespace SSAP.API.Extensions;
 
@@ -21,14 +22,14 @@ public static class ServiceExtension
     {
         services.AddScoped(typeof(IGenericService<,,>), typeof(GenericService<,,>));
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-        
+
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<ITokenService, JwtService>();
 
         services.AddScoped<IScholarshipProgramService, ScholarshipProgramService>();
         services.AddScoped<IScholarshipProgramRepository, ScholarshipProgramRepository>();
-        
+
         services.AddScoped<ICriteriaService, CriteriaService>();
         services.AddScoped<ICriteriaRepository, CriteriaRepository>();
 
@@ -38,8 +39,8 @@ public static class ServiceExtension
         services.AddScoped<IMajorService, MajorService>();
         services.AddScoped<IMajorRepository, MajorRepository>();
 
-		services.AddScoped<IReviewService,ReviewService>();
-        services.AddScoped<ICountryService,CountryService>();
+        services.AddScoped<IReviewService, ReviewService>();
+        services.AddScoped<ICountryService, CountryService>();
         services.AddScoped<IFeedbackService, FeedbackService>();
         services.AddScoped<IApplicantProfileService, ApplicantProfileService>();
         services.AddScoped<IUniversityService, UniversityService>();
@@ -48,13 +49,17 @@ public static class ServiceExtension
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IAchievementService, AchievementService>();
         services.AddScoped<IApplicationService, ApplicationService>();
+        services.AddScoped<IChatService, ChatService>();
+        services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
+        services.AddSignalR();
+        services.AddControllers();
 
-		services.AddHttpClient<GeminiService>();
+        services.AddHttpClient<GeminiService>();
         services.AddSingleton(sp => new GeminiService(
             sp.GetRequiredService<HttpClient>(),
             config.GetSection("OpenAI").GetSection("ApiKey").Value ?? string.Empty
         ));
-        
+
         services.AddScoped<GoogleService>(s => new GoogleService(
             config.GetSection("Google").GetSection("ClientId").Value ?? string.Empty,
             config.GetSection("Google").GetSection("ClientSecret").Value ?? string.Empty,
@@ -63,12 +68,12 @@ public static class ServiceExtension
 
         services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
         services.AddScoped<ICloudinaryService, CloudinaryService>();
-        
-		services.AddScoped<IEmailService, EmailService>();
+
+        services.AddScoped<IEmailService, EmailService>();
 
         services.Configure<ElasticSettings>(config.GetSection("ElasticSettings"));
         services.AddSingleton(typeof(IElasticService<>), typeof(ElasticService<>));
-        
+
         FirebaseApp.Create(new AppOptions()
         {
             Credential = GoogleCredential.FromFile("./firebase-adminsdk.json"),
@@ -76,5 +81,5 @@ public static class ServiceExtension
 
         services.AddScoped<INotificationService, NotificationsService>();
         return services;
-    }
+    } 
 }
