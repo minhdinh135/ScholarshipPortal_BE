@@ -49,7 +49,7 @@ namespace Infrastructure.ExternalServices.Chat
 				};
 
 				await SaveMessageAsync(chatMessage);
-				await _chatHubContext.Clients.User(receiverId.ToString()).SendAsync("ReceiveMessage", senderId, message);
+				await _chatHubContext.Clients.Group(receiverId.ToString()).SendAsync("ReceiveMessage", senderId, message);
 
 				return response;
 			}

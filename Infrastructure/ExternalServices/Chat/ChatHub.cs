@@ -16,7 +16,9 @@ namespace Infrastructure.ExternalServices.Chat
 
 		public override async Task OnConnectedAsync()
 		{
-			string userId = Context.UserIdentifier;
+			//string userId = Context.UserIdentifier;
+            var httpContext = Context.GetHttpContext();
+            string userId = httpContext.Request.Query["userId"];
 			await Groups.AddToGroupAsync(Context.ConnectionId, userId);
 			await base.OnConnectedAsync();
 		}
