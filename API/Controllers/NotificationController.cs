@@ -26,10 +26,10 @@ public class NotificationController : ControllerBase
 
     [HttpGet("get-all-by-id/{id}")]
     public async Task<IActionResult> GetAll(int id, [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10,
-        [FromQuery] string sortBy = "Time", [FromQuery] string sortOrder = "desc")
+        [FromQuery] string sortBy = "SentDate", [FromQuery] string sortOrder = "desc")
     {
         var response = await _notificationService.GetAll(pageIndex, pageSize, sortBy, sortOrder);
-        response.Items = response.Items.Where(x => x.AccountId == id).ToList();
+        response.Items = response.Items.Where(x => x.ReceiverId == id).ToList();
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all notification successfully", response));
     }
@@ -72,7 +72,7 @@ public class NotificationController : ControllerBase
     public async Task<IActionResult> ReadNotification(int id)
     {
         var response = await _notificationService.GetById(id);
-        response.Status = "READ";
+        response.IsRead = true;
 
         response = await _notificationService.Update(id, _mapper.Map<NotificationUpdateDTO>(response));
 

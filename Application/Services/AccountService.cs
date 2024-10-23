@@ -62,7 +62,7 @@ namespace Application.Services
                     Email = acc.Email,
                     HashedPassword = acc.HashedPassword,
                     Address = acc.Address,
-                    Avatar = acc.AvatarUrl,
+                    AvatarUrl = acc.AvatarUrl,
                     RoleId = acc.RoleId,
                     RoleName = acc.Role != null ? acc.Role.Name : "",
                     CreatedAt = acc.CreatedAt,
