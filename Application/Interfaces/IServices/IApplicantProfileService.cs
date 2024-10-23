@@ -11,7 +11,7 @@ namespace Application.Interfaces.IServices
 {
 	public interface IApplicantProfileService
 	{
-		Task<IEnumerable<ApplicantProfile>> GetAll();
+		Task<IEnumerable<ApplicantProfileDTO>> GetAll();
 		Task<ApplicantProfile> Get(int id);
 		Task<ApplicantProfile> Add(AddApplicantProfileDTO dto);
 		Task<ApplicantProfile> Update(UpdateApplicantProfileDTO dto);

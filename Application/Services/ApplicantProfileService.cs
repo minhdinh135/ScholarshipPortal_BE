@@ -38,9 +38,10 @@ namespace Application.Services
 			return await _repository.GetById(id);
 		}
 
-		public async Task<IEnumerable<ApplicantProfile>> GetAll()
+		public async Task<IEnumerable<ApplicantProfileDTO>> GetAll()
 		{
-			return await _repository.GetAll();
+			var entities = await _repository.GetAll();
+			return _mapper.Map<IEnumerable<ApplicantProfileDTO>>(entities);
 		}
 
 		public async Task<ApplicantProfile> Update(UpdateApplicantProfileDTO dto)

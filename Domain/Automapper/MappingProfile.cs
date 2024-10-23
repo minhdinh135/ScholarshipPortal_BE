@@ -36,8 +36,9 @@ namespace Domain.Automapper
             CreateMap<ApplicationDocument, UpdateDocumentDTO>().ReverseMap();
 
             CreateMap<ApplicantProfile, AddApplicantProfileDTO>().ReverseMap();
-            CreateMap<ApplicantProfile, UpdateApplicantProfileDTO>().ReverseMap();
-
+			CreateMap<ApplicantProfile, UpdateApplicantProfileDTO>().ReverseMap();
+            CreateMap<ApplicantProfile, ApplicantProfileDTO>().ReverseMap();
+			
             CreateMap<University, AddUniversityDTO>().ReverseMap();
             CreateMap<University, UpdateUniversityDTO>().ReverseMap();
             CreateMap<University, UniversityResponse>().ReverseMap();

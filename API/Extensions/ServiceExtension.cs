@@ -13,6 +13,7 @@ using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Infrastructure.ExternalServices.Notification;
 using Infrastructure.ExternalServices.Chat;
+using Infrastructure.ExternalServices.ExportPDF;
 
 namespace SSAP.API.Extensions;
 
@@ -53,8 +54,10 @@ public static class ServiceExtension
         services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
         services.AddSignalR();
         services.AddControllers();
+		services.AddScoped<IPdfExportService, PdfExportService>();
 
-        services.AddHttpClient<GeminiService>();
+
+		services.AddHttpClient<GeminiService>();
         services.AddSingleton(sp => new GeminiService(
             sp.GetRequiredService<HttpClient>(),
             config.GetSection("OpenAI").GetSection("ApiKey").Value ?? string.Empty
