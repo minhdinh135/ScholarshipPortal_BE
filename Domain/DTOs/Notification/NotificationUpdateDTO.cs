@@ -6,15 +6,11 @@ public class NotificationUpdateDTO : BaseDto
 {
     public int Id { get; set; }
 
-    public required string Title { get; set; }
-
-    public required string Body { get; set; }
-
-    public string? Icon { get; set; }
+    public string? Message { get; set; }
     
-    public DateTime? Time { get; set; }
+    public bool? IsRead { get; set; }
     
-    public string? Link { get; set; }
-
-    public int AccountId { get; set; }
+    public DateTime? SentDate { get; set; }
+    
+    public int? ReceiverId { get; set; }
 }
