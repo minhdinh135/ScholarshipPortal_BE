@@ -1,3 +1,4 @@
+using Application.Exceptions;
 using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
@@ -5,6 +6,7 @@ using Domain.DTOs.Account;
 using Domain.DTOs.Authentication;
 using Domain.DTOs.Common;
 using Domain.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Services
 {
@@ -13,12 +15,14 @@ namespace Application.Services
         private readonly IAccountRepository _accountRepository;
         private readonly IMapper _mapper;
         private readonly IPasswordService _passwordService;
+        private readonly ICloudinaryService _cloudinaryService;
 
-        public AccountService(IAccountRepository accountRepository, IMapper mapper, IPasswordService passwordService)
+        public AccountService(IAccountRepository accountRepository, IMapper mapper, IPasswordService passwordService, ICloudinaryService cloudinaryService)
         {
             _accountRepository = accountRepository;
             _mapper = mapper;
             _passwordService = passwordService;
+            _cloudinaryService = cloudinaryService;
         }
 
         public async Task<AccountDto> AddAccount(RegisterDto dto)
@@ -69,5 +73,26 @@ namespace Application.Services
             await _accountRepository.Update(entity);
             return _mapper.Map<AccountDto>(entity);
         }
-    }
+
+		public async Task<bool> UpdateAvatar(int id, IFormFile avatar)
+		{
+			var uploadedAvatar = await _cloudinaryService.UploadImage(avatar);
+			if (uploadedAvatar == null)
+				throw new FileProcessingException("Upload avatar failed");
+
+			var existingProfile = await _accountRepository.GetById(id);
+			existingProfile.AvatarUrl = uploadedAvatar;
+			_mapper.Map<UpdateAccountDto>(existingProfile);
+
+			var updatedAccount = await _accountRepository.Update(existingProfile);
+			if (updatedAccount == null)
+			{
+				return false;
+
+			}
+
+			return true;
+
+		}
+	}
 }
