@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace SSAP.API.Controllers
 {
 	[ApiController]
-	[Route("api/chat")]
+	[Route("api/chats")]
 	public class ChatController : ControllerBase
 	{
 		private readonly IChatService _chatService;
-		private readonly IAccountsService _accountsService;
+		private readonly IAccountService _accountsService;
 		private readonly IChatMessageRepository _chatMessageRepository;
 
-		public ChatController(IChatService chatService, IAccountsService accountsService, IChatMessageRepository chatMessageRepository)
+		public ChatController(IChatService chatService, IAccountService accountsService, IChatMessageRepository chatMessageRepository)
 		{
 			_chatService = chatService;
 			_accountsService = accountsService;

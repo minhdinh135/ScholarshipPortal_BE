@@ -8,7 +8,7 @@ public class CreateCriteriaRequestValidator : BaseValidator<CreateCriteriaReques
 {
     public CreateCriteriaRequestValidator()
     {
-        RuleFor(x => x.Title)
+        RuleFor(x => x.Name)
             .NotEmpty().WithMessage("The title must not be empty");
     }
 }

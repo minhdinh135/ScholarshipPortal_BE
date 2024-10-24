@@ -1,9 +1,6 @@
-﻿using Application.Helper;
-using Application.Interfaces.IServices;
+﻿using Application.Interfaces.IServices;
 using Domain.DTOs.Common;
 using Domain.DTOs.ScholarshipProgram;
-using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SSAP.API.Controllers;
@@ -72,17 +69,8 @@ public class ScholarshipProgramController : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> CreateScholarshipProgram(
-        [FromBody] CreateScholarshipProgramRequest createScholarshipProgramRequest,
-        [FromServices] IValidator<CreateScholarshipProgramRequest> validator)
+        [FromBody] CreateScholarshipProgramRequest createScholarshipProgramRequest)
     {
-        ValidationResult validationResult = await validator.ValidateAsync(createScholarshipProgramRequest);
-
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Validation errors occured",
-                ErrorHandler.GetErrors(validationResult)));
-        }
-
         var createdScholarshipProgram =
             await _scholarshipProgramService.CreateScholarshipProgram(createScholarshipProgramRequest);
 
@@ -97,17 +85,8 @@ public class ScholarshipProgramController : ControllerBase
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateScholarshipProgram([FromRoute] int id,
-        [FromBody] UpdateScholarshipProgramRequest updateScholarshipProgramRequest,
-        [FromServices] IValidator<UpdateScholarshipProgramRequest> validator)
+        [FromBody] UpdateScholarshipProgramRequest updateScholarshipProgramRequest)
     {
-        ValidationResult validationResult = await validator.ValidateAsync(updateScholarshipProgramRequest);
-
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Validation errors occured",
-                ErrorHandler.GetErrors(validationResult)));
-        }
-
         var updatedScholarshipProgram =
             await _scholarshipProgramService.UpdateScholarshipProgram(id, updateScholarshipProgramRequest);
 

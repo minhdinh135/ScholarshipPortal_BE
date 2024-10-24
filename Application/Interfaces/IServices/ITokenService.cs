@@ -1,10 +1,10 @@
-﻿using Domain.DTOs.Authentication;
-using Domain.Entities;
+﻿using Domain.DTOs.Account;
+using Domain.DTOs.Authentication;
 using Microsoft.Extensions.Configuration;
 
 namespace Application.Interfaces.IServices;
 
 public interface ITokenService
 {
-    JwtDTO CreateToken(IConfiguration config, Account account, string? role);
+    JwtDto CreateToken(IConfiguration config, AccountDto account, string? role);
 }
