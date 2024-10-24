@@ -50,6 +50,26 @@ public class ApplicantController : ControllerBase
         }
     }
 
+    [HttpPost("{applicantId}/achievements")]
+    public async Task<IActionResult> AddProfileAchievements(int applicantId, List<AddAchievementDto> addAchievementDto)
+    {
+        try
+        {
+            var achievementIds = await _applicantService.AddProfileAchievements(applicantId, addAchievementDto);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK,
+                $"Add achievements successfully with ids:{achievementIds}", achievementIds));
+        }
+        catch (NotFoundException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message, null));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message, null));
+        }
+    }
+
     [HttpPut("{applicantId}")]
     public async Task<IActionResult> UpdateApplicantProfile(int applicantId,
         UpdateApplicantProfileDto updateApplicantProfileDto)
@@ -76,7 +96,8 @@ public class ApplicantController : ControllerBase
             var applicantProfile = await _applicantService.GetApplicantProfile(applicantId);
             var pdf = await _applicantService.ExportApplicantProfileToPdf(applicantId);
 
-            return File(pdf, "application/pdf", $"ApplicantCV_{applicantProfile.FirstName}{applicantProfile.LastName}.pdf");
+            return File(pdf, "application/pdf",
+                $"ApplicantCV_{applicantProfile.FirstName}{applicantProfile.LastName}.pdf");
         }
         catch (NotFoundException e)
         {

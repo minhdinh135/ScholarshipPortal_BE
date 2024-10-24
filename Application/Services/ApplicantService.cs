@@ -19,7 +19,7 @@ public class ApplicantService : IApplicantService
         _applicantRepository = applicantRepository;
         _pdfService = pdfService;
     }
-    
+
     public async Task<IEnumerable<ApplicantProfileDto>> GetAllApplicantProfiles()
     {
         var applicantProfiles = await _applicantRepository.GetAll();
@@ -56,6 +56,36 @@ public class ApplicantService : IApplicantService
         var updatedScholarshipProgram = await _applicantRepository.Update(existingApplicantProfile);
 
         return _mapper.Map<ApplicantProfileDto>(updatedScholarshipProgram);
+    }
+
+    public async Task<List<int>> AddProfileAchievements(int applicantId, List<AddAchievementDto> dtos)
+    {
+        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (applicantProfile == null)
+            throw new ServiceException($"Applicant Profile with applicantId:{applicantId} is not found");
+        
+        var achievements = _mapper.Map<List<Achievement>>(dtos);
+        
+        foreach (var achievement in achievements)
+        {
+            achievement.ApplicantProfileId = applicantProfile.Id;
+        }
+
+        try
+        {
+            var resultIds = await _applicantRepository.AddProfileAchievements(achievements);
+
+            return resultIds;
+        }
+        catch (Exception e)
+        {
+            throw new RepositoryException("Add achievements failed");
+        }
+    }
+
+    public Task<bool> UpdateProfileAchievements(int applicantId, List<UpdateAchievementDto> dtos)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task<byte[]> ExportApplicantProfileToPdf(int applicantId)

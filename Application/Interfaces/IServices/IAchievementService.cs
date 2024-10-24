@@ -1,4 +1,4 @@
-using Domain.DTOs.Achievement;
+using Domain.DTOs.Applicant;
 using Domain.DTOs.Common;
 
 namespace Application.Interfaces.IServices
