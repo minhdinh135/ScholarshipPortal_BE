@@ -23,8 +23,9 @@ namespace Domain.Automapper
                 .ForMember(dest => dest.RoleName, opt =>
                     opt.MapFrom(src => src.Role.Name))
                 .ReverseMap();
+			CreateMap<AccountDto, UpdateAccountDto>().ReverseMap();
 
-            CreateMap<ApplicantProfile, ApplicantProfileDto>().ReverseMap();
+			CreateMap<ApplicantProfile, ApplicantProfileDto>().ReverseMap();
             CreateMap<ApplicantProfile, AddApplicantProfileDto>().ReverseMap();
             CreateMap<ApplicantProfile, UpdateApplicantProfileDto>().ReverseMap();
 
