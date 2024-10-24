@@ -1,5 +1,4 @@
 ﻿using Domain.DTOs.Account;
-using Domain.DTOs.Achievement;
 
 namespace Domain.DTOs.Applicant;
 

@@ -1,6 +1,5 @@
 using AutoMapper;
 using Domain.DTOs.Account;
-using Domain.DTOs.Achievement;
 using Domain.DTOs.Applicant;
 using Domain.DTOs.Application;
 using Domain.DTOs.Authentication;

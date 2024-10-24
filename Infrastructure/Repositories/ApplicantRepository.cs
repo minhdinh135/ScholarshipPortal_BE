@@ -22,4 +22,18 @@ public class ApplicantRepository : GenericRepository<ApplicantProfile>, IApplica
             .Include(a => a.ApplicantCertificates)
             .FirstOrDefaultAsync(a => a.ApplicantId == applicantId);
     }
+
+    public async Task<List<int>> AddProfileAchievements(List<Achievement> achievements)
+    {
+        await _dbContext.Achievements
+            .AddRangeAsync(achievements);
+        await _dbContext.SaveChangesAsync();
+
+        return achievements.Select(a => a.Id).ToList();
+    }
+
+    public Task<bool> UpdateProfileAchievements(List<Achievement> achievements)
+    {
+        throw new NotImplementedException();
+    }
 }
