@@ -4,6 +4,8 @@ using Application.Interfaces.IServices;
 using AutoMapper;
 using Domain.DTOs.Applicant;
 using Domain.Entities;
+using Microsoft.AspNetCore.Http;
+using ServiceException = Application.Exceptions.ServiceException;
 
 namespace Application.Services;
 
@@ -12,12 +14,15 @@ public class ApplicantService : IApplicantService
     private readonly IMapper _mapper;
     private readonly IApplicantRepository _applicantRepository;
     private readonly IPdfService _pdfService;
+    private readonly ICloudinaryService _cloudinaryService;
 
-    public ApplicantService(IMapper mapper, IApplicantRepository applicantRepository, IPdfService pdfService)
+    public ApplicantService(IMapper mapper, IApplicantRepository applicantRepository, IPdfService pdfService,
+        ICloudinaryService cloudinaryService)
     {
         _mapper = mapper;
         _applicantRepository = applicantRepository;
         _pdfService = pdfService;
+        _cloudinaryService = cloudinaryService;
     }
 
     public async Task<IEnumerable<ApplicantProfileDto>> GetAllApplicantProfiles()
@@ -62,10 +67,10 @@ public class ApplicantService : IApplicantService
     {
         var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
         if (applicantProfile == null)
-            throw new ServiceException($"Applicant Profile with applicantId:{applicantId} is not found");
-        
+            throw new ServiceException($"Applicant profile with applicantId:{applicantId} is not found");
+
         var achievements = _mapper.Map<List<Achievement>>(dtos);
-        
+
         foreach (var achievement in achievements)
         {
             achievement.ApplicantProfileId = applicantProfile.Id;
@@ -79,13 +84,158 @@ public class ApplicantService : IApplicantService
         }
         catch (Exception e)
         {
-            throw new RepositoryException("Add achievements failed");
+            throw new ServiceException(e.Message);
         }
     }
 
-    public Task<bool> UpdateProfileAchievements(int applicantId, List<UpdateAchievementDto> dtos)
+    public async Task UpdateProfileAchievements(int applicantId, List<UpdateAchievementDto> dtos)
     {
-        throw new NotImplementedException();
+        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (applicantProfile == null)
+            throw new NotFoundException($"Applicant profile with applicantId:{applicantId} s not found");
+
+        var achievements = _mapper.Map<List<Achievement>>(dtos);
+
+        achievements.ForEach(a => a.ApplicantProfileId = applicantProfile.Id);
+
+        try
+        {
+            await _applicantRepository.UpdateProfileAchievements(applicantProfile.Id, achievements);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task<List<int>> AddProfileSkills(int applicantId, List<AddApplicantSkillDto> dtos)
+    {
+        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (applicantProfile == null)
+            throw new ServiceException($"Applicant profile with applicantId:{applicantId} is not found");
+
+        var skills = _mapper.Map<List<ApplicantSkill>>(dtos);
+
+        foreach (var skill in skills)
+        {
+            skill.ApplicantProfileId = applicantProfile.Id;
+        }
+
+        try
+        {
+            var resultIds = await _applicantRepository.AddProfileSkills(skills);
+
+            return resultIds;
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task UpdateProfileSkills(int applicantId, List<UpdateApplicantSkillDto> dtos)
+    {
+        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (applicantProfile == null)
+            throw new NotFoundException($"Applicant profile with applicantId:{applicantId} s not found");
+
+        var skills = _mapper.Map<List<ApplicantSkill>>(dtos);
+
+        skills.ForEach(a => a.ApplicantProfileId = applicantProfile.Id);
+
+        try
+        {
+            await _applicantRepository.UpdateProfileSkills(applicantProfile.Id, skills);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task<List<int>> AddProfileCertificates(int applicantId, List<AddApplicantCertificateDto> dtos)
+    {
+        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (applicantProfile == null)
+            throw new ServiceException($"Applicant profile with applicantId:{applicantId} is not found");
+
+        var certificates = _mapper.Map<List<ApplicantCertificate>>(dtos);
+
+        foreach (var certificate in certificates)
+        {
+            certificate.ApplicantProfileId = applicantProfile.Id;
+        }
+
+        try
+        {
+            var resultIds = await _applicantRepository.AddProfileCertificates(certificates);
+
+            return resultIds;
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task UpdateProfileCertificates(int applicantId, List<UpdateApplicantCertificateDto> dtos)
+    {
+        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (applicantProfile == null)
+            throw new NotFoundException($"Applicant profile with applicantId:{applicantId} s not found");
+
+        var certificates = _mapper.Map<List<ApplicantSkill>>(dtos);
+
+        certificates.ForEach(a => a.ApplicantProfileId = applicantProfile.Id);
+
+        try
+        {
+            await _applicantRepository.UpdateProfileSkills(applicantProfile.Id, certificates);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task<List<string>> UploadCertificateImages(IFormFileCollection certificateFiles)
+    {
+        try
+        {
+            var certificateUrls = new List<string>();
+            
+            foreach (var certificateFile in certificateFiles)
+            {
+                var certificateUrl = await _cloudinaryService.UploadImage(certificateFile);
+                certificateUrls.Add(certificateUrl);
+            }
+
+            return certificateUrls;
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task UpdateProfileAchievements(int applicantId, List<UpdateApplicantSkillDto> dtos)
+    {
+        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (applicantProfile == null)
+            throw new NotFoundException($"Applicant profile with applicantId:{applicantId} s not found");
+
+        var skills = _mapper.Map<List<ApplicantSkill>>(dtos);
+
+        skills.ForEach(a => a.ApplicantProfileId = applicantProfile.Id);
+
+        try
+        {
+            await _applicantRepository.UpdateProfileSkills(applicantProfile.Id, skills);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
     }
 
     public async Task<byte[]> ExportApplicantProfileToPdf(int applicantId)
@@ -94,7 +244,6 @@ public class ApplicantService : IApplicantService
         if (applicantProfile == null)
             throw new NotFoundException($"Applicant profile with applicantId: {applicantId} is not found");
 
-        // var pdf =  _pdfService.ExportProfileToPdf(applicantProfile);
         var pdf = await _pdfService.GenerateProfileInPdf(_mapper.Map<ApplicantProfileDto>(applicantProfile));
 
         return pdf;

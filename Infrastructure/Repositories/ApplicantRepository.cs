@@ -32,8 +32,46 @@ public class ApplicantRepository : GenericRepository<ApplicantProfile>, IApplica
         return achievements.Select(a => a.Id).ToList();
     }
 
-    public Task<bool> UpdateProfileAchievements(List<Achievement> achievements)
+    public async Task UpdateProfileAchievements(int applicantProfileId, List<Achievement> achievements)
     {
-        throw new NotImplementedException();
+        await _dbContext.Achievements
+            .Where(a => a.ApplicantProfileId == applicantProfileId)
+            .ExecuteDeleteAsync();
+        await AddProfileAchievements(achievements);
+    }
+
+    public async Task<List<int>> AddProfileSkills(List<ApplicantSkill> skills)
+    {
+        await _dbContext.ApplicantSkills
+            .AddRangeAsync(skills);
+        await _dbContext.SaveChangesAsync();
+
+        return skills.Select(a => a.Id).ToList();
+    }
+
+    public async Task UpdateProfileSkills(int applicantProfileId, List<ApplicantSkill> skills)
+    {
+        await _dbContext.ApplicantSkills
+            .Where(a => a.ApplicantProfileId == applicantProfileId)
+            .ExecuteDeleteAsync();
+        await AddProfileSkills(skills);
+    }
+
+    public async Task<List<int>> AddProfileCertificates(List<ApplicantCertificate> certificates)
+    {
+        await _dbContext.ApplicantCertificates
+            .AddRangeAsync(certificates);
+        await _dbContext.SaveChangesAsync();
+
+        return certificates.Select(a => a.Id).ToList();
+    }
+
+    public async Task UpdateProfileCertificates(int applicantProfileId, List<ApplicantCertificate> certificates)
+    {
+        await _dbContext.ApplicantCertificates
+            .Where(a => a.ApplicantProfileId == applicantProfileId)
+            .ExecuteDeleteAsync();
+        
+        await AddProfileCertificates(certificates);
     }
 }
