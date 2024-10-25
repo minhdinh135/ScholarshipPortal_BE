@@ -1,6 +1,7 @@
 using Domain.DTOs.Account;
 using Domain.DTOs.Authentication;
 using Domain.DTOs.Common;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Interfaces.IServices
 {
@@ -11,6 +12,7 @@ namespace Application.Interfaces.IServices
 		Task<AccountDto> GetAccount(int id);
 		Task<AccountDto> AddAccount(RegisterDto dto);
 		Task<AccountDto> UpdateAccount(int id, UpdateAccountDto dto);
+		Task<bool> UpdateAvatar(int id, IFormFile avatar);
 		Task<AccountDto> DeleteAccount(int id);
 	}
 }

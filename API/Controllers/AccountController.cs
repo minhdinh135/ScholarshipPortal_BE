@@ -1,4 +1,5 @@
 using Application.Interfaces.IServices;
+using AutoMapper;
 using Domain.DTOs.Account;
 using Domain.DTOs.Authentication;
 using Domain.DTOs.Common;
@@ -14,18 +15,21 @@ public class AccountController : ControllerBase
     private readonly IAccountService _accountService;
     private readonly IPasswordService _passwordService;
     private readonly IEmailService _emailService;
-    private readonly ICloudinaryService _cloudinaryService;
+	private readonly IMapper _mapper;
+	private readonly ICloudinaryService _cloudinaryService;
     private static readonly Dictionary<string, string> _otpStore = new();
     private static readonly Random _random = new();
 
     public AccountController(ILogger<AccountController> logger, IAccountService accountService,
-        IPasswordService passwordService, IEmailService emailService, ICloudinaryService cloudinaryService)
+        IPasswordService passwordService, IEmailService emailService, ICloudinaryService cloudinaryService,
+        IMapper mapper)
     {
         _accountService = accountService;
         _logger = logger;
         _passwordService = passwordService;
         _emailService = emailService;
         _cloudinaryService = cloudinaryService;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -125,11 +129,13 @@ public class AccountController : ControllerBase
             Username = user.Username,
             Email = user.Email,
             PhoneNumber = user.PhoneNumber,
-            Password = user.HashedPassword,
+            HashedPassword = user.HashedPassword,
             Address = user.Address,
             AvatarUrl = user.AvatarUrl,
             RoleId = user.RoleId,
             Status = user.Status,
+            RoleName = user.RoleName,
+            LoginWithGoogle = user.LoginWithGoogle,
         });
 
         try
@@ -145,16 +151,14 @@ public class AccountController : ControllerBase
         return Ok(new { Message = "Password changed successfully!" });
     }
 
-    [HttpPost("change-avatar")]
-    public async Task<IActionResult> ChangeAvatar([FromForm] RegisterDto dto)
+    [HttpPost("{id}/change-avatar")]
+    public async Task<IActionResult> ChangeAvatar(int id, [FromForm] ChangeAvatarDTO dto)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
         try
         {
-            var addedProfile = await _accountService.AddAccount(dto);
-            return Ok(addedProfile);
+            var success = await _accountService.UpdateAvatar(id, dto.File);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update avatar successfully", null));
         }
         catch (Exception ex)
         {
@@ -219,11 +223,13 @@ public class AccountController : ControllerBase
             Username = user.Username,
             Email = user.Email,
             PhoneNumber = user.PhoneNumber,
-            Password = user.HashedPassword,
+            HashedPassword = user.HashedPassword,
             Address = user.Address,
             AvatarUrl = user.AvatarUrl,
             RoleId = user.RoleId,
             Status = user.Status,
+            RoleName = user.RoleName,
+            LoginWithGoogle = user.LoginWithGoogle,
         });
 
         await _emailService.SendEmailAsync(user.Email, "Password Reset Successful",
