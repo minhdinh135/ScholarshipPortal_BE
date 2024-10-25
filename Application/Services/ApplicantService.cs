@@ -153,7 +153,13 @@ public class ApplicantService : IApplicantService
         }
     }
 
-    public async Task<List<int>> AddProfileCertificates(int applicantId, List<AddApplicantCertificateDto> dtos)
+	public async Task<List<ApplicantSkillDto>> GetSkillsByApplicantId(int applicantId)
+	{
+		var skills = await _applicantRepository.GetSkillsByApplicantId(applicantId);
+		return _mapper.Map<List<ApplicantSkillDto>>(skills);
+	}
+
+	public async Task<List<int>> AddProfileCertificates(int applicantId, List<AddApplicantCertificateDto> dtos)
     {
         var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
         if (applicantProfile == null)
