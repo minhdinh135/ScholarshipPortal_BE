@@ -28,7 +28,7 @@ public class ApplicantController : ControllerBase
     }
 
     [HttpGet("{applicantId}")]
-    public async Task<IActionResult> GetApplicantPrfile(int applicantId)
+    public async Task<IActionResult> GetApplicantProfile(int applicantId)
     {
         var applicant = await _applicantService.GetApplicantProfile(applicantId);
 
@@ -47,6 +47,24 @@ public class ApplicantController : ControllerBase
         catch (Exception e)
         {
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Add applicant profile failed", null));
+        }
+    }
+
+    [HttpPut("{applicantId}")]
+    public async Task<IActionResult> UpdateApplicantProfile(int applicantId,
+        UpdateApplicantProfileDto updateApplicantProfileDto)
+    {
+        try
+        {
+            var updatedProfile = await _applicantService.UpdateApplicantProfile(applicantId, updateApplicantProfileDto);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update applicant profile successfully",
+                updatedProfile));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Update applicant profile failed",
+                null));
         }
     }
 
@@ -70,23 +88,22 @@ public class ApplicantController : ControllerBase
         }
     }
 
-    [HttpPut("{applicantId}")]
-    public async Task<IActionResult> UpdateApplicantProfile(int applicantId,
-        UpdateApplicantProfileDto updateApplicantProfileDto)
+    [HttpPut("{applicantId}/achievements")]
+    public async Task<IActionResult> UpdateProfileAchievements(int applicantId,
+        List<UpdateAchievementDto> updateAchievementDtos)
     {
         try
         {
-            var updatedProfile = await _applicantService.UpdateApplicantProfile(applicantId, updateApplicantProfileDto);
+            await _applicantService.UpdateProfileAchievements(applicantId, updateAchievementDtos);
 
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update applicant profile successfully",
-                updatedProfile));
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update achievements successfuly", null));
         }
-        catch (Exception e)
+        catch (ServiceException e)
         {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Update applicant profile failed",
-                null));
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message, null));
         }
     }
+
 
     [HttpGet("{applicantId}/profile/pdf")]
     public async Task<IActionResult> ExportApplicantProfileToPdf(int applicantId)
