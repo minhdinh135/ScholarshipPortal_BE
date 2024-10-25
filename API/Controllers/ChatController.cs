@@ -56,7 +56,7 @@ namespace SSAP.API.Controllers
 		{
 			var messages = await _chatService.GetAllMessagesAsync(receiverId);
 
-			if (messages == null || !messages.Any())
+			if (messages == null)
 			{
 				return NotFound(new ApiResponse(StatusCodes.Status404NotFound, "No messages found for the specified receiver", null));
 			}
