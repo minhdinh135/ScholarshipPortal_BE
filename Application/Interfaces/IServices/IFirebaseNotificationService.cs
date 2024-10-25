@@ -1,6 +1,3 @@
-using Domain.DTOs.Common;
-using Domain.DTOs.Notification;
-
 namespace Application.Interfaces.IServices;
 
 public interface IFirebaseNotificationService

@@ -32,8 +32,11 @@ public class ApplicantRepository : GenericRepository<ApplicantProfile>, IApplica
         return achievements.Select(a => a.Id).ToList();
     }
 
-    public Task<bool> UpdateProfileAchievements(List<Achievement> achievements)
+    public async Task UpdateProfileAchievements(int applicantProfileId, List<Achievement> achievements)
     {
-        throw new NotImplementedException();
+        await _dbContext.Achievements
+            .Where(a => a.ApplicantProfileId == applicantProfileId)
+            .ExecuteDeleteAsync();
+        await AddProfileAchievements(achievements);
     }
 }
