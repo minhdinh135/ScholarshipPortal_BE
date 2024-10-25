@@ -15,21 +15,16 @@ public class AccountController : ControllerBase
     private readonly IAccountService _accountService;
     private readonly IPasswordService _passwordService;
     private readonly IEmailService _emailService;
-	private readonly IMapper _mapper;
-	private readonly ICloudinaryService _cloudinaryService;
     private static readonly Dictionary<string, string> _otpStore = new();
     private static readonly Random _random = new();
 
     public AccountController(ILogger<AccountController> logger, IAccountService accountService,
-        IPasswordService passwordService, IEmailService emailService, ICloudinaryService cloudinaryService,
-        IMapper mapper)
+        IPasswordService passwordService, IEmailService emailService)
     {
         _accountService = accountService;
         _logger = logger;
         _passwordService = passwordService;
         _emailService = emailService;
-        _cloudinaryService = cloudinaryService;
-        _mapper = mapper;
     }
 
     [HttpGet]

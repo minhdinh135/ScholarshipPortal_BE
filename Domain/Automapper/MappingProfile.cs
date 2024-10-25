@@ -11,62 +11,63 @@ using Domain.DTOs.Role;
 using Domain.DTOs.University;
 using Domain.Entities;
 
-namespace Domain.Automapper
+namespace Domain.Automapper;
+
+public class MappingProfile : Profile
 {
-    public class MappingProfile : Profile
+    public MappingProfile()
     {
-        public MappingProfile()
-        {
-            CreateMap<Account, RegisterDto>().ReverseMap();
-            CreateMap<Account, UpdateAccountDto>().ReverseMap();
-            CreateMap<Account, AccountDto>()
-                .ForMember(dest => dest.RoleName, opt =>
-                    opt.MapFrom(src => src.Role.Name))
-                .ReverseMap();
-			CreateMap<AccountDto, UpdateAccountDto>().ReverseMap();
+        CreateMap<Role, AddRoleDto>().ReverseMap();
+        CreateMap<Role, UpdateRoleDto>().ReverseMap();
+        CreateMap<Role, RoleDto>().ReverseMap();
 
-			CreateMap<ApplicantProfile, ApplicantProfileDto>().ReverseMap();
-            CreateMap<ApplicantProfile, AddApplicantProfileDto>().ReverseMap();
-            CreateMap<ApplicantProfile, UpdateApplicantProfileDto>().ReverseMap();
+        CreateMap<Account, RegisterDto>().ReverseMap();
+        CreateMap<Account, UpdateAccountDto>().ReverseMap();
+        CreateMap<Account, AccountDto>()
+            .ForMember(dest => dest.RoleName, opt =>
+                opt.MapFrom(src => src.Role.Name))
+            .ReverseMap();
+        CreateMap<AccountDto, UpdateAccountDto>().ReverseMap();
 
-            CreateMap<Role, AddRoleDto>().ReverseMap();
-            CreateMap<Role, UpdateRoleDto>().ReverseMap();
-            CreateMap<Role, RoleDto>().ReverseMap();
+        CreateMap<ApplicantProfile, AddApplicantProfileDto>().ReverseMap();
+        CreateMap<ApplicantProfile, UpdateApplicantProfileDto>().ReverseMap();
+        CreateMap<ApplicantProfile, ApplicantProfileDto>().ReverseMap();
 
-            CreateMap<University, AddUniversityDto>().ReverseMap();
-            CreateMap<University, UpdateUniversityDto>().ReverseMap();
-            CreateMap<University, UniversityDto>().ReverseMap();
+        CreateMap<Achievement, AddAchievementDto>().ReverseMap();
+        CreateMap<Achievement, UpdateAchievementDto>().ReverseMap();
+        CreateMap<Achievement, AchievementDto>().ReverseMap();
 
-            CreateMap<Achievement, AddAchievementDto>().ReverseMap();
-            CreateMap<Achievement, UpdateAchievementDto>().ReverseMap();
-            CreateMap<Achievement, AchievementDto>().ReverseMap();
+        CreateMap<ApplicantSkill, ApplicantSkillDto>().ReverseMap();
+        CreateMap<ApplicantSkill, AddApplicantSkillDto>().ReverseMap();
+        CreateMap<ApplicantSkill, UpdateApplicantSkillDto>().ReverseMap();
 
-            CreateMap<ApplicantProfile, AddApplicantProfileDto>().ReverseMap();
-            CreateMap<ApplicantProfile, UpdateApplicantProfileDto>().ReverseMap();
-            CreateMap<ApplicantProfile, ApplicantProfileDto>().ReverseMap();
+        CreateMap<ApplicantCertificate, ApplicantCertificateDto>().ReverseMap();
+        CreateMap<ApplicantCertificate, AddApplicantCertificateDto>().ReverseMap();
+        CreateMap<ApplicantCertificate, UpdateApplicantCertificateDto>().ReverseMap();
 
-            CreateMap<University, AddUniversityDto>().ReverseMap();
-            CreateMap<University, UpdateUniversityDto>().ReverseMap();
-            CreateMap<Application, AddApplicationDto>().ReverseMap();
-            CreateMap<Application, UpdateApplicationDto>().ReverseMap();
-            CreateMap<Application, ApplicationDto>().ReverseMap();
+        CreateMap<University, AddUniversityDto>().ReverseMap();
+        CreateMap<University, UpdateUniversityDto>().ReverseMap();
+        CreateMap<University, UniversityDto>().ReverseMap();
 
-            CreateMap<Criteria, CriteriaDto>().ReverseMap();
-            CreateMap<CreateCriteriaRequest, Criteria>();
-            CreateMap<UpdateCriteriaRequest, Criteria>();
+        CreateMap<Application, AddApplicationDto>().ReverseMap();
+        CreateMap<Application, UpdateApplicationDto>().ReverseMap();
+        CreateMap<Application, ApplicationDto>().ReverseMap();
 
-            CreateMap<Major, MajorDto>().ReverseMap();
-            CreateMap<CreateMajorRequest, Major>();
-            CreateMap<UpdateMajorRequest, Major>();
+        CreateMap<Criteria, CriteriaDto>().ReverseMap();
+        CreateMap<CreateCriteriaRequest, Criteria>();
+        CreateMap<UpdateCriteriaRequest, Criteria>();
 
-            CreateMap<Category, CategoryDto>().ReverseMap();
-            CreateMap<CreateCategoryRequest, Category>();
-            CreateMap<UpdateCategoryRequest, Category>();
+        CreateMap<Major, MajorDto>().ReverseMap();
+        CreateMap<CreateMajorRequest, Major>();
+        CreateMap<UpdateMajorRequest, Major>();
 
-            CreateMap<Notification, NotificationAddDTO>().ReverseMap();
-            CreateMap<Notification, NotificationUpdateDTO>().ReverseMap();
-            CreateMap<Notification, NotificationDTO>().ReverseMap();
-            CreateMap<NotificationDTO, NotificationUpdateDTO>().ReverseMap();
-        }
+        CreateMap<Category, CategoryDto>().ReverseMap();
+        CreateMap<CreateCategoryRequest, Category>();
+        CreateMap<UpdateCategoryRequest, Category>();
+
+        CreateMap<Notification, NotificationAddDTO>().ReverseMap();
+        CreateMap<Notification, NotificationUpdateDTO>().ReverseMap();
+        CreateMap<Notification, NotificationDTO>().ReverseMap();
+        CreateMap<NotificationDTO, NotificationUpdateDTO>().ReverseMap();
     }
 }
