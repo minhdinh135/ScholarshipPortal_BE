@@ -8,7 +8,7 @@ public class ApiResponse
     public string? Message { get; set; }
     public object? Data { get; set; }
 
-    public List<ValidationError>? Errors { get; set; }
+    // public List<ValidationError>? Errors { get; set; }
 
     public ApiResponse()
     {
