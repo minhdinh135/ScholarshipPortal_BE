@@ -4,6 +4,7 @@ using Application.Interfaces.IServices;
 using AutoMapper;
 using Domain.DTOs.Applicant;
 using Domain.Entities;
+using ServiceException = Application.Exceptions.ServiceException;
 
 namespace Application.Services;
 
@@ -62,10 +63,10 @@ public class ApplicantService : IApplicantService
     {
         var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
         if (applicantProfile == null)
-            throw new ServiceException($"Applicant Profile with applicantId:{applicantId} is not found");
-        
+            throw new ServiceException($"Applicant profile with applicantId:{applicantId} is not found");
+
         var achievements = _mapper.Map<List<Achievement>>(dtos);
-        
+
         foreach (var achievement in achievements)
         {
             achievement.ApplicantProfileId = applicantProfile.Id;
@@ -79,13 +80,28 @@ public class ApplicantService : IApplicantService
         }
         catch (Exception e)
         {
-            throw new RepositoryException("Add achievements failed");
+            throw new ServiceException(e.Message);
         }
     }
 
-    public Task<bool> UpdateProfileAchievements(int applicantId, List<UpdateAchievementDto> dtos)
+    public async Task UpdateProfileAchievements(int applicantId, List<UpdateAchievementDto> dtos)
     {
-        throw new NotImplementedException();
+        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (applicantProfile == null)
+            throw new NotFoundException($"Applicant profile with applicantId:{applicantId} s not found");
+
+        var achievements = _mapper.Map<List<Achievement>>(dtos);
+
+        achievements.ForEach(a => a.ApplicantProfileId = applicantProfile.Id);
+
+        try
+        {
+            await _applicantRepository.UpdateProfileAchievements(applicantProfile.Id, achievements);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
     }
 
     public async Task<byte[]> ExportApplicantProfileToPdf(int applicantId)

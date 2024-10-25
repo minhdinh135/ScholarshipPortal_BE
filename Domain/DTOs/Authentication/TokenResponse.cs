@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Infrastructure.ExternalServices.Google;
+namespace Domain.DTOs.Authentication;
 public class TokenResponse
 {
     [JsonProperty("access_token")]

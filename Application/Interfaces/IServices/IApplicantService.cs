@@ -12,7 +12,7 @@ public interface IApplicantService
 
     Task<List<int>> AddProfileAchievements(int applicantId, List<AddAchievementDto> dtos);
 
-    Task<bool> UpdateProfileAchievements(int applicantId, List<UpdateAchievementDto> dtos);
+    Task UpdateProfileAchievements(int applicantId, List<UpdateAchievementDto> dtos);
 
     Task<byte[]> ExportApplicantProfileToPdf(int applicantId);
 }
