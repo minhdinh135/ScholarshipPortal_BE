@@ -65,30 +65,30 @@ public class AuthenticationController : ControllerBase
         return Ok(new { Url = url });
     }
 
-    // [HttpGet("google/callback")]
-    // public async Task<IActionResult> Callback([FromQuery] string code)
-    // {
-    //     if (string.IsNullOrEmpty(code))
-    //     {
-    //         return Redirect("http://localhost:5173/login-google?result=fail");
-    //         //return BadRequest("Authorization code is missing.");
-    //     }
-    //
-    //     var token = await _googleService.ExchangeCodeForToken(code);
-    //     var userInfo = await _googleService.GetUserInfo(token);
-    //     try
-    //     {
-    //         var (jwt, isNewUser) = await _authService.GoogleAuth(userInfo);
-    //         return Redirect("http://localhost:5173/login-google?result=success&isNewUser=" + isNewUser + "&jwt=" +
-    //                         jwt.Token);
-    //         //return Ok(jwt);
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         return Redirect("http://localhost:5173/login-google?result=fail");
-    //         //return BadRequest(new { Message = ex.Message });
-    //     }
-    // }
+    [HttpGet("google/callback")]
+    public async Task<IActionResult> Callback([FromQuery] string code)
+    {
+         if (string.IsNullOrEmpty(code))
+         {
+             return Redirect("http://localhost:5173/login-google?result=fail");
+             //return BadRequest("Authorization code is missing.");
+         }
+    
+         var token = await _googleService.ExchangeCodeForToken(code);
+         var userInfo = await _googleService.GetUserInfo(token);
+         try
+         {
+             var (jwt, isNewUser) = await _authService.GoogleAuth(userInfo);
+             return Redirect("http://localhost:5173/login-google?result=success&isNewUser=" + isNewUser + "&jwt=" +
+                             jwt.Token);
+             //return Ok(jwt);
+         }
+         catch (Exception ex)
+         {
+             return Redirect("http://localhost:5173/login-google?result=fail");
+         //    return BadRequest(new { Message = ex.Message });
+         }
+    }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDto register)

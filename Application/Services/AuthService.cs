@@ -88,6 +88,7 @@ public class AuthService : IAuthService
             Username = userInfo.Name,
             PhoneNumber = "",
             Email = userInfo.Email,
+            Password = _passwordService.GeneratePassword(),
             LoginWithGoogle = true,
             Address = "",
             AvatarUrl = userInfo.Picture,
