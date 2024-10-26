@@ -124,21 +124,21 @@ public class ApplicantController : ControllerBase
     //     }
     // }
 
-    //[HttpPut("{applicantId}/skills")]
-    //public async Task<IActionResult> UpdateProfileSkills(int applicantId,
-    //    List<UpdateApplicantSkillDto> updateSkillDtos)
-    //{
-    //    try
-    //    {
-    //        await _applicantService.UpdateProfileSkills(applicantId, updateSkillDtos);
+    [HttpPut("{applicantId}/skills")]
+    public async Task<IActionResult> UpdateProfileSkills(int applicantId,
+        List<UpdateApplicantSkillDto> updateSkillDtos)
+    {
+        try
+        {
+            await _applicantService.UpdateProfileSkills(applicantId, updateSkillDtos);
 
-    //        return Ok(new ApiResponse(StatusCodes.Status200OK, "Update skills successfuly", null));
-    //    }
-    //    catch (ServiceException e)
-    //    {
-    //        return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message, null));
-    //    }
-    //}
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update skills successfuly", null));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message, null));
+        }
+    }
 
     // [HttpPost("{applicantId}/certificates")]
     // public async Task<IActionResult> AddProfileCertificates(int applicantId,
@@ -210,61 +210,4 @@ public class ApplicantController : ControllerBase
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message, null));
         }
     }
-
-	[HttpPost("{applicantId}/skills")]
-	public async Task<IActionResult> AddApplicantSkills(int applicantId, List<AddApplicantSkillDto> addApplicantSkillDtos)
-	{
-		foreach (var skill in addApplicantSkillDtos)
-		{
-			bool exists = await _applicantService.SkillExists(applicantId, skill.Name);
-			if (exists)
-			{
-				return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, $"Skill name '{skill.Name}' already exists.", null));
-			}
-		}
-
-		var addedSkillIds = await _applicantService.AddProfileSkills(applicantId, addApplicantSkillDtos);
-		return Ok(new ApiResponse(StatusCodes.Status200OK, "Add applicant skills successfully", addedSkillIds));
-	}
-
-
-	[HttpPut("{applicantId}/skills")]
-	public async Task<IActionResult> UpdateApplicantSkills(int applicantId, List<UpdateApplicantSkillDto> updateApplicantSkillDtos)
-	{
-		try
-		{
-			await _applicantService.UpdateProfileSkills(applicantId, updateApplicantSkillDtos);
-			return Ok(new ApiResponse(StatusCodes.Status200OK, "Update applicant skills successfully", null));
-		}
-		catch (Exception e)
-		{
-			return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Update applicant skills failed", null));
-		}
-	}
-
-	[HttpGet("{applicantId}/skills")]
-	public async Task<IActionResult> GetApplicantSkills(int applicantId)
-	{
-		var skills = await _applicantService.GetSkillsByApplicantId(applicantId);
-		return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicant skills successfully", skills));
-	}
-
-	[HttpDelete("{applicantId}/skills/{skillId}")]
-	public async Task<IActionResult> DeleteApplicantSkill(int applicantId, int skillId)
-	{
-		try
-		{
-			await _applicantService.DeleteApplicantSkill(applicantId, skillId);
-			return Ok(new ApiResponse(StatusCodes.Status200OK, "Skill deleted successfully", null));
-		}
-		catch (NotFoundException e)
-		{
-			return NotFound(new ApiResponse(StatusCodes.Status404NotFound, e.Message, null));
-		}
-		catch (Exception e)
-		{
-			return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Failed to delete skill", null));
-		}
-	}
-
 }

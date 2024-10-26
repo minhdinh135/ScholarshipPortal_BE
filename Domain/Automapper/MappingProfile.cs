@@ -8,6 +8,7 @@ using Domain.DTOs.Criteria;
 using Domain.DTOs.Major;
 using Domain.DTOs.Notification;
 using Domain.DTOs.Role;
+using Domain.DTOs.ScholarshipProgram;
 using Domain.DTOs.University;
 using Domain.Entities;
 
@@ -44,6 +45,14 @@ public class MappingProfile : Profile
         CreateMap<ApplicantCertificate, ApplicantCertificateDto>().ReverseMap();
         CreateMap<ApplicantCertificate, AddApplicantCertificateDto>().ReverseMap();
         CreateMap<ApplicantCertificate, UpdateApplicantCertificateDto>().ReverseMap();
+
+        CreateMap<ScholarshipProgram, ScholarshipProgramDto>().ReverseMap();
+        CreateMap<ScholarshipProgram, CreateScholarshipProgramRequest>().ReverseMap();
+        CreateMap<ScholarshipProgram, UpdateScholarshipProgramRequest>().ReverseMap();
+
+        CreateMap<Skill, SkillDto>().ReverseMap();
+
+        CreateMap<Certificate, CertificateDto>().ReverseMap();
 
         CreateMap<University, AddUniversityDto>().ReverseMap();
         CreateMap<University, UpdateUniversityDto>().ReverseMap();
