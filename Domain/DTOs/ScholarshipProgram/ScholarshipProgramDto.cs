@@ -25,12 +25,14 @@ public class ScholarshipProgramDto : BaseDto
     public string? Status { get; set; }
 
     public int? FunderId { get; set; }
+    
+    public CategoryDto Category { get; set; }
 
-    public int? CategoryId { get; set; }
+    public List<UniversityDto>? Universities { get; set; }
 
-    public ICollection<UniversityDto>? Universities { get; set; }
+    public List<MajorDto>? Majors { get; set; }
 
-    public ICollection<MajorDto>? Majors { get; set; }
-
-    public ICollection<CertificateDto> Certificates { get; set; }
+    public List<CertificateDto> Certificates { get; set; }
+    
+    public List<SkillDto> Skills { get; set; }
 }

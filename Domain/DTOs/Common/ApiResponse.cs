@@ -14,6 +14,12 @@ public class ApiResponse
     {
     }
 
+    public ApiResponse(int statusCode, string message)
+    {
+        StatusCode = statusCode;
+        Message = message;
+    }
+
     public ApiResponse(int statusCode, string message, object data)
     {
         StatusCode = statusCode;
