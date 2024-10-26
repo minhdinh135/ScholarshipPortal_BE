@@ -2,6 +2,7 @@
 using Domain.DTOs.Common;
 using Domain.DTOs.Major;
 using Domain.DTOs.University;
+using Domain.Entities;
 
 namespace Domain.DTOs.ScholarshipProgram;
 
@@ -30,4 +31,6 @@ public class ScholarshipProgramDto : BaseDto
     public ICollection<UniversityDto>? Universities { get; set; }
 
     public ICollection<MajorDto>? Majors { get; set; }
+
+    public ICollection<CertificateDto> Certificates { get; set; }
 }

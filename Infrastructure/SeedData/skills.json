@@ -1,0 +1,52 @@
+﻿[
+  {
+    "Name": "Data Analysis",
+    "Description": "Ability to analyze data and interpret patterns, trends, and insights.",
+    "Type": "Technical Skill"
+  },
+  {
+    "Name": "Project Management",
+    "Description": "Skills in planning, organizing, and managing resources to achieve project goals.",
+    "Type": "Soft Skill"
+  },
+  {
+    "Name": "Software Development",
+    "Description": "Proficiency in programming and software engineering principles.",
+    "Type": "Technical Skill"
+  },
+  {
+    "Name": "Financial Modeling",
+    "Description": "Ability to create financial representations of real-world scenarios for decision-making.",
+    "Type": "Technical Skill"
+  },
+  {
+    "Name": "Public Speaking",
+    "Description": "Skill in presenting information effectively to an audience.",
+    "Type": "Soft Skill"
+  },
+  {
+    "Name": "Research",
+    "Description": "Experience in conducting systematic investigation to establish facts and conclusions.",
+    "Type": "Technical Skill"
+  },
+  {
+    "Name": "Cybersecurity",
+    "Description": "Knowledge of protecting systems, networks, and programs from digital attacks.",
+    "Type": "Technical Skill"
+  },
+  {
+    "Name": "Machine Learning",
+    "Description": "Understanding of algorithms and statistical models used to enable systems to learn from data.",
+    "Type": "Technical Skill"
+  },
+  {
+    "Name": "Leadership",
+    "Description": "Ability to guide, inspire, and manage a team towards achieving objectives.",
+    "Type": "Soft Skill"
+  },
+  {
+    "Name": "Graphic Design",
+    "Description": "Skill in creating visual content using design tools and principles.",
+    "Type": "Technical Skill"
+  }
+]
