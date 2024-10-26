@@ -81,6 +81,16 @@ namespace Application.Services
 				throw new FileProcessingException("Upload avatar failed");
 
 			var existingProfile = await _accountRepository.GetById(id);
+            if(existingProfile.AvatarUrl != null){
+                string fileId = existingProfile.AvatarUrl.Split('/')[^1].Split('.')[0];
+                try{
+                    await _cloudinaryService.DeleteImage(fileId);
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
 			existingProfile.AvatarUrl = uploadedAvatar;
 			_mapper.Map<UpdateAccountDto>(existingProfile);
 

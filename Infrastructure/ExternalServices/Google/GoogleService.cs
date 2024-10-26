@@ -46,7 +46,7 @@ public class GoogleService
     }
   }
 
-  public async Task<UserInfo> GetUserInfo(string accessToken)
+  public async Task<Domain.DTOs.Authentication.UserInfo> GetUserInfo(string accessToken)
   {
     using (var httpClient = new HttpClient())
     {
@@ -58,7 +58,7 @@ public class GoogleService
       response.EnsureSuccessStatusCode();
 
       var responseContent = await response.Content.ReadAsStringAsync();
-      var userInfo = JsonConvert.DeserializeObject<UserInfo>(responseContent);
+      var userInfo = JsonConvert.DeserializeObject<Domain.DTOs.Authentication.UserInfo>(responseContent);
       return userInfo;
     }
   }
