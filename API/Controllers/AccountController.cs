@@ -153,7 +153,7 @@ public class AccountController : ControllerBase
         {
             var success = await _accountService.UpdateAvatar(id, dto.File);
 
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update avatar successfully", null));
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update avatar successfully", success));
         }
         catch (Exception ex)
         {
