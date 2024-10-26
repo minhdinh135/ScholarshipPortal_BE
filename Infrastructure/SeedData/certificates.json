@@ -1,0 +1,27 @@
+﻿[
+  {
+    "Name": "Project Management Professional",
+    "Description": "Certification for professionals in project management.",
+    "Type": "Professional"
+  },
+  {
+    "Name": "Certified Information Systems Security Professional",
+    "Description": "Cybersecurity certification to demonstrate expertise in security management.",
+    "Type": "Security"
+  },
+  {
+    "Name": "Certified Data Scientist",
+    "Description": "Certification for individuals proficient in data science and analytics.",
+    "Type": "Data Science"
+  },
+  {
+    "Name": "Advanced Software Engineering",
+    "Description": "Certification for expertise in advanced software engineering concepts.",
+    "Type": "Engineering"
+  },
+  {
+    "Name": "Financial Risk Manager",
+    "Description": "Certification for finance professionals specializing in risk management.",
+    "Type": "Finance"
+  }
+]

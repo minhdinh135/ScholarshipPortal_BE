@@ -8,7 +8,5 @@ public class Certificate : BaseEntity
     
     public string? Type { get; set; }
     
-    public int? ScholarshipProgramId { get; set; }
-    
     public ICollection<ScholarshipProgramCertificate> ScholarshipProgramCertificates { get; set; }
 }
