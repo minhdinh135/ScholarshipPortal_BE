@@ -63,36 +63,11 @@ public class ApplicantService : IApplicantService
         return _mapper.Map<ApplicantProfileDto>(updatedScholarshipProgram);
     }
 
-    public async Task<List<int>> AddProfileAchievements(int applicantId, List<AddAchievementDto> dtos)
-    {
-        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
-        if (applicantProfile == null)
-            throw new ServiceException($"Applicant profile with applicantId:{applicantId} is not found");
-
-        var achievements = _mapper.Map<List<Achievement>>(dtos);
-
-        foreach (var achievement in achievements)
-        {
-            achievement.ApplicantProfileId = applicantProfile.Id;
-        }
-
-        try
-        {
-            var resultIds = await _applicantRepository.AddProfileAchievements(achievements);
-
-            return resultIds;
-        }
-        catch (Exception e)
-        {
-            throw new ServiceException(e.Message);
-        }
-    }
-
     public async Task UpdateProfileAchievements(int applicantId, List<UpdateAchievementDto> dtos)
     {
         var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
         if (applicantProfile == null)
-            throw new NotFoundException($"Applicant profile with applicantId:{applicantId} s not found");
+            throw new NotFoundException($"Applicant profile with applicantId:{applicantId} is not found");
 
         var achievements = _mapper.Map<List<Achievement>>(dtos);
 
@@ -108,36 +83,11 @@ public class ApplicantService : IApplicantService
         }
     }
 
-    public async Task<List<int>> AddProfileSkills(int applicantId, List<AddApplicantSkillDto> dtos)
-    {
-        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
-        if (applicantProfile == null)
-            throw new ServiceException($"Applicant profile with applicantId:{applicantId} is not found");
-
-        var skills = _mapper.Map<List<ApplicantSkill>>(dtos);
-
-        foreach (var skill in skills)
-        {
-            skill.ApplicantProfileId = applicantProfile.Id;
-        }
-
-        try
-        {
-            var resultIds = await _applicantRepository.AddProfileSkills(skills);
-
-            return resultIds;
-        }
-        catch (Exception e)
-        {
-            throw new ServiceException(e.Message);
-        }
-    }
-
     public async Task UpdateProfileSkills(int applicantId, List<UpdateApplicantSkillDto> dtos)
     {
         var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
         if (applicantProfile == null)
-            throw new NotFoundException($"Applicant profile with applicantId:{applicantId} s not found");
+            throw new NotFoundException($"Applicant profile with applicantId:{applicantId} is not found");
 
         var skills = _mapper.Map<List<ApplicantSkill>>(dtos);
 
@@ -146,37 +96,6 @@ public class ApplicantService : IApplicantService
         try
         {
             await _applicantRepository.UpdateProfileSkills(applicantProfile.Id, skills);
-        }
-        catch (Exception e)
-        {
-            throw new ServiceException(e.Message);
-        }
-    }
-
-	public async Task<List<ApplicantSkillDto>> GetSkillsByApplicantId(int applicantId)
-	{
-		var skills = await _applicantRepository.GetSkillsByApplicantId(applicantId);
-		return _mapper.Map<List<ApplicantSkillDto>>(skills);
-	}
-
-	public async Task<List<int>> AddProfileCertificates(int applicantId, List<AddApplicantCertificateDto> dtos)
-    {
-        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
-        if (applicantProfile == null)
-            throw new ServiceException($"Applicant profile with applicantId:{applicantId} is not found");
-
-        var certificates = _mapper.Map<List<ApplicantCertificate>>(dtos);
-
-        foreach (var certificate in certificates)
-        {
-            certificate.ApplicantProfileId = applicantProfile.Id;
-        }
-
-        try
-        {
-            var resultIds = await _applicantRepository.AddProfileCertificates(certificates);
-
-            return resultIds;
         }
         catch (Exception e)
         {
@@ -190,13 +109,13 @@ public class ApplicantService : IApplicantService
         if (applicantProfile == null)
             throw new NotFoundException($"Applicant profile with applicantId:{applicantId} s not found");
 
-        var certificates = _mapper.Map<List<ApplicantSkill>>(dtos);
+        var certificates = _mapper.Map<List<ApplicantCertificate>>(dtos);
 
         certificates.ForEach(a => a.ApplicantProfileId = applicantProfile.Id);
 
         try
         {
-            await _applicantRepository.UpdateProfileSkills(applicantProfile.Id, certificates);
+            await _applicantRepository.UpdateProfileCertificates(applicantProfile.Id, certificates);
         }
         catch (Exception e)
         {
@@ -209,7 +128,7 @@ public class ApplicantService : IApplicantService
         try
         {
             var certificateUrls = new List<string>();
-            
+
             foreach (var certificateFile in certificateFiles)
             {
                 var certificateUrl = await _cloudinaryService.UploadImage(certificateFile);
@@ -217,26 +136,6 @@ public class ApplicantService : IApplicantService
             }
 
             return certificateUrls;
-        }
-        catch (Exception e)
-        {
-            throw new ServiceException(e.Message);
-        }
-    }
-
-    public async Task UpdateProfileAchievements(int applicantId, List<UpdateApplicantSkillDto> dtos)
-    {
-        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
-        if (applicantProfile == null)
-            throw new NotFoundException($"Applicant profile with applicantId:{applicantId} s not found");
-
-        var skills = _mapper.Map<List<ApplicantSkill>>(dtos);
-
-        skills.ForEach(a => a.ApplicantProfileId = applicantProfile.Id);
-
-        try
-        {
-            await _applicantRepository.UpdateProfileSkills(applicantProfile.Id, skills);
         }
         catch (Exception e)
         {

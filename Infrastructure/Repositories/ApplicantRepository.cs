@@ -23,63 +23,65 @@ public class ApplicantRepository : GenericRepository<ApplicantProfile>, IApplica
             .FirstOrDefaultAsync(a => a.ApplicantId == applicantId);
     }
 
-    public async Task<List<int>> AddProfileAchievements(List<Achievement> achievements)
-    {
-        await _dbContext.Achievements
-            .AddRangeAsync(achievements);
-        await _dbContext.SaveChangesAsync();
-
-        return achievements.Select(a => a.Id).ToList();
-    }
+    // public async Task<List<int>> AddProfileAchievements(List<Achievement> achievements)
+    // {
+    //     await _dbContext.Achievements
+    //         .AddRangeAsync(achievements);
+    //     await _dbContext.SaveChangesAsync();
+    //
+    //     return achievements.Select(a => a.Id).ToList();
+    // }
 
     public async Task UpdateProfileAchievements(int applicantProfileId, List<Achievement> achievements)
     {
         await _dbContext.Achievements
             .Where(a => a.ApplicantProfileId == applicantProfileId)
             .ExecuteDeleteAsync();
-        await AddProfileAchievements(achievements);
-    }
 
-    public async Task<List<int>> AddProfileSkills(List<ApplicantSkill> skills)
-    {
-        await _dbContext.ApplicantSkills
-            .AddRangeAsync(skills);
+        await _dbContext.Achievements
+            .AddRangeAsync(achievements);
+
         await _dbContext.SaveChangesAsync();
-
-        return skills.Select(a => a.Id).ToList();
     }
+
+    // public async Task<List<int>> AddProfileSkills(List<ApplicantSkill> skills)
+    // {
+    //     await _dbContext.ApplicantSkills
+    //         .AddRangeAsync(skills);
+    //     await _dbContext.SaveChangesAsync();
+    //
+    //     return skills.Select(a => a.Id).ToList();
+    // }
 
     public async Task UpdateProfileSkills(int applicantProfileId, List<ApplicantSkill> skills)
     {
         await _dbContext.ApplicantSkills
             .Where(a => a.ApplicantProfileId == applicantProfileId)
             .ExecuteDeleteAsync();
-        await AddProfileSkills(skills);
-    }
 
-	public async Task<List<ApplicantSkill>> GetSkillsByApplicantId(int applicantId)
-	{
-		return await _dbContext.ApplicantSkills
-			.AsNoTracking()
-			.Where(skill => skill.ApplicantProfile.ApplicantId == applicantId)
-			.ToListAsync();
-	}
+        await _dbContext.ApplicantSkills
+            .AddRangeAsync(skills);
 
-	public async Task<List<int>> AddProfileCertificates(List<ApplicantCertificate> certificates)
-    {
-        await _dbContext.ApplicantCertificates
-            .AddRangeAsync(certificates);
         await _dbContext.SaveChangesAsync();
-
-        return certificates.Select(a => a.Id).ToList();
     }
+
+    // public async Task<List<int>> AddProfileCertificates(List<ApplicantCertificate> certificates)
+    // {
+    //     await _dbContext.ApplicantCertificates
+    //         .AddRangeAsync(certificates);
+    //     await _dbContext.SaveChangesAsync();
+    //
+    //     return certificates.Select(a => a.Id).ToList();
+    // }
 
     public async Task UpdateProfileCertificates(int applicantProfileId, List<ApplicantCertificate> certificates)
     {
         await _dbContext.ApplicantCertificates
             .Where(a => a.ApplicantProfileId == applicantProfileId)
             .ExecuteDeleteAsync();
-        
-        await AddProfileCertificates(certificates);
+        await _dbContext.ApplicantCertificates
+            .AddRangeAsync(certificates);
+
+        await _dbContext.SaveChangesAsync();
     }
 }
