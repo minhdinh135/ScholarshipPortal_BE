@@ -14,6 +14,7 @@ public interface IApplicantRepository : IGenericRepository<ApplicantProfile>
 
     Task UpdateProfileSkills(int applicantProfileId, List<ApplicantSkill> skills);
 	Task<List<ApplicantSkill>> GetSkillsByApplicantId(int applicantId);
+	Task DeleteApplicantSkill(int skillId);
 
 	Task<List<int>> AddProfileCertificates(List<ApplicantCertificate> certificates);
 

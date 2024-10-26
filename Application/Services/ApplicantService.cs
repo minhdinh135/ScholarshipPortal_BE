@@ -153,11 +153,36 @@ public class ApplicantService : IApplicantService
         }
     }
 
+	public async Task<bool> SkillExists(int applicantId, string skillName)
+	{
+		var skills = await GetSkillsByApplicantId(applicantId);
+		return skills.Any(s => s.Name.Equals(skillName, StringComparison.OrdinalIgnoreCase));
+	}
+
 	public async Task<List<ApplicantSkillDto>> GetSkillsByApplicantId(int applicantId)
 	{
 		var skills = await _applicantRepository.GetSkillsByApplicantId(applicantId);
 		return _mapper.Map<List<ApplicantSkillDto>>(skills);
 	}
+
+	public async Task DeleteApplicantSkill(int applicantId, int skillId)
+	{
+		var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+		if (applicantProfile == null)
+			throw new NotFoundException($"Applicant profile with applicantId: {applicantId} not found");
+
+		var skill = await _applicantRepository.GetSkillsByApplicantId(skillId);
+
+		try
+		{
+			await _applicantRepository.DeleteApplicantSkill(skillId);
+		}
+		catch (Exception e)
+		{
+			throw new ServiceException(e.Message);
+		}
+	}
+
 
 	public async Task<List<int>> AddProfileCertificates(int applicantId, List<AddApplicantCertificateDto> dtos)
     {
