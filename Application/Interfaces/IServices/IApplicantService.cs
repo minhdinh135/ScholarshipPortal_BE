@@ -17,7 +17,10 @@ public interface IApplicantService
 
     Task<List<int>> AddProfileSkills(int applicantId, List<AddApplicantSkillDto> dtos);
 
-    Task UpdateProfileSkills(int applicantId, List<UpdateApplicantSkillDto> dtos);
+	Task DeleteApplicantSkill(int applicantId, int skillId);
+    Task<bool> SkillExists(int applicantId, string skillName);
+
+	Task UpdateProfileSkills(int applicantId, List<UpdateApplicantSkillDto> dtos);
 	Task<List<ApplicantSkillDto>> GetSkillsByApplicantId(int applicantId);
 
 	Task<List<int>> AddProfileCertificates(int applicantId, List<AddApplicantCertificateDto> dtos);

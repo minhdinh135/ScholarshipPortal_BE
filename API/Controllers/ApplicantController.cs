@@ -214,11 +214,19 @@ public class ApplicantController : ControllerBase
 	[HttpPost("{applicantId}/skills")]
 	public async Task<IActionResult> AddApplicantSkills(int applicantId, List<AddApplicantSkillDto> addApplicantSkillDtos)
 	{
+		foreach (var skill in addApplicantSkillDtos)
+		{
+			bool exists = await _applicantService.SkillExists(applicantId, skill.Name);
+			if (exists)
+			{
+				return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, $"Skill name '{skill.Name}' already exists.", null));
+			}
+		}
 
-			var addedSkillIds = await _applicantService.AddProfileSkills(applicantId, addApplicantSkillDtos);
-			return Ok(new ApiResponse(StatusCodes.Status200OK, "Add applicant skills successfully", addedSkillIds));
-
+		var addedSkillIds = await _applicantService.AddProfileSkills(applicantId, addApplicantSkillDtos);
+		return Ok(new ApiResponse(StatusCodes.Status200OK, "Add applicant skills successfully", addedSkillIds));
 	}
+
 
 	[HttpPut("{applicantId}/skills")]
 	public async Task<IActionResult> UpdateApplicantSkills(int applicantId, List<UpdateApplicantSkillDto> updateApplicantSkillDtos)
@@ -239,6 +247,24 @@ public class ApplicantController : ControllerBase
 	{
 		var skills = await _applicantService.GetSkillsByApplicantId(applicantId);
 		return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicant skills successfully", skills));
+	}
+
+	[HttpDelete("{applicantId}/skills/{skillId}")]
+	public async Task<IActionResult> DeleteApplicantSkill(int applicantId, int skillId)
+	{
+		try
+		{
+			await _applicantService.DeleteApplicantSkill(applicantId, skillId);
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Skill deleted successfully", null));
+		}
+		catch (NotFoundException e)
+		{
+			return NotFound(new ApiResponse(StatusCodes.Status404NotFound, e.Message, null));
+		}
+		catch (Exception e)
+		{
+			return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Failed to delete skill", null));
+		}
 	}
 
 }
