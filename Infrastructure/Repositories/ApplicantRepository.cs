@@ -65,6 +65,16 @@ public class ApplicantRepository : GenericRepository<ApplicantProfile>, IApplica
 			.ToListAsync();
 	}
 
+	public async Task DeleteApplicantSkill(int skillId)
+	{
+		var skill = await _dbContext.ApplicantSkills.FindAsync(skillId);
+		if (skill != null)
+		{
+			_dbContext.ApplicantSkills.Remove(skill);
+			await _dbContext.SaveChangesAsync();
+		}
+	}
+
 	public async Task<List<int>> AddProfileCertificates(List<ApplicantCertificate> certificates)
     {
         await _dbContext.ApplicantCertificates
