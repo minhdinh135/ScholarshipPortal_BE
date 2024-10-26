@@ -21,6 +21,7 @@ public class JwtService : ITokenService{
               , DateTime.UtcNow.ToString()),
           new Claim("id", account.Id.ToString()),
           new Claim("username", account.Username.ToString()),
+          new Claim("avatar", account.AvatarUrl ?? ""),
           new Claim("email", account.Email),
           new Claim("role", role),
     };
