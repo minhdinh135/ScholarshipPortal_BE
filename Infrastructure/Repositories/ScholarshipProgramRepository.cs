@@ -20,6 +20,8 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
             .ThenInclude(spu => spu.University)
             .Include(sp => sp.ScholarshipProgramMajors)
             .ThenInclude(spm => spm.Major)
+            .Include(sp => sp.ScholarshipProgramCertificates)
+            .ThenInclude(spc => spc.Certificate)
             .AsNoTracking()
             .AsSplitQuery()
             .ToListAsync();
@@ -30,9 +32,15 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
     public async Task<ScholarshipProgram> GetScholarsipProgramById(int id)
     {
         var scholarshipProgram = await _dbContext.ScholarshipPrograms
+            .AsNoTracking()
+            .AsSplitQuery()
             .Include(sp => sp.Category)
             .Include(sp => sp.ScholarshipProgramUniversities)
+            .ThenInclude(spm => spm.University)
             .Include(sp => sp.ScholarshipProgramMajors)
+            .ThenInclude(spm => spm.Major)
+            .Include(sp => sp.ScholarshipProgramCertificates)
+            .ThenInclude(spc => spc.Certificate)
             .FirstOrDefaultAsync(sp => sp.Id == id);
 
         return scholarshipProgram;

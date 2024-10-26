@@ -8,6 +8,8 @@ public class Transaction : BaseEntity
     
     public string? Description { get; set; }
     
+    public string? TransactionId { get; set; }
+    
     public DateTime? TransactionDate { get; set; }
     
     public string? Status { get; set; }

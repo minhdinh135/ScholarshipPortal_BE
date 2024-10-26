@@ -38,5 +38,5 @@ public class ScholarshipProgram : BaseEntity
     
     public ICollection<ScholarshipProgramMajor>? ScholarshipProgramMajors { get; set; }
     
-    public ICollection<Skill> Skills { get; set; }
+    public ICollection<ScholarshipProgramSkill> ScholarshipProgramSkills { get; set; }
 }
