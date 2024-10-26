@@ -1,4 +1,6 @@
-﻿namespace Domain.Entities;
+﻿using System.Collections;
+
+namespace Domain.Entities;
 
 public class ApplicantProfile : BaseEntity
 {
@@ -23,4 +25,6 @@ public class ApplicantProfile : BaseEntity
     public ICollection<ApplicantSkill>? ApplicantSkills { get; set; }
     
     public ICollection<ApplicantCertificate>? ApplicantCertificates { get; set; }
+    
+    public ICollection<Experience>? Experiences { get; set; }
 }

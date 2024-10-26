@@ -51,6 +51,8 @@ public class ScholarshipContext : DbContext
 
     public virtual DbSet<ApplicantCertificate> ApplicantCertificates { get; set; }
 
+    public virtual DbSet<Experience> Experiences { get; set; }
+
     public virtual DbSet<ProviderProfile> ProviderProfiles { get; set; }
 
     public virtual DbSet<ProviderDocument> ProviderDocuments { get; set; }
@@ -68,6 +70,8 @@ public class ScholarshipContext : DbContext
     public virtual DbSet<Notification> Notifications { get; set; }
 
     public virtual DbSet<Service> Services { get; set; }
+
+    public virtual DbSet<RequestDetail> RequestDetails { get; set; }
 
     public virtual DbSet<Request> Requests { get; set; }
 
@@ -104,6 +108,8 @@ public class ScholarshipContext : DbContext
     public virtual DbSet<ScholarshipProgramMajor> ScholarshipProgramMajors { get; set; }
 
     public virtual DbSet<ScholarshipProgramCertificate> ScholarshipProgramCertificates { get; set; }
+
+    public virtual DbSet<ScholarshipProgramSkill> ScholarshipProgramSkills { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -150,6 +156,9 @@ public class ScholarshipContext : DbContext
         modelBuilder.Entity<ProviderDocument>()
             .ToTable("provider_documents");
 
+        modelBuilder.Entity<RequestDetail>()
+            .ToTable("request_details");
+
         modelBuilder.Entity<ApplicationReview>()
             .ToTable("application_reviews");
 
@@ -173,6 +182,9 @@ public class ScholarshipContext : DbContext
 
         modelBuilder.Entity<ScholarshipProgramCertificate>()
             .ToTable("scholarship_program_certificates");
+
+        modelBuilder.Entity<ScholarshipProgramSkill>()
+            .ToTable("scholarship_program_skills");
 
         // Configure relationships
         modelBuilder.Entity<Account>(entity =>
@@ -305,16 +317,16 @@ public class ScholarshipContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        modelBuilder.Entity<Request>(entity =>
+        modelBuilder.Entity<RequestDetail>(entity =>
         {
-            entity.HasOne(request => request.Applicant)
-                .WithMany(applicant => applicant.Requests)
-                .HasForeignKey(request => request.ApplicantId)
+            entity.HasOne(rd => rd.Request)
+                .WithMany(r => r.RequestDetails)
+                .HasForeignKey(rd => rd.RequestId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            entity.HasOne(request => request.Service)
-                .WithMany(service => service.Requests)
-                .HasForeignKey(request => request.ServiceId)
+            entity.HasOne(rd => rd.Service)
+                .WithMany(s => s.RequestDetails)
+                .HasForeignKey(rd => rd.ServiceId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
@@ -361,11 +373,20 @@ public class ScholarshipContext : DbContext
             .HasForeignKey(reviewMilestone => reviewMilestone.ScholarshipProgramId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Skill>()
-            .HasOne(skill => skill.ScholarshipProgram)
-            .WithMany(scholarshipProgram => scholarshipProgram.Skills)
-            .HasForeignKey(skill => skill.ScholarshipProgramId)
-            .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<ScholarshipProgramSkill>(entity =>
+        {
+            entity.HasKey(sps => new { sps.ScholarshipProgramId, sps.SkillId });
+
+            entity.HasOne(sps => sps.ScholarshipProgram)
+                .WithMany(sp => sp.ScholarshipProgramSkills)
+                .HasForeignKey(sps => sps.ScholarshipProgramId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(sps => sps.Skill)
+                .WithMany(c => c.ScholarshipProgramSkills)
+                .HasForeignKey(sps => sps.SkillId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
 
         modelBuilder.Entity<ScholarshipProgramCertificate>(entity =>
         {

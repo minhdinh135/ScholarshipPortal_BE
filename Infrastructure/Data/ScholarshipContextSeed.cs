@@ -54,6 +54,20 @@ public class ScholarshipContextSeed
             context.Majors.AddRange(majors);
         }
 
+        if (!context.Skills.Any())
+        {
+            var skillsData = File.ReadAllText(basePath + "/skills.json");
+            var skills = JsonSerializer.Deserialize<List<Skill>>(skillsData);
+            context.Skills.AddRange(skills);
+        }
+
+        if (!context.Certificates.Any())
+        {
+            var certificatesData = File.ReadAllText(basePath + "/certificates.json");
+            var certificates = JsonSerializer.Deserialize<List<Certificate>>(certificatesData);
+            context.Certificates.AddRange(certificates);
+        }
+
         if (context.ChangeTracker.HasChanges()) await context.SaveChangesAsync();
     }
 }

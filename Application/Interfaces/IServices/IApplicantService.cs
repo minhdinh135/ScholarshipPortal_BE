@@ -18,12 +18,14 @@ public interface IApplicantService
     Task<List<int>> AddProfileSkills(int applicantId, List<AddApplicantSkillDto> dtos);
 
     Task UpdateProfileSkills(int applicantId, List<UpdateApplicantSkillDto> dtos);
+	Task<List<ApplicantSkillDto>> GetSkillsByApplicantId(int applicantId);
 
-    Task<List<int>> AddProfileCertificates(int applicantId, List<AddApplicantCertificateDto> dtos);
+	Task<List<int>> AddProfileCertificates(int applicantId, List<AddApplicantCertificateDto> dtos);
 
     Task UpdateProfileCertificates(int applicantId, List<UpdateApplicantCertificateDto> dtos);
 
     Task<List<string>> UploadCertificateImages(IFormFileCollection certificateFiles);
 
     Task<byte[]> ExportApplicantProfileToPdf(int applicantId);
+
 }

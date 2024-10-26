@@ -12,11 +12,13 @@ public class Service : BaseEntity
     
     public string? Status { get; set; }
     
+    public DateTime? Duration { get; set; }
+    
     public int? ProviderId { get; set; }
     
     public Account? Provider { get; set; }
     
-    public ICollection<Feedback> Feedbacks { get; set; }
+    public ICollection<Feedback>? Feedbacks { get; set; }
     
-    public ICollection<Request> Requests { get; set; }
+    public ICollection<RequestDetail>? RequestDetails { get; set; }
 }

@@ -57,7 +57,15 @@ public class ApplicantRepository : GenericRepository<ApplicantProfile>, IApplica
         await AddProfileSkills(skills);
     }
 
-    public async Task<List<int>> AddProfileCertificates(List<ApplicantCertificate> certificates)
+	public async Task<List<ApplicantSkill>> GetSkillsByApplicantId(int applicantId)
+	{
+		return await _dbContext.ApplicantSkills
+			.AsNoTracking()
+			.Where(skill => skill.ApplicantProfile.ApplicantId == applicantId)
+			.ToListAsync();
+	}
+
+	public async Task<List<int>> AddProfileCertificates(List<ApplicantCertificate> certificates)
     {
         await _dbContext.ApplicantCertificates
             .AddRangeAsync(certificates);
