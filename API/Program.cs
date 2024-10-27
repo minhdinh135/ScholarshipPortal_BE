@@ -103,7 +103,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
-builder.Services.AddSignalR();
 
 //Add Cors
 builder.Services.AddCors(options =>
@@ -169,7 +168,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseExceptionHandler();
-app.MapHub<ChatHub>("/chat");
 
 app.MapControllers();
 app.Run();
