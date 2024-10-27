@@ -22,6 +22,8 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
             .ThenInclude(spm => spm.Major)
             .Include(sp => sp.ScholarshipProgramCertificates)
             .ThenInclude(spc => spc.Certificate)
+            .Include(sp => sp.ScholarshipProgramSkills)
+            .ThenInclude(sps => sps.Skill)
             .AsNoTracking()
             .AsSplitQuery()
             .ToListAsync();
@@ -32,7 +34,7 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
     public async Task<ScholarshipProgram> GetScholarsipProgramById(int id)
     {
         var scholarshipProgram = await _dbContext.ScholarshipPrograms
-            .AsNoTracking()
+            // .AsNoTracking()
             .AsSplitQuery()
             .Include(sp => sp.Category)
             .Include(sp => sp.ScholarshipProgramUniversities)
@@ -41,28 +43,22 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
             .ThenInclude(spm => spm.Major)
             .Include(sp => sp.ScholarshipProgramCertificates)
             .ThenInclude(spc => spc.Certificate)
+            .Include(sp => sp.ScholarshipProgramSkills)
+            .ThenInclude(sps => sps.Skill)
             .FirstOrDefaultAsync(sp => sp.Id == id);
 
         return scholarshipProgram;
     }
 
-    public async Task ClearExistingUniversities(ScholarshipProgram scholarshipProgram)
+    public async Task DeleteRelatedInformation(ScholarshipProgram scholarshipProgram)
     {
-        var existingUniversities = scholarshipProgram.ScholarshipProgramUniversities.ToList();
-        
-        foreach (var existingUniversity in existingUniversities)
-        {
-            _dbContext.ScholarshipProgramUniversities.Remove(existingUniversity);
-        }
-    }
-
-    public async Task ClearExistingMajors(ScholarshipProgram scholarshipProgram)
-    {
-        var existingMajors = scholarshipProgram.ScholarshipProgramMajors.ToList();
-        
-        foreach (var existingMajor in existingMajors)
-        {
-            _dbContext.ScholarshipProgramMajors.Remove(existingMajor);
-        }
+        await _dbContext.ScholarshipProgramMajors.Where(spm => spm.ScholarshipProgramId == scholarshipProgram.Id)
+            .ExecuteDeleteAsync();
+        await _dbContext.ScholarshipProgramUniversities.Where(spu => spu.ScholarshipProgramId == scholarshipProgram.Id)
+            .ExecuteDeleteAsync();
+        await _dbContext.ScholarshipProgramCertificates.Where(spc => spc.ScholarshipProgramId == scholarshipProgram.Id)
+            .ExecuteDeleteAsync();
+        await _dbContext.ScholarshipProgramSkills.Where(spk => spk.ScholarshipProgramId == scholarshipProgram.Id)
+            .ExecuteDeleteAsync();
     }
 }

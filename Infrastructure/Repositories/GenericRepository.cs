@@ -83,12 +83,13 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
             return entity1;
         }
 
-        var entity = _dbSet.Find(keys[0], keys[1]);
+        var entity = await _dbSet.FindAsync(keys[0], keys[1]);
         return entity;
     }
 
     public async Task<T> Update(T entity)
     {
+        _dbContext.Attach(entity);
         _dbContext.Entry(entity).State = EntityState.Modified;
         await _dbContext.SaveChangesAsync();
         return entity;
