@@ -8,7 +8,5 @@ public interface IScholarshipProgramRepository : IGenericRepository<ScholarshipP
 
     Task<ScholarshipProgram> GetScholarsipProgramById(int id);
 
-    Task ClearExistingUniversities(ScholarshipProgram scholarshipProgram);
-
-    Task ClearExistingMajors(ScholarshipProgram scholarshipProgram);
+    Task DeleteRelatedInformation(ScholarshipProgram scholarshipProgram);
 }
