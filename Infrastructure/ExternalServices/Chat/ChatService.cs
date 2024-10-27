@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using FirebaseAdmin.Messaging;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.ExternalServices.Chat
@@ -10,13 +9,11 @@ namespace Infrastructure.ExternalServices.Chat
 	{
 		private readonly ILogger<ChatService> _logger;
 		private readonly IChatMessageRepository _chatMessageRepository;
-		private readonly IHubContext<ChatHub> _chatHubContext;
 
-		public ChatService(ILogger<ChatService> logger, IChatMessageRepository chatMessageRepository, IHubContext<ChatHub> chatHubContext)
+		public ChatService(ILogger<ChatService> logger, IChatMessageRepository chatMessageRepository)
 		{
 			_logger = logger;
 			_chatMessageRepository = chatMessageRepository;
-			_chatHubContext = chatHubContext;
 		}
 
 		public async Task<string> SendMessage(int senderId, int receiverId, string message)
@@ -26,12 +23,12 @@ namespace Infrastructure.ExternalServices.Chat
 				var messageData = new Message()
 				{
 					Data = new Dictionary<string, string>()
-			{
-				{ "SenderId", senderId.ToString() },
-				{ "ReceiverId", receiverId.ToString() },
-				{ "Message", message },
-				{ "SentDate", DateTime.Now.ToString("o") }
-			},
+                    {   
+				        { "SenderId", senderId.ToString() },
+				        { "ReceiverId", receiverId.ToString() },
+				        { "Message", message },
+				        { "SentDate", DateTime.Now.ToString("o") }
+			        },
 					Topic = $"{receiverId}"
 				};
 
@@ -49,7 +46,6 @@ namespace Infrastructure.ExternalServices.Chat
 				};
 
 				await SaveMessageAsync(chatMessage);
-				await _chatHubContext.Clients.Group(receiverId.ToString()).SendAsync("ReceiveMessage", senderId, message);
 
 				return response;
 			}
