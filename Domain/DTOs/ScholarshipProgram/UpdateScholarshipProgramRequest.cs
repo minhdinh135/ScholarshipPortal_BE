@@ -4,8 +4,6 @@ namespace Domain.DTOs.ScholarshipProgram;
 
 public class UpdateScholarshipProgramRequest
 {
-    public int? Id { get; set; }
-
     public string? Name { get; set; }
 
     public string? ImageUrl { get; set; }
@@ -27,4 +25,8 @@ public class UpdateScholarshipProgramRequest
     public List<int>? UniversityIds { get; set; }
 
     public List<int>? MajorIds { get; set; }
+
+    public List<int>? CertificateIds { get; set; }
+
+    public List<int>? SkillIds { get; set; }
 }
