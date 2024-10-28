@@ -1,6 +1,11 @@
-﻿namespace Application.Interfaces.IServices;
+﻿using Domain.DTOs.Funder;
+using Domain.Entities;
 
-public class IFunderService
+namespace Application.Interfaces.IServices;
+
+public interface IFunderService
 {
-    
+    Task<FunderProfileDto> GetFunderDetailsByFunderId(int funderId);
+    Task<FunderProfileDto> AddFunderDetails(AddFunderDetailsDto addFunderDetailsDto);
+    Task<FunderProfileDto> UpdateFunderDetails(int funderId, UpdateFunderDetailsDto updateFunderDetailsDto);
 }

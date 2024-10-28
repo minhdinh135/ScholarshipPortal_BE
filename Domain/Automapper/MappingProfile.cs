@@ -5,10 +5,15 @@ using Domain.DTOs.Application;
 using Domain.DTOs.Authentication;
 using Domain.DTOs.Category;
 using Domain.DTOs.Criteria;
+using Domain.DTOs.Feedback;
+using Domain.DTOs.Funder;
 using Domain.DTOs.Major;
 using Domain.DTOs.Notification;
+using Domain.DTOs.Provider;
+using Domain.DTOs.Request;
 using Domain.DTOs.Role;
 using Domain.DTOs.ScholarshipProgram;
+using Domain.DTOs.Service;
 using Domain.DTOs.University;
 using Domain.Entities;
 
@@ -30,6 +35,16 @@ public class MappingProfile : Profile
                 opt.MapFrom(src => src.Role.Name))
             .ReverseMap();
         CreateMap<AccountDto, UpdateAccountDto>().ReverseMap();
+        
+        // Funder Profile mapping
+        CreateMap<FunderProfile, FunderProfileDto>().ReverseMap();
+        CreateMap<UpdateFunderDetailsDto, FunderProfile>();
+        CreateMap<FunderDocument, FunderDocumentDto>().ReverseMap();
+        
+        // Provider Profile mapping
+        CreateMap<ProviderProfile, ProviderProfileDto>().ReverseMap();
+        CreateMap<AddProviderDetailsDto, ProviderProfile>();
+        CreateMap<UpdateProviderDetailsDto, ProviderProfile>();
 
         // Applicant Profile mapping
         CreateMap<ApplicantProfile, AddApplicantProfileDto>().ReverseMap();
@@ -107,7 +122,26 @@ public class MappingProfile : Profile
         CreateMap<Application, AddApplicationDto>().ReverseMap();
         CreateMap<Application, UpdateApplicationDto>().ReverseMap();
         CreateMap<Application, ApplicationDto>().ReverseMap();
-
+        CreateMap<ApplicationDocument, ApplicationDocumentDto>().ReverseMap();
+        CreateMap<ApplicationReview, ApplicationReviewDto>().ReverseMap();
+        
+        // Service mapping
+        CreateMap<Service, ServiceDto>().ReverseMap();
+        CreateMap<AddServiceDto, Service>();
+        CreateMap<UpdateServiceDto, Service>();
+        
+        // Request mapping
+        CreateMap<Request, RequestDto>().ReverseMap();
+        CreateMap<RequestDetail, RequestDetailsDto>().ReverseMap();
+        CreateMap<AddRequestDto, Request>();
+        CreateMap<UpdateRequestDto, Request>();
+        
+        // Feedback mapping
+        CreateMap<Feedback, FeedbackDto>().ReverseMap();
+        CreateMap<AddFeedbackDto, Feedback>();
+        CreateMap<UpdateFeedbackDto, Feedback>();
+            
+        // Notification mapping
         CreateMap<Notification, NotificationAddDTO>().ReverseMap();
         CreateMap<Notification, NotificationUpdateDTO>().ReverseMap();
         CreateMap<Notification, NotificationDTO>().ReverseMap();

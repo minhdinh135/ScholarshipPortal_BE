@@ -32,6 +32,12 @@ public static class ServiceExtension
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IAccountRepository, AccountRepository>();
 
+        services.AddScoped<IProviderService, ProviderService>();
+        services.AddScoped<IProviderRepository, ProviderRepository>();
+
+        services.AddScoped<IFunderService, FunderService>();
+        services.AddScoped<IFunderRepository, FunderRepository>();
+
         services.AddScoped<IApplicantService, ApplicantService>();
         services.AddScoped<IApplicantRepository, ApplicantRepository>();
 
@@ -48,6 +54,17 @@ public static class ServiceExtension
         services.AddScoped<IMajorRepository, MajorRepository>();
 
         services.AddScoped<IApplicationService, ApplicationService>();
+        services.AddScoped<IApplicationRepository, ApplicationRepository>();
+
+        services.AddScoped<IServiceService, ServiceService>();
+        services.AddScoped<IServiceRepository, ServiceRepository>();
+
+        services.AddScoped<IRequestService, RequestService>();
+        services.AddScoped<IRequestRepository, RequestRepository>();
+
+        services.AddScoped<IFeedbackService, FeedbackService>();
+        services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+        
         services.AddScoped<IChatService, ChatService>();
         services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
 		
