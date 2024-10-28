@@ -8,10 +8,10 @@ namespace Application.Services
 {
     public class ApplicationService : IApplicationService
     {
-        private readonly IGenericRepository<Domain.Entities.Application> _applicationRepository;
+        private readonly IApplicationRepository _applicationRepository;
         private readonly IMapper _mapper;
 
-        public ApplicationService(IGenericRepository<Domain.Entities.Application> applicationRepository, IMapper mapper)
+        public ApplicationService(IApplicationRepository applicationRepository, IMapper mapper)
         {
             _applicationRepository = applicationRepository;
             _mapper = mapper;
@@ -32,6 +32,7 @@ namespace Application.Services
             return _mapper.Map<ApplicationDto>(entity);
         }
 
+
         public async Task<ApplicationDto> Get(int id)
         {
             var entity = await _applicationRepository.GetById(id);
@@ -51,6 +52,20 @@ namespace Application.Services
             var categories = await _applicationRepository.GetPaginatedList(pageIndex, pageSize, sortBy, sortOrder);
 
             return _mapper.Map<PaginatedList<ApplicationDto>>(categories);
+        }
+
+        public async Task<IEnumerable<ApplicationDto>> GetApplicationsByApplicantId(int applicantId)
+        {
+            var applications = await _applicationRepository.GetByApplicantId(applicantId);
+
+            return _mapper.Map<IEnumerable<ApplicationDto>>(applications);
+        }
+
+        public async Task<IEnumerable<ApplicationDto>> GetApplicationsByScholarshipProgramId(int scholarshipProgramId)
+        {
+            var applications = await _applicationRepository.GetByScholarshipProgramId(scholarshipProgramId);
+
+            return _mapper.Map<IEnumerable<ApplicationDto>>(applications);
         }
 
         public async Task<ApplicationDto> Update(int id, UpdateApplicationDto dto)
