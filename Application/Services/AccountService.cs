@@ -17,7 +17,8 @@ namespace Application.Services
         private readonly IPasswordService _passwordService;
         private readonly ICloudinaryService _cloudinaryService;
 
-        public AccountService(IAccountRepository accountRepository, IMapper mapper, IPasswordService passwordService, ICloudinaryService cloudinaryService)
+        public AccountService(IAccountRepository accountRepository, IMapper mapper, IPasswordService passwordService, ICloudinaryService cloudinaryService
+            )
         {
             _accountRepository = accountRepository;
             _mapper = mapper;
@@ -62,6 +63,14 @@ namespace Application.Services
             var categories = await _accountRepository.GetPaginatedList(pageIndex, pageSize, sortBy, sortOrder);
 
             return _mapper.Map<PaginatedList<AccountDto>>(categories);
+        }
+
+        public async Task<PaginatedList<AccountDto>> GetAllAppliedToScholarship(int scholarshipId, int pageIndex, int pageSize, string sortBy, 
+                string sortOrder)
+        {
+            var accounts = await _accountRepository.GetAllAppliedToScholarship(scholarshipId, pageIndex, pageSize, sortBy, sortOrder);
+
+            return _mapper.Map<PaginatedList<AccountDto>>(accounts);
         }
 
         public async Task<AccountDto> UpdateAccount(int id, UpdateAccountDto dto)

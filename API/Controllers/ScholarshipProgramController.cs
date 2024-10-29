@@ -61,6 +61,12 @@ public class ScholarshipProgramController : ControllerBase
     public async Task<IActionResult> GetScholarshipProgramById([FromRoute] int id)
     {
         var scholarshipProgram = await _scholarshipProgramService.GetScholarshipProgramById(id);
+        var userId = HttpContext.User.FindFirst("id")?.Value;
+        if(userId == null)
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Unauthorized", scholarshipProgram));
+        //Console.WriteLine(userId);
+        if(scholarshipProgram.FunderId != int.Parse(userId))
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Unauthorized", scholarshipProgram));
 
         if (scholarshipProgram == null)
             return NotFound(new ApiResponse(StatusCodes.Status404NotFound, "Scholarship program not found", null));
