@@ -4,6 +4,7 @@ using Domain.DTOs.Applicant;
 using Domain.DTOs.Application;
 using Domain.DTOs.Authentication;
 using Domain.DTOs.Category;
+using Domain.DTOs.Country;
 using Domain.DTOs.Criteria;
 using Domain.DTOs.Feedback;
 using Domain.DTOs.Funder;
@@ -103,6 +104,8 @@ public class MappingProfile : Profile
 
         CreateMap<Certificate, CertificateDto>().ReverseMap();
 
+        CreateMap<Country, CountryDto>().ReverseMap();
+        
         CreateMap<University, AddUniversityDto>().ReverseMap();
         CreateMap<University, UpdateUniversityDto>().ReverseMap();
         CreateMap<University, UniversityDto>().ReverseMap();
