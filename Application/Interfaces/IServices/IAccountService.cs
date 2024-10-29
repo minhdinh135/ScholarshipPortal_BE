@@ -9,6 +9,7 @@ namespace Application.Interfaces.IServices
 	{
 		Task<IEnumerable<AccountDto>> GetAll();
 		Task<PaginatedList<AccountDto>> GetAll(int pageIndex, int pageSize, string sortBy, string sortOrder);
+		Task<PaginatedList<AccountDto>> GetAllAppliedToScholarship(int scholarshipId, int pageIndex, int pageSize, string sortBy, string sortOrder);
 		Task<AccountDto> GetAccount(int id);
 		Task<AccountDto> AddAccount(RegisterDto dto);
 		Task<AccountDto> UpdateAccount(int id, UpdateAccountDto dto);

@@ -48,6 +48,9 @@ public static class ServiceExtension
         services.AddScoped<IMajorRepository, MajorRepository>();
 
         services.AddScoped<IApplicationService, ApplicationService>();
+        services.AddScoped<IApplicationRepository, ApplicationRepository>();
+
+        services.AddScoped<IApplicationService, ApplicationService>();
         services.AddScoped<IChatService, ChatService>();
         services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
 		

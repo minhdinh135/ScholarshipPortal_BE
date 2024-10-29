@@ -67,6 +67,23 @@ public class AccountController : ControllerBase
         }
     }
 
+    [HttpGet("applied-to-scholarship/{scholarshipId}")]
+    public async Task<IActionResult> GetAllAppliedToScholarship(int scholarshipId, [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10,
+        [FromQuery] string sortBy = default, [FromQuery] string sortOrder = default)
+    {
+        try
+        {
+            var profile = await _accountService.GetAllAppliedToScholarship(scholarshipId, pageIndex, pageSize, sortBy, sortOrder);
+            if (profile == null) return NotFound("Account not found.");
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Get successfully", profile));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Failed to get applicant profile by id {scholarshipId}: {ex.Message}");
+            return StatusCode(500, "Error retrieving data from the database.");
+        }
+    }
+
     [HttpPost]
     public async Task<IActionResult> AddAccount([FromBody] RegisterDto dto)
     {
@@ -129,7 +146,7 @@ public class AccountController : ControllerBase
             AvatarUrl = user.AvatarUrl,
             RoleId = user.RoleId,
             Status = user.Status,
-            RoleName = user.RoleName,
+            //RoleName = user.RoleName,
             LoginWithGoogle = user.LoginWithGoogle,
         });
 
@@ -223,7 +240,7 @@ public class AccountController : ControllerBase
             AvatarUrl = user.AvatarUrl,
             RoleId = user.RoleId,
             Status = user.Status,
-            RoleName = user.RoleName,
+            //RoleName = user.RoleName,
             LoginWithGoogle = user.LoginWithGoogle,
         });
 

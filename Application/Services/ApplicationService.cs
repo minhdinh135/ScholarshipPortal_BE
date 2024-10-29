@@ -8,10 +8,10 @@ namespace Application.Services
 {
     public class ApplicationService : IApplicationService
     {
-        private readonly IGenericRepository<Domain.Entities.Application> _applicationRepository;
+        private readonly IApplicationRepository _applicationRepository;
         private readonly IMapper _mapper;
 
-        public ApplicationService(IGenericRepository<Domain.Entities.Application> applicationRepository, IMapper mapper)
+        public ApplicationService(IApplicationRepository applicationRepository, IMapper mapper)
         {
             _applicationRepository = applicationRepository;
             _mapper = mapper;
@@ -45,6 +45,12 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<ApplicationDto>>(entities);
         }
 
+        public async Task<Domain.Entities.Application> GetWithDocumentsAndAccount(int applicationId)
+        {
+            var entities = await _applicationRepository.GetWithDocumentsAndAccount(applicationId);
+            return entities;
+        }
+
         public async Task<PaginatedList<ApplicationDto>> GetAll(int pageIndex, int pageSize, string sortBy,
             string sortOrder)
         {
@@ -61,6 +67,12 @@ namespace Application.Services
             var entity = _mapper.Map<Domain.Entities.Application>(dto);
             await _applicationRepository.Update(entity);
             return _mapper.Map<ApplicationDto>(entity);
+        }
+
+        public async Task<IEnumerable<Domain.Entities.Application>> GetByScholarshipId(int scholarshipId)
+        {
+            var entities = await _applicationRepository.GetByScholarshipId(scholarshipId);
+            return entities;
         }
     }
 }

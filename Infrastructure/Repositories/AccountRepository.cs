@@ -1,4 +1,6 @@
-﻿using Application.Interfaces.IRepositories;
+﻿using Application.Helper;
+using Application.Interfaces.IRepositories;
+using Domain.DTOs.Common;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +13,35 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
     {
     }
 
+    public async Task<PaginatedList<Account>> GetAllAppliedToScholarship(int scholarshipId, int pageIndex, int pageSize, string sortBy, string sortOrder)
+    {
+
+        var applications = _dbContext.Set<Domain.Entities.Application>()
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Where(a => a.ScholarshipProgramId == scholarshipId)
+            .Include(a => a.Applicant);
+        var query = applications.Select(a => a.Applicant).GroupBy(a => a.Id).Select(g => g.FirstOrDefault()) ;
+        if (!string.IsNullOrEmpty(sortBy))
+        {
+            var orderByExpression = ExpressionUtils.GetOrderByExpression<Account>(sortBy);
+            query = sortOrder?.ToLower() == "desc"
+                ? query.OrderByDescending(orderByExpression)
+                : query.OrderBy(orderByExpression);
+        }
+
+        var items = await query
+            .Skip((pageIndex - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var totalCount = await query.CountAsync();
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+        return new PaginatedList<Account>(items, pageIndex, totalPages);
+
+    }
+
     public async Task<IEnumerable<Account>> GetAllWithRole()
     {
         var accounts = await _dbContext.Accounts
@@ -21,4 +52,5 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
 
         return accounts;
     }
+
 }

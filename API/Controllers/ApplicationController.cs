@@ -14,7 +14,7 @@ namespace SSAP.API.Controllers
 
 		public ApplicationController(IApplicationService applicationService, ILogger<ApplicationController> logger)
 		{
-      _applicationService = applicationService;
+            _applicationService = applicationService;
 			_logger = logger;
 		}
 
@@ -41,6 +41,38 @@ namespace SSAP.API.Controllers
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicantions successfully", categories));
     }
+
+        [HttpGet("with-documents-and-account-profile/{id}")]
+		public async Task<IActionResult> GetWithDocumentsAndAccount(int id)
+		{
+			try
+			{
+				var profile = await _applicationService.GetWithDocumentsAndAccount(id);
+				if (profile == null) return NotFound("Application not found.");
+				return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicantion successfully", profile));
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Failed to get applicant profile by id {id}: {ex.Message}");
+				return StatusCode(500, "Error retrieving data from the database.");
+			}
+		}
+
+        [HttpGet("get-by-scholarship/{scholarshipId}")]
+		public async Task<IActionResult> GetByScholarship(int scholarshipId)
+		{
+			try
+			{
+				var profile = await _applicationService.GetByScholarshipId(scholarshipId);
+				if (profile == null) return NotFound("Application not found.");
+				return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicantion successfully", profile));
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Failed to get applicant profile by id {scholarshipId}: {ex.Message}");
+				return StatusCode(500, "Error retrieving data from the database.");
+			}
+		}
 
 		[HttpGet("{id}")]
 		public async Task<IActionResult> Get(int id)
