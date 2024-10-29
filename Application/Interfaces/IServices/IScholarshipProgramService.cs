@@ -1,4 +1,5 @@
-﻿using Domain.DTOs.Common;
+﻿using Domain.DTOs.Application;
+using Domain.DTOs.Common;
 using Domain.DTOs.ScholarshipProgram;
 using Microsoft.AspNetCore.Http;
 

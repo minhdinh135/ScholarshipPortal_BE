@@ -33,14 +33,80 @@ namespace SSAP.API.Controllers
 			}
 		}
 
-    [HttpGet("paginated")]
-    public async Task<IActionResult> GetAll([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10,
-        [FromQuery] string sortBy = default, [FromQuery] string sortOrder = default)
-    {
-        var categories = await _applicationService.GetAll(pageIndex, pageSize, sortBy, sortOrder);
+        [HttpGet("paginated")]
+        public async Task<IActionResult> GetAll([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10,
+            [FromQuery] string sortBy = default, [FromQuery] string sortOrder = default)
+        {
+            var categories = await _applicationService.GetAll(pageIndex, pageSize, sortBy, sortOrder);
 
-        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicantions successfully", categories));
-    }
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicantions successfully", categories));
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            try
+            {
+                var profile = await _applicationService.Get(id);
+                if (profile == null) return NotFound("Application not found.");
+                return Ok(profile);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get applicant profile by id {id}: {ex.Message}");
+                return StatusCode(500, "Error retrieving data from the database.");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add([FromBody] AddApplicationDto dto)
+        {
+            try
+            {
+                var addedProfile = await _applicationService.Add(dto);
+                return Ok(addedProfile);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to add applicant profile: {ex.Message}");
+                return StatusCode(500, "Error adding data to the database.");
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateApplicationDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var updatedProfile = await _applicationService.Update(id, dto);
+                return Ok(updatedProfile);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to update applicant profile: {ex.Message}");
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var deletedProfile = await _applicationService.Delete(id);
+                if (deletedProfile == null) return NotFound("Application not found.");
+
+                return Ok(deletedProfile);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to delete applicant profile: {ex.Message}");
+                return StatusCode(500, "Error deleting data from the database.");
+            }
+        }
 
         [HttpGet("with-documents-and-account-profile/{id}")]
 		public async Task<IActionResult> GetWithDocumentsAndAccount(int id)
@@ -74,7 +140,7 @@ namespace SSAP.API.Controllers
 			}
 		}
 
-		[HttpGet("{id}")]
+		/*[HttpGet("{id}")]
 		public async Task<IActionResult> Get(int id)
 		{
 			try
@@ -141,6 +207,6 @@ namespace SSAP.API.Controllers
 				_logger.LogError($"Failed to delete applicant profile: {ex.Message}");
 				return StatusCode(500, "Error deleting data from the database.");
 			}
-		}
+		}*/
 	}
 }

@@ -12,11 +12,13 @@ public class ApplicantController : ControllerBase
 {
     private readonly ILogger<ApplicantController> _logger;
     private readonly IApplicantService _applicantService;
+    private readonly IApplicationService _applicationService;
 
-    public ApplicantController(ILogger<ApplicantController> logger, IApplicantService applicantService)
+    public ApplicantController(ILogger<ApplicantController> logger, IApplicantService applicantService, IApplicationService applicationService)
     {
-        _applicantService = applicantService;
         _logger = logger;
+        _applicantService = applicantService;
+        _applicationService = applicationService;
     }
 
     [HttpGet]
@@ -33,6 +35,14 @@ public class ApplicantController : ControllerBase
         var applicant = await _applicantService.GetApplicantProfile(applicantId);
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicant successfully", applicant));
+    }
+
+    [HttpGet("{applicantId}/applications")]
+    public async Task<IActionResult> GetApplicationsByApplicantId(int applicantId)
+    {
+        var applications = await _applicationService.GetApplicationsByApplicantId(applicantId);
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applications successfully", applications));
     }
 
     [HttpPost]
@@ -193,7 +203,7 @@ public class ApplicantController : ControllerBase
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message, null));
         }
     }
-
+    
     [HttpGet("{applicantId}/profile/pdf")]
     public async Task<IActionResult> ExportApplicantProfileToPdf(int applicantId)
     {

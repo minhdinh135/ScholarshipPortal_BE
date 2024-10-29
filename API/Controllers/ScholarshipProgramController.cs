@@ -10,10 +10,12 @@ namespace SSAP.API.Controllers;
 public class ScholarshipProgramController : ControllerBase
 {
     private readonly IScholarshipProgramService _scholarshipProgramService;
+    private readonly IApplicationService _applicationService;
 
-    public ScholarshipProgramController(IScholarshipProgramService scholarshipProgramService)
+    public ScholarshipProgramController(IScholarshipProgramService scholarshipProgramService, IApplicationService applicationService)
     {
         _scholarshipProgramService = scholarshipProgramService;
+        _applicationService = applicationService;
     }
 
     [HttpGet]
@@ -73,6 +75,15 @@ public class ScholarshipProgramController : ControllerBase
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get scholarship program successfully", scholarshipProgram));
     }
 
+    [HttpGet("{id}/applications")]
+    public async Task<IActionResult> GetAllScholarshipProgramApplications(int id)
+    {
+        var applications = await _applicationService.GetApplicationsByScholarshipProgramId(id);
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get scholarship prograom applications successfully",
+            applications));
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateScholarshipProgram(
         [FromBody] CreateScholarshipProgramRequest createScholarshipProgramRequest)
@@ -119,7 +130,7 @@ public class ScholarshipProgramController : ControllerBase
                 "Error uploading program image: " + e.Message, null));
         }
     }
-
+    
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteScholarshipProgram([FromRoute] int id)
     {
