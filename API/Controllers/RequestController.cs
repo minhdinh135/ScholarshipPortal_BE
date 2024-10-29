@@ -25,7 +25,17 @@ public class RequestController : ControllerBase
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all requests successfully", requests));
     }
 
-    [HttpGet("{id}")]
+	[HttpGet("checkApplicantRequests")]
+	public async Task<IActionResult> CheckUserRequest(int serviceId, int applicantId)
+	{
+
+		bool hasRequested = await _requestService.HasUserRequestedService(serviceId, applicantId);
+
+		return Ok(new ApiResponse(StatusCodes.Status200OK, "Check user request successfully", hasRequested));
+	}
+
+
+	[HttpGet("{id}")]
     public async Task<IActionResult> GetRequestById(int id)
     {
         try

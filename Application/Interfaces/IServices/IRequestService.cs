@@ -11,4 +11,5 @@ public interface IRequestService
     Task<RequestDto> CreateRequest(AddRequestDto addRequestDto);
 
     Task<RequestDto> UpdateRequest(int id, UpdateRequestDto updateRequestDto);
+	Task<bool> HasUserRequestedService(int serviceId, int applicantId);
 }
