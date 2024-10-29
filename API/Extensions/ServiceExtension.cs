@@ -53,6 +53,15 @@ public static class ServiceExtension
         services.AddScoped<IMajorService, MajorService>();
         services.AddScoped<IMajorRepository, MajorRepository>();
 
+        services.AddScoped<ICountryService, CountryService>();
+        services.AddScoped<ICountryRepository, CountryRepository>();
+
+        services.AddScoped<ICertificateService, CertificateService>();
+        services.AddScoped<ICertificateRepository, CertificateRepository>();
+
+        services.AddScoped<ISkillService, SkillService>();
+        services.AddScoped<ISkillRepository, SkillRepository>();
+
         services.AddScoped<IApplicationService, ApplicationService>();
         services.AddScoped<IApplicationRepository, ApplicationRepository>();
 
