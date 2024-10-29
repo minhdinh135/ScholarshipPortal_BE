@@ -138,6 +138,8 @@ public class MappingProfile : Profile
         CreateMap<RequestDetail, RequestDetailsDto>().ReverseMap();
         CreateMap<AddRequestDto, Request>();
         CreateMap<UpdateRequestDto, Request>();
+        CreateMap<AddRequestDetailsDto, RequestDetail>();
+        CreateMap<UpdateRequestDetailsDto, RequestDetail>();
         
         // Feedback mapping
         CreateMap<Feedback, FeedbackDto>().ReverseMap();

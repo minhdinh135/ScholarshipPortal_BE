@@ -21,14 +21,14 @@ public class RequestService : IRequestService
 
     public async Task<IEnumerable<RequestDto>> GetAllRequests()
     {
-        var requests = await _requestRepository.GetAll();
+        var requests = await _requestRepository.GetAllRequests();
 
         return _mapper.Map<IEnumerable<RequestDto>>(requests);
     }
 
     public async Task<RequestDto> GetRequestById(int id)
     {
-        var request = await _requestRepository.GetById(id);
+        var request = await _requestRepository.GetRequestById(id);
         if (request == null)
             throw new ServiceException($"Request with id:{id} is not found", new NotFoundException());
 
@@ -54,7 +54,7 @@ public class RequestService : IRequestService
     {
         try
         {
-            var exisingRequest = await _requestRepository.GetById(id);
+            var exisingRequest = await _requestRepository.GetRequestById(id);
             if (exisingRequest == null)
                 throw new ServiceException($"Request with id:{id} is not found", new NotFoundException());
 

@@ -9,4 +9,6 @@ public class AddRequestDto
     public string? Status { get; set; }
 
     public int? ApplicantId { get; set; }
+    
+    public List<AddRequestDetailsDto> RequestDetails { get; set; }
 }
