@@ -4,6 +4,7 @@ using Application.Interfaces.IServices;
 using AutoMapper;
 using Domain.DTOs.Request;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services;
 
@@ -68,4 +69,17 @@ public class RequestService : IRequestService
             throw new ServiceException(e.Message);
         }
     }
+
+	public async Task<bool> HasUserRequestedService(int serviceId, int applicantId)
+	{
+		try
+		{
+            var requests = await _requestRepository.HasUserRequestedService(serviceId, applicantId);
+            return requests;
+		}
+		catch (Exception e)
+		{
+			throw new ServiceException(e.Message);
+		}
+	}
 }
