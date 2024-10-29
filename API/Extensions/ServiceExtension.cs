@@ -14,6 +14,7 @@ using Google.Apis.Auth.OAuth2;
 using Infrastructure.ExternalServices.Notification;
 using Infrastructure.ExternalServices.Chat;
 using Infrastructure.ExternalServices.PDF;
+using Infrastructure.ExternalServices.Stripe;
 
 namespace SSAP.API.Extensions;
 
@@ -98,6 +99,9 @@ public static class ServiceExtension
 
         services.Configure<ElasticSettings>(config.GetSection("ElasticSettings"));
         services.AddSingleton(typeof(IElasticService<>), typeof(ElasticService<>));
+
+        services.Configure<StripeSettings>(config.GetSection("StripeSettings"));
+        services.AddScoped<IStripeService, StripeService>();
 
         FirebaseApp.Create(new AppOptions()
         {
