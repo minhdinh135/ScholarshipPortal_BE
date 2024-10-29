@@ -20,5 +20,5 @@ public class UpdateAccountDto
     public string? Status { get; set; }
 
     public int? RoleId { get; set; }
-    public string? RoleName { get; set;}
+    //public string? RoleName { get; set;}
 }

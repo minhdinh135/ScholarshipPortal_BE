@@ -1,5 +1,4 @@
 ﻿using Application.Interfaces.IRepositories;
-using Domain.DTOs.Request;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -32,4 +31,12 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
 
         return request;
     }
+    
+	public async Task<bool> HasUserRequestedService(int serviceId, int applicantId)
+	{
+		return await _dbContext.Requests
+			.Where(r => r.ApplicantId == applicantId)
+			.Include(x => x.RequestDetails)
+			.AnyAsync(r => r.RequestDetails.FirstOrDefault().ServiceId == serviceId);
+	}
 }
