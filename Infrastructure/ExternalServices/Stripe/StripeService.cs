@@ -40,6 +40,23 @@ public class StripeService : IStripeService
         return session.Url;
     }
 
+    public async Task<object> Pay(int amount)
+    {
+        var options = new PaymentIntentCreateOptions
+        {
+            Amount = amount,
+            Currency = "usd",
+            AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
+            {
+                Enabled = true,
+            },
+        };
+        var service = new PaymentIntentService();
+        var paymentIntent = service.Create(options);
+
+        return paymentIntent;
+    }
+
     public async Task<List<object>> GetAllProducts()
     {
         var options = new ProductListOptions { Limit = 3 };

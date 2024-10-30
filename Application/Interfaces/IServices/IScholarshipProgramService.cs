@@ -12,8 +12,8 @@ public interface IScholarshipProgramService
     Task<IEnumerable<ScholarshipProgramDto>> GetScholarshipProgramsByFunderId(int funderId);
     Task<IEnumerable<ScholarshipProgramDto>> GetScholarshipProgramsByMajorId(int majorId);
     Task<ScholarshipProgramDto> GetScholarshipProgramById(int id);
-    Task<ScholarshipProgramDto> CreateScholarshipProgram(CreateScholarshipProgramRequest createScholarshipProgramRequest);
-    Task<ScholarshipProgramDto> UpdateScholarshipProgram(int id, UpdateScholarshipProgramRequest updateScholarshipProgramRequest);
+    Task<int> CreateScholarshipProgram(CreateScholarshipProgramRequest createScholarshipProgramRequest);
+    Task UpdateScholarshipProgram(int id, UpdateScholarshipProgramRequest updateScholarshipProgramRequest);
     Task UploadScholarshipProgramImage(int id, IFormFile file);
     Task<ScholarshipProgramDto> DeleteScholarshipProgramById(int id);
 }

@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.IServices;
+﻿using Application.Exceptions;
+using Application.Interfaces.IServices;
 using Domain.DTOs.Common;
 using Domain.DTOs.ScholarshipProgram;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,8 @@ public class ScholarshipProgramController : ControllerBase
     private readonly IScholarshipProgramService _scholarshipProgramService;
     private readonly IApplicationService _applicationService;
 
-    public ScholarshipProgramController(IScholarshipProgramService scholarshipProgramService, IApplicationService applicationService)
+    public ScholarshipProgramController(IScholarshipProgramService scholarshipProgramService,
+        IApplicationService applicationService)
     {
         _scholarshipProgramService = scholarshipProgramService;
         _applicationService = applicationService;
@@ -60,19 +62,24 @@ public class ScholarshipProgramController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetScholarshipProgramById([FromRoute] int id)
     {
-        var scholarshipProgram = await _scholarshipProgramService.GetScholarshipProgramById(id);
-        var userId = HttpContext.User.FindFirst("id")?.Value;
-        if(userId == null)
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Unauthorized", scholarshipProgram));
-        //Console.WriteLine(userId);
-        if(scholarshipProgram.FunderId != int.Parse(userId))
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Unauthorized", scholarshipProgram));
+        try
+        {
+            var scholarshipProgram = await _scholarshipProgramService.GetScholarshipProgramById(id);
 
-        if (scholarshipProgram == null)
-            return NotFound(new ApiResponse(StatusCodes.Status404NotFound, "Scholarship program not found", null));
+            // var userId = HttpContext.User.FindFirst("id")?.Value;
+            // if(userId == null)
+            //     return Ok(new ApiResponse(StatusCodes.Status200OK, "Unauthorized", scholarshipProgram));
+            // Console.WriteLine(userId);
+            // if(scholarshipProgram.FunderId != int.Parse(userId))
+            //     return Ok(new ApiResponse(StatusCodes.Status200OK, "Unauthorized", scholarshipProgram));
 
-
-        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get scholarship program successfully", scholarshipProgram));
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Get scholarship program successfully",
+                scholarshipProgram));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
     }
 
     [HttpGet("{id}/applications")]
@@ -88,31 +95,30 @@ public class ScholarshipProgramController : ControllerBase
     public async Task<IActionResult> CreateScholarshipProgram(
         [FromBody] CreateScholarshipProgramRequest createScholarshipProgramRequest)
     {
-        var createdScholarshipProgram =
+        var result =
             await _scholarshipProgramService.CreateScholarshipProgram(createScholarshipProgramRequest);
 
-        if (createdScholarshipProgram == null)
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Create scholarship program failed",
-                null));
+        if (result == null)
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Create scholarship program failed"));
 
-        return Created("api/scholarship-programs/" + createdScholarshipProgram.Id, new ApiResponse(
-            StatusCodes.Status200OK, "Create scholarship program successfully",
-            createdScholarshipProgram));
+        return Created("api/scholarship-programs/" + result, new ApiResponse(
+            StatusCodes.Status201Created, $"Create scholarship program successfully with id:{result}",
+            new { Id = result }));
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateScholarshipProgram([FromRoute] int id,
         [FromBody] UpdateScholarshipProgramRequest updateScholarshipProgramRequest)
     {
-        var updatedScholarshipProgram =
+        try
+        {
             await _scholarshipProgramService.UpdateScholarshipProgram(id, updateScholarshipProgramRequest);
-
-        if (updatedScholarshipProgram == null)
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Update scholarship program failed",
-                null));
-
-        return Ok(new ApiResponse(StatusCodes.Status200OK, "Update scholarship program successfully",
-            updatedScholarshipProgram));
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update scholarship program successfully"));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
     }
 
     [HttpPut("{id}/image")]
@@ -130,7 +136,7 @@ public class ScholarshipProgramController : ControllerBase
                 "Error uploading program image: " + e.Message, null));
         }
     }
-    
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteScholarshipProgram([FromRoute] int id)
     {
