@@ -15,6 +15,14 @@ public class PaymentController : ControllerBase
         _stripeService = stripeService;
     }
 
+    [HttpPost("/pay")]
+    public async Task<IActionResult> Pay(int amount)
+    {
+        var payment = await _stripeService.Pay(amount);
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, $"Pay with amount {amount} successfully", payment));
+    }
+    
     [HttpGet("products")]
     public async Task<IActionResult> GetAllProducts()
     {

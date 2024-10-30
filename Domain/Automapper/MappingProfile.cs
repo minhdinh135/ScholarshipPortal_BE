@@ -92,13 +92,13 @@ public class MappingProfile : Profile
                     { MajorId = id, ScholarshipProgramId = dest.Id }).ToList()))
             .ForMember(dest => dest.ScholarshipProgramUniversities, opt =>
                 opt.MapFrom((src, dest) => src.UniversityIds.Select(id => new ScholarshipProgramUniversity
-                    { UniversityId = id, ScholarshipProgramId = dest.Id })))
+                    { UniversityId = id, ScholarshipProgramId = dest.Id }).ToList()))
             .ForMember(dest => dest.ScholarshipProgramCertificates, opt =>
                 opt.MapFrom((src, dest) => src.CertificateIds.Select(id => new ScholarshipProgramCertificate
-                    { CertificateId = id, ScholarshipProgramId = dest.Id })))
+                    { CertificateId = id, ScholarshipProgramId = dest.Id }).ToList()))
             .ForMember(dest => dest.ScholarshipProgramSkills, opt =>
                 opt.MapFrom((src, dest) => src.SkillIds.Select(id => new ScholarshipProgramSkill
-                    { SkillId = id, ScholarshipProgramId = dest.Id })));
+                    { SkillId = id, ScholarshipProgramId = dest.Id }).ToList()));
 
         CreateMap<Skill, SkillDto>().ReverseMap();
 
