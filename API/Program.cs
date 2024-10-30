@@ -4,7 +4,6 @@ using Application.Common;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Infrastructure.Data;
-using Infrastructure.ExternalServices.Chat;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -29,8 +28,6 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 builder.Services.AddSignalR();
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 //Not throw errors imidiately
 // builder.Services.Configure<ApiBehaviorOptions>(options
 //     => options.SuppressModelStateInvalidFilter = true);

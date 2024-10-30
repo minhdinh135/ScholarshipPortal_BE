@@ -67,20 +67,23 @@ public class ScholarshipProgramService : IScholarshipProgramService
     {
         var scholarshipProgram = await _scholarshipProgramRepository.GetScholarsipProgramById(id);
 
+        if (scholarshipProgram == null)
+            throw new ServiceException($"Scholarship Program with id:{id} is not found", new NotFoundException());
+
         return _mapper.Map<ScholarshipProgramDto>(scholarshipProgram);
     }
 
-    public async Task<ScholarshipProgramDto> CreateScholarshipProgram(
+    public async Task<int> CreateScholarshipProgram(
         CreateScholarshipProgramRequest createScholarshipProgramRequest)
     {
         var scholarshipProgram = _mapper.Map<ScholarshipProgram>(createScholarshipProgramRequest);
 
         var createdScholarshipProgram = await _scholarshipProgramRepository.Add(scholarshipProgram);
 
-        return _mapper.Map<ScholarshipProgramDto>(createdScholarshipProgram);
+        return createdScholarshipProgram.Id;
     }
 
-    public async Task<ScholarshipProgramDto> UpdateScholarshipProgram(int id,
+    public async Task UpdateScholarshipProgram(int id,
         UpdateScholarshipProgramRequest updateScholarshipProgramRequest)
     {
         var existingScholarshipProgram = await _scholarshipProgramRepository.GetScholarsipProgramById(id);
@@ -93,9 +96,7 @@ public class ScholarshipProgramService : IScholarshipProgramService
             
             _mapper.Map(updateScholarshipProgramRequest, existingScholarshipProgram);
             
-            var updatedScholarshipProgram = await _scholarshipProgramRepository.Update(existingScholarshipProgram);
-
-            return _mapper.Map<ScholarshipProgramDto>(updatedScholarshipProgram);
+            await _scholarshipProgramRepository.Update(existingScholarshipProgram);
         }
         catch (Exception e)
         {

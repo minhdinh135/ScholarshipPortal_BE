@@ -2,7 +2,6 @@
 using Domain.DTOs.Common;
 using Domain.DTOs.Major;
 using Domain.DTOs.University;
-using Domain.Entities;
 
 namespace Domain.DTOs.ScholarshipProgram;
 
@@ -26,13 +25,13 @@ public class ScholarshipProgramDto : BaseDto
 
     public int? FunderId { get; set; }
     
-    public CategoryDto Category { get; set; }
+    public CategoryDto? Category { get; set; }
 
     public List<UniversityDto>? Universities { get; set; }
 
     public List<MajorDto>? Majors { get; set; }
 
-    public List<CertificateDto> Certificates { get; set; }
+    public List<CertificateDto>? Certificates { get; set; }
     
-    public List<SkillDto> Skills { get; set; }
+    public List<SkillDto>? Skills { get; set; }
 }
