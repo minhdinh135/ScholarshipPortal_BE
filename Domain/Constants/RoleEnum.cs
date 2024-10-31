@@ -6,5 +6,6 @@ namespace Domain.Constants
         public const string PROVIDER = "PROVIDER";
         public const string FUNDER = "FUNDER";
         public const string APPLICANT = "APPLICANT";
+        public const string EXPERT = "EXPERT";
     }
 }

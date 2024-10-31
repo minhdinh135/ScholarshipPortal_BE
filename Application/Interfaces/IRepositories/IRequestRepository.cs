@@ -8,4 +8,6 @@ public interface IRequestRepository : IGenericRepository<Request>
     Task<IEnumerable<Request>> GetAllRequests();
     Task<Request> GetRequestById(int id);
 	Task<bool> HasUserRequestedService(int serviceId, int applicantId);
+	Task<IEnumerable<Request>> GetByServiceId(int serviceId);
+    Task<Request> GetWithApplicantAndRequestDetails(int id);
 }
