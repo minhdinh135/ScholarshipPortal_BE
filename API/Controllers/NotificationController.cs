@@ -14,14 +14,17 @@ public class NotificationController : ControllerBase
 {
     private readonly INotificationService _notificationService;
     private readonly IAccountService _accountService;
+    private readonly IScholarshipProgramService _scholarshipProgramService;
     private readonly IMapper _mapper;
 
     public NotificationController(INotificationService notificationService, IMapper mapper,
-        IAccountService accountService)
+        IAccountService accountService,
+        IScholarshipProgramService scholarshipProgramService)
     {
         _notificationService = notificationService;
         _mapper = mapper;
         _accountService = accountService;
+        _scholarshipProgramService = scholarshipProgramService;
     }
 
     [HttpGet("get-all-by-id/{id}")]
@@ -67,6 +70,26 @@ public class NotificationController : ControllerBase
             return BadRequest(new { Message = ex.Message });
         }
     }
+
+    [HttpPost("notify-funder-new-applicant")]
+    public async Task<IActionResult> NotifyFunderNewApplicant( [FromQuery]int scholarshipId, [FromQuery] int applicantId)
+    {
+        try
+        {
+            var scholarship = await _scholarshipProgramService.GetScholarshipProgramById(scholarshipId);
+            var applicant = await _accountService.GetAccount(applicantId);
+            
+            //send notification
+            await _notificationService.SendNotification(scholarship.FunderId.ToString(), "/", "", 
+                $"{applicant.Username} has applied to your scholarship program.");
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
 
     [HttpPut("read/{id}")]
     public async Task<IActionResult> ReadNotification(int id)
