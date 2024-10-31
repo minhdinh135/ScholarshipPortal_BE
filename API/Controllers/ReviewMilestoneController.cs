@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace SSAP.API.Controllers;
 
 [ApiController]
-[Route("api/requests")]
+[Route("api/review-milestones")]
 public class ReviewMilestoneController : ControllerBase
 {
     private readonly IReviewMilestoneService _reviewMilestoneService;
