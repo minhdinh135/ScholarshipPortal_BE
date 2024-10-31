@@ -34,7 +34,16 @@ public class ServiceService : IServiceService
         return _mapper.Map<ServiceDto>(service);
     }
 
-    public async Task<ServiceDto> AddService(AddServiceDto addServiceDto)
+	public async Task<IEnumerable<ServiceDto>> GetServicesByProviderId(int providerId)
+	{
+		var services = await _serviceRepository.GetAll();
+		var providerServices = services.Where(service => service.ProviderId == providerId);
+
+		return _mapper.Map<IEnumerable<ServiceDto>>(providerServices);
+	}
+
+
+	public async Task<ServiceDto> AddService(AddServiceDto addServiceDto)
     {
         var service = _mapper.Map<Service>(addServiceDto);
         var addedService = await _serviceRepository.Add(service);

@@ -35,7 +35,12 @@ public class RequestService : IRequestService
         return _mapper.Map<RequestDto>(request);
     }
 
-    public async Task<RequestDto> CreateRequest(AddRequestDto addRequestDto)
+	public async Task<IEnumerable<Request>> GetByServiceId(int serviceId)
+	{
+		return await _requestRepository.GetByServiceId(serviceId);
+	}
+
+	public async Task<RequestDto> CreateRequest(AddRequestDto addRequestDto)
     {
         try
         {

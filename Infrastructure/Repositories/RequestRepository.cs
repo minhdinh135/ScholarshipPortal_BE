@@ -39,4 +39,17 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
 			.Include(x => x.RequestDetails)
 			.AnyAsync(r => r.RequestDetails.FirstOrDefault().ServiceId == serviceId);
 	}
+
+	public async Task<IEnumerable<Request>> GetByServiceId(int serviceId)
+	{
+		var requests = await _dbContext.Requests
+			.AsNoTracking()
+			.Where(r => r.RequestDetails.Any(rd => rd.ServiceId == serviceId))
+			.Include(r => r.Applicant)
+			.Include(r => r.RequestDetails)
+				.ThenInclude(rd => rd.Service)
+			.ToListAsync();
+
+		return requests;
+	}
 }

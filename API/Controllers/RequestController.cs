@@ -49,7 +49,24 @@ public class RequestController : ControllerBase
         }
     }
 
-    [HttpPost]
+	[HttpGet("get-by-service/{serviceId}")]
+	public async Task<IActionResult> GetByService(int serviceId)
+	{
+		try
+		{
+			var requests = await _requestService.GetByServiceId(serviceId);
+			if (requests == null || !requests.Any())
+				return NotFound("No requests found for this service.");
+
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Retrieved requests successfully", requests));
+		}
+		catch (Exception ex)
+		{
+			return StatusCode(500, "Error retrieving data from the database." + ex.Message);
+		}
+	}
+
+	[HttpPost]
     public async Task<IActionResult> CreateRequest(AddRequestDto addRequestDto)
     {
         try
