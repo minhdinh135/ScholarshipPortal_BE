@@ -40,7 +40,15 @@ public class ServiceController : ControllerBase
         }
     }
 
-    [HttpPost]
+	[HttpGet("by-provider-id/{providerId}")]
+	public async Task<IActionResult> GetServicesByProviderId([FromRoute] int providerId)
+	{
+		var services = await _serviceService.GetServicesByProviderId(providerId);
+		return Ok(new ApiResponse(StatusCodes.Status200OK, "Get services by provider ID successfully", services));
+	}
+
+
+	[HttpPost]
     public async Task<IActionResult> AddService(AddServiceDto addServiceDto)
     {
         try

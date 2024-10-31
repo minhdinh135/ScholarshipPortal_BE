@@ -12,6 +12,7 @@ using Domain.DTOs.Major;
 using Domain.DTOs.Notification;
 using Domain.DTOs.Provider;
 using Domain.DTOs.Request;
+using Domain.DTOs.ReviewMilestone;
 using Domain.DTOs.Role;
 using Domain.DTOs.ScholarshipProgram;
 using Domain.DTOs.Service;
@@ -151,5 +152,11 @@ public class MappingProfile : Profile
         CreateMap<Notification, NotificationUpdateDTO>().ReverseMap();
         CreateMap<Notification, NotificationDTO>().ReverseMap();
         CreateMap<NotificationDTO, NotificationUpdateDTO>().ReverseMap();
+
+        // Review milestone mapping
+        CreateMap<ReviewMilestone, ReviewMilestoneDto>().ReverseMap();
+        CreateMap<AddReviewMilestoneDto, ReviewMilestone>();
+        CreateMap<UpdateReviewMilestoneDto, ReviewMilestone>();
+
     }
 }
