@@ -49,13 +49,28 @@ public class RequestController : ControllerBase
         }
     }
 
+    [HttpGet("with-applicant-and-request-details/{id}")]
+    public async Task<IActionResult> GetWithApplicantAndRequestDetails(int id)
+    {
+        try
+        {
+            var request = await _requestService.GetWithApplicantAndRequestDetails(id);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Get request successfully", request));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
 	[HttpGet("get-by-service/{serviceId}")]
 	public async Task<IActionResult> GetByService(int serviceId)
 	{
 		try
 		{
 			var requests = await _requestService.GetByServiceId(serviceId);
-			if (requests == null || !requests.Any())
+			if (requests == null)
 				return NotFound("No requests found for this service.");
 
 			return Ok(new ApiResponse(StatusCodes.Status200OK, "Retrieved requests successfully", requests));

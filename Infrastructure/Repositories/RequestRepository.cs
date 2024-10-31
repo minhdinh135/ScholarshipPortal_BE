@@ -52,4 +52,18 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
 
 		return requests;
 	}
+
+    public async Task<Request> GetWithApplicantAndRequestDetails(int id)
+	{
+		var request = await _dbContext.Requests
+			.AsNoTracking()
+            .Where(r => r.Id == id)
+            .Include(r => r.Applicant)
+                .ThenInclude(a => a.ApplicantProfile)
+            .Include(r => r.RequestDetails)
+                .ThenInclude(rd => rd.Service)
+            .FirstOrDefaultAsync();
+			
+		return request;
+	}
 }

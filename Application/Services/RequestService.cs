@@ -87,4 +87,18 @@ public class RequestService : IRequestService
 			throw new ServiceException(e.Message);
 		}
 	}
+
+
+    public async Task<Request> GetWithApplicantAndRequestDetails(int id)
+    {
+        try
+		{
+            var requests = await _requestRepository.GetWithApplicantAndRequestDetails(id);
+            return requests;
+		}
+		catch (Exception e)
+		{
+			throw new ServiceException(e.Message);
+		}
+    }
 }
