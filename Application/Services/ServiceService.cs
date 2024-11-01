@@ -2,6 +2,7 @@
 using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
+using Domain.DTOs.Common;
 using Domain.DTOs.Service;
 using Domain.Entities;
 
@@ -25,7 +26,13 @@ public class ServiceService : IServiceService
         return _mapper.Map<IEnumerable<ServiceDto>>(services);
     }
 
-    public async Task<ServiceDto> GetServiceById(int id)
+	public async Task<PaginatedList<ServiceDto>> GetAll(int pageIndex, int pageSize, string sortBy, string sortOrder)
+	{
+		var services = await _serviceRepository.GetPaginatedList(pageIndex, pageSize, sortBy, sortOrder);
+		return _mapper.Map<PaginatedList<ServiceDto>>(services);
+	}
+
+	public async Task<ServiceDto> GetServiceById(int id)
     {
         var service = await _serviceRepository.GetById(id);
         if (service == null)
