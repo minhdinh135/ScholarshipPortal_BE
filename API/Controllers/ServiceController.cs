@@ -25,6 +25,7 @@ public class ServiceController : ControllerBase
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all services successfully", services));
     }
 
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetServiceById(int id)
     {
@@ -39,6 +40,16 @@ public class ServiceController : ControllerBase
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
         }
     }
+
+	[HttpGet("paginated")]
+	public async Task<IActionResult> GetAll([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10,
+	[FromQuery] string sortBy = default, [FromQuery] string sortOrder = default)
+	{
+		var services = await _serviceService.GetAll(pageIndex, pageSize, sortBy, sortOrder);
+
+		return Ok(new ApiResponse(StatusCodes.Status200OK, "Get services successfully", services));
+	}
+
 
 	[HttpGet("by-provider-id/{providerId}")]
 	public async Task<IActionResult> GetServicesByProviderId([FromRoute] int providerId)
