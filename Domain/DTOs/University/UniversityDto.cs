@@ -1,4 +1,6 @@
-﻿namespace Domain.DTOs.University;
+﻿using Domain.DTOs.Country;
+
+namespace Domain.DTOs.University;
 
 public class UniversityDto
 {
@@ -10,5 +12,5 @@ public class UniversityDto
 
     public string? City { get; set; }
 
-    public int? CountryId { get; set; }
+    public CountryDto Country { get; set; }
 }
