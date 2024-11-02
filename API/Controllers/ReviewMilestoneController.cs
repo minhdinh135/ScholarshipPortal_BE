@@ -40,6 +40,22 @@ public class ReviewMilestoneController : ControllerBase
         }
     }
 
+    [HttpGet("by-scholarship/{id}")]
+    public async Task<IActionResult> GetByScholarshipId(int id)
+    {
+        try
+        {
+            var request = await _reviewMilestoneService.GetAll();
+            request = request.Where(x => x.ScholarshipProgramId == id).ToList();
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Get review milestone successfully", request));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateReviewMilestone(AddReviewMilestoneDto addRequestDto)
     {

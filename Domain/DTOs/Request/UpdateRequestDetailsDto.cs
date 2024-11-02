@@ -2,6 +2,7 @@
 
 public class UpdateRequestDetailsDto
 {
+    public int Id { get; set; }
     public DateTime? ExpectedCompletionTime { get; set; }
 
     public string? ApplicationNotes { get; set; }
