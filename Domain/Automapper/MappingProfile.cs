@@ -138,7 +138,7 @@ public class MappingProfile : Profile
         CreateMap<Request, RequestDto>().ReverseMap();
         CreateMap<RequestDetail, RequestDetailsDto>().ReverseMap();
         CreateMap<AddRequestDto, Request>();
-        CreateMap<UpdateRequestDto, Request>();
+        CreateMap<UpdateRequestDto, Request>().ReverseMap();
         CreateMap<AddRequestDetailsDto, RequestDetail>();
         CreateMap<UpdateRequestDetailsDto, RequestDetail>();
         

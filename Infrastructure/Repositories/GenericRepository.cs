@@ -80,10 +80,18 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         if (keys.Length == 1)
         {
             var entity1 = await _dbSet.FindAsync(keys[0]);
+            if (entity1 != null)
+            {
+                _dbContext.Entry(entity1).State = EntityState.Detached;
+            }
             return entity1;
         }
 
         var entity = await _dbSet.FindAsync(keys[0], keys[1]);
+        if (entity != null)
+        {
+            _dbContext.Entry(entity).State = EntityState.Detached;
+        }
         return entity;
     }
 
