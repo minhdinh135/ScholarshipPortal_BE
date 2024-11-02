@@ -40,6 +40,23 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
 			.AnyAsync(r => r.RequestDetails.FirstOrDefault().ServiceId == serviceId);
 	}
 
+	public async Task<bool> DeleteRequestAsync(int requestId)
+	{
+		var request = await _dbContext.Requests
+			.Include(r => r.RequestDetails)
+			.FirstOrDefaultAsync(r => r.Id == requestId);
+
+		if (request != null)
+		{
+			_dbContext.RequestDetails.RemoveRange(request.RequestDetails);
+			_dbContext.Requests.Remove(request);
+			await _dbContext.SaveChangesAsync();
+			return true;
+		}
+		return false;
+	}
+
+
 	public async Task<IEnumerable<Request>> GetByServiceId(int serviceId)
 	{
 		var requests = await _dbContext.Requests

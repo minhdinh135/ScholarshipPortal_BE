@@ -88,8 +88,12 @@ public class RequestService : IRequestService
 		}
 	}
 
+	public async Task<bool> CancelRequestAsync(int requestId)
+	{
+		return await _requestRepository.DeleteRequestAsync(requestId);
+	}
 
-    public async Task<Request> GetWithApplicantAndRequestDetails(int id)
+	public async Task<Request> GetWithApplicantAndRequestDetails(int id)
     {
         try
 		{
