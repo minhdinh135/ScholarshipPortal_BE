@@ -33,8 +33,18 @@ public class RequestController : ControllerBase
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Check user request successfully", hasRequested));
     }
 
+	[HttpDelete("cancel-request/{id}")]
+	public async Task<IActionResult> CancelRequest(int id)
+	{
+		var result = await _requestService.CancelRequestAsync(id);
+		if (result)
+		{
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Request cancelled successfully"));
+		}
+		return NotFound(new ApiResponse(StatusCodes.Status404NotFound, "Request not found"));
+	}
 
-    [HttpGet("{id}")]
+	[HttpGet("{id}")]
     public async Task<IActionResult> GetRequestById(int id)
     {
         try
