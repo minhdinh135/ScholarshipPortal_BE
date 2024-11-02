@@ -1,6 +1,4 @@
-﻿using Application.Helper;
-using Application.Interfaces.IRepositories;
-using Domain.DTOs.Common;
+﻿using Application.Interfaces.IRepositories;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -13,26 +11,14 @@ public class ServiceRepository : GenericRepository<Service>, IServiceRepository
     {
     }
 
-	public async Task<PaginatedList<Service>> GetPaginatedList(int pageIndex, int pageSize, string sortBy, string sortOrder)
-	{
-		var query = _dbContext.Set<Service>().AsNoTracking();
+    public async Task<IEnumerable<Service>> GetServicesByProviderId(int providerId)
+    {
+        var services = await _dbContext.Services
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Where(s => s.ProviderId == providerId)
+            .ToListAsync();
 
-		if (!string.IsNullOrEmpty(sortBy))
-		{
-			var orderByExpression = ExpressionUtils.GetOrderByExpression<Service>(sortBy);
-			query = sortOrder?.ToLower() == "desc"
-				? query.OrderByDescending(orderByExpression)
-				: query.OrderBy(orderByExpression);
-		}
-
-		var items = await query
-			.Skip((pageIndex - 1) * pageSize)
-			.Take(pageSize)
-			.ToListAsync();
-
-		var totalCount = await query.CountAsync();
-		var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-
-		return new PaginatedList<Service>(items, pageIndex, totalPages);
-	}
+        return services;
+    }
 }

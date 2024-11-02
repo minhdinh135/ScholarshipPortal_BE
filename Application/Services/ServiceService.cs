@@ -43,8 +43,10 @@ public class ServiceService : IServiceService
 
 	public async Task<IEnumerable<ServiceDto>> GetServicesByProviderId(int providerId)
 	{
-		var services = await _serviceRepository.GetAll();
-		var providerServices = services.Where(service => service.ProviderId == providerId);
+		// var services = await _serviceRepository.GetAll();
+		// var providerServices = services.Where(service => service.ProviderId == providerId);
+
+        var providerServices = await _serviceRepository.GetServicesByProviderId(providerId);
 
 		return _mapper.Map<IEnumerable<ServiceDto>>(providerServices);
 	}

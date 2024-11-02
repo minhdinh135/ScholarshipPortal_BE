@@ -69,7 +69,6 @@ public static class ServiceExtension
         services.AddScoped<IApplicationService, ApplicationService>();
         services.AddScoped<IApplicationRepository, ApplicationRepository>();
 
-        services.AddScoped<IApplicationService, ApplicationService>();
         services.AddScoped<IServiceService, ServiceService>();
         services.AddScoped<IServiceRepository, ServiceRepository>();
 
