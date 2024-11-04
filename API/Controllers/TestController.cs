@@ -43,19 +43,26 @@ public class TestController : ControllerBase
     }
 
     [HttpPost("upload-file")]
-    public async Task<IActionResult> UploadFile(IFormFile file)
+    public async Task<IActionResult> UploadFile(List<IFormFile> files)
     {
-        try
-        {
-            var profiles = await _cloudinaryService.UploadRaw(file);
-            return Ok(new { url = profiles });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Failed to upload: {ex.Message}");
-            return StatusCode(500, new { message = ex.Message });
-        }
-    }
+		try
+		{
+			var uploadResults = new List<string>();
+
+			foreach (var file in files)
+			{
+				var url = await _cloudinaryService.UploadRaw(file);
+				uploadResults.Add(url);
+			}
+
+			return Ok(new { urls = uploadResults });
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError($"Failed to upload files: {ex.Message}");
+			return StatusCode(500, new { message = ex.Message });
+		}
+	}
 
     [HttpDelete("delete-image/{publicId}")]
     public async Task<IActionResult> DeleteImage(string publicId)
