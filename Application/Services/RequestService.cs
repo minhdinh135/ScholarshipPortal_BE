@@ -12,11 +12,14 @@ public class RequestService : IRequestService
 {
     private readonly IMapper _mapper;
     private readonly IRequestRepository _requestRepository;
+    private readonly IGenericRepository<RequestDetail> _requestDetailRepository;
 
-    public RequestService(IMapper mapper, IRequestRepository requestRepository)
+    public RequestService(IMapper mapper, IRequestRepository requestRepository,
+        IGenericRepository<RequestDetail> requestDetailRepository)
     {
         _mapper = mapper;
         _requestRepository = requestRepository;
+        _requestDetailRepository = requestDetailRepository;
     }
 
     public async Task<IEnumerable<RequestDto>> GetAllRequests()
@@ -66,6 +69,12 @@ public class RequestService : IRequestService
             _mapper.Map(updateRequestDto, exisingRequest);
 
             var updatedRequest = await _requestRepository.Update(exisingRequest);
+            foreach(var requestDetail in updateRequestDto.RequestDetails)
+            {
+                var exisingRequestDetail = await _requestDetailRepository.GetById(requestDetail.Id);
+                _mapper.Map(requestDetail, exisingRequestDetail);
+                await _requestDetailRepository.Update(exisingRequestDetail);
+            }
 
             return _mapper.Map<RequestDto>(updatedRequest);
         }
