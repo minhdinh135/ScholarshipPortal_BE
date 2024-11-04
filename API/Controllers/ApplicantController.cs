@@ -45,6 +45,16 @@ public class ApplicantController : ControllerBase
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applications successfully", applications));
     }
 
+    [HttpGet("by-applicantId-and-scholarshipId")]
+    public async Task<IActionResult> GetApplicationsByApplicantIdAndScholarshipId([FromQuery]int applicantId,
+            [FromQuery]int scholarshipId)
+    {
+        var applications = await _applicationService.GetApplicationsByApplicantId(applicantId);
+        applications = applications.Where(x => x.ScholarshipProgramId == scholarshipId).ToList();
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applications successfully", applications));
+    }
+
     [HttpPost]
     public async Task<IActionResult> AddApplicantProfile(AddApplicantProfileDto addApplicantProfileDto)
     {

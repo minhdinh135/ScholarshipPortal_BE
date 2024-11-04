@@ -127,6 +127,8 @@ public class MappingProfile : Profile
         CreateMap<Application, UpdateApplicationDto>().ReverseMap();
         CreateMap<Application, ApplicationDto>().ReverseMap();
         CreateMap<ApplicationDocument, ApplicationDocumentDto>().ReverseMap();
+        CreateMap<ApplicationDocument, AddApplicationDocumentDto>().ReverseMap();
+        CreateMap<ApplicationDocument, UpdateApplicationDocumentDto>().ReverseMap();
         CreateMap<ApplicationReview, ApplicationReviewDto>().ReverseMap();
         
         // Service mapping
