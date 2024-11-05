@@ -1,4 +1,6 @@
-﻿namespace Domain.DTOs.Request;
+﻿using Domain.DTOs.Service;
+
+namespace Domain.DTOs.Request;
 
 public class RequestDetailsDto
 {
@@ -15,4 +17,5 @@ public class RequestDetailsDto
     public int? RequestId { get; set; }
     
     public int? ServiceId { get; set; }
+    public ServiceDto? Service { get; set; }
 }
