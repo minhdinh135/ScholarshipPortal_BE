@@ -34,7 +34,13 @@ public class FeedbackService : IFeedbackService
         return _mapper.Map<FeedbackDto>(feedback);
     }
 
-    public async Task<FeedbackDto> AddFeedback(AddFeedbackDto addFeedbackDto)
+	public async Task<bool> FeedbackExists(int applicantId, int serviceId)
+	{
+		var feedback = await _feedbackRepository.GetAll();
+		return feedback.Any(f => f.ApplicantId == applicantId && f.ServiceId == serviceId);
+	}
+
+	public async Task<FeedbackDto> AddFeedback(AddFeedbackDto addFeedbackDto)
     {
         try
         {

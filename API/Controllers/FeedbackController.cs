@@ -40,22 +40,28 @@ public class FeedbackController : ControllerBase
         }
     }
 
-    [HttpPost]
-    public async Task<IActionResult> AddFeedback(AddFeedbackDto addFeedbackDto)
-    {
-        try
-        {
-            var addedFeedback = await _feedbackService.AddFeedback(addFeedbackDto);
+	[HttpPost]
+	public async Task<IActionResult> AddFeedback(AddFeedbackDto addFeedbackDto)
+	{
+		try
+		{
+			var existingFeedback = await _feedbackService.GetAllFeedbacks();
+			if (existingFeedback.Any(f => f.ApplicantId == addFeedbackDto.ApplicantId && f.ServiceId == addFeedbackDto.ServiceId))
+			{
+				return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "You have already feedback this service!"));
+			}
 
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Add feedback successfully", addedFeedback));
-        }
-        catch (ServiceException e)
-        {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
-        }
-    }
+			var addedFeedback = await _feedbackService.AddFeedback(addFeedbackDto);
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Add feedback successfully", addedFeedback));
+		}
+		catch (ServiceException e)
+		{
+			return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+		}
+	}
 
-    [HttpPut("{id}")]
+
+	[HttpPut("{id}")]
     public async Task<IActionResult> UpdateFeedback(int id, UpdateFeedbackDto updateFeedbackDto)
     {
         try
