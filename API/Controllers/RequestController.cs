@@ -18,9 +18,9 @@ public class RequestController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllRequests()
+    public async Task<IActionResult> GetAllRequests([FromQuery] RequestQueryParameters requestQueryParameters)
     {
-        var requests = await _requestService.GetAllRequests();
+        var requests = await _requestService.GetAllRequests(requestQueryParameters);
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all requests successfully", requests));
     }
