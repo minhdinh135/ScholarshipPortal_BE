@@ -81,7 +81,7 @@ public class NotificationController : ControllerBase
             
             //send notification
             await _notificationService.SendNotification(scholarship.FunderId.ToString(), "/", "", 
-                $"{applicant.Username} has applied to your scholarship program.");
+                $"{applicant.Username} has applied to scholarship {scholarship.Name}.");
             return Ok();
         }
         catch (Exception ex)
