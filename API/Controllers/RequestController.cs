@@ -44,6 +44,21 @@ public class RequestController : ControllerBase
 		return NotFound(new ApiResponse(StatusCodes.Status404NotFound, "Request not found"));
 	}
 
+	//[HttpGet("applicant/{applicantId}")]
+	//public async Task<IActionResult> GetRequestsByApplicantId(int applicantId)
+	//{
+	//	try
+	//	{
+	//		var requests = await _requestService.GetRequestByApplicantId(applicantId);
+	//		return Ok(new ApiResponse(StatusCodes.Status200OK, "Requests retrieved successfully", requests));
+	//	}
+	//	catch (ServiceException e)
+	//	{
+	//		return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+	//	}
+	//}
+
+
 	[HttpGet("{id}")]
     public async Task<IActionResult> GetRequestById(int id)
     {
