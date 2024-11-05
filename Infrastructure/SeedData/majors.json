@@ -2,62 +2,125 @@
   {
     "Id": 1,
     "Name": "Agriculture",
-    "Description": "The science, art, and practice of cultivating plants and livestock."
+    "Description": "The science, art, and practice of cultivating plants and livestock.",
+    "MajorSkills": [
+      {
+        "SkillId": 6
+      }
+    ]
   },
   {
     "Id": 2,
     "Name": "Sciences",
-    "Description": "The systematic enterprise that builds and organizes knowledge in the form of testable explanations and predictions about the universe."
+    "Description": "The systematic enterprise that builds and organizes knowledge in the form of testable explanations and predictions about the universe.",
+    "MajorSkills": [
+      {
+        "SkillId": 1
+      },
+      {
+        "SkillId": 6
+      }
+    ]
   },
   {
     "Id": 3,
     "Name": "Architecture",
-    "Description": "The art and science of designing and constructing buildings."
+    "Description": "The art and science of designing and constructing buildings.",
+    "MajorSkills": [
+      {
+        "SkillId": 6
+      }
+    ]
   },
   {
     "Id": 4,
     "Name": "Business & Management",
-    "Description": "The study of organizing, planning, and analyzing business activities and managing operations."
+    "Description": "The study of organizing, planning, and analyzing business activities and managing operations.",
+    "MajorSkills": [
+      {
+        "SkillId": 6
+      }
+    ]
   },
   {
     "Id": 5,
     "Name": "Computer Science",
-    "Description": "The study of computer systems, programming, and software development."
+    "Description": "The study of computer systems, programming, and software development.",
+    "MajorSkills": [
+      {
+        "SkillId": 6
+      }
+    ]
   },
   {
     "Id": 6,
     "Name": "Creative Art & Design",
-    "Description": "The expression of ideas through visual arts and design."
+    "Description": "The expression of ideas through visual arts and design.",
+    "MajorSkills": [
+      {
+        "SkillId": 6
+      }
+    ]
   },
   {
     "Id": 7,
     "Name": "Mechanism & Technology",
-    "Description": "The study of applied mechanics and technology in industrial processes."
+    "Description": "The study of applied mechanics and technology in industrial processes.",
+    "MajorSkills": [
+      {
+        "SkillId": 6
+      }
+    ]
   },
   {
     "Id": 8,
     "Name": "Public Health",
-    "Description": "The science of protecting and improving the health of people and their communities."
+    "Description": "The science of protecting and improving the health of people and their communities.",
+    "MajorSkills": [
+      {
+        "SkillId": 6
+      }
+    ]
   },
   {
     "Id": 9,
     "Name": "Humanities",
-    "Description": "The study of human culture, such as literature, philosophy, and history."
+    "Description": "The study of human culture, such as literature, philosophy, and history.",
+    "MajorSkills": [
+      {
+        "SkillId": 6
+      }
+    ]
   },
   {
     "Id": 10,
     "Name": "Law",
-    "Description": "The system of rules created and enforced through social or governmental institutions to regulate behavior."
+    "Description": "The system of rules created and enforced through social or governmental institutions to regulate behavior.",
+    "MajorSkills": [
+      {
+        "SkillId": 6
+      }
+    ]
   },
   {
     "Id": 11,
     "Name": "Social Science & Media",
-    "Description": "The study of society, communication, and media production."
+    "Description": "The study of society, communication, and media production.",
+    "MajorSkills": [
+      {
+        "SkillId": 6
+      }
+    ]
   },
   {
     "Id": 12,
     "Name": "Tourism & Hotel",
-    "Description": "The study of managing travel, hospitality, and accommodation services."
+    "Description": "The study of managing travel, hospitality, and accommodation services.",
+    "MajorSkills": [
+      {
+        "SkillId": 6
+      }
+    ]
   }
 ]
 

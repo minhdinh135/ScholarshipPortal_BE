@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ScholarshipContext))]
-    partial class ScholarshipContextModelSnapshot : ModelSnapshot
+    [Migration("20241105043024_UpdateMajorAndSkill")]
+    partial class UpdateMajorAndSkill
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1117,38 +1120,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("Universities");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Wallet", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal?>("Balance")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("BankAccountName")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("BankAccountNumber")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId")
-                        .IsUnique();
-
-                    b.ToTable("Wallets");
-                });
-
             modelBuilder.Entity("Domain.Entities.Account", b =>
                 {
                     b.HasOne("Domain.Entities.Role", "Role")
@@ -1540,16 +1511,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Wallet", b =>
-                {
-                    b.HasOne("Domain.Entities.Account", "Account")
-                        .WithOne("Wallet")
-                        .HasForeignKey("Domain.Entities.Wallet", "AccountId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Account");
-                });
-
             modelBuilder.Entity("Domain.Entities.Account", b =>
                 {
                     b.Navigation("ApplicantProfile");
@@ -1580,8 +1541,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("SenderTransactions");
 
                     b.Navigation("Services");
-
-                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Domain.Entities.ApplicantProfile", b =>

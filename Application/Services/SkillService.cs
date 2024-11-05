@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
+using Domain.DTOs.Major;
 using Domain.DTOs.ScholarshipProgram;
 
 namespace Application.Services;

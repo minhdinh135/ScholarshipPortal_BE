@@ -1,5 +1,3 @@
-using System.Collections;
-
 namespace Domain.Entities;
 
 public class Account : BaseEntity
@@ -23,6 +21,8 @@ public class Account : BaseEntity
     public int? RoleId { get; set; }
 
     public Role? Role { get; set; }
+    
+    public Wallet? Wallet { get; set; }
 
     public ApplicantProfile? ApplicantProfile { get; set; }
 

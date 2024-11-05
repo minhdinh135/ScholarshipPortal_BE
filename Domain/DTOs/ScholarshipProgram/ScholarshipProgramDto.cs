@@ -32,6 +32,4 @@ public class ScholarshipProgramDto : BaseDto
     public List<MajorDto>? Majors { get; set; }
 
     public List<CertificateDto>? Certificates { get; set; }
-    
-    public List<SkillDto>? Skills { get; set; }
 }
