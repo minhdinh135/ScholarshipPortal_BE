@@ -120,7 +120,10 @@ public class MappingProfile : Profile
         CreateMap<CreateCategoryRequest, Category>();
         CreateMap<UpdateCategoryRequest, Category>();
 
-        CreateMap<Application, AddApplicationDto>().ReverseMap();
+        CreateMap<Application, AddApplicationDto>()
+            .ForMember(dest => dest.Documents, opt =>
+                    opt.MapFrom(src => src.ApplicationDocuments))
+            .ReverseMap();
         CreateMap<Application, UpdateApplicationDto>().ReverseMap();
         CreateMap<Application, ApplicationDto>().ReverseMap();
         CreateMap<ApplicationDocument, ApplicationDocumentDto>().ReverseMap();

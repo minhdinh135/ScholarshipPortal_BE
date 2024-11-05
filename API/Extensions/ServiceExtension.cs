@@ -114,7 +114,6 @@ public static class ServiceExtension
         services.AddScoped<INotificationService, NotificationsService>();
         services.AddScoped<IReviewMilestoneService, ReviewMilestoneService>();
         services.AddScoped<IReviewMilestoneRepository, ReviewMilestoneRepository>();
-        services.AddScoped<IApplicationDocumentService, ApplicationDocumentService>();
         return services;
     }
 }

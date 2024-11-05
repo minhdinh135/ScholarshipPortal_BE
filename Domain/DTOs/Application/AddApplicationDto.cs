@@ -9,4 +9,6 @@ public class AddApplicationDto
     public int ScholarshipProgramId { get; set; }
 
     public string? Status { get; set; }
+
+    public List<AddApplicationDocumentDto> Documents { get; set; }
 }
