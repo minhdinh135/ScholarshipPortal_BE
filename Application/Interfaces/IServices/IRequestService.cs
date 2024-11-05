@@ -8,6 +8,7 @@ public interface IRequestService
     Task<IEnumerable<RequestDto>> GetAllRequests(RequestQueryParameters requestQueryParameters);
 
     Task<RequestDto> GetRequestById(int id);
+	Task<IEnumerable<RequestDto>> GetRequestByApplicantId(int applicantId);
 
     Task<RequestDto> CreateRequest(AddRequestDto addRequestDto);
 
