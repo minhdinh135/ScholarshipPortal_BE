@@ -1,4 +1,4 @@
-﻿namespace Domain.DTOs.ScholarshipProgram;
+﻿namespace Domain.DTOs.Major;
 
 public class SkillDto
 {

@@ -8,5 +8,5 @@ public class Skill : BaseEntity
     
     public string? Type { get; set; }
     
-    public ICollection<ScholarshipProgramSkill> ScholarshipProgramSkills { get; set; }
+    public ICollection<MajorSkill>? MajorSkills { get; set; }
 }

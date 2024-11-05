@@ -1,6 +1,5 @@
 ﻿using Application.Interfaces.IServices;
 using Domain.DTOs.Major;
-using Domain.Entities;
 using Infrastructure.ExternalServices.Email;
 using Infrastructure.ExternalServices.Gemini;
 using Microsoft.AspNetCore.Mvc;

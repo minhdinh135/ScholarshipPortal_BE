@@ -9,4 +9,6 @@ public class MajorDto : BaseDto
     public string? Name { get; set; }
 
     public string? Description { get; set; }
+    
+    public List<SkillDto> Skills { get; set; }
 }
