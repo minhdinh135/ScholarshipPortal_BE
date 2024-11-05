@@ -5,7 +5,8 @@ namespace Application.Interfaces.IRepositories;
 
 public interface IRequestRepository : IGenericRepository<Request>
 {
-    Task<IEnumerable<Request>> GetAllRequests();
+    Task<IEnumerable<Request>> GetAllRequests(RequestQueryParameters requestQueryParameters);
+    Task<IEnumerable<Request>> GetRequestsByApplicantId(int applicantId);
     Task<Request> GetRequestById(int id);
 	Task<bool> HasUserRequestedService(int serviceId, int applicantId);
 	Task<IEnumerable<Request>> GetByServiceId(int serviceId);

@@ -4,7 +4,6 @@ using Application.Interfaces.IServices;
 using AutoMapper;
 using Domain.DTOs.Request;
 using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services;
 
@@ -22,9 +21,16 @@ public class RequestService : IRequestService
         _requestDetailRepository = requestDetailRepository;
     }
 
-    public async Task<IEnumerable<RequestDto>> GetAllRequests()
+    public async Task<IEnumerable<RequestDto>> GetAllRequests(RequestQueryParameters requestQueryParameters)
     {
-        var requests = await _requestRepository.GetAllRequests();
+        var requests = await _requestRepository.GetAllRequests(requestQueryParameters);
+
+        return _mapper.Map<IEnumerable<RequestDto>>(requests);
+    }
+
+    public async Task<IEnumerable<RequestDto>> GetRequestByApplicantId(int applicantId)
+    {
+        var requests = await _requestRepository.GetRequestsByApplicantId(applicantId);
 
         return _mapper.Map<IEnumerable<RequestDto>>(requests);
     }
@@ -38,12 +44,12 @@ public class RequestService : IRequestService
         return _mapper.Map<RequestDto>(request);
     }
 
-	public async Task<IEnumerable<Request>> GetByServiceId(int serviceId)
-	{
-		return await _requestRepository.GetByServiceId(serviceId);
-	}
+    public async Task<IEnumerable<Request>> GetByServiceId(int serviceId)
+    {
+        return await _requestRepository.GetByServiceId(serviceId);
+    }
 
-	public async Task<RequestDto> CreateRequest(AddRequestDto addRequestDto)
+    public async Task<RequestDto> CreateRequest(AddRequestDto addRequestDto)
     {
         try
         {
@@ -69,7 +75,7 @@ public class RequestService : IRequestService
             _mapper.Map(updateRequestDto, exisingRequest);
 
             var updatedRequest = await _requestRepository.Update(exisingRequest);
-            foreach(var requestDetail in updateRequestDto.RequestDetails)
+            foreach (var requestDetail in updateRequestDto.RequestDetails)
             {
                 var exisingRequestDetail = await _requestDetailRepository.GetById(requestDetail.Id);
                 _mapper.Map(requestDetail, exisingRequestDetail);
@@ -84,34 +90,34 @@ public class RequestService : IRequestService
         }
     }
 
-	public async Task<bool> HasUserRequestedService(int serviceId, int applicantId)
-	{
-		try
-		{
-            var requests = await _requestRepository.HasUserRequestedService(serviceId, applicantId);
-            return requests;
-		}
-		catch (Exception e)
-		{
-			throw new ServiceException(e.Message);
-		}
-	}
-
-	public async Task<bool> CancelRequestAsync(int requestId)
-	{
-		return await _requestRepository.DeleteRequestAsync(requestId);
-	}
-
-	public async Task<Request> GetWithApplicantAndRequestDetails(int id)
+    public async Task<bool> HasUserRequestedService(int serviceId, int applicantId)
     {
         try
-		{
+        {
+            var requests = await _requestRepository.HasUserRequestedService(serviceId, applicantId);
+            return requests;
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task<bool> CancelRequestAsync(int requestId)
+    {
+        return await _requestRepository.DeleteRequestAsync(requestId);
+    }
+
+    public async Task<Request> GetWithApplicantAndRequestDetails(int id)
+    {
+        try
+        {
             var requests = await _requestRepository.GetWithApplicantAndRequestDetails(id);
             return requests;
-		}
-		catch (Exception e)
-		{
-			throw new ServiceException(e.Message);
-		}
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
     }
 }
