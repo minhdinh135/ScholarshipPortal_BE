@@ -73,8 +73,6 @@ public class MappingProfile : Profile
                 opt.MapFrom(src => src.ScholarshipProgramUniversities.Select(spu => spu.University)))
             .ForMember(dest => dest.Certificates, opt =>
                 opt.MapFrom(src => src.ScholarshipProgramCertificates.Select(spc => spc.Certificate)))
-            .ForMember(dest => dest.Skills, opt =>
-                opt.MapFrom(src => src.ScholarshipProgramSkills.Select(spm => spm.Skill)))
             .ReverseMap();
         CreateMap<CreateScholarshipProgramRequest, ScholarshipProgram>()
             .ForMember(dest => dest.ScholarshipProgramMajors, opt =>
@@ -84,9 +82,8 @@ public class MappingProfile : Profile
                     src.UniversityIds.Select(id => new ScholarshipProgramUniversity { UniversityId = id }).ToList()))
             .ForMember(dest => dest.ScholarshipProgramCertificates, opt =>
                 opt.MapFrom(src =>
-                    src.CertificateIds.Select(id => new ScholarshipProgramCertificate { CertificateId = id }).ToList()))
-            .ForMember(dest => dest.ScholarshipProgramSkills, opt =>
-                opt.MapFrom(src => src.SkillIds.Select(id => new ScholarshipProgramSkill { SkillId = id }).ToList()));
+                    src.CertificateIds.Select(id => new ScholarshipProgramCertificate { CertificateId = id })
+                        .ToList()));
         CreateMap<UpdateScholarshipProgramRequest, ScholarshipProgram>()
             .ForMember(dest => dest.ScholarshipProgramMajors, opt =>
                 opt.MapFrom((src, dest) => src.MajorIds.Select(id => new ScholarshipProgramMajor
@@ -96,11 +93,8 @@ public class MappingProfile : Profile
                     { UniversityId = id, ScholarshipProgramId = dest.Id }).ToList()))
             .ForMember(dest => dest.ScholarshipProgramCertificates, opt =>
                 opt.MapFrom((src, dest) => src.CertificateIds.Select(id => new ScholarshipProgramCertificate
-                    { CertificateId = id, ScholarshipProgramId = dest.Id }).ToList()))
-            .ForMember(dest => dest.ScholarshipProgramSkills, opt =>
-                opt.MapFrom((src, dest) => src.SkillIds.Select(id => new ScholarshipProgramSkill
-                    { SkillId = id, ScholarshipProgramId = dest.Id }).ToList()));
-
+                    { CertificateId = id, ScholarshipProgramId = dest.Id }).ToList()));
+            
         CreateMap<Skill, SkillDto>().ReverseMap();
 
         CreateMap<Certificate, CertificateDto>().ReverseMap();
@@ -115,7 +109,10 @@ public class MappingProfile : Profile
         CreateMap<CreateCriteriaRequest, Criteria>();
         CreateMap<UpdateCriteriaRequest, Criteria>();
 
-        CreateMap<Major, MajorDto>().ReverseMap();
+        CreateMap<Major, MajorDto>()
+            .ForMember(dest => dest.Skills, opt =>
+                opt.MapFrom(src => src.MajorSkills.Select(ms => ms.Skill)))
+            .ReverseMap();
         CreateMap<CreateMajorRequest, Major>();
         CreateMap<UpdateMajorRequest, Major>();
 

@@ -40,6 +40,8 @@ public class ScholarshipContext : DbContext
     }
 
     public virtual DbSet<Account> Accounts { get; set; }
+    
+    public virtual DbSet<Wallet> Wallets { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
 
@@ -109,7 +111,7 @@ public class ScholarshipContext : DbContext
 
     public virtual DbSet<ScholarshipProgramCertificate> ScholarshipProgramCertificates { get; set; }
 
-    public virtual DbSet<ScholarshipProgramSkill> ScholarshipProgramSkills { get; set; }
+    public virtual DbSet<MajorSkill> MajorSkills { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -183,8 +185,8 @@ public class ScholarshipContext : DbContext
         modelBuilder.Entity<ScholarshipProgramCertificate>()
             .ToTable("scholarship_program_certificates");
 
-        modelBuilder.Entity<ScholarshipProgramSkill>()
-            .ToTable("scholarship_program_skills");
+        modelBuilder.Entity<MajorSkill>()
+            .ToTable("major_skills");
 
         // Configure relationships
         modelBuilder.Entity<Account>(entity =>
@@ -207,6 +209,11 @@ public class ScholarshipContext : DbContext
             entity.HasOne(account => account.ProviderProfile)
                 .WithOne(providerProfile => providerProfile.Provider)
                 .HasForeignKey<ProviderProfile>(providerProfile => providerProfile.ProviderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(account => account.Wallet)
+                .WithOne(wallet => wallet.Account)
+                .HasForeignKey<Wallet>(wallet => wallet.AccountId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
@@ -373,18 +380,23 @@ public class ScholarshipContext : DbContext
             .HasForeignKey(reviewMilestone => reviewMilestone.ScholarshipProgramId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<ScholarshipProgramSkill>(entity =>
-        {
-            entity.HasKey(sps => new { sps.ScholarshipProgramId, sps.SkillId });
+        modelBuilder.Entity<Major>()
+            .HasOne(m => m.ParentMajor)
+            .WithMany(m => m.SubMajors)
+            .HasForeignKey(e => e.ParentMajorId);
 
-            entity.HasOne(sps => sps.ScholarshipProgram)
-                .WithMany(sp => sp.ScholarshipProgramSkills)
-                .HasForeignKey(sps => sps.ScholarshipProgramId)
+        modelBuilder.Entity<MajorSkill>(entity =>
+        {
+            entity.HasKey(ms => new { ms.MajorId, ms.SkillId });
+
+            entity.HasOne(ms => ms.Major)
+                .WithMany(m => m.MajorSkills)
+                .HasForeignKey(ms => ms.MajorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            entity.HasOne(sps => sps.Skill)
-                .WithMany(c => c.ScholarshipProgramSkills)
-                .HasForeignKey(sps => sps.SkillId)
+            entity.HasOne(ms => ms.Skill)
+                .WithMany(s => s.MajorSkills)
+                .HasForeignKey(ms => ms.SkillId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 

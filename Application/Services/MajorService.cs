@@ -20,7 +20,7 @@ public class MajorService : IMajorService
 
     public async Task<IEnumerable<MajorDto>> GetAllMajors()
     {
-        var allMajors = await _majorRepository.GetAll();
+        var allMajors = await _majorRepository.GetAllMajors();
 
         return _mapper.Map<IEnumerable<MajorDto>>(allMajors);
     }
@@ -34,7 +34,7 @@ public class MajorService : IMajorService
 
     public async Task<MajorDto> GetMajorById(int id)
     {
-        var major = await _majorRepository.GetById(id);
+        var major = await _majorRepository.GetMajorById(id);
 
         return _mapper.Map<MajorDto>(major);
     }

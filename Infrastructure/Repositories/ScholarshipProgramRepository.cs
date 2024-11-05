@@ -20,10 +20,10 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
             .ThenInclude(spu => spu.University)
             .Include(sp => sp.ScholarshipProgramMajors)
             .ThenInclude(spm => spm.Major)
+            .ThenInclude(m => m.MajorSkills)
+            .ThenInclude(ms => ms.Skill)
             .Include(sp => sp.ScholarshipProgramCertificates)
             .ThenInclude(spc => spc.Certificate)
-            .Include(sp => sp.ScholarshipProgramSkills)
-            .ThenInclude(sps => sps.Skill)
             .AsNoTracking()
             .AsSplitQuery()
             .ToListAsync();
@@ -41,10 +41,10 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
             .ThenInclude(spm => spm.University)
             .Include(sp => sp.ScholarshipProgramMajors)
             .ThenInclude(spm => spm.Major)
+            .ThenInclude(m => m.MajorSkills)
+            .ThenInclude(ms => ms.Skill)
             .Include(sp => sp.ScholarshipProgramCertificates)
             .ThenInclude(spc => spc.Certificate)
-            .Include(sp => sp.ScholarshipProgramSkills)
-            .ThenInclude(sps => sps.Skill)
             .FirstOrDefaultAsync(sp => sp.Id == id);
 
         return scholarshipProgram;
@@ -57,8 +57,6 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
         await _dbContext.ScholarshipProgramUniversities.Where(spu => spu.ScholarshipProgramId == scholarshipProgram.Id)
             .ExecuteDeleteAsync();
         await _dbContext.ScholarshipProgramCertificates.Where(spc => spc.ScholarshipProgramId == scholarshipProgram.Id)
-            .ExecuteDeleteAsync();
-        await _dbContext.ScholarshipProgramSkills.Where(spk => spk.ScholarshipProgramId == scholarshipProgram.Id)
             .ExecuteDeleteAsync();
     }
 }
