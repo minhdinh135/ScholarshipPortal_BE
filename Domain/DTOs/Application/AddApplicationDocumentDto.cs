@@ -7,6 +7,4 @@ public class AddApplicationDocumentDto
     public string? Type { get; set; }
 
     public string? FileUrl { get; set; }
-
-    public int? ApplicationId { get; set; }
 }
