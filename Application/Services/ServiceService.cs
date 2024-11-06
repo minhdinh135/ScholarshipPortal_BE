@@ -21,7 +21,7 @@ public class ServiceService : IServiceService
 
     public async Task<IEnumerable<ServiceDto>> GetAllServices()
     {
-        var services = await _serviceRepository.GetAll();
+        var services = await _serviceRepository.GetAllServices();
 
         return _mapper.Map<IEnumerable<ServiceDto>>(services);
     }
@@ -34,7 +34,7 @@ public class ServiceService : IServiceService
 
 	public async Task<ServiceDto> GetServiceById(int id)
     {
-        var service = await _serviceRepository.GetById(id);
+        var service = await _serviceRepository.GetServiceById(id);
         if (service == null)
             throw new ServiceException($"Service with id:{id} not found", new NotFoundException());
 
