@@ -4,4 +4,5 @@ namespace Application.Interfaces.IRepositories;
 
 public interface IFeedbackRepository : IGenericRepository<Feedback>
 {
+	Task<bool> FeedbackExists(int applicantId, int serviceId);
 }
