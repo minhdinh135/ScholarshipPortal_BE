@@ -17,7 +17,7 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
         var query = _dbContext.Requests
             .AsNoTracking()
             .AsSplitQuery()
-            .Include(r => r.RequestDetails).ThenInclude(r => r.Service)
+            .Include(r => r.RequestDetails).ThenInclude(r => r.Service).ThenInclude(r=>r.Feedbacks)
 			.AsQueryable();
 
         if (requestQueryParameters.ApplicantId.HasValue)
@@ -45,8 +45,8 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
         var request = await _dbContext.Requests
             .AsNoTracking()
             .AsSplitQuery()
-            .Include(r => r.RequestDetails)
-            .FirstOrDefaultAsync(r => r.Id == id);
+            .Include(r => r.RequestDetails).ThenInclude(r => r.Service).ThenInclude(r => r.Feedbacks)
+			.FirstOrDefaultAsync(r => r.Id == id);
 
         return request;
     }
