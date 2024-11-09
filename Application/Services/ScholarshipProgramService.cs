@@ -1,4 +1,5 @@
-﻿using Application.Exceptions;
+﻿using System.Linq.Expressions;
+using Application.Exceptions;
 using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
@@ -24,10 +25,17 @@ public class ScholarshipProgramService : IScholarshipProgramService
         _cloudinaryService = cloudinaryService;
     }
 
+    public async Task<PaginatedList<ScholarshipProgramDto>> GetAllPrograms(ListOptions listOptions)
+    {
+        var allScholarshipPrograms = await _scholarshipProgramRepository.GetAllScholarshipPrograms(listOptions);
+
+        return _mapper.Map<PaginatedList<ScholarshipProgramDto>>(allScholarshipPrograms);
+    }
+
     public async Task<IEnumerable<ScholarshipProgramDto>> GetAllScholarshipPrograms()
     {
-        var allScholarshipPrograms = await _scholarshipProgramRepository.GetAllScholarshipPrograms();
-
+        var allScholarshipPrograms = await _scholarshipProgramRepository.GetAll();
+    
         return _mapper.Map<IEnumerable<ScholarshipProgramDto>>(allScholarshipPrograms);
     }
 

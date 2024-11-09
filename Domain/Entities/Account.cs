@@ -36,10 +36,6 @@ public class Account : BaseEntity
 
     public ICollection<Notification> Notifications { get; set; }
 
-    public ICollection<Transaction> SenderTransactions { get; set; }
-
-    public ICollection<Transaction> ReceiverTransactions { get; set; }
-
     public ICollection<Service> Services { get; set; }
 
     public ICollection<Request> Requests { get; set; }

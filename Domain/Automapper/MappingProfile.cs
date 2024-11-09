@@ -10,6 +10,7 @@ using Domain.DTOs.Feedback;
 using Domain.DTOs.Funder;
 using Domain.DTOs.Major;
 using Domain.DTOs.Notification;
+using Domain.DTOs.Payment;
 using Domain.DTOs.Provider;
 using Domain.DTOs.Request;
 using Domain.DTOs.ReviewMilestone;
@@ -18,6 +19,7 @@ using Domain.DTOs.ScholarshipProgram;
 using Domain.DTOs.Service;
 using Domain.DTOs.University;
 using Domain.Entities;
+using Org.BouncyCastle.Asn1;
 
 namespace Domain.Automapper;
 
@@ -37,6 +39,25 @@ public class MappingProfile : Profile
                 opt.MapFrom(src => src.Role.Name))
             .ReverseMap();
         CreateMap<AccountDto, UpdateAccountDto>().ReverseMap();
+
+        CreateMap<Wallet, WalletDto>().ReverseMap();
+        CreateMap<CreateWalletDto, Wallet>();
+        CreateMap<UpdateWalletBalanceDto, Wallet>();
+
+        CreateMap<TransferRequest, Transaction>()
+            .ForMember(dest => dest.Amount, opt =>
+                opt.MapFrom(src => src.Amount))
+            .ForMember(dest => dest.Description, opt =>
+                opt.MapFrom(src => "Wallet Balance Transfer"))
+            .ForMember(dest => dest.TransactionId, opt =>
+                opt.MapFrom(src => Guid.NewGuid().ToString("N")))
+            .ForMember(dest => dest.PaymentMethod, opt =>
+                opt.MapFrom(src => "Credit Card"))
+            .ForMember(dest => dest.Status, opt =>
+                opt.MapFrom(src => "PAID"))
+            .ForMember(dest => dest.TransactionDate, opt =>
+                opt.MapFrom(src => DateTime.UtcNow));
+            
         
         // Funder Profile mapping
         CreateMap<FunderProfile, FunderProfileDto>().ReverseMap();
