@@ -238,14 +238,14 @@ public class ScholarshipContext : DbContext
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasOne(transaction => transaction.Sender)
-                .WithMany(account => account.SenderTransactions)
-                .HasForeignKey(transaction => transaction.SenderId)
+            entity.HasOne(transaction => transaction.WalletSender)
+                .WithMany(wallet => wallet.SenderTransactions)
+                .HasForeignKey(transaction => transaction.WalletSenderId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            entity.HasOne(transaction => transaction.Receiver)
-                .WithMany(account => account.ReceiverTransactions)
-                .HasForeignKey(transaction => transaction.ReceiverId)
+            entity.HasOne(transaction => transaction.WalletReceiver)
+                .WithMany(wallet => wallet.ReceiverTransactions)
+                .HasForeignKey(transaction => transaction.WalletReceiverId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 

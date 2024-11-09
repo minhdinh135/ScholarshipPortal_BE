@@ -14,11 +14,11 @@ public class Transaction : BaseEntity
     
     public string? Status { get; set; }
     
-    public int? SenderId { get; set; }
+    public int? WalletSenderId { get; set; }
     
-    public Account? Sender { get; set; }
+    public Wallet? WalletSender { get; set; }
     
-    public int? ReceiverId { get; set; }
+    public int? WalletReceiverId { get; set; }
     
-    public Account? Receiver { get; set; }
+    public Wallet? WalletReceiver { get; set; }
 }

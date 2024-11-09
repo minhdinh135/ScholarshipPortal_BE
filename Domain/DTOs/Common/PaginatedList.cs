@@ -1,6 +1,6 @@
 ﻿namespace Domain.DTOs.Common;
 
-public class PaginatedList<T>
+public class PaginatedList<T> 
 {
     public IEnumerable<T> Items { get; set; }
     public int PageIndex { get; }
@@ -13,5 +13,5 @@ public class PaginatedList<T>
         Items = items;
         PageIndex = pageIndex;
         TotalPages = totalPages;
-    } 
+    }
 }

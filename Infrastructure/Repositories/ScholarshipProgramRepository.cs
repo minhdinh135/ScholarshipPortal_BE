@@ -1,4 +1,6 @@
-﻿using Application.Interfaces.IRepositories;
+﻿using System.Linq.Expressions;
+using Application.Interfaces.IRepositories;
+using Domain.DTOs.Common;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -12,21 +14,30 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
     }
 
 
-    public async Task<IEnumerable<ScholarshipProgram>> GetAllScholarshipPrograms()
+    public async Task<PaginatedList<ScholarshipProgram>> GetAllScholarshipPrograms(ListOptions listOptions)
     {
-        var scholarshipPrograms = await _dbContext.ScholarshipPrograms
-            .Include(sp => sp.Category)
-            .Include(sp => sp.ScholarshipProgramUniversities)
-            .ThenInclude(spu => spu.University)
-            .Include(sp => sp.ScholarshipProgramMajors)
-            .ThenInclude(spm => spm.Major)
-            .ThenInclude(m => m.MajorSkills)
-            .ThenInclude(ms => ms.Skill)
-            .Include(sp => sp.ScholarshipProgramCertificates)
-            .ThenInclude(spc => spc.Certificate)
-            .AsNoTracking()
-            .AsSplitQuery()
-            .ToListAsync();
+        // var scholarshipPrograms = await _dbContext.ScholarshipPrograms
+        //     .Include(sp => sp.Category)
+        //     .Include(sp => sp.ScholarshipProgramUniversities)
+        //     .ThenInclude(spu => spu.University)
+        //     .Include(sp => sp.ScholarshipProgramMajors)
+        //     .ThenInclude(spm => spm.Major)
+        //     .ThenInclude(m => m.MajorSkills)
+        //     .ThenInclude(ms => ms.Skill)
+        //     .Include(sp => sp.ScholarshipProgramCertificates)
+        //     .ThenInclude(spc => spc.Certificate)
+        //     .AsNoTracking()
+        //     .AsSplitQuery()
+        //     .ToListAsync();
+
+        var includes = new Func<IQueryable<ScholarshipProgram>, IQueryable<ScholarshipProgram>>[]
+        {
+            q => q.Include(sp => sp.Category),
+            q => q.Include(sp => sp.ScholarshipProgramUniversities).ThenInclude(u => u.University),
+            q => q.Include(sp => sp.ScholarshipProgramCertificates).ThenInclude(c => c.Certificate),
+            q => q.Include(sp => sp.ScholarshipProgramMajors).ThenInclude(m => m.Major)
+        };
+        var scholarshipPrograms = await GetPaginatedList(includes, listOptions);
 
         return scholarshipPrograms;
     }

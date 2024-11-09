@@ -21,9 +21,10 @@ public class ScholarshipProgramController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllScholarshipPrograms()
+    public async Task<IActionResult> GetAllScholarshipPrograms([FromQuery] ListOptions listOptions)
     {
-        var allScholarshipPrograms = await _scholarshipProgramService.GetAllScholarshipPrograms();
+        // var allScholarshipPrograms = await _scholarshipProgramService.GetAllScholarshipPrograms();
+        var allScholarshipPrograms = await _scholarshipProgramService.GetAllPrograms(listOptions);
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all scholarship programs successfully",
             allScholarshipPrograms));

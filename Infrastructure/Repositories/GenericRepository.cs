@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Application.Helper;
 using Application.Interfaces.IRepositories;
 using Domain.DTOs.Common;
@@ -33,6 +34,46 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         await _dbContext.SaveChangesAsync();
 
         return entity;
+    }
+
+    public async Task<PaginatedList<T>> GetPaginatedList(Func<IQueryable<T>, IQueryable<T>>[] includes,
+        ListOptions listOptions)
+    {
+        var query = _dbContext.Set<T>()
+            .AsNoTracking()
+            .AsSplitQuery();
+
+        if (includes != null)
+        {
+            foreach (var include in includes)
+            {
+                query = include(query);
+            }
+        }
+
+        if (!string.IsNullOrEmpty(listOptions.SortBy))
+        {
+            var orderByExpression = ExpressionUtils.GetOrderByExpression<T>(listOptions.SortBy);
+            query = listOptions.IsDescending
+                ? query.OrderByDescending(orderByExpression)
+                : query.OrderBy(orderByExpression);
+        }
+
+        if (!listOptions.IsPaging)
+        {
+            var allItems = await query.ToListAsync();
+            return new PaginatedList<T>(allItems, 1, 1);
+        }
+
+        var items = await query
+            .Skip((listOptions.PageIndex - 1) * listOptions.PageSize)
+            .Take(listOptions.PageSize)
+            .ToListAsync();
+
+        var totalCount = await _dbContext.Set<T>().CountAsync();
+        var totalPages = (int)Math.Ceiling((double)totalCount / listOptions.PageSize);
+
+        return new PaginatedList<T>(items, listOptions.PageIndex, totalPages);
     }
 
     public async Task<IEnumerable<T>> GetAll(params Func<IQueryable<T>, IQueryable<T>>[] includes)
@@ -84,6 +125,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
             {
                 _dbContext.Entry(entity1).State = EntityState.Detached;
             }
+
             return entity1;
         }
 
@@ -92,6 +134,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         {
             _dbContext.Entry(entity).State = EntityState.Detached;
         }
+
         return entity;
     }
 
