@@ -1059,12 +1059,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("PaymentMethod")
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("ReceiverId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SenderId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Status")
                         .HasColumnType("longtext");
 
@@ -1077,11 +1071,17 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int?>("WalletReceiverId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("WalletSenderId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ReceiverId");
+                    b.HasIndex("WalletReceiverId");
 
-                    b.HasIndex("SenderId");
+                    b.HasIndex("WalletSenderId");
 
                     b.ToTable("Transactions");
                 });
@@ -1137,6 +1137,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("StripeCustomerId")
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -1515,19 +1518,19 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Transaction", b =>
                 {
-                    b.HasOne("Domain.Entities.Account", "Receiver")
+                    b.HasOne("Domain.Entities.Wallet", "WalletReceiver")
                         .WithMany("ReceiverTransactions")
-                        .HasForeignKey("ReceiverId")
+                        .HasForeignKey("WalletReceiverId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Entities.Account", "Sender")
+                    b.HasOne("Domain.Entities.Wallet", "WalletSender")
                         .WithMany("SenderTransactions")
-                        .HasForeignKey("SenderId")
+                        .HasForeignKey("WalletSenderId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Receiver");
+                    b.Navigation("WalletReceiver");
 
-                    b.Navigation("Sender");
+                    b.Navigation("WalletSender");
                 });
 
             modelBuilder.Entity("Domain.Entities.University", b =>
@@ -1571,13 +1574,9 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("ReceiverChats");
 
-                    b.Navigation("ReceiverTransactions");
-
                     b.Navigation("Requests");
 
                     b.Navigation("SenderChats");
-
-                    b.Navigation("SenderTransactions");
 
                     b.Navigation("Services");
 
@@ -1683,6 +1682,13 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.University", b =>
                 {
                     b.Navigation("ScholarshipProgramUniversities");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Wallet", b =>
+                {
+                    b.Navigation("ReceiverTransactions");
+
+                    b.Navigation("SenderTransactions");
                 });
 #pragma warning restore 612, 618
         }

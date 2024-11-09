@@ -33,6 +33,8 @@ public static class ServiceExtension
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IAccountRepository, AccountRepository>();
 
+        services.AddScoped<IWalletRepository, WalletRepository>();
+
         services.AddScoped<IProviderService, ProviderService>();
         services.AddScoped<IProviderRepository, ProviderRepository>();
 
@@ -80,6 +82,9 @@ public static class ServiceExtension
         
         services.AddScoped<IChatService, ChatService>();
         services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
+
+        services.AddScoped<IPaymentService, PaymentService>();
+        services.AddScoped<ITransactionRepository, TransactionRepository>();
 		
 		services.AddHttpClient<GeminiService>();
         services.AddSingleton(sp => new GeminiService(

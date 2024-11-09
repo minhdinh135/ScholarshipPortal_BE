@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ScholarshipContext))]
-    [Migration("20241026035614_AddEntities")]
-    partial class AddEntities
+    [Migration("20241108105310_InitV3")]
+    partial class InitV3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -645,12 +645,32 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("ParentMajorId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ParentMajorId");
+
                     b.ToTable("Majors");
+                });
+
+            modelBuilder.Entity("Domain.Entities.MajorSkill", b =>
+                {
+                    b.Property<int?>("MajorId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SkillId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MajorId", "SkillId");
+
+                    b.HasIndex("SkillId");
+
+                    b.ToTable("major_skills", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Notification", b =>
@@ -943,21 +963,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("scholarship_program_majors", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.ScholarshipProgramSkill", b =>
-                {
-                    b.Property<int?>("ScholarshipProgramId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SkillId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ScholarshipProgramId", "SkillId");
-
-                    b.HasIndex("SkillId");
-
-                    b.ToTable("scholarship_program_skills", (string)null);
-                });
-
             modelBuilder.Entity("Domain.Entities.ScholarshipProgramUniversity", b =>
                 {
                     b.Property<int?>("ScholarshipProgramId")
@@ -1057,12 +1062,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("PaymentMethod")
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("ReceiverId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SenderId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Status")
                         .HasColumnType("longtext");
 
@@ -1075,11 +1074,17 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int?>("WalletReceiverId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("WalletSenderId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ReceiverId");
+                    b.HasIndex("WalletReceiverId");
 
-                    b.HasIndex("SenderId");
+                    b.HasIndex("WalletSenderId");
 
                     b.ToTable("Transactions");
                 });
@@ -1113,6 +1118,41 @@ namespace Infrastructure.Migrations
                     b.HasIndex("CountryId");
 
                     b.ToTable("Universities");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Wallet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("Balance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("BankAccountName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("BankAccountNumber")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("StripeCustomerId")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId")
+                        .IsUnique();
+
+                    b.ToTable("Wallets");
                 });
 
             modelBuilder.Entity("Domain.Entities.Account", b =>
@@ -1302,6 +1342,34 @@ namespace Infrastructure.Migrations
                     b.Navigation("Funder");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Major", b =>
+                {
+                    b.HasOne("Domain.Entities.Major", "ParentMajor")
+                        .WithMany("SubMajors")
+                        .HasForeignKey("ParentMajorId");
+
+                    b.Navigation("ParentMajor");
+                });
+
+            modelBuilder.Entity("Domain.Entities.MajorSkill", b =>
+                {
+                    b.HasOne("Domain.Entities.Major", "Major")
+                        .WithMany("MajorSkills")
+                        .HasForeignKey("MajorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Skill", "Skill")
+                        .WithMany("MajorSkills")
+                        .HasForeignKey("SkillId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Major");
+
+                    b.Navigation("Skill");
+                });
+
             modelBuilder.Entity("Domain.Entities.Notification", b =>
                 {
                     b.HasOne("Domain.Entities.Account", "Receiver")
@@ -1423,25 +1491,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("ScholarshipProgram");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ScholarshipProgramSkill", b =>
-                {
-                    b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
-                        .WithMany("ScholarshipProgramSkills")
-                        .HasForeignKey("ScholarshipProgramId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Skill", "Skill")
-                        .WithMany("ScholarshipProgramSkills")
-                        .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("ScholarshipProgram");
-
-                    b.Navigation("Skill");
-                });
-
             modelBuilder.Entity("Domain.Entities.ScholarshipProgramUniversity", b =>
                 {
                     b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
@@ -1472,19 +1521,19 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Transaction", b =>
                 {
-                    b.HasOne("Domain.Entities.Account", "Receiver")
+                    b.HasOne("Domain.Entities.Wallet", "WalletReceiver")
                         .WithMany("ReceiverTransactions")
-                        .HasForeignKey("ReceiverId")
+                        .HasForeignKey("WalletReceiverId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Entities.Account", "Sender")
+                    b.HasOne("Domain.Entities.Wallet", "WalletSender")
                         .WithMany("SenderTransactions")
-                        .HasForeignKey("SenderId")
+                        .HasForeignKey("WalletSenderId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Receiver");
+                    b.Navigation("WalletReceiver");
 
-                    b.Navigation("Sender");
+                    b.Navigation("WalletSender");
                 });
 
             modelBuilder.Entity("Domain.Entities.University", b =>
@@ -1495,6 +1544,16 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Wallet", b =>
+                {
+                    b.HasOne("Domain.Entities.Account", "Account")
+                        .WithOne("Wallet")
+                        .HasForeignKey("Domain.Entities.Wallet", "AccountId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("Domain.Entities.Account", b =>
@@ -1518,15 +1577,13 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("ReceiverChats");
 
-                    b.Navigation("ReceiverTransactions");
-
                     b.Navigation("Requests");
 
                     b.Navigation("SenderChats");
 
-                    b.Navigation("SenderTransactions");
-
                     b.Navigation("Services");
+
+                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Domain.Entities.ApplicantProfile", b =>
@@ -1574,7 +1631,11 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Major", b =>
                 {
+                    b.Navigation("MajorSkills");
+
                     b.Navigation("ScholarshipProgramMajors");
+
+                    b.Navigation("SubMajors");
                 });
 
             modelBuilder.Entity("Domain.Entities.ProviderProfile", b =>
@@ -1606,8 +1667,6 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("ScholarshipProgramMajors");
 
-                    b.Navigation("ScholarshipProgramSkills");
-
                     b.Navigation("ScholarshipProgramUniversities");
                 });
 
@@ -1620,12 +1679,19 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Skill", b =>
                 {
-                    b.Navigation("ScholarshipProgramSkills");
+                    b.Navigation("MajorSkills");
                 });
 
             modelBuilder.Entity("Domain.Entities.University", b =>
                 {
                     b.Navigation("ScholarshipProgramUniversities");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Wallet", b =>
+                {
+                    b.Navigation("ReceiverTransactions");
+
+                    b.Navigation("SenderTransactions");
                 });
 #pragma warning restore 612, 618
         }

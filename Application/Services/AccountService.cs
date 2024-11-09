@@ -8,110 +8,176 @@ using Domain.DTOs.Common;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
-namespace Application.Services
+namespace Application.Services;
+
+public class AccountService : IAccountService
 {
-    public class AccountService : IAccountService
+    private readonly IAccountRepository _accountRepository;
+    private readonly IMapper _mapper;
+    private readonly IPasswordService _passwordService;
+    private readonly ICloudinaryService _cloudinaryService;
+    private readonly IWalletRepository _walletRepository;
+    private readonly IStripeService _stripeService;
+
+    public AccountService(
+        IAccountRepository accountRepository,
+        IMapper mapper,
+        IPasswordService passwordService,
+        ICloudinaryService cloudinaryService,
+        IWalletRepository walletRepository,
+        IStripeService stripeService
+    )
     {
-        private readonly IAccountRepository _accountRepository;
-        private readonly IMapper _mapper;
-        private readonly IPasswordService _passwordService;
-        private readonly ICloudinaryService _cloudinaryService;
+        _accountRepository = accountRepository;
+        _mapper = mapper;
+        _passwordService = passwordService;
+        _cloudinaryService = cloudinaryService;
+        _walletRepository = walletRepository;
+        _stripeService = stripeService;
+    }
 
-        public AccountService(IAccountRepository accountRepository, IMapper mapper, IPasswordService passwordService, ICloudinaryService cloudinaryService
-            )
+    public async Task<AccountDto> AddAccount(RegisterDto dto)
+    {
+        var entity = _mapper.Map<Account>(dto);
+        entity.HashedPassword = _passwordService.HashPassword(dto.Password);
+
+        await _accountRepository.Add(entity);
+
+        return _mapper.Map<AccountDto>(entity);
+    }
+
+    public async Task<AccountDto> DeleteAccount(int id)
+    {
+        var entity = await _accountRepository.GetById(id);
+        if (entity == null) return null;
+        await _accountRepository.DeleteById(id);
+        return _mapper.Map<AccountDto>(entity);
+    }
+
+    public async Task<AccountDto> GetAccount(int id)
+    {
+        var entity = await _accountRepository.GetById(id);
+        if (entity == null) return null;
+        return _mapper.Map<AccountDto>(entity);
+    }
+
+    public async Task<IEnumerable<AccountDto>> GetAll()
+    {
+        var entities = await _accountRepository.GetAllWithRole();
+        return _mapper.Map<IEnumerable<AccountDto>>(entities);
+    }
+
+    public async Task<PaginatedList<AccountDto>> GetAll(int pageIndex, int pageSize, string sortBy,
+        string sortOrder)
+    {
+        var categories = await _accountRepository.GetPaginatedList(pageIndex, pageSize, sortBy, sortOrder);
+
+        return _mapper.Map<PaginatedList<AccountDto>>(categories);
+    }
+
+    public async Task<PaginatedList<AccountDto>> GetAllAppliedToScholarship(int scholarshipId, int pageIndex,
+        int pageSize, string sortBy,
+        string sortOrder)
+    {
+        var accounts =
+            await _accountRepository.GetAllAppliedToScholarship(scholarshipId, pageIndex, pageSize, sortBy,
+                sortOrder);
+
+        return _mapper.Map<PaginatedList<AccountDto>>(accounts);
+    }
+
+    public async Task<AccountDto> UpdateAccount(int id, UpdateAccountDto dto)
+    {
+        var university = await _accountRepository.GetAll();
+        var exist = university.Any(u => u.Id == id);
+        if (!exist) throw new Exception("Account not found.");
+        var entity = _mapper.Map<Account>(dto);
+        await _accountRepository.Update(entity);
+        return _mapper.Map<AccountDto>(entity);
+    }
+
+    public async Task<bool> UpdateAvatar(int id, IFormFile avatar)
+    {
+        var uploadedAvatar = await _cloudinaryService.UploadImage(avatar);
+        if (uploadedAvatar == null)
+            throw new FileProcessingException("Upload avatar failed");
+
+        var existingProfile = await _accountRepository.GetById(id);
+        if (existingProfile.AvatarUrl != null)
         {
-            _accountRepository = accountRepository;
-            _mapper = mapper;
-            _passwordService = passwordService;
-            _cloudinaryService = cloudinaryService;
-        }
-
-        public async Task<AccountDto> AddAccount(RegisterDto dto)
-        {
-            var entity = _mapper.Map<Account>(dto);
-            entity.HashedPassword = _passwordService.HashPassword(dto.Password);
-            
-            await _accountRepository.Add(entity);
-            
-            return _mapper.Map<AccountDto>(entity);
-        }
-
-        public async Task<AccountDto> DeleteAccount(int id)
-        {
-            var entity = await _accountRepository.GetById(id);
-            if (entity == null) return null;
-            await _accountRepository.DeleteById(id);
-            return _mapper.Map<AccountDto>(entity);
-        }
-
-        public async Task<AccountDto> GetAccount(int id)
-        {
-            var entity = await _accountRepository.GetById(id);
-            if (entity == null) return null;
-            return _mapper.Map<AccountDto>(entity);
-        }
-
-        public async Task<IEnumerable<AccountDto>> GetAll()
-        {
-            var entities = await _accountRepository.GetAllWithRole();
-            return _mapper.Map<IEnumerable<AccountDto>>(entities);
-        }
-
-        public async Task<PaginatedList<AccountDto>> GetAll(int pageIndex, int pageSize, string sortBy,
-            string sortOrder)
-        {
-            var categories = await _accountRepository.GetPaginatedList(pageIndex, pageSize, sortBy, sortOrder);
-
-            return _mapper.Map<PaginatedList<AccountDto>>(categories);
-        }
-
-        public async Task<PaginatedList<AccountDto>> GetAllAppliedToScholarship(int scholarshipId, int pageIndex, int pageSize, string sortBy, 
-                string sortOrder)
-        {
-            var accounts = await _accountRepository.GetAllAppliedToScholarship(scholarshipId, pageIndex, pageSize, sortBy, sortOrder);
-
-            return _mapper.Map<PaginatedList<AccountDto>>(accounts);
-        }
-
-        public async Task<AccountDto> UpdateAccount(int id, UpdateAccountDto dto)
-        {
-            var university = await _accountRepository.GetAll();
-            var exist = university.Any(u => u.Id == id);
-            if (!exist) throw new Exception("Account not found.");
-            var entity = _mapper.Map<Account>(dto);
-            await _accountRepository.Update(entity);
-            return _mapper.Map<AccountDto>(entity);
-        }
-
-		public async Task<bool> UpdateAvatar(int id, IFormFile avatar)
-		{
-			var uploadedAvatar = await _cloudinaryService.UploadImage(avatar);
-			if (uploadedAvatar == null)
-				throw new FileProcessingException("Upload avatar failed");
-
-			var existingProfile = await _accountRepository.GetById(id);
-            if(existingProfile.AvatarUrl != null){
-                string fileId = existingProfile.AvatarUrl.Split('/')[^1].Split('.')[0];
-                try{
-                    await _cloudinaryService.DeleteImage(fileId);
-                }
-                catch(Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
+            string fileId = existingProfile.AvatarUrl.Split('/')[^1].Split('.')[0];
+            try
+            {
+                await _cloudinaryService.DeleteImage(fileId);
             }
-			existingProfile.AvatarUrl = uploadedAvatar;
-			_mapper.Map<UpdateAccountDto>(existingProfile);
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
 
-			var updatedAccount = await _accountRepository.Update(existingProfile);
-			if (updatedAccount == null)
-			{
-				return false;
+        existingProfile.AvatarUrl = uploadedAvatar;
+        _mapper.Map<UpdateAccountDto>(existingProfile);
 
-			}
+        var updatedAccount = await _accountRepository.Update(existingProfile);
+        if (updatedAccount == null)
+        {
+            return false;
+        }
 
-			return true;
+        return true;
+    }
 
-		}
-	}
+    public async Task<WalletDto> GetWalletByUserId(int userId)
+    {
+        var wallet = await _walletRepository.GetWalletByUserId(userId);
+
+        if (wallet == null)
+            throw new ServiceException($"Wallet with userId:{userId} is not found", new NotFoundException());
+
+        return _mapper.Map<WalletDto>(wallet);
+    }
+
+    public async Task<WalletDto> CreateWallet(int id, CreateWalletDto createWalletDto)
+    {
+        var account = await _accountRepository.GetById(id);
+        if (account == null)
+            throw new ServiceException($"Account with id:{id} is not found",
+                new NotFoundException());
+
+        var stripeCustomerId = await _stripeService.CreateStripeCustomer(account, createWalletDto.Balance);
+        var wallet = _mapper.Map<Wallet>(createWalletDto);
+        wallet.AccountId = id;
+        wallet.StripeCustomerId = stripeCustomerId;
+
+        var createdWallet = await _walletRepository.Add(wallet);
+
+        return _mapper.Map<WalletDto>(createdWallet);
+    }
+
+    public async Task<WalletDto> UpdateWalletBalance(int userId, UpdateWalletBalanceDto updateWalletBalanceDto)
+    {
+        var existingWallet = await _walletRepository.GetWalletByUserId(userId);
+        if (existingWallet == null)
+            throw new ServiceException($"Wallet with userId:{userId} is not found", new NotFoundException());
+
+        await _stripeService.UpdateCustomerBalance(existingWallet.StripeCustomerId, updateWalletBalanceDto.Balance);
+        _mapper.Map(updateWalletBalanceDto, existingWallet);
+        var updatedWallet = await _walletRepository.Update(existingWallet);
+
+        return _mapper.Map<WalletDto>(updatedWallet);
+    }
+
+    public async Task<WalletDto> UpdateWalletBalance(int userId, decimal balance)
+    {
+        var existingWallet = await _walletRepository.GetWalletByUserId(userId);
+        if (existingWallet == null)
+            throw new ServiceException($"Wallet with userId:{userId} is not found", new NotFoundException());
+
+        await _stripeService.UpdateCustomerBalance(existingWallet.StripeCustomerId, balance);
+        existingWallet.Balance = balance;
+        var updatedWallet = await _walletRepository.Update(existingWallet);
+
+        return _mapper.Map<WalletDto>(updatedWallet);
+    }
 }

@@ -5,7 +5,7 @@ using Domain.DTOs.University;
 
 namespace Domain.DTOs.ScholarshipProgram;
 
-public class ScholarshipProgramDto : BaseDto
+public class ScholarshipProgramDto 
 {
     public int? Id { get; set; }
 

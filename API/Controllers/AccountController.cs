@@ -1,3 +1,4 @@
+using Application.Exceptions;
 using Application.Interfaces.IServices;
 using AutoMapper;
 using Domain.DTOs.Account;
@@ -68,12 +69,14 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet("applied-to-scholarship/{scholarshipId}")]
-    public async Task<IActionResult> GetAllAppliedToScholarship(int scholarshipId, [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10,
+    public async Task<IActionResult> GetAllAppliedToScholarship(int scholarshipId, [FromQuery] int pageIndex = 1,
+        [FromQuery] int pageSize = 10,
         [FromQuery] string sortBy = default, [FromQuery] string sortOrder = default)
     {
         try
         {
-            var profile = await _accountService.GetAllAppliedToScholarship(scholarshipId, pageIndex, pageSize, sortBy, sortOrder);
+            var profile =
+                await _accountService.GetAllAppliedToScholarship(scholarshipId, pageIndex, pageSize, sortBy, sortOrder);
             if (profile == null) return NotFound("Account not found.");
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Get successfully", profile));
         }
@@ -264,6 +267,51 @@ public class AccountController : ControllerBase
         {
             _logger.LogError($"Failed to delete applicant profile: {ex.Message}");
             return StatusCode(500, "Error deleting data from the database.");
+        }
+    }
+
+    [HttpGet("{id}/wallet")]
+    public async Task<IActionResult> GetAccountWallet(int id)
+    {
+        try
+        {
+            var wallet = await _accountService.GetWalletByUserId(id);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Get wallet successfully", wallet));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
+    [HttpPost("{id}/wallet")]
+    public async Task<IActionResult> CreateWallet(int id, CreateWalletDto createWalletDto)
+    {
+        try
+        {
+            var createdWallet = await _accountService.CreateWallet(id, createWalletDto);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Create wallet successfully", createdWallet));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
+    [HttpPut("{id}/wallet")]
+    public async Task<IActionResult> UpdateWalletBalance(int id, UpdateWalletBalanceDto updateWalletBalanceDto)
+    {
+        try
+        {
+            var updatedWallet = await _accountService.UpdateWalletBalance(id, updateWalletBalanceDto);
+    
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update wallet balance successfully", updatedWallet));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
         }
     }
 }

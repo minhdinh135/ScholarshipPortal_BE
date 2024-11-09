@@ -15,34 +15,50 @@ public class NotificationController : ControllerBase
     private readonly INotificationService _notificationService;
     private readonly IAccountService _accountService;
     private readonly IScholarshipProgramService _scholarshipProgramService;
+    private readonly IServiceService _serviceService;
+    private readonly IEmailService _emailService;
     private readonly IMapper _mapper;
 
     public NotificationController(INotificationService notificationService, IMapper mapper,
         IAccountService accountService,
-        IScholarshipProgramService scholarshipProgramService)
+        IScholarshipProgramService scholarshipProgramService,
+        IEmailService emailService,
+        IServiceService serviceService)
     {
         _notificationService = notificationService;
         _mapper = mapper;
         _accountService = accountService;
         _scholarshipProgramService = scholarshipProgramService;
+        _emailService = emailService;
+        _serviceService = serviceService;
     }
 
     [HttpGet("get-all-by-id/{id}")]
-    public async Task<IActionResult> GetAll(int id, [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10,
-        [FromQuery] string sortBy = "SentDate", [FromQuery] string sortOrder = "desc")
+    public async Task<IActionResult> GetAll(int id)
     {
-        var response = await _notificationService.GetAll(pageIndex, pageSize, sortBy, sortOrder);
-        response.Items = response.Items.Where(x => x.ReceiverId == id).ToList();
+        var response = await _notificationService.GetAll();
+        response = response.Where(x => x.ReceiverId == id).ToList().OrderByDescending(x => x.CreatedAt);
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all notification successfully", response));
+    }
+
+    [HttpPost("send-notification-and-email")]
+    public async Task<IActionResult> SendNotificationAndEmail([FromBody] NotificationRequest request)
+    {
+        var response = await _notificationService.SendNotification(request.Topic, request.Link, request.Title, request.Body);
+        AccountDto? user = null;
+        if(int.TryParse(request.Topic, out var id)){
+           user = await _accountService.GetAccount(id);
+        }
+        if (user != null) await _emailService.SendEmailAsync(user.Email, request.Title, request.Body);
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Send notification successfully", response));
     }
 
     [HttpPost("send-notification")]
     public async Task<IActionResult> SendNotification([FromBody] NotificationRequest request)
     {
         var response = await _notificationService.SendNotification(request.Topic, request.Link, request.Title, request.Body);
-        
-
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Send notification successfully", response));
     }
 
@@ -55,6 +71,8 @@ public class NotificationController : ControllerBase
             //send notification
             await _notificationService.SendNotification(user.Id.ToString(), "/account-info", "Welcome", "Update your profile now.");
             await _notificationService.SendNotification(user.Id.ToString(), "/scholarship-program", "Welcome", "Check out our scholarship program.");
+            if (user != null) await _emailService.SendEmailAsync(user.Email, "Welcome", "Welcome to SSAP! You can check out our scholarship program.");
+
             //get all admins
             var admins = await _accountService.GetAll();
             admins = admins.Where(x => x.RoleName == RoleEnum.ADMIN).ToList();
@@ -62,6 +80,7 @@ public class NotificationController : ControllerBase
             foreach (var admin in admins)
             {
                 await _notificationService.SendNotification(admin.Id.ToString(), "/admin/accountsmanagement", "New User", $"{user.Username} has registered.");
+                await _emailService.SendEmailAsync(admin.Email, "New User", $"{user.Username} has registered.");
             }
             return Ok();
         }
@@ -78,10 +97,20 @@ public class NotificationController : ControllerBase
         {
             var scholarship = await _scholarshipProgramService.GetScholarshipProgramById(scholarshipId);
             var applicant = await _accountService.GetAccount(applicantId);
+            var funder = await _accountService.GetAccount(scholarship.FunderId.Value);
             
-            //send notification
+            //send notification to funder
             await _notificationService.SendNotification(scholarship.FunderId.ToString(), "/", "", 
                 $"{applicant.Username} has applied to scholarship {scholarship.Name}.");
+            await _emailService.SendEmailAsync(funder.Email, $"New Applicant to your {scholarship.Name} scholarship", 
+                $"{applicant.Username} has applied to scholarship {scholarship.Name}.");
+
+            //send notification to applicant
+            await _notificationService.SendNotification(applicant.Id.ToString(), "/", "", 
+                $"You have applied to scholarship {scholarship.Name}.");
+            await _emailService.SendEmailAsync(applicant.Email, $"Apply to {scholarship.Name} successfully", 
+                $"You have applied to scholarship {scholarship.Name}.");
+
             return Ok();
         }
         catch (Exception ex)
@@ -89,6 +118,36 @@ public class NotificationController : ControllerBase
             return BadRequest(new { Message = ex.Message });
         }
     }
+
+    [HttpPost("notify-provider-new-request")]
+    public async Task<IActionResult> NotifyProviderNewRequest( [FromQuery]int serviceId, [FromQuery] int applicantId)
+    {
+        try
+        {
+            var service = await _serviceService.GetServiceById(serviceId);
+            var applicant = await _accountService.GetAccount(applicantId);
+            var provider = await _accountService.GetAccount(service.ProviderId.Value);
+            
+            //send notification to provider
+            await _notificationService.SendNotification(service.ProviderId.ToString(), "/", "", 
+                $"{applicant.Username} has requested to {service.Name}.");
+            await _emailService.SendEmailAsync(provider.Email, $"New request to your service {service.Name}", 
+                $"{applicant.Username} has requested to {service.Name}.");
+
+            //send notification to applicant
+            await _notificationService.SendNotification(applicant.Id.ToString(), "/", "", 
+                $"You have requested to service {service.Name}.");
+            await _emailService.SendEmailAsync(applicant.Email, $"Request to {service.Name} successfully", 
+                $"You have requested to service {service.Name}.");
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
 
 
     [HttpPut("read/{id}")]

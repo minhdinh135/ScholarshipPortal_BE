@@ -8,7 +8,13 @@ public class Wallet : BaseEntity
     
     public decimal? Balance { get; set; }
     
+    public string? StripeCustomerId { get; set; }
+    
     public int? AccountId { get; set; }
     
     public Account? Account { get; set; }
+    
+    public ICollection<Transaction>? SenderTransactions { get; set; }
+    
+    public ICollection<Transaction>? ReceiverTransactions { get; set; }
 }

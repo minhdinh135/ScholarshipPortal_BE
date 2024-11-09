@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces.IServices;
 using Domain.DTOs.Category;
 using Domain.DTOs.Common;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SSAP.API.Controllers;

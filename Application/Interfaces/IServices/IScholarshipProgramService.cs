@@ -1,5 +1,4 @@
-﻿using Domain.DTOs.Application;
-using Domain.DTOs.Common;
+﻿using Domain.DTOs.Common;
 using Domain.DTOs.ScholarshipProgram;
 using Microsoft.AspNetCore.Http;
 
@@ -7,6 +6,7 @@ namespace Application.Interfaces.IServices;
 
 public interface IScholarshipProgramService
 {
+    Task<PaginatedList<ScholarshipProgramDto>> GetAllPrograms(ListOptions listOptions);
     Task<IEnumerable<ScholarshipProgramDto>> GetAllScholarshipPrograms();
     Task<PaginatedList<ScholarshipProgramDto>> GetScholarshipPrograms(int pageIndex, int pageSize, string sortBy, string sortOrder);
     Task<IEnumerable<ScholarshipProgramDto>> GetScholarshipProgramsByFunderId(int funderId);
