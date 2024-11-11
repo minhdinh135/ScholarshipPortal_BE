@@ -101,6 +101,7 @@ public static class ServiceExtension
         services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
         services.AddScoped<ICloudinaryService, CloudinaryService>();
 
+        services.Configure<EmailSettings>(config.GetSection("EmailSettings"));
         services.AddScoped<IEmailService, EmailService>();
         
         services.AddScoped<IPdfService, PdfService>();

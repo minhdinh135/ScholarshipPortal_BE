@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitV3 : Migration
+    public partial class InitV4 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -174,31 +174,6 @@ namespace Infrastructure.Migrations
                         name: "FK_Accounts_Roles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "major_skills",
-                columns: table => new
-                {
-                    MajorId = table.Column<int>(type: "int", nullable: false),
-                    SkillId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_major_skills", x => new { x.MajorId, x.SkillId });
-                    table.ForeignKey(
-                        name: "FK_major_skills_Majors_MajorId",
-                        column: x => x.MajorId,
-                        principalTable: "Majors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_major_skills_Skills_SkillId",
-                        column: x => x.SkillId,
-                        principalTable: "Skills",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
@@ -680,6 +655,42 @@ namespace Infrastructure.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "major_skills",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    MajorId = table.Column<int>(type: "int", nullable: true),
+                    SkillId = table.Column<int>(type: "int", nullable: true),
+                    ScholarshipProgramId = table.Column<int>(type: "int", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_major_skills", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_major_skills_Majors_MajorId",
+                        column: x => x.MajorId,
+                        principalTable: "Majors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_major_skills_Skills_SkillId",
+                        column: x => x.SkillId,
+                        principalTable: "Skills",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_major_skills_scholarship_programs_ScholarshipProgramId",
+                        column: x => x.ScholarshipProgramId,
+                        principalTable: "scholarship_programs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "review_milestones",
                 columns: table => new
                 {
@@ -722,31 +733,6 @@ namespace Infrastructure.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_scholarship_program_certificates_scholarship_programs_Schola~",
-                        column: x => x.ScholarshipProgramId,
-                        principalTable: "scholarship_programs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "scholarship_program_majors",
-                columns: table => new
-                {
-                    ScholarshipProgramId = table.Column<int>(type: "int", nullable: false),
-                    MajorId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_scholarship_program_majors", x => new { x.ScholarshipProgramId, x.MajorId });
-                    table.ForeignKey(
-                        name: "FK_scholarship_program_majors_Majors_MajorId",
-                        column: x => x.MajorId,
-                        principalTable: "Majors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_scholarship_program_majors_scholarship_programs_ScholarshipP~",
                         column: x => x.ScholarshipProgramId,
                         principalTable: "scholarship_programs",
                         principalColumn: "Id",
@@ -1065,6 +1051,16 @@ namespace Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_major_skills_MajorId",
+                table: "major_skills",
+                column: "MajorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_major_skills_ScholarshipProgramId",
+                table: "major_skills",
+                column: "ScholarshipProgramId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_major_skills_SkillId",
                 table: "major_skills",
                 column: "SkillId");
@@ -1114,11 +1110,6 @@ namespace Infrastructure.Migrations
                 name: "IX_scholarship_program_certificates_CertificateId",
                 table: "scholarship_program_certificates",
                 column: "CertificateId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_scholarship_program_majors_MajorId",
-                table: "scholarship_program_majors",
-                column: "MajorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_scholarship_program_universities_UniversityId",
@@ -1217,9 +1208,6 @@ namespace Infrastructure.Migrations
                 name: "scholarship_program_certificates");
 
             migrationBuilder.DropTable(
-                name: "scholarship_program_majors");
-
-            migrationBuilder.DropTable(
                 name: "scholarship_program_universities");
 
             migrationBuilder.DropTable(
@@ -1238,6 +1226,9 @@ namespace Infrastructure.Migrations
                 name: "funder_profiles");
 
             migrationBuilder.DropTable(
+                name: "Majors");
+
+            migrationBuilder.DropTable(
                 name: "Skills");
 
             migrationBuilder.DropTable(
@@ -1251,9 +1242,6 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Certificates");
-
-            migrationBuilder.DropTable(
-                name: "Majors");
 
             migrationBuilder.DropTable(
                 name: "Universities");

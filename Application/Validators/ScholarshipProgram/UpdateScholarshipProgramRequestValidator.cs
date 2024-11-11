@@ -28,8 +28,5 @@ public class UpdateScholarshipProgramRequestValidator : BaseValidator<UpdateScho
 
         RuleFor(x => x.UniversityIds)
             .NotEmpty().WithMessage("List of university ids is required");
-
-        RuleFor(x => x.MajorIds)
-            .NotEmpty().WithMessage("List of major ids is required");
     }
 }

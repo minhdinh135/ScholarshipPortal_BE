@@ -1,5 +1,4 @@
 ﻿using Domain.DTOs.Category;
-using Domain.DTOs.Common;
 using Domain.DTOs.Major;
 using Domain.DTOs.University;
 
@@ -29,7 +28,7 @@ public class ScholarshipProgramDto
 
     public List<UniversityDto>? Universities { get; set; }
 
-    public List<MajorDto>? Majors { get; set; }
+    public List<MajorDto>? MajorSkills { get; set; }
 
     public List<CertificateDto>? Certificates { get; set; }
 }
