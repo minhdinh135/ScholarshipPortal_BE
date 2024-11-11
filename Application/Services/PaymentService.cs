@@ -14,7 +14,8 @@ public class PaymentService : IPaymentService
     private readonly IAccountService _accountService;
     private readonly ITransactionRepository _transactionRepository;
 
-    public PaymentService(IMapper mapper, IStripeService stripeService, IAccountService accountService, ITransactionRepository transactionRepository)
+    public PaymentService(IMapper mapper, IStripeService stripeService, IAccountService accountService,
+        ITransactionRepository transactionRepository)
     {
         _mapper = mapper;
         _stripeService = stripeService;
@@ -27,7 +28,11 @@ public class PaymentService : IPaymentService
         try
         {
             var account = await _accountService.GetWalletByUserId(invoiceRequest.AccountId);
-            var invoiceUrl = await _stripeService.CreateInvoice(account.StripeCustomerId, invoiceRequest.Amount);
+            var invoiceUrl = await _stripeService.CreateInvoice(account.StripeCustomerId, invoiceRequest.Amount,
+                new Dictionary<string, string>()
+                {
+                    { "accountId", invoiceRequest.AccountId.ToString() }
+                });
 
             return invoiceUrl;
         }

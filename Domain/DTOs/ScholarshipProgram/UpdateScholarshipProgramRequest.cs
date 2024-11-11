@@ -24,7 +24,7 @@ public class UpdateScholarshipProgramRequest
 
     public List<int>? UniversityIds { get; set; }
 
-    public List<int>? MajorIds { get; set; }
+    public List<MajorSkillsDto>? MajorSkills { get; set; }
 
     public List<int>? CertificateIds { get; set; }
 }

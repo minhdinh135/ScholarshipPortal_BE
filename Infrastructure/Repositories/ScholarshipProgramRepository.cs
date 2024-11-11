@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using Application.Interfaces.IRepositories;
+﻿using Application.Interfaces.IRepositories;
 using Domain.DTOs.Common;
 using Domain.Entities;
 using Infrastructure.Data;
@@ -16,26 +15,13 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
 
     public async Task<PaginatedList<ScholarshipProgram>> GetAllScholarshipPrograms(ListOptions listOptions)
     {
-        // var scholarshipPrograms = await _dbContext.ScholarshipPrograms
-        //     .Include(sp => sp.Category)
-        //     .Include(sp => sp.ScholarshipProgramUniversities)
-        //     .ThenInclude(spu => spu.University)
-        //     .Include(sp => sp.ScholarshipProgramMajors)
-        //     .ThenInclude(spm => spm.Major)
-        //     .ThenInclude(m => m.MajorSkills)
-        //     .ThenInclude(ms => ms.Skill)
-        //     .Include(sp => sp.ScholarshipProgramCertificates)
-        //     .ThenInclude(spc => spc.Certificate)
-        //     .AsNoTracking()
-        //     .AsSplitQuery()
-        //     .ToListAsync();
-
         var includes = new Func<IQueryable<ScholarshipProgram>, IQueryable<ScholarshipProgram>>[]
         {
             q => q.Include(sp => sp.Category),
             q => q.Include(sp => sp.ScholarshipProgramUniversities).ThenInclude(u => u.University),
             q => q.Include(sp => sp.ScholarshipProgramCertificates).ThenInclude(c => c.Certificate),
-            q => q.Include(sp => sp.ScholarshipProgramMajors).ThenInclude(m => m.Major)
+            q => q.Include(sp => sp.MajorSkills).ThenInclude(ms => ms.Major),
+            q => q.Include(sp => sp.MajorSkills).ThenInclude(ms => ms.Skill)
         };
         var scholarshipPrograms = await GetPaginatedList(includes, listOptions);
 
@@ -50,10 +36,10 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
             .Include(sp => sp.Category)
             .Include(sp => sp.ScholarshipProgramUniversities)
             .ThenInclude(spm => spm.University)
-            .Include(sp => sp.ScholarshipProgramMajors)
+            .Include(sp => sp.MajorSkills)
             .ThenInclude(spm => spm.Major)
-            .ThenInclude(m => m.MajorSkills)
-            .ThenInclude(ms => ms.Skill)
+            .Include(sp => sp.MajorSkills)
+            .ThenInclude(spm => spm.Skill)
             .Include(sp => sp.ScholarshipProgramCertificates)
             .ThenInclude(spc => spc.Certificate)
             .FirstOrDefaultAsync(sp => sp.Id == id);
@@ -61,10 +47,21 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
         return scholarshipProgram;
     }
 
+    public async Task<IEnumerable<ScholarshipProgram>> GetScholarshipProgramByMajorId(int majorId)
+    {
+        var scholarshipPrograms = await _dbContext.ScholarshipPrograms
+            .AsSplitQuery()
+            .Include(sp => sp.MajorSkills)
+            .ThenInclude(ms => ms.Major)
+            .Where(sp => sp.MajorSkills.Any(ms => ms.MajorId == majorId))
+            .ToListAsync();
+
+        return scholarshipPrograms;
+    }
+
     public async Task DeleteRelatedInformation(ScholarshipProgram scholarshipProgram)
     {
-        await _dbContext.ScholarshipProgramMajors.Where(spm => spm.ScholarshipProgramId == scholarshipProgram.Id)
-            .ExecuteDeleteAsync();
+        await _dbContext.MajorSkills.Where(ms => ms.ScholarshipProgramId == scholarshipProgram.Id).ExecuteDeleteAsync();
         await _dbContext.ScholarshipProgramUniversities.Where(spu => spu.ScholarshipProgramId == scholarshipProgram.Id)
             .ExecuteDeleteAsync();
         await _dbContext.ScholarshipProgramCertificates.Where(spc => spc.ScholarshipProgramId == scholarshipProgram.Id)

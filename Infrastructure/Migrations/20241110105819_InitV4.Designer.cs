@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ScholarshipContext))]
-    [Migration("20241108105310_InitV3")]
-    partial class InitV3
+    [Migration("20241110105819_InitV4")]
+    partial class InitV4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -660,13 +660,30 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.MajorSkill", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int?>("MajorId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ScholarshipProgramId")
                         .HasColumnType("int");
 
                     b.Property<int?>("SkillId")
                         .HasColumnType("int");
 
-                    b.HasKey("MajorId", "SkillId");
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MajorId");
+
+                    b.HasIndex("ScholarshipProgramId");
 
                     b.HasIndex("SkillId");
 
@@ -946,21 +963,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("CertificateId");
 
                     b.ToTable("scholarship_program_certificates", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Entities.ScholarshipProgramMajor", b =>
-                {
-                    b.Property<int?>("ScholarshipProgramId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MajorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ScholarshipProgramId", "MajorId");
-
-                    b.HasIndex("MajorId");
-
-                    b.ToTable("scholarship_program_majors", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ScholarshipProgramUniversity", b =>
@@ -1356,16 +1358,21 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Major", "Major")
                         .WithMany("MajorSkills")
                         .HasForeignKey("MajorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
+                        .WithMany("MajorSkills")
+                        .HasForeignKey("ScholarshipProgramId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Domain.Entities.Skill", "Skill")
                         .WithMany("MajorSkills")
                         .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Major");
+
+                    b.Navigation("ScholarshipProgram");
 
                     b.Navigation("Skill");
                 });
@@ -1468,25 +1475,6 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Certificate");
-
-                    b.Navigation("ScholarshipProgram");
-                });
-
-            modelBuilder.Entity("Domain.Entities.ScholarshipProgramMajor", b =>
-                {
-                    b.HasOne("Domain.Entities.Major", "Major")
-                        .WithMany("ScholarshipProgramMajors")
-                        .HasForeignKey("MajorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
-                        .WithMany("ScholarshipProgramMajors")
-                        .HasForeignKey("ScholarshipProgramId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Major");
 
                     b.Navigation("ScholarshipProgram");
                 });
@@ -1633,8 +1621,6 @@ namespace Infrastructure.Migrations
                 {
                     b.Navigation("MajorSkills");
 
-                    b.Navigation("ScholarshipProgramMajors");
-
                     b.Navigation("SubMajors");
                 });
 
@@ -1661,11 +1647,11 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("Criteria");
 
+                    b.Navigation("MajorSkills");
+
                     b.Navigation("ReviewMilestones");
 
                     b.Navigation("ScholarshipProgramCertificates");
-
-                    b.Navigation("ScholarshipProgramMajors");
 
                     b.Navigation("ScholarshipProgramUniversities");
                 });

@@ -107,8 +107,6 @@ public class ScholarshipContext : DbContext
 
     public virtual DbSet<ScholarshipProgramUniversity> ScholarshipProgramUniversities { get; set; }
 
-    public virtual DbSet<ScholarshipProgramMajor> ScholarshipProgramMajors { get; set; }
-
     public virtual DbSet<ScholarshipProgramCertificate> ScholarshipProgramCertificates { get; set; }
 
     public virtual DbSet<MajorSkill> MajorSkills { get; set; }
@@ -178,9 +176,6 @@ public class ScholarshipContext : DbContext
 
         modelBuilder.Entity<ScholarshipProgramUniversity>()
             .ToTable("scholarship_program_universities");
-
-        modelBuilder.Entity<ScholarshipProgramMajor>()
-            .ToTable("scholarship_program_majors");
 
         modelBuilder.Entity<ScholarshipProgramCertificate>()
             .ToTable("scholarship_program_certificates");
@@ -387,7 +382,7 @@ public class ScholarshipContext : DbContext
 
         modelBuilder.Entity<MajorSkill>(entity =>
         {
-            entity.HasKey(ms => new { ms.MajorId, ms.SkillId });
+            // entity.HasKey(ms => new { ms.MajorId, ms.SkillId });
 
             entity.HasOne(ms => ms.Major)
                 .WithMany(m => m.MajorSkills)
@@ -397,6 +392,11 @@ public class ScholarshipContext : DbContext
             entity.HasOne(ms => ms.Skill)
                 .WithMany(s => s.MajorSkills)
                 .HasForeignKey(ms => ms.SkillId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(ms => ms.ScholarshipProgram)
+                .WithMany(sp => sp.MajorSkills)
+                .HasForeignKey(ms => ms.ScholarshipProgramId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
@@ -427,21 +427,6 @@ public class ScholarshipContext : DbContext
             entity.HasOne(spu => spu.University)
                 .WithMany(u => u.ScholarshipProgramUniversities)
                 .HasForeignKey(spu => spu.UniversityId)
-                .OnDelete(DeleteBehavior.Restrict);
-        });
-
-        modelBuilder.Entity<ScholarshipProgramMajor>(entity =>
-        {
-            entity.HasKey(spm => new { spm.ScholarshipProgramId, spm.MajorId });
-
-            entity.HasOne(spm => spm.ScholarshipProgram)
-                .WithMany(sp => sp.ScholarshipProgramMajors)
-                .HasForeignKey(spm => spm.ScholarshipProgramId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            entity.HasOne(spm => spm.Major)
-                .WithMany(m => m.ScholarshipProgramMajors)
-                .HasForeignKey(spm => spm.MajorId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
     }

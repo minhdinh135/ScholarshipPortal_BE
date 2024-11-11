@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using Application.Exceptions;
+﻿using Application.Exceptions;
 using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
@@ -7,7 +6,6 @@ using Domain.DTOs.Common;
 using Domain.DTOs.ScholarshipProgram;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services;
 
@@ -35,7 +33,7 @@ public class ScholarshipProgramService : IScholarshipProgramService
     public async Task<IEnumerable<ScholarshipProgramDto>> GetAllScholarshipPrograms()
     {
         var allScholarshipPrograms = await _scholarshipProgramRepository.GetAll();
-    
+
         return _mapper.Map<IEnumerable<ScholarshipProgramDto>>(allScholarshipPrograms);
     }
 
@@ -61,12 +59,7 @@ public class ScholarshipProgramService : IScholarshipProgramService
 
     public async Task<IEnumerable<ScholarshipProgramDto>> GetScholarshipProgramsByMajorId(int majorId)
     {
-        var scholarshipPrograms =
-            await _scholarshipProgramRepository.GetAll(x => x.Include(x => x.ScholarshipProgramMajors));
-        scholarshipPrograms =
-            scholarshipPrograms.Where(scholarshipProgram => scholarshipProgram
-                .ScholarshipProgramMajors
-                .Any(x => x.MajorId == majorId));
+        var scholarshipPrograms = await _scholarshipProgramRepository.GetScholarshipProgramByMajorId(majorId);
 
         return _mapper.Map<IEnumerable<ScholarshipProgramDto>>(scholarshipPrograms);
     }
@@ -101,9 +94,10 @@ public class ScholarshipProgramService : IScholarshipProgramService
         try
         {
             await _scholarshipProgramRepository.DeleteRelatedInformation(existingScholarshipProgram);
-            
+
             _mapper.Map(updateScholarshipProgramRequest, existingScholarshipProgram);
-            
+            existingScholarshipProgram.MajorSkills.ToList().ForEach(ms => ms.ScholarshipProgramId = id);
+
             await _scholarshipProgramRepository.Update(existingScholarshipProgram);
         }
         catch (Exception e)

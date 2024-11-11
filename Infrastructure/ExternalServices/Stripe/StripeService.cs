@@ -48,24 +48,26 @@ public class StripeService : IStripeService
         return paymentLink.Url;
     }
 
-    public async Task<string> CreateInvoice(string stripeCustomerId, decimal amount)
+    public async Task<string> CreateInvoice(string stripeCustomerId, decimal amount,
+        Dictionary<string, string> metaData)
     {
         var invoiceOptions = new InvoiceCreateOptions
         {
             Customer = stripeCustomerId,
             CollectionMethod = "send_invoice",
             DaysUntilDue = 30,
+            Metadata = metaData
         };
         var invoiceService = new InvoiceService();
         var invoice = await invoiceService.CreateAsync(invoiceOptions);
-        
+
         // Create an Invoice Item with the Price, and Customer you want to charge
         var invoiceItemOptions = new InvoiceItemCreateOptions
         {
             Customer = stripeCustomerId,
             Amount = (int)(amount * 100),
             Invoice = invoice.Id,
-            Description = "Test Invoice Item"
+            Description = "Test Invoice Item",
         };
         var invoiceItemService = new InvoiceItemService();
         await invoiceItemService.CreateAsync(invoiceItemOptions);
@@ -113,7 +115,7 @@ public class StripeService : IStripeService
             Name = account.Username,
             Email = account.Email,
             Phone = account.PhoneNumber,
-            Balance = - (int)(balance * 100),
+            Balance = -(int)(balance * 100),
         };
         var customerService = new CustomerService();
         var customer = await customerService.CreateAsync(customerOptions);
@@ -131,11 +133,19 @@ public class StripeService : IStripeService
         return customer.Id;
     }
 
+    public async Task<object> GetCustomer(string stripeCustomerId)
+    {
+        var service = new CustomerService();
+        var customer = await service.GetAsync(stripeCustomerId);
+
+        return customer;
+    }
+
     public async Task<string> UpdateCustomerBalance(string stripeCustomerId, decimal balance)
     {
         var options = new CustomerUpdateOptions
         {
-            Balance = - (int)(balance * 100)
+            Balance = -(int)(balance * 100)
         };
         var service = new CustomerService();
         var updatedCustomer = await service.UpdateAsync(stripeCustomerId, options);
