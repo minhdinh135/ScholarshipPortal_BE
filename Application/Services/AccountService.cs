@@ -155,7 +155,22 @@ public class AccountService : IAccountService
         return _mapper.Map<WalletDto>(createdWallet);
     }
 
-    public async Task<WalletDto> UpdateWalletBalance(int userId, UpdateWalletBalanceDto updateWalletBalanceDto)
+	public async Task<WalletDto> UpdateWalletBankInformation(int userId, UpdateWalletBankInformationDto dto)
+	{
+		var wallet = await _walletRepository.GetWalletByUserId(userId);
+		if (wallet == null)
+			throw new ServiceException($"Wallet for user with id:{userId} not found", new NotFoundException());
+
+		wallet.BankAccountName = dto.BankAccountName ?? wallet.BankAccountName;
+		wallet.BankAccountNumber = dto.BankAccountNumber ?? wallet.BankAccountNumber;
+
+		var updatedWallet = await _walletRepository.Update(wallet);
+
+		return _mapper.Map<WalletDto>(updatedWallet);
+	}
+
+
+	public async Task<WalletDto> UpdateWalletBalance(int userId, UpdateWalletBalanceDto updateWalletBalanceDto)
     {
         var existingWallet = await _walletRepository.GetWalletByUserId(userId);
         if (existingWallet == null)

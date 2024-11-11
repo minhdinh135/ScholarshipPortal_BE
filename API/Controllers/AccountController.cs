@@ -300,6 +300,22 @@ public class AccountController : ControllerBase
         }
     }
 
+	[HttpPut("{id}/wallet/bank-information")]
+	public async Task<IActionResult> UpdateWalletBankInformation(int id, [FromBody] UpdateWalletBankInformationDto dto)
+	{
+		try
+		{
+			var updatedWallet = await _accountService.UpdateWalletBankInformation(id, dto);
+
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Wallet bank information updated successfully", updatedWallet));
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError($"Failed to update wallet bank information for user {id}: {ex.Message}");
+			return StatusCode(500, "Error updating wallet bank information.");
+		}
+	}
+
     [HttpPut("{id}/wallet")]
     public async Task<IActionResult> UpdateWalletBalance(int id, UpdateWalletBalanceDto updateWalletBalanceDto)
     {
