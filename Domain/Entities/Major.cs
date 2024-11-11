@@ -12,7 +12,5 @@ public class Major : BaseEntity
     
     public ICollection<Major>? SubMajors { get; set; }
     
-    public ICollection<ScholarshipProgramMajor>? ScholarshipProgramMajors { get; set; }
-    
     public ICollection<MajorSkill>? MajorSkills { get; set; }
 }

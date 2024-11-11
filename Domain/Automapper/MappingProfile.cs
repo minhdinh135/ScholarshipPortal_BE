@@ -19,7 +19,6 @@ using Domain.DTOs.ScholarshipProgram;
 using Domain.DTOs.Service;
 using Domain.DTOs.University;
 using Domain.Entities;
-using Org.BouncyCastle.Asn1;
 
 namespace Domain.Automapper;
 
@@ -57,13 +56,13 @@ public class MappingProfile : Profile
                 opt.MapFrom(src => "PAID"))
             .ForMember(dest => dest.TransactionDate, opt =>
                 opt.MapFrom(src => DateTime.UtcNow));
-            
-        
+
+
         // Funder Profile mapping
         CreateMap<FunderProfile, FunderProfileDto>().ReverseMap();
         CreateMap<UpdateFunderDetailsDto, FunderProfile>();
         CreateMap<FunderDocument, FunderDocumentDto>().ReverseMap();
-        
+
         // Provider Profile mapping
         CreateMap<ProviderProfile, ProviderProfileDto>().ReverseMap();
         CreateMap<AddProviderDetailsDto, ProviderProfile>();
@@ -88,16 +87,28 @@ public class MappingProfile : Profile
 
         // Scholarship Program mapping
         CreateMap<ScholarshipProgram, ScholarshipProgramDto>()
-            .ForMember(dest => dest.Majors, opt =>
-                opt.MapFrom(src => src.ScholarshipProgramMajors.Select(spm => spm.Major)))
+            .ForMember(dest => dest.MajorSkills, opt =>
+                opt.MapFrom(src => src.MajorSkills.GroupBy(ms => ms.Major.Id).Select(group => new MajorDto
+                {
+                    Id = group.Key,
+                    Name = group.First().Major.Name,  // Use the first major from the group
+                    Description = group.First().Major.Description,
+                    Skills = group.Select(ms => new SkillDto
+                    {
+                        Id = ms.Skill.Id,
+                        Name = ms.Skill.Name,
+                        Description = ms.Skill.Description,
+                        Type = ms.Skill.Type
+                    }).ToList() 
+                }).ToList()))
             .ForMember(dest => dest.Universities, opt =>
                 opt.MapFrom(src => src.ScholarshipProgramUniversities.Select(spu => spu.University)))
             .ForMember(dest => dest.Certificates, opt =>
                 opt.MapFrom(src => src.ScholarshipProgramCertificates.Select(spc => spc.Certificate)))
             .ReverseMap();
         CreateMap<CreateScholarshipProgramRequest, ScholarshipProgram>()
-            .ForMember(dest => dest.ScholarshipProgramMajors, opt =>
-                opt.MapFrom(src => src.MajorIds.Select(id => new ScholarshipProgramMajor { MajorId = id }).ToList()))
+            .ForMember(dest => dest.MajorSkills, opt =>
+                opt.MapFrom(src => src.MajorSkills))
             .ForMember(dest => dest.ScholarshipProgramUniversities, opt =>
                 opt.MapFrom(src =>
                     src.UniversityIds.Select(id => new ScholarshipProgramUniversity { UniversityId = id }).ToList()))
@@ -106,22 +117,30 @@ public class MappingProfile : Profile
                     src.CertificateIds.Select(id => new ScholarshipProgramCertificate { CertificateId = id })
                         .ToList()));
         CreateMap<UpdateScholarshipProgramRequest, ScholarshipProgram>()
-            .ForMember(dest => dest.ScholarshipProgramMajors, opt =>
-                opt.MapFrom((src, dest) => src.MajorIds.Select(id => new ScholarshipProgramMajor
-                    { MajorId = id, ScholarshipProgramId = dest.Id }).ToList()))
+            .ForMember(dest => dest.MajorSkills, opt =>
+                opt.MapFrom((src, dest) => src.MajorSkills))
             .ForMember(dest => dest.ScholarshipProgramUniversities, opt =>
                 opt.MapFrom((src, dest) => src.UniversityIds.Select(id => new ScholarshipProgramUniversity
                     { UniversityId = id, ScholarshipProgramId = dest.Id }).ToList()))
             .ForMember(dest => dest.ScholarshipProgramCertificates, opt =>
                 opt.MapFrom((src, dest) => src.CertificateIds.Select(id => new ScholarshipProgramCertificate
                     { CertificateId = id, ScholarshipProgramId = dest.Id }).ToList()));
-            
+
+        CreateMap<List<MajorSkillsDto>, ICollection<MajorSkill>>()
+            .ConvertUsing(dtos =>
+                dtos.SelectMany(dto => dto.SkillIds.Select(skillId => new MajorSkill
+                {
+                    MajorId = dto.MajorId,
+                    SkillId = skillId
+                })).ToList()
+            );
+
         CreateMap<Skill, SkillDto>().ReverseMap();
 
         CreateMap<Certificate, CertificateDto>().ReverseMap();
 
         CreateMap<Country, CountryDto>().ReverseMap();
-        
+
         CreateMap<University, AddUniversityDto>().ReverseMap();
         CreateMap<University, UpdateUniversityDto>().ReverseMap();
         CreateMap<University, UniversityDto>().ReverseMap();
@@ -143,7 +162,7 @@ public class MappingProfile : Profile
 
         CreateMap<Application, AddApplicationDto>()
             .ForMember(dest => dest.Documents, opt =>
-                    opt.MapFrom(src => src.ApplicationDocuments))
+                opt.MapFrom(src => src.ApplicationDocuments))
             .ReverseMap();
         CreateMap<Application, UpdateApplicationDto>().ReverseMap();
         CreateMap<Application, ApplicationDto>().ReverseMap();
@@ -151,28 +170,28 @@ public class MappingProfile : Profile
         CreateMap<ApplicationDocument, AddApplicationDocumentDto>().ReverseMap();
         CreateMap<ApplicationDocument, UpdateApplicationDocumentDto>().ReverseMap();
         CreateMap<ApplicationReview, ApplicationReviewDto>().ReverseMap();
-        
+
         // Service mapping
         CreateMap<Service, ServiceDto>().ReverseMap();
         CreateMap<AddServiceDto, Service>();
         CreateMap<UpdateServiceDto, Service>();
-        
+
         // Request mapping
         CreateMap<Request, RequestDto>().ReverseMap();
         CreateMap<RequestDetail, RequestDetailsDto>()
-            .ForMember(dest => dest.Service, opt => 
-            opt.MapFrom(r => r.Service))
+            .ForMember(dest => dest.Service, opt =>
+                opt.MapFrom(r => r.Service))
             .ReverseMap();
         CreateMap<AddRequestDto, Request>();
         CreateMap<UpdateRequestDto, Request>().ReverseMap();
         CreateMap<AddRequestDetailsDto, RequestDetail>();
         CreateMap<UpdateRequestDetailsDto, RequestDetail>();
-        
+
         // Feedback mapping
         CreateMap<Feedback, FeedbackDto>().ReverseMap();
         CreateMap<AddFeedbackDto, Feedback>();
         CreateMap<UpdateFeedbackDto, Feedback>();
-            
+
         // Notification mapping
         CreateMap<Notification, NotificationAddDTO>().ReverseMap();
         CreateMap<Notification, NotificationUpdateDTO>().ReverseMap();
@@ -183,6 +202,5 @@ public class MappingProfile : Profile
         CreateMap<ReviewMilestone, ReviewMilestoneDto>().ReverseMap();
         CreateMap<AddReviewMilestoneDto, ReviewMilestone>();
         CreateMap<UpdateReviewMilestoneDto, ReviewMilestone>();
-
     }
 }

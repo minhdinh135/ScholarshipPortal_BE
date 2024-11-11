@@ -16,13 +16,17 @@ public class PaymentController : ControllerBase
     private readonly StripeSettings _stripeSettings;
     private readonly IStripeService _stripeService;
     private readonly IPaymentService _paymentService;
+    private readonly IAccountService _accountService;
+    private readonly IEmailService _emailService;
 
     public PaymentController(IOptions<StripeSettings> stripeSettings, IStripeService stripeService,
-        IPaymentService paymentService)
+        IPaymentService paymentService, IAccountService accountService, IEmailService emailService)
     {
         _stripeSettings = stripeSettings.Value;
         _stripeService = stripeService;
         _paymentService = paymentService;
+        _accountService = accountService;
+        _emailService = emailService;
     }
 
     // [HttpPost("/pay")]
@@ -49,20 +53,20 @@ public class PaymentController : ControllerBase
     //     return Ok(paymentUrl);
     // }
 
-    // [HttpPost("create-invoice")]
-    // public async Task<IActionResult> CreateInvoice(InvoiceRequest invoiceRequest)
-    // {
-    //     try
-    //     {
-    //         var invoiceUrl = await _paymentService.CreateInvoice(invoiceRequest);
-    //
-    //         return Ok(new ApiResponse(StatusCodes.Status200OK, "Create invoice successfully", invoiceUrl));
-    //     }
-    //     catch (ServiceException e)
-    //     {
-    //         return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
-    //     }
-    // }
+    [HttpPost("create-invoice")]
+    public async Task<IActionResult> CreateInvoice(InvoiceRequest invoiceRequest)
+    {
+        try
+        {
+            var invoiceUrl = await _paymentService.CreateInvoice(invoiceRequest);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Create invoice successfully", invoiceUrl));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
 
     [HttpPost("transfer-money")]
     public async Task<IActionResult> TransferMoney(TransferRequest transferRequest)
@@ -80,34 +84,43 @@ public class PaymentController : ControllerBase
         }
     }
 
-    // [HttpPost("webhook")]
-    // public async Task<IActionResult> HandleWebhook()
-    // {
-    //     var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-    //
-    //     try
-    //     {
-    //         var stripeEvent = EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"],
-    //             _stripeSettings.WebhookSecret);
-    //
-    //         // Handle the event
-    //         // If on SDK version < 46, use class Events instead of EventTypes
-    //         if (stripeEvent.Type == EventTypes.InvoicePaymentSucceeded)
-    //         {
-    //             var invoice = stripeEvent.Data.Object as Invoice;
-    //         }
-    //         // ... handle other event types
-    //         else
-    //         {
-    //             // Unexpected event type
-    //             Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
-    //         }
-    //
-    //         return Ok();
-    //     }
-    //     catch (StripeException e)
-    //     {
-    //         return BadRequest();
-    //     }
-    // }
+    [HttpPost("webhook")]
+    public async Task<IActionResult> HandleWebhook()
+    {
+        var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+
+        try
+        {
+            // var stripeEvent = EventUtility.ParseEvent(json);
+            var stripeEvent = EventUtility.ConstructEvent(
+                json,
+                Request.Headers["Stripe-Signature"],
+                _stripeSettings.WebhookSecret
+            );
+            
+            // Handle the event
+            // If on SDK version < 46, use class Events instead of EventTypes
+            if (stripeEvent.Type == EventTypes.InvoicePaid)
+            {
+                var invoice = stripeEvent.Data.Object as Invoice;
+                var customer = await _stripeService.GetCustomer(invoice.CustomerId) as Customer;
+                await _accountService.UpdateWalletBalance(int.Parse(invoice.Metadata["accountId"]),
+                    -customer.Balance / 100);
+
+                await _emailService.SendInvoiceReceipt(customer.Email, invoice.Total, invoice.Id);
+            }
+            // ... handle other event types
+            else
+            {
+                // Unexpected event type
+                Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
+            }
+
+            return Ok();
+        }
+        catch (StripeException e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 }

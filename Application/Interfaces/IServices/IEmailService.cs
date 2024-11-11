@@ -10,5 +10,6 @@ namespace Application.Interfaces.IServices
     public interface IEmailService
     {
         Task SendEmailAsync(string email, string subject, string message, IFormFile? file = null);
+        Task SendInvoiceReceipt(string recipientEmail, decimal amount, string invoiceId);
     }
 }
