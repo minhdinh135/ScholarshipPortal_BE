@@ -3,6 +3,7 @@ using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
 using Domain.DTOs.Payment;
+using Domain.DTOs.Transaction;
 using Domain.Entities;
 
 namespace Application.Services;
@@ -70,4 +71,16 @@ public class PaymentService : IPaymentService
             throw new ServiceException(e.Message);
         }
     }
+
+	public async Task<List<Transaction>> GetTransactionsByWalletSenderIdAsync(int walletSenderId)
+	{
+		try
+		{
+			return await _transactionRepository.GetTransactionsByWalletSenderIdAsync(walletSenderId);
+		}
+		catch (Exception e)
+		{
+			throw new ServiceException(e.Message);
+		}
+	}
 }
