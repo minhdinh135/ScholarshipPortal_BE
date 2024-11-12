@@ -125,7 +125,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.ScholarshipProgramCertificates, opt =>
                 opt.MapFrom((src, dest) => src.CertificateIds.Select(id => new ScholarshipProgramCertificate
                     { CertificateId = id, ScholarshipProgramId = dest.Id }).ToList()));
-
+        
         CreateMap<List<MajorSkillsDto>, ICollection<MajorSkill>>()
             .ConvertUsing(dtos =>
                 dtos.SelectMany(dto => dto.SkillIds.Select(skillId => new MajorSkill
@@ -134,6 +134,11 @@ public class MappingProfile : Profile
                     SkillId = skillId
                 })).ToList()
             );
+
+        CreateMap<ScholarshipProgram, ScholarshipProgramElasticDocument>()
+            .ForMember(dest => dest.CategoryName, opt =>
+                opt.MapFrom(src => src.Category.Name))
+            .ReverseMap();
 
         CreateMap<Skill, SkillDto>().ReverseMap();
 
@@ -160,15 +165,19 @@ public class MappingProfile : Profile
         CreateMap<CreateCategoryRequest, Category>();
         CreateMap<UpdateCategoryRequest, Category>();
 
+        // Application
         CreateMap<Application, AddApplicationDto>()
             .ForMember(dest => dest.Documents, opt =>
                 opt.MapFrom(src => src.ApplicationDocuments))
             .ReverseMap();
         CreateMap<Application, UpdateApplicationDto>().ReverseMap();
+        CreateMap<Application, UpdateApplicationStatusRequest>().ReverseMap();
         CreateMap<Application, ApplicationDto>().ReverseMap();
+        
         CreateMap<ApplicationDocument, ApplicationDocumentDto>().ReverseMap();
         CreateMap<ApplicationDocument, AddApplicationDocumentDto>().ReverseMap();
         CreateMap<ApplicationDocument, UpdateApplicationDocumentDto>().ReverseMap();
+        
         CreateMap<ApplicationReview, ApplicationReviewDto>().ReverseMap();
 
         // Service mapping

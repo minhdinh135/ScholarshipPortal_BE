@@ -14,7 +14,7 @@ namespace Application.Interfaces.IServices
         Task<Domain.Entities.Application> GetWithDocumentsAndAccount(int applicationId);
         Task<IEnumerable<Domain.Entities.Application>> GetByScholarshipId(int scholarshipId);
         Task<ApplicationDto> Add(AddApplicationDto dto);
-        Task<ApplicationDto> Update(int id, UpdateApplicationDto dto);
+        Task<ApplicationDto> Update(int id, UpdateApplicationStatusRequest dto);
         Task<ApplicationDto> Delete(int id);
     }
 }
