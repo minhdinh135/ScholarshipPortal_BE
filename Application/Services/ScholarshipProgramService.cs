@@ -84,7 +84,9 @@ public class ScholarshipProgramService : IScholarshipProgramService
 
         var createdScholarshipProgram = await _scholarshipProgramRepository.Add(scholarshipProgram);
 
-        var scholarshipElasticDocument = _mapper.Map<ScholarshipProgramElasticDocument>(createdScholarshipProgram);
+        var existingScholarshipProgram =
+            await _scholarshipProgramRepository.GetScholarsipProgramById(createdScholarshipProgram.Id);
+        var scholarshipElasticDocument = _mapper.Map<ScholarshipProgramElasticDocument>(existingScholarshipProgram);
         await _scholarshipElasticService.AddOrUpdate(scholarshipElasticDocument, "scholarships");
 
         return createdScholarshipProgram.Id;
