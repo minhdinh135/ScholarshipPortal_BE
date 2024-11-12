@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using Application.Services;
+using Domain.DTOs.Account;
 using Infrastructure.ExternalServices.Cloudinary;
 using Infrastructure.ExternalServices.Elastic;
 using Infrastructure.ExternalServices.Email;
@@ -24,6 +25,7 @@ public static class ServiceExtension
     {
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+        services.Configure<AdminAccount>(config.GetSection("AdminAccount"));
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<ITokenService, JwtService>();
