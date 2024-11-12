@@ -14,13 +14,16 @@ public class ScholarshipProgramService : IScholarshipProgramService
     private readonly IMapper _mapper;
     private readonly IScholarshipProgramRepository _scholarshipProgramRepository;
     private readonly ICloudinaryService _cloudinaryService;
+    private readonly IElasticService<ScholarshipProgramElasticDocument> _scholarshipElasticService;
 
     public ScholarshipProgramService(IMapper mapper, IScholarshipProgramRepository scholarshipProgramRepository,
-        ICloudinaryService cloudinaryService)
+        ICloudinaryService cloudinaryService,
+        IElasticService<ScholarshipProgramElasticDocument> scholarshipElasticService)
     {
         _mapper = mapper;
         _scholarshipProgramRepository = scholarshipProgramRepository;
         _cloudinaryService = cloudinaryService;
+        _scholarshipElasticService = scholarshipElasticService;
     }
 
     public async Task<PaginatedList<ScholarshipProgramDto>> GetAllPrograms(ListOptions listOptions)
@@ -81,6 +84,9 @@ public class ScholarshipProgramService : IScholarshipProgramService
 
         var createdScholarshipProgram = await _scholarshipProgramRepository.Add(scholarshipProgram);
 
+        var scholarshipElasticDocument = _mapper.Map<ScholarshipProgramElasticDocument>(createdScholarshipProgram);
+        await _scholarshipElasticService.AddOrUpdate(scholarshipElasticDocument, "scholarships");
+
         return createdScholarshipProgram.Id;
     }
 
@@ -97,6 +103,9 @@ public class ScholarshipProgramService : IScholarshipProgramService
 
             _mapper.Map(updateScholarshipProgramRequest, existingScholarshipProgram);
             existingScholarshipProgram.MajorSkills.ToList().ForEach(ms => ms.ScholarshipProgramId = id);
+
+            var scholarshipElasticDocument = _mapper.Map<ScholarshipProgramElasticDocument>(existingScholarshipProgram);
+            await _scholarshipElasticService.AddOrUpdate(scholarshipElasticDocument, "scholarships");
 
             await _scholarshipProgramRepository.Update(existingScholarshipProgram);
         }
@@ -139,5 +148,13 @@ public class ScholarshipProgramService : IScholarshipProgramService
         var deletedScholarshipProgram = await _scholarshipProgramRepository.DeleteById(id);
 
         return _mapper.Map<ScholarshipProgramDto>(deletedScholarshipProgram);
+    }
+
+    public async Task<List<ScholarshipProgramElasticDocument>> SearchScholarships(
+        ScholarshipSearchOptions scholarshipSearchOptions)
+    {
+        var scholarships = await _scholarshipElasticService.SearchScholarships(scholarshipSearchOptions);
+
+        return scholarships;
     }
 }

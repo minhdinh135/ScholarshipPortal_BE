@@ -1,18 +1,22 @@
-﻿namespace Application.Interfaces.IServices;
+﻿using Domain.DTOs.ScholarshipProgram;
+
+namespace Application.Interfaces.IServices;
 
 public interface IElasticService<T> where T : class
 {
     Task CreateIndex(string indexName);
 
-    Task<bool> AddOrUpdate(T entity);
+    Task<bool> AddOrUpdate(T entity, string indexName);
 
     Task<bool> AddOrUpdateBulk(IEnumerable<T> entities, string indexName);
 
-    Task<T> Get(string key);
+    Task<T> Get(int key);
 
     Task<List<T>?> GetAll();
 
     Task<bool> Remove(string key);
 
     Task<long?> RemoveAll();
+
+    Task<List<ScholarshipProgramElasticDocument>> SearchScholarships(ScholarshipSearchOptions scholarshipSearchOptions);
 }

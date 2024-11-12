@@ -1,8 +1,10 @@
 using Application.Interfaces.IServices;
 using AutoMapper;
 using Domain.Constants;
+using Domain.DTOs.Account;
 using Domain.DTOs.Authentication;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Application.Services;
 
@@ -13,21 +15,30 @@ public class AuthService : IAuthService
     private readonly IAccountService _accountService;
     private readonly IConfiguration _configuration;
     private readonly IMapper _mapper;
+    private readonly AdminAccount _adminAccount;
 
     public AuthService(ITokenService tokenService,
         IPasswordService passwordService,
         IAccountService accountService,
-        IConfiguration configuration, IMapper mapper)
+        IConfiguration configuration, IMapper mapper, IOptions<AdminAccount> adminAccount)
     {
         _tokenService = tokenService;
         _passwordService = passwordService;
         _accountService = accountService;
         _configuration = configuration;
         _mapper = mapper;
+        _adminAccount = adminAccount.Value;
     }
 
     public async Task<JwtDto> Login(LoginDto login)
     {
+        if (login.Email == _adminAccount.Email && login.Password == _adminAccount.Password)
+        {
+            var token = _tokenService.CreateToken(_configuration, login.Email, RoleEnum.ADMIN);
+
+            return token;
+        }
+        
         var users = await _accountService.GetAll();
         var userLogin = users.Where(u => u.Username == login.Email || u.Email == login.Email).FirstOrDefault();
         if (userLogin == null)
