@@ -12,7 +12,6 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
     {
     }
 
-
     public async Task<PaginatedList<ScholarshipProgram>> GetAllScholarshipPrograms(ListOptions listOptions)
     {
         var includes = new Func<IQueryable<ScholarshipProgram>, IQueryable<ScholarshipProgram>>[]

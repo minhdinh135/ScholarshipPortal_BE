@@ -1,7 +1,9 @@
+using Application.Exceptions;
 using Application.Interfaces.IServices;
 using Domain.DTOs.Application;
 using Domain.DTOs.Common;
 using Microsoft.AspNetCore.Mvc;
+using ServiceException = Application.Exceptions.ServiceException;
 
 namespace SSAP.API.Controllers
 {
@@ -74,20 +76,17 @@ namespace SSAP.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateApplicationDto dto)
+        public async Task<IActionResult> Update(int id, UpdateApplicationStatusRequest updateApplicationStatusRequest)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             try
             {
-                var updatedProfile = await _applicationService.Update(id, dto);
-                return Ok(updatedProfile);
+                var updatedApplication = await _applicationService.Update(id, updateApplicationStatusRequest);
+                return Ok(updatedApplication);
             }
-            catch (Exception ex)
+            catch (ServiceException ex)
             {
                 _logger.LogError($"Failed to update applicant profile: {ex.Message}");
-                return BadRequest(new { Message = ex.Message });
+                return BadRequest(ex.Message);
             }
         }
 

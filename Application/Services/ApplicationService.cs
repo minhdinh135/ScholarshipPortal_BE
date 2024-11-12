@@ -1,3 +1,4 @@
+using Application.Exceptions;
 using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
@@ -74,14 +75,15 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<ApplicationDto>>(applications);
         }
 
-        public async Task<ApplicationDto> Update(int id, UpdateApplicationDto dto)
+        public async Task<ApplicationDto> Update(int id, UpdateApplicationStatusRequest dto)
         {
-            var university = await _applicationRepository.GetAll();
-            var exist = university.Any(u => u.Id == id);
-            if (!exist) throw new Exception("Application not found.");
-            var entity = _mapper.Map<Domain.Entities.Application>(dto);
-            await _applicationRepository.Update(entity);
-            return _mapper.Map<ApplicationDto>(entity);
+            var existingApplication = await _applicationRepository.GetById(id);
+            if (existingApplication == null)
+                throw new ServiceException($"Application with id:{id} is not found", new NotFoundException());
+            
+            _mapper.Map(dto, existingApplication);
+            var updatedApplication = await _applicationRepository.Update(existingApplication);
+            return _mapper.Map<ApplicationDto>(updatedApplication);
         }
 
         public async Task<IEnumerable<Domain.Entities.Application>> GetByScholarshipId(int scholarshipId)

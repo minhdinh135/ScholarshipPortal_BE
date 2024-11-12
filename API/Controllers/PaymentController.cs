@@ -84,7 +84,28 @@ public class PaymentController : ControllerBase
         }
     }
 
-    [HttpPost("webhook")]
+	[HttpGet("transactions/{walletSenderId}")]
+	public async Task<IActionResult> GetTransactionsByWalletSenderId(int walletSenderId)
+	{
+		try
+		{
+			var transactions = await _paymentService.GetTransactionsByWalletSenderIdAsync(walletSenderId);
+
+			if (transactions == null || transactions.Count() == 0)
+			{
+				return NotFound(new ApiResponse(StatusCodes.Status404NotFound, "No transactions found for this wallet"));
+			}
+
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Transactions fetched successfully", transactions));
+		}
+		catch (ServiceException e)
+		{
+			return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+		}
+	}
+
+
+	[HttpPost("webhook")]
     public async Task<IActionResult> HandleWebhook()
     {
         var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();

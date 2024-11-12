@@ -30,6 +30,14 @@ public class ScholarshipProgramController : ControllerBase
             allScholarshipPrograms));
     }
 
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchScholarships([FromQuery] ScholarshipSearchOptions scholarshipSearchOptions)
+    {
+        var response = await _scholarshipProgramService.SearchScholarships(scholarshipSearchOptions);
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Search successfully", response));
+    }
+
     [HttpGet("by-funder-id/{id}")]
     public async Task<IActionResult> GetAllScholarshipProgramsByFunderId([FromRoute] int id)
     {

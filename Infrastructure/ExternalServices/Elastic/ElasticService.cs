@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.IServices;
+using Domain.DTOs.ScholarshipProgram;
 using Elastic.Clients.Elasticsearch;
 using Elastic.Clients.Elasticsearch.QueryDsl;
 using Microsoft.Extensions.Options;
@@ -22,17 +23,21 @@ public class ElasticService<T> : IElasticService<T> where T : class
 
     public async Task CreateIndex(string indexName)
     {
-        if (!_client.Indices.Exists(indexName).Exists)
+        var indexExist = await _client.Indices.ExistsAsync(indexName);
+
+        if (!indexExist.Exists)
         {
             await _client.Indices.CreateAsync(indexName);
         }
     }
 
-    public async Task<bool> AddOrUpdate(T entity)
+    public async Task<bool> AddOrUpdate(T entity, string indexName)
     {
-        var response = await _client.IndexAsync(entity, idx =>
-            idx.Index(_elasticSettings.DefaultIndex)
-                .OpType(OpType.Index));
+        // var response = await _client.IndexAsync(entity, idx =>
+        //     idx.Index(_elasticSettings.DefaultIndex)
+        //         .OpType(OpType.Index));
+
+        var response = await _client.IndexAsync(entity, idx => idx.Index(indexName));
 
         return response.IsValidResponse;
     }
@@ -46,7 +51,7 @@ public class ElasticService<T> : IElasticService<T> where T : class
         return response.IsValidResponse;
     }
 
-    public async Task<T> Get(string key)
+    public async Task<T> Get(int key)
     {
         var response = await _client.GetAsync<T>(key, r =>
             r.Index(_elasticSettings.DefaultIndex));
@@ -77,5 +82,46 @@ public class ElasticService<T> : IElasticService<T> where T : class
                 .Query(q => q.MatchAll(new MatchAllQuery())));
 
         return response.IsValidResponse ? response.Deleted : default;
+    }
+
+    public async Task<List<ScholarshipProgramElasticDocument>> SearchScholarships(
+        ScholarshipSearchOptions scholarshipSearchOptions)
+    {
+        var response = await _client.SearchAsync<ScholarshipProgramElasticDocument>(s => s
+            .Index("scholarships")
+            .From(0)
+            .Size(10)
+            .Query(q => q
+                .Bool(b => b
+                    .Must(must => must
+                        .MultiMatch(match => match
+                            .Query(scholarshipSearchOptions.Name)
+                            .Fields(new[] { "name" })
+                        )
+                        .MultiMatch(match => match
+                            .Query(scholarshipSearchOptions.Status)
+                            .Fields(new[] { "status" }))
+                        .MultiMatch(match => match
+                            .Query(scholarshipSearchOptions.CategoryName)
+                            .Fields(new[] { "categoryName" }))
+                        .Range(range => range
+                            .DateRange(dr => dr
+                                .Field(f => f.Deadline)
+                                .Lte(scholarshipSearchOptions.Deadline)
+                            )
+                        )
+                    )
+                    .Should(s => s
+                        .Range(range => range
+                            .NumberRange(nr => nr
+                                .Field(f => f.ScholarshipAmount)
+                                .Gte((double?)scholarshipSearchOptions.ScholarshipMinAmount)
+                                .Lte((double?)scholarshipSearchOptions.ScholarshipMaxAmount)
+                            )
+                        )
+                    )
+                )));
+
+        return response.Documents.ToList();
     }
 }
