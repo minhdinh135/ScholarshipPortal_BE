@@ -36,6 +36,12 @@ public class ElasticService<T> : IElasticService<T> where T : class
         // var response = await _client.IndexAsync(entity, idx =>
         //     idx.Index(_elasticSettings.DefaultIndex)
         //         .OpType(OpType.Index));
+        var indexExist = await _client.Indices.ExistsAsync(indexName);
+
+        if (!indexExist.Exists)
+        {
+            await _client.Indices.CreateAsync(indexName);
+        }
 
         var response = await _client.IndexAsync(entity, idx => idx.Index(indexName));
 
@@ -94,31 +100,36 @@ public class ElasticService<T> : IElasticService<T> where T : class
             .Query(q => q
                 .Bool(b => b
                     .Must(must => must
-                        .MultiMatch(match => match
-                            .Query(scholarshipSearchOptions.Name)
-                            .Fields(new[] { "name" })
-                        )
-                        .MultiMatch(match => match
-                            .Query(scholarshipSearchOptions.Status)
-                            .Fields(new[] { "status" }))
-                        .MultiMatch(match => match
-                            .Query(scholarshipSearchOptions.CategoryName)
-                            .Fields(new[] { "categoryName" }))
-                        .Range(range => range
-                            .DateRange(dr => dr
-                                .Field(f => f.Deadline)
-                                .Lte(scholarshipSearchOptions.Deadline)
+                            .MultiMatch(match => match
+                                .Query(scholarshipSearchOptions.Name)
+                                .Fields(new[] { "name" })
+                                .Fuzziness(new Fuzziness("AUTO"))
+                            ),
+                        must => must
+                            .MultiMatch(match => match
+                                .Query(scholarshipSearchOptions.Status)
+                                .Fields(new[] { "status" })
+                            ),
+                        must => must
+                            .MultiMatch(match => match
+                                .Query(scholarshipSearchOptions.CategoryName)
+                                .Fields(new[] { "categoryName" })
+                            ),
+                        must => must
+                            .Range(range => range
+                                .DateRange(dr => dr
+                                    .Field(f => f.Deadline)
+                                    .Lte(scholarshipSearchOptions.Deadline)
+                                )
+                            ),
+                        must => must
+                            .Range(range => range
+                                .NumberRange(nr => nr
+                                    .Field(f => f.ScholarshipAmount)
+                                    .Gte((double?)scholarshipSearchOptions.ScholarshipMinAmount)
+                                    .Lte((double?)scholarshipSearchOptions.ScholarshipMaxAmount)
+                                )
                             )
-                        )
-                    )
-                    .Should(s => s
-                        .Range(range => range
-                            .NumberRange(nr => nr
-                                .Field(f => f.ScholarshipAmount)
-                                .Gte((double?)scholarshipSearchOptions.ScholarshipMinAmount)
-                                .Lte((double?)scholarshipSearchOptions.ScholarshipMaxAmount)
-                            )
-                        )
                     )
                 )));
 
