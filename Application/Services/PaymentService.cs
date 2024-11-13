@@ -83,4 +83,29 @@ public class PaymentService : IPaymentService
 			throw new ServiceException(e.Message);
 		}
 	}
+
+	public async Task<List<Transaction>> GetTransactionsByWalletUserIdAsync(int walletUserId)
+    {
+		try
+		{
+			return await _transactionRepository.GetTransactionsByWalletUserIdAsync(walletUserId);
+		}
+		catch (Exception e)
+		{
+			throw new ServiceException(e.Message);
+		}
+	}
+
+	public async Task<List<Transaction>> GetAllTransactionsAsync()
+	{
+		try
+		{
+			return await _transactionRepository.GetAllAsync();
+		}
+		catch (Exception e)
+		{
+			throw new ServiceException("Error fetching transactions: " + e.Message);
+		}
+	}
+
 }

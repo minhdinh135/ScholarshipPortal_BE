@@ -84,16 +84,36 @@ public class PaymentController : ControllerBase
         }
     }
 
-	[HttpGet("transactions/{walletSenderId}")]
-	public async Task<IActionResult> GetTransactionsByWalletSenderId(int walletSenderId)
+	[HttpGet("transactions/{walletUserId}")]
+	public async Task<IActionResult> GetTransactionsByWalletSenderId(int walletUserId)
 	{
 		try
 		{
-			var transactions = await _paymentService.GetTransactionsByWalletSenderIdAsync(walletSenderId);
+			var transactions = await _paymentService.GetTransactionsByWalletUserIdAsync(walletUserId);
 
 			if (transactions == null || transactions.Count() == 0)
 			{
 				return NotFound(new ApiResponse(StatusCodes.Status404NotFound, "No transactions found for this wallet"));
+			}
+
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Transactions fetched successfully", transactions));
+		}
+		catch (ServiceException e)
+		{
+			return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+		}
+	}
+
+	[HttpGet("transactions")]
+	public async Task<IActionResult> GetAllTransactions()
+	{
+		try
+		{
+			var transactions = await _paymentService.GetAllTransactionsAsync();
+
+			if (transactions == null || transactions.Count() == 0)
+			{
+				return NotFound(new ApiResponse(StatusCodes.Status404NotFound, "No transactions found"));
 			}
 
 			return Ok(new ApiResponse(StatusCodes.Status200OK, "Transactions fetched successfully", transactions));
