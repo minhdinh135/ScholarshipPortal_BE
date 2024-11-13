@@ -87,7 +87,7 @@ public class ScholarshipProgramService : IScholarshipProgramService
         var existingScholarshipProgram =
             await _scholarshipProgramRepository.GetScholarsipProgramById(createdScholarshipProgram.Id);
         var scholarshipElasticDocument = _mapper.Map<ScholarshipProgramElasticDocument>(existingScholarshipProgram);
-        await _scholarshipElasticService.AddOrUpdate(scholarshipElasticDocument, "scholarships");
+        await _scholarshipElasticService.AddOrUpdateScholarship(scholarshipElasticDocument);
 
         return createdScholarshipProgram.Id;
     }
@@ -107,7 +107,7 @@ public class ScholarshipProgramService : IScholarshipProgramService
             existingScholarshipProgram.MajorSkills.ToList().ForEach(ms => ms.ScholarshipProgramId = id);
 
             var scholarshipElasticDocument = _mapper.Map<ScholarshipProgramElasticDocument>(existingScholarshipProgram);
-            await _scholarshipElasticService.AddOrUpdate(scholarshipElasticDocument, "scholarships");
+            await _scholarshipElasticService.AddOrUpdateScholarship(scholarshipElasticDocument);
 
             await _scholarshipProgramRepository.Update(existingScholarshipProgram);
         }
@@ -158,5 +158,12 @@ public class ScholarshipProgramService : IScholarshipProgramService
         var scholarships = await _scholarshipElasticService.SearchScholarships(scholarshipSearchOptions);
 
         return scholarships;
+    }
+
+    public async Task<List<string>> SuggestScholarships(string input)
+    {
+        var suggestions = await _scholarshipElasticService.SuggestScholarships(input);
+
+        return suggestions;
     }
 }
