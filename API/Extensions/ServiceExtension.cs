@@ -2,20 +2,23 @@
 using Application.Interfaces.IServices;
 using Application.Services;
 using Domain.DTOs.Account;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
+using Hangfire;
+using Hangfire.MySql;
+using Infrastructure.ExternalServices.Chat;
 using Infrastructure.ExternalServices.Cloudinary;
 using Infrastructure.ExternalServices.Elastic;
 using Infrastructure.ExternalServices.Email;
 using Infrastructure.ExternalServices.Gemini;
 using Infrastructure.ExternalServices.Google;
-using Infrastructure.ExternalServices.Password;
-using Infrastructure.ExternalServices.Token;
-using Infrastructure.Repositories;
-using FirebaseAdmin;
-using Google.Apis.Auth.OAuth2;
 using Infrastructure.ExternalServices.Notification;
-using Infrastructure.ExternalServices.Chat;
+using Infrastructure.ExternalServices.Password;
 using Infrastructure.ExternalServices.PDF;
 using Infrastructure.ExternalServices.Stripe;
+using Infrastructure.ExternalServices.Token;
+using Infrastructure.Repositories;
+using BackgroundService = Infrastructure.ExternalServices.Background.BackgroundService;
 
 namespace SSAP.API.Extensions;
 
@@ -63,7 +66,7 @@ public static class ServiceExtension
 
         services.AddScoped<IUniversityService, UniversityService>();
         services.AddScoped<IUniversityRepository, UniversityRepository>();
-        
+
         services.AddScoped<ICountryService, CountryService>();
         services.AddScoped<ICountryRepository, CountryRepository>();
 
@@ -84,14 +87,14 @@ public static class ServiceExtension
 
         services.AddScoped<IFeedbackService, FeedbackService>();
         services.AddScoped<IFeedbackRepository, FeedbackRepository>();
-        
+
         services.AddScoped<IChatService, ChatService>();
         services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
 
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<ITransactionRepository, TransactionRepository>();
-		
-		services.AddHttpClient<GeminiService>();
+
+        services.AddHttpClient<GeminiService>();
         services.AddSingleton(sp => new GeminiService(
             sp.GetRequiredService<HttpClient>(),
             config.GetSection("OpenAI").GetSection("ApiKey").Value ?? string.Empty
@@ -108,7 +111,7 @@ public static class ServiceExtension
 
         services.Configure<EmailSettings>(config.GetSection("EmailSettings"));
         services.AddScoped<IEmailService, EmailService>();
-        
+
         services.AddScoped<IPdfService, PdfService>();
 
         services.Configure<ElasticSettings>(config.GetSection("ElasticSettings"));
@@ -116,6 +119,17 @@ public static class ServiceExtension
 
         services.Configure<StripeSettings>(config.GetSection("StripeSettings"));
         services.AddScoped<IStripeService, StripeService>();
+
+        services.AddHangfire(configuration => configuration
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UseStorage(new MySqlStorage(
+                config.GetConnectionString("Hangfire"),
+                new MySqlStorageOptions()
+            )));
+        services.AddHangfireServer();
+        services.AddScoped<IBackgroundService, BackgroundService>();
 
         FirebaseApp.Create(new AppOptions()
         {
