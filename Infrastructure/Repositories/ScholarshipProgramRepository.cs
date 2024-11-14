@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.IRepositories;
+using Domain.Constants;
 using Domain.DTOs.Common;
 using Domain.Entities;
 using Infrastructure.Data;
@@ -53,6 +54,15 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
             .Include(sp => sp.MajorSkills)
             .ThenInclude(ms => ms.Major)
             .Where(sp => sp.MajorSkills.Any(ms => ms.MajorId == majorId))
+            .ToListAsync();
+
+        return scholarshipPrograms;
+    }
+
+    public async Task<IEnumerable<ScholarshipProgram>> GetOpenScholarshipPrograms()
+    {
+        var scholarshipPrograms = await _dbContext.ScholarshipPrograms
+            .Where(s => s.Status == ScholarshipProgramStatusEnum.Open.ToString())
             .ToListAsync();
 
         return scholarshipPrograms;
