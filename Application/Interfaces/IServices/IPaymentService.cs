@@ -10,4 +10,6 @@ public interface IPaymentService
 
     Task TransferMoney(TransferRequest transferRequest);
 	Task<List<Transaction>> GetTransactionsByWalletSenderIdAsync(int walletSenderId);
+	Task<List<Transaction>> GetTransactionsByWalletUserIdAsync(int walletUserId);
+	Task<List<Transaction>> GetAllTransactionsAsync();
 }
