@@ -1,6 +1,4 @@
-using Domain.Constants;
 using Domain.Entities;
-using Google.Apis.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -40,7 +38,7 @@ public class ScholarshipContext : DbContext
     }
 
     public virtual DbSet<Account> Accounts { get; set; }
-    
+
     public virtual DbSet<Wallet> Wallets { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
@@ -62,6 +60,8 @@ public class ScholarshipContext : DbContext
     public virtual DbSet<FunderProfile> FunderProfiles { get; set; }
 
     public virtual DbSet<FunderDocument> FunderDocuments { get; set; }
+
+    public virtual DbSet<ExpertProfile> ExpertProfiles { get; set; }
 
     public virtual DbSet<Achievement> Achievements { get; set; }
 
@@ -138,6 +138,9 @@ public class ScholarshipContext : DbContext
         modelBuilder.Entity<FunderProfile>()
             .ToTable("funder_profiles");
 
+        modelBuilder.Entity<ExpertProfile>()
+            .ToTable("expert_profiles");
+
         modelBuilder.Entity<ProviderProfile>()
             .ToTable("provider_profiles");
 
@@ -201,6 +204,11 @@ public class ScholarshipContext : DbContext
                 .HasForeignKey<FunderProfile>(funderProfile => funderProfile.FunderId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            entity.HasOne(account => account.ExpertProfile)
+                .WithOne(expertProfile => expertProfile.Expert)
+                .HasForeignKey<ExpertProfile>(expertProfile => expertProfile.ExpertId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             entity.HasOne(account => account.ProviderProfile)
                 .WithOne(providerProfile => providerProfile.Provider)
                 .HasForeignKey<ProviderProfile>(providerProfile => providerProfile.ProviderId)
@@ -209,6 +217,11 @@ public class ScholarshipContext : DbContext
             entity.HasOne(account => account.Wallet)
                 .WithOne(wallet => wallet.Account)
                 .HasForeignKey<Wallet>(wallet => wallet.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(account => account.Funder)
+                .WithMany(account => account.Experts)
+                .HasForeignKey(account => account.FunderId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
@@ -378,7 +391,8 @@ public class ScholarshipContext : DbContext
         modelBuilder.Entity<Major>()
             .HasOne(m => m.ParentMajor)
             .WithMany(m => m.SubMajors)
-            .HasForeignKey(e => e.ParentMajorId);
+            .HasForeignKey(e => e.ParentMajorId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<MajorSkill>(entity =>
         {

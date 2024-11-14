@@ -20,7 +20,6 @@ namespace Application.Interfaces.IServices
         Task<AccountDto> DeleteAccount(int id);
         Task<WalletDto> GetWalletByUserId(int userId);
         Task<WalletDto> CreateWallet(int id, CreateWalletDto createWalletDto);
-        Task<WalletDto> UpdateWalletBalance(int userId, UpdateWalletBalanceDto updateWalletBalanceDto);
         Task<WalletDto> UpdateWalletBalance(int userId, decimal balance);
 		Task<WalletDto> UpdateWalletBankInformation(int userId, UpdateWalletBankInformationDto dto);
 	}

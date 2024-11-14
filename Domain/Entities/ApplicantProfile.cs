@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace Domain.Entities;
+﻿namespace Domain.Entities;
 
 public class ApplicantProfile : BaseEntity
 {
