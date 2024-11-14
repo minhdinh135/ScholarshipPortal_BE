@@ -1,8 +1,11 @@
-﻿using Application.Interfaces.IServices;
+﻿using Application.Exceptions;
+using Application.Interfaces.IServices;
 using Domain.DTOs.ScholarshipProgram;
 using Elastic.Clients.Elasticsearch;
+using Elastic.Clients.Elasticsearch.Mapping;
 using Elastic.Clients.Elasticsearch.QueryDsl;
 using Microsoft.Extensions.Options;
+using ServiceException = Application.Exceptions.ServiceException;
 
 namespace Infrastructure.ExternalServices.Elastic;
 
@@ -31,6 +34,38 @@ public class ElasticService<T> : IElasticService<T> where T : class
         }
     }
 
+    public async Task CreateScholarshipIndex()
+    {
+        var indexExists = await _client.Indices.ExistsAsync("scholarships");
+
+        if (!indexExists.Exists)
+        {
+            await _client.Indices.CreateAsync("scholarships", c => c
+                .Mappings(m => m
+                    .Dynamic(DynamicMapping.False)
+                    .Properties<ScholarshipProgramElasticDocument>(p => p
+                        .SearchAsYouType(t => t.Name)
+                        .Text(t => t.Description, c => c
+                            .Fields(f => f.Keyword(new PropertyName("keyword"))
+                            )
+                        )
+                        .Text(t => t.CategoryName, c => c
+                            .Fields(f => f.Keyword(new PropertyName("keyword"))
+                            )
+                        )
+                        .IntegerNumber(n => n.NumberOfScholarships)
+                        .LongNumber(n => n.ScholarshipAmount)
+                        .Date(d => d.Deadline)
+                        .Text(t => t.Status, c => c
+                            .Fields(f => f.Keyword(new PropertyName("keyword"))
+                            )
+                        )
+                    )
+                )
+            );
+        }
+    }
+
     public async Task<bool> AddOrUpdate(T entity, string indexName)
     {
         // var response = await _client.IndexAsync(entity, idx =>
@@ -40,7 +75,7 @@ public class ElasticService<T> : IElasticService<T> where T : class
 
         if (!indexExist.Exists)
         {
-            await _client.Indices.CreateAsync(indexName);
+            await CreateIndex(indexName);
         }
 
         var response = await _client.IndexAsync(entity, idx => idx.Index(indexName));
@@ -48,9 +83,30 @@ public class ElasticService<T> : IElasticService<T> where T : class
         return response.IsValidResponse;
     }
 
+    public async Task<bool> AddOrUpdateScholarship(ScholarshipProgramElasticDocument scholarship)
+    {
+        var indexExist = await _client.Indices.ExistsAsync("scholarships");
+
+        if (!indexExist.Exists)
+        {
+            await CreateScholarshipIndex();
+        }
+
+        var response = await _client.IndexAsync(scholarship, idx => idx.Index("scholarships"));
+
+        return response.IsValidResponse;
+    }
+
     public async Task<bool> AddOrUpdateBulk(IEnumerable<T> entities, string indexName)
     {
-        var response = await _client.BulkAsync(b => b.Index(_elasticSettings.DefaultIndex)
+        var indexExist = await _client.Indices.ExistsAsync(indexName);
+
+        if (!indexExist.Exists)
+        {
+            await CreateIndex(indexName);
+        }
+
+        var response = await _client.BulkAsync(b => b.Index(indexName)
             .UpdateMany(entities, (ed, e) =>
                 ed.Doc(e).DocAsUpsert(true)));
 
@@ -136,5 +192,19 @@ public class ElasticService<T> : IElasticService<T> where T : class
                 )));
 
         return response.Documents.ToList();
+    }
+
+    public async Task<List<string>> SuggestScholarships(string input)
+    {
+        var response = await _client.SearchAsync<ScholarshipProgramElasticDocument>(s => s
+            .Query(q => q.MultiMatch(mm => mm
+                    .Query(input)
+                    .Type(TextQueryType.BoolPrefix)
+                    .Fields(new[] { "name", "name._2gram", "name._3gram" })
+                )
+            )
+        );
+
+        return response.Documents.Select(d => d.Name).ToList();
     }
 }

@@ -38,6 +38,14 @@ public class ScholarshipProgramController : ControllerBase
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Search successfully", response));
     }
 
+    [HttpGet("suggest")]
+    public async Task<IActionResult> SuggestScholarships([FromQuery] string input)
+    {
+        var response = await _scholarshipProgramService.SuggestScholarships(input);
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Suggest successfully", response));
+    }
+
     [HttpGet("by-funder-id/{id}")]
     public async Task<IActionResult> GetAllScholarshipProgramsByFunderId([FromRoute] int id)
     {
