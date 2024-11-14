@@ -321,7 +321,7 @@ public class AccountController : ControllerBase
     {
         try
         {
-            var updatedWallet = await _accountService.UpdateWalletBalance(id, updateWalletBalanceDto);
+            var updatedWallet = await _accountService.UpdateWalletBalance(id, updateWalletBalanceDto.Balance);
     
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Update wallet balance successfully", updatedWallet));
         }

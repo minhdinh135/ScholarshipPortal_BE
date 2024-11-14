@@ -84,16 +84,36 @@ public class PaymentController : ControllerBase
         }
     }
 
-	[HttpGet("transactions/{walletSenderId}")]
-	public async Task<IActionResult> GetTransactionsByWalletSenderId(int walletSenderId)
+	[HttpGet("transactions/{walletUserId}")]
+	public async Task<IActionResult> GetTransactionsByWalletSenderId(int walletUserId)
 	{
 		try
 		{
-			var transactions = await _paymentService.GetTransactionsByWalletSenderIdAsync(walletSenderId);
+			var transactions = await _paymentService.GetTransactionsByWalletUserIdAsync(walletUserId);
 
 			if (transactions == null || transactions.Count() == 0)
 			{
 				return NotFound(new ApiResponse(StatusCodes.Status404NotFound, "No transactions found for this wallet"));
+			}
+
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Transactions fetched successfully", transactions));
+		}
+		catch (ServiceException e)
+		{
+			return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+		}
+	}
+
+	[HttpGet("transactions")]
+	public async Task<IActionResult> GetAllTransactions()
+	{
+		try
+		{
+			var transactions = await _paymentService.GetAllTransactionsAsync();
+
+			if (transactions == null || transactions.Count() == 0)
+			{
+				return NotFound(new ApiResponse(StatusCodes.Status404NotFound, "No transactions found"));
 			}
 
 			return Ok(new ApiResponse(StatusCodes.Status200OK, "Transactions fetched successfully", transactions));
@@ -112,36 +132,40 @@ public class PaymentController : ControllerBase
 
         try
         {
-            // var stripeEvent = EventUtility.ParseEvent(json);
-            var stripeEvent = EventUtility.ConstructEvent(
-                json,
-                Request.Headers["Stripe-Signature"],
-                _stripeSettings.WebhookSecret
-            );
-            
-            // Handle the event
-            // If on SDK version < 46, use class Events instead of EventTypes
-            if (stripeEvent.Type == EventTypes.InvoicePaid)
-            {
-                var invoice = stripeEvent.Data.Object as Invoice;
-                var customer = await _stripeService.GetCustomer(invoice.CustomerId) as Customer;
-                await _accountService.UpdateWalletBalance(int.Parse(invoice.Metadata["accountId"]),
-                    -customer.Balance / 100);
+	        // var stripeEvent = EventUtility.ParseEvent(json);
+	        var stripeEvent = EventUtility.ConstructEvent(
+		        json,
+		        Request.Headers["Stripe-Signature"],
+		        _stripeSettings.WebhookSecret
+	        );
 
-                await _emailService.SendInvoiceReceipt(customer.Email, invoice.Total, invoice.Id);
-            }
-            // ... handle other event types
-            else
-            {
-                // Unexpected event type
-                Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
-            }
+	        // Handle the event
+	        // If on SDK version < 46, use class Events instead of EventTypes
+	        if (stripeEvent.Type == EventTypes.InvoicePaid)
+	        {
+		        var invoice = stripeEvent.Data.Object as Invoice;
+		        var customer = await _stripeService.GetCustomer(invoice.CustomerId) as Customer;
+		        await _accountService.UpdateWalletBalance(int.Parse(invoice.Metadata["accountId"]),
+			        -customer.Balance / 100);
 
-            return Ok();
+		        await _emailService.SendInvoiceReceipt(customer.Email, invoice.Total, invoice.Id);
+	        }
+	        // ... handle other event types
+	        else
+	        {
+		        // Unexpected event type
+		        Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
+	        }
+
+	        return Ok();
         }
         catch (StripeException e)
         {
-            return BadRequest(e.Message);
+	        return BadRequest(e.Message);
+        }
+        catch (ServiceException e)
+        {
+	        return BadRequest(e.Message);
         }
     }
 }
