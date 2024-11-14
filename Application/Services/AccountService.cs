@@ -2,6 +2,7 @@ using Application.Exceptions;
 using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
+using Domain.Constants;
 using Domain.DTOs.Account;
 using Domain.DTOs.Authentication;
 using Domain.DTOs.Common;
@@ -18,6 +19,7 @@ public class AccountService : IAccountService
     private readonly ICloudinaryService _cloudinaryService;
     private readonly IWalletRepository _walletRepository;
     private readonly IStripeService _stripeService;
+    private readonly ITransactionRepository _transactionRepository;
 
     public AccountService(
         IAccountRepository accountRepository,
@@ -25,7 +27,8 @@ public class AccountService : IAccountService
         IPasswordService passwordService,
         ICloudinaryService cloudinaryService,
         IWalletRepository walletRepository,
-        IStripeService stripeService
+        IStripeService stripeService,
+        ITransactionRepository transactionRepository
     )
     {
         _accountRepository = accountRepository;
@@ -34,6 +37,7 @@ public class AccountService : IAccountService
         _cloudinaryService = cloudinaryService;
         _walletRepository = walletRepository;
         _stripeService = stripeService;
+        _transactionRepository = transactionRepository;
     }
 
     public async Task<AccountDto> AddAccount(RegisterDto dto)
@@ -140,45 +144,55 @@ public class AccountService : IAccountService
 
     public async Task<WalletDto> CreateWallet(int id, CreateWalletDto createWalletDto)
     {
-        var account = await _accountRepository.GetById(id);
+        var account = await _accountRepository.GetAccountById(id);
         if (account == null)
             throw new ServiceException($"Account with id:{id} is not found",
                 new NotFoundException());
 
-        var stripeCustomerId = await _stripeService.CreateStripeCustomer(account, createWalletDto.Balance);
-        var wallet = _mapper.Map<Wallet>(createWalletDto);
-        wallet.AccountId = id;
-        wallet.StripeCustomerId = stripeCustomerId;
+        if (account.Wallet != null)
+            throw new ServiceException($"Account with id:{id} already has wallet");
+        
+        try
+        {
+            var stripeCustomerId = await _stripeService.CreateStripeCustomer(account, createWalletDto.Balance);
+            var wallet = _mapper.Map<Wallet>(createWalletDto);
+            wallet.AccountId = id;
+            wallet.StripeCustomerId = stripeCustomerId;
 
-        var createdWallet = await _walletRepository.Add(wallet);
+            var createdWallet = await _walletRepository.Add(wallet);
 
-        return _mapper.Map<WalletDto>(createdWallet);
+            Transaction transaction = new Transaction
+            {
+                Amount = createWalletDto.Balance,
+                Description = "Wallet is created",
+                PaymentMethod = PaymentMethodEnum.CREDIT_CARD,
+                TransactionDate = DateTime.Now,
+                WalletReceiverId = createdWallet.Id,
+                WalletSenderId = createdWallet.Id,
+                TransactionId = Guid.NewGuid().ToString("N"),
+                Status = "Successful"
+            };
+
+            await _transactionRepository.Add(transaction);
+
+            return _mapper.Map<WalletDto>(createdWallet);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
     }
 
-	public async Task<WalletDto> UpdateWalletBankInformation(int userId, UpdateWalletBankInformationDto dto)
-	{
-		var wallet = await _walletRepository.GetWalletByUserId(userId);
-		if (wallet == null)
-			throw new ServiceException($"Wallet for user with id:{userId} not found", new NotFoundException());
-
-		wallet.BankAccountName = dto.BankAccountName ?? wallet.BankAccountName;
-		wallet.BankAccountNumber = dto.BankAccountNumber ?? wallet.BankAccountNumber;
-
-		var updatedWallet = await _walletRepository.Update(wallet);
-
-		return _mapper.Map<WalletDto>(updatedWallet);
-	}
-
-
-	public async Task<WalletDto> UpdateWalletBalance(int userId, UpdateWalletBalanceDto updateWalletBalanceDto)
+    public async Task<WalletDto> UpdateWalletBankInformation(int userId, UpdateWalletBankInformationDto dto)
     {
-        var existingWallet = await _walletRepository.GetWalletByUserId(userId);
-        if (existingWallet == null)
-            throw new ServiceException($"Wallet with userId:{userId} is not found", new NotFoundException());
+        var wallet = await _walletRepository.GetWalletByUserId(userId);
+        if (wallet == null)
+            throw new ServiceException($"Wallet for user with id:{userId} not found", new NotFoundException());
 
-        await _stripeService.UpdateCustomerBalance(existingWallet.StripeCustomerId, updateWalletBalanceDto.Balance);
-        _mapper.Map(updateWalletBalanceDto, existingWallet);
-        var updatedWallet = await _walletRepository.Update(existingWallet);
+        wallet.BankAccountName = dto.BankAccountName ?? wallet.BankAccountName;
+        wallet.BankAccountNumber = dto.BankAccountNumber ?? wallet.BankAccountNumber;
+
+        var updatedWallet = await _walletRepository.Update(wallet);
 
         return _mapper.Map<WalletDto>(updatedWallet);
     }
@@ -189,10 +203,33 @@ public class AccountService : IAccountService
         if (existingWallet == null)
             throw new ServiceException($"Wallet with userId:{userId} is not found", new NotFoundException());
 
-        await _stripeService.UpdateCustomerBalance(existingWallet.StripeCustomerId, balance);
-        existingWallet.Balance = balance;
-        var updatedWallet = await _walletRepository.Update(existingWallet);
+        var amount = balance - existingWallet.Balance;
 
-        return _mapper.Map<WalletDto>(updatedWallet);
+        try
+        {
+            await _stripeService.UpdateCustomerBalance(existingWallet.StripeCustomerId, balance);
+            existingWallet.Balance = balance;
+            var updatedWallet = await _walletRepository.Update(existingWallet);
+
+            Transaction transaction = new Transaction
+            {
+                Amount = amount,
+                Description = "Wallet balance updated",
+                PaymentMethod = PaymentMethodEnum.CREDIT_CARD,
+                TransactionDate = DateTime.Now,
+                WalletReceiverId = existingWallet.Id,
+                WalletSenderId = existingWallet.Id,
+                TransactionId = Guid.NewGuid().ToString("N"),
+                Status = "Successful"
+            };
+
+            var createdTransaction = await _transactionRepository.Add(transaction);
+
+            return _mapper.Map<WalletDto>(updatedWallet);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
     }
 }

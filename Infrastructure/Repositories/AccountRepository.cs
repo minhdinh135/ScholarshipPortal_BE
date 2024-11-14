@@ -42,6 +42,20 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
 
     }
 
+    public async Task<Account> GetAccountById(int id)
+    {
+        var account = await _dbContext.Accounts
+            .AsSplitQuery()
+            .Include(a => a.Role)
+            .Include(a => a.Wallet)
+            .ThenInclude(w => w.ReceiverTransactions)
+            .Include(a => a.Wallet)
+            .ThenInclude(w => w.SenderTransactions)
+            .FirstOrDefaultAsync(a => a.Id == id);
+
+        return account;
+    }
+
     public async Task<IEnumerable<Account>> GetAllWithRole()
     {
         var accounts = await _dbContext.Accounts

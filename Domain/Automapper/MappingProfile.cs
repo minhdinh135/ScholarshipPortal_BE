@@ -6,6 +6,7 @@ using Domain.DTOs.Authentication;
 using Domain.DTOs.Category;
 using Domain.DTOs.Country;
 using Domain.DTOs.Criteria;
+using Domain.DTOs.Expert;
 using Domain.DTOs.Feedback;
 using Domain.DTOs.Funder;
 using Domain.DTOs.Major;
@@ -62,6 +63,11 @@ public class MappingProfile : Profile
         CreateMap<FunderProfile, FunderProfileDto>().ReverseMap();
         CreateMap<UpdateFunderDetailsDto, FunderProfile>();
         CreateMap<FunderDocument, FunderDocumentDto>().ReverseMap();
+        
+        // Expert Profile mapping
+        CreateMap<ExpertProfile, ExpertProfileDto>().ReverseMap();
+        CreateMap<CreateExpertDetailsDto, ExpertProfile>();
+        CreateMap<UpdateExpertDetailsDto, ExpertProfile>();
 
         // Provider Profile mapping
         CreateMap<ProviderProfile, ProviderProfileDto>().ReverseMap();

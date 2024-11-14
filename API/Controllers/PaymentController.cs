@@ -132,36 +132,40 @@ public class PaymentController : ControllerBase
 
         try
         {
-            // var stripeEvent = EventUtility.ParseEvent(json);
-            var stripeEvent = EventUtility.ConstructEvent(
-                json,
-                Request.Headers["Stripe-Signature"],
-                _stripeSettings.WebhookSecret
-            );
-            
-            // Handle the event
-            // If on SDK version < 46, use class Events instead of EventTypes
-            if (stripeEvent.Type == EventTypes.InvoicePaid)
-            {
-                var invoice = stripeEvent.Data.Object as Invoice;
-                var customer = await _stripeService.GetCustomer(invoice.CustomerId) as Customer;
-                await _accountService.UpdateWalletBalance(int.Parse(invoice.Metadata["accountId"]),
-                    -customer.Balance / 100);
+	        // var stripeEvent = EventUtility.ParseEvent(json);
+	        var stripeEvent = EventUtility.ConstructEvent(
+		        json,
+		        Request.Headers["Stripe-Signature"],
+		        _stripeSettings.WebhookSecret
+	        );
 
-                await _emailService.SendInvoiceReceipt(customer.Email, invoice.Total, invoice.Id);
-            }
-            // ... handle other event types
-            else
-            {
-                // Unexpected event type
-                Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
-            }
+	        // Handle the event
+	        // If on SDK version < 46, use class Events instead of EventTypes
+	        if (stripeEvent.Type == EventTypes.InvoicePaid)
+	        {
+		        var invoice = stripeEvent.Data.Object as Invoice;
+		        var customer = await _stripeService.GetCustomer(invoice.CustomerId) as Customer;
+		        await _accountService.UpdateWalletBalance(int.Parse(invoice.Metadata["accountId"]),
+			        -customer.Balance / 100);
 
-            return Ok();
+		        await _emailService.SendInvoiceReceipt(customer.Email, invoice.Total, invoice.Id);
+	        }
+	        // ... handle other event types
+	        else
+	        {
+		        // Unexpected event type
+		        Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
+	        }
+
+	        return Ok();
         }
         catch (StripeException e)
         {
-            return BadRequest(e.Message);
+	        return BadRequest(e.Message);
+        }
+        catch (ServiceException e)
+        {
+	        return BadRequest(e.Message);
         }
     }
 }

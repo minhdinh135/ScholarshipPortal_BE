@@ -43,6 +43,9 @@ public static class ServiceExtension
         services.AddScoped<IFunderService, FunderService>();
         services.AddScoped<IFunderRepository, FunderRepository>();
 
+        services.AddScoped<IExpertService, ExpertService>();
+        services.AddScoped<IExpertRepository, ExpertRepository>();
+
         services.AddScoped<IApplicantService, ApplicantService>();
         services.AddScoped<IApplicantRepository, ApplicantRepository>();
 
