@@ -22,6 +22,14 @@ public class Account : BaseEntity
 
     public Role? Role { get; set; }
     
+    public int? FunderId { get; set; }
+    
+    public Account? Funder { get; set; }
+    
+    public ICollection<Account>? Experts { get; set; }
+    
+    public ExpertProfile? ExpertProfile { get; set; }
+    
     public Wallet? Wallet { get; set; }
 
     public ApplicantProfile? ApplicantProfile { get; set; }
