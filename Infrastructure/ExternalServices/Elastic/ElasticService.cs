@@ -155,8 +155,10 @@ public class ElasticService<T> : IElasticService<T> where T : class
             .Size(10)
             .Query(q => q
                 .Bool(b => b
-                    .Must(must => must
+                    .Must(
+                        must => must
                             .MultiMatch(match => match
+                                .PrefixLength(1)
                                 .Query(scholarshipSearchOptions.Name)
                                 .Fields(new[] { "name" })
                                 .Fuzziness(new Fuzziness("AUTO"))
