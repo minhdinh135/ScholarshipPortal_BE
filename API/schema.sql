@@ -20,7 +20,6 @@ CREATE TABLE `Certificates` (
     `Name` longtext NULL,
     `Description` longtext NULL,
     `Type` longtext NULL,
-    `ScholarshipProgramId` int NULL,
     `CreatedAt` datetime(6) NULL,
     `UpdatedAt` datetime(6) NULL,
     PRIMARY KEY (`Id`)
@@ -39,14 +38,26 @@ CREATE TABLE `Majors` (
     `Id` int NOT NULL AUTO_INCREMENT,
     `Name` longtext NULL,
     `Description` longtext NULL,
+    `ParentMajorId` int NULL,
     `CreatedAt` datetime(6) NULL,
     `UpdatedAt` datetime(6) NULL,
-    PRIMARY KEY (`Id`)
+    PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_Majors_Majors_ParentMajorId` FOREIGN KEY (`ParentMajorId`) REFERENCES `Majors` (`Id`)
 );
 
 CREATE TABLE `Roles` (
     `Id` int NOT NULL AUTO_INCREMENT,
     `Name` longtext NULL,
+    `CreatedAt` datetime(6) NULL,
+    `UpdatedAt` datetime(6) NULL,
+    PRIMARY KEY (`Id`)
+);
+
+CREATE TABLE `Skills` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `Name` longtext NULL,
+    `Description` longtext NULL,
+    `Type` longtext NULL,
     `CreatedAt` datetime(6) NULL,
     `UpdatedAt` datetime(6) NULL,
     PRIMARY KEY (`Id`)
@@ -144,6 +155,18 @@ CREATE TABLE `provider_profiles` (
     CONSTRAINT `FK_provider_profiles_Accounts_ProviderId` FOREIGN KEY (`ProviderId`) REFERENCES `Accounts` (`Id`) ON DELETE RESTRICT
 );
 
+CREATE TABLE `Requests` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `Description` longtext NULL,
+    `RequestDate` datetime(6) NULL,
+    `Status` longtext NULL,
+    `ApplicantId` int NULL,
+    `CreatedAt` datetime(6) NULL,
+    `UpdatedAt` datetime(6) NULL,
+    PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_Requests_Accounts_ApplicantId` FOREIGN KEY (`ApplicantId`) REFERENCES `Accounts` (`Id`)
+);
+
 CREATE TABLE `scholarship_programs` (
     `Id` int NOT NULL AUTO_INCREMENT,
     `Name` longtext NULL,
@@ -169,6 +192,7 @@ CREATE TABLE `Services` (
     `Type` longtext NULL,
     `Price` decimal(18,2) NULL,
     `Status` longtext NULL,
+    `Duration` datetime(6) NULL,
     `ProviderId` int NULL,
     `CreatedAt` datetime(6) NULL,
     `UpdatedAt` datetime(6) NULL,
@@ -176,20 +200,17 @@ CREATE TABLE `Services` (
     CONSTRAINT `FK_Services_Accounts_ProviderId` FOREIGN KEY (`ProviderId`) REFERENCES `Accounts` (`Id`)
 );
 
-CREATE TABLE `Transactions` (
+CREATE TABLE `Wallets` (
     `Id` int NOT NULL AUTO_INCREMENT,
-    `Amount` decimal(18,2) NULL,
-    `PaymentMethod` longtext NULL,
-    `Description` longtext NULL,
-    `TransactionDate` datetime(6) NULL,
-    `Status` longtext NULL,
-    `SenderId` int NULL,
-    `ReceiverId` int NULL,
+    `BankAccountName` longtext NULL,
+    `BankAccountNumber` longtext NULL,
+    `Balance` decimal(18,2) NULL,
+    `StripeCustomerId` longtext NULL,
+    `AccountId` int NULL,
     `CreatedAt` datetime(6) NULL,
     `UpdatedAt` datetime(6) NULL,
     PRIMARY KEY (`Id`),
-    CONSTRAINT `FK_Transactions_Accounts_ReceiverId` FOREIGN KEY (`ReceiverId`) REFERENCES `Accounts` (`Id`) ON DELETE RESTRICT,
-    CONSTRAINT `FK_Transactions_Accounts_SenderId` FOREIGN KEY (`SenderId`) REFERENCES `Accounts` (`Id`) ON DELETE RESTRICT
+    CONSTRAINT `FK_Wallets_Accounts_AccountId` FOREIGN KEY (`AccountId`) REFERENCES `Accounts` (`Id`) ON DELETE RESTRICT
 );
 
 CREATE TABLE `Achievements` (
@@ -227,6 +248,17 @@ CREATE TABLE `applicant_skills` (
     `UpdatedAt` datetime(6) NULL,
     PRIMARY KEY (`Id`),
     CONSTRAINT `FK_applicant_skills_applicant_profiles_ApplicantProfileId` FOREIGN KEY (`ApplicantProfileId`) REFERENCES `applicant_profiles` (`Id`) ON DELETE RESTRICT
+);
+
+CREATE TABLE `Experiences` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `Name` longtext NULL,
+    `Description` longtext NULL,
+    `ApplicantProfileId` int NULL,
+    `CreatedAt` datetime(6) NULL,
+    `UpdatedAt` datetime(6) NULL,
+    PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_Experiences_applicant_profiles_ApplicantProfileId` FOREIGN KEY (`ApplicantProfileId`) REFERENCES `applicant_profiles` (`Id`)
 );
 
 CREATE TABLE `funder_documents` (
@@ -289,6 +321,19 @@ CREATE TABLE `Criteria` (
     CONSTRAINT `FK_Criteria_scholarship_programs_ScholarshipProgramId` FOREIGN KEY (`ScholarshipProgramId`) REFERENCES `scholarship_programs` (`Id`) ON DELETE RESTRICT
 );
 
+CREATE TABLE `major_skills` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `MajorId` int NULL,
+    `SkillId` int NULL,
+    `ScholarshipProgramId` int NULL,
+    `CreatedAt` datetime(6) NULL,
+    `UpdatedAt` datetime(6) NULL,
+    PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_major_skills_Majors_MajorId` FOREIGN KEY (`MajorId`) REFERENCES `Majors` (`Id`) ON DELETE RESTRICT,
+    CONSTRAINT `FK_major_skills_Skills_SkillId` FOREIGN KEY (`SkillId`) REFERENCES `Skills` (`Id`) ON DELETE RESTRICT,
+    CONSTRAINT `FK_major_skills_scholarship_programs_ScholarshipProgramId` FOREIGN KEY (`ScholarshipProgramId`) REFERENCES `scholarship_programs` (`Id`) ON DELETE RESTRICT
+);
+
 CREATE TABLE `review_milestones` (
     `Id` int NOT NULL AUTO_INCREMENT,
     `Description` longtext NULL,
@@ -309,32 +354,12 @@ CREATE TABLE `scholarship_program_certificates` (
     CONSTRAINT `FK_scholarship_program_certificates_scholarship_programs_Schola~` FOREIGN KEY (`ScholarshipProgramId`) REFERENCES `scholarship_programs` (`Id`) ON DELETE RESTRICT
 );
 
-CREATE TABLE `scholarship_program_majors` (
-    `ScholarshipProgramId` int NOT NULL,
-    `MajorId` int NOT NULL,
-    PRIMARY KEY (`ScholarshipProgramId`, `MajorId`),
-    CONSTRAINT `FK_scholarship_program_majors_Majors_MajorId` FOREIGN KEY (`MajorId`) REFERENCES `Majors` (`Id`) ON DELETE RESTRICT,
-    CONSTRAINT `FK_scholarship_program_majors_scholarship_programs_ScholarshipP~` FOREIGN KEY (`ScholarshipProgramId`) REFERENCES `scholarship_programs` (`Id`) ON DELETE RESTRICT
-);
-
 CREATE TABLE `scholarship_program_universities` (
     `ScholarshipProgramId` int NOT NULL,
     `UniversityId` int NOT NULL,
     PRIMARY KEY (`ScholarshipProgramId`, `UniversityId`),
     CONSTRAINT `FK_scholarship_program_universities_Universities_UniversityId` FOREIGN KEY (`UniversityId`) REFERENCES `Universities` (`Id`) ON DELETE RESTRICT,
     CONSTRAINT `FK_scholarship_program_universities_scholarship_programs_Schola~` FOREIGN KEY (`ScholarshipProgramId`) REFERENCES `scholarship_programs` (`Id`) ON DELETE RESTRICT
-);
-
-CREATE TABLE `Skills` (
-    `Id` int NOT NULL AUTO_INCREMENT,
-    `Name` longtext NULL,
-    `Description` longtext NULL,
-    `Type` longtext NULL,
-    `ScholarshipProgramId` int NULL,
-    `CreatedAt` datetime(6) NULL,
-    `UpdatedAt` datetime(6) NULL,
-    PRIMARY KEY (`Id`),
-    CONSTRAINT `FK_Skills_scholarship_programs_ScholarshipProgramId` FOREIGN KEY (`ScholarshipProgramId`) REFERENCES `scholarship_programs` (`Id`) ON DELETE RESTRICT
 );
 
 CREATE TABLE `Feedbacks` (
@@ -351,18 +376,36 @@ CREATE TABLE `Feedbacks` (
     CONSTRAINT `FK_Feedbacks_Services_ServiceId` FOREIGN KEY (`ServiceId`) REFERENCES `Services` (`Id`) ON DELETE RESTRICT
 );
 
-CREATE TABLE `Requests` (
+CREATE TABLE `request_details` (
     `Id` int NOT NULL AUTO_INCREMENT,
-    `Description` longtext NULL,
-    `RequestDate` datetime(6) NULL,
-    `Status` longtext NULL,
-    `ApplicantId` int NULL,
+    `ExpectedCompletionTime` datetime(6) NULL,
+    `ApplicationNotes` longtext NULL,
+    `ScholarshipType` longtext NULL,
+    `ApplicationFileUrl` longtext NULL,
+    `RequestId` int NULL,
     `ServiceId` int NULL,
     `CreatedAt` datetime(6) NULL,
     `UpdatedAt` datetime(6) NULL,
     PRIMARY KEY (`Id`),
-    CONSTRAINT `FK_Requests_Accounts_ApplicantId` FOREIGN KEY (`ApplicantId`) REFERENCES `Accounts` (`Id`) ON DELETE RESTRICT,
-    CONSTRAINT `FK_Requests_Services_ServiceId` FOREIGN KEY (`ServiceId`) REFERENCES `Services` (`Id`) ON DELETE RESTRICT
+    CONSTRAINT `FK_request_details_Requests_RequestId` FOREIGN KEY (`RequestId`) REFERENCES `Requests` (`Id`) ON DELETE RESTRICT,
+    CONSTRAINT `FK_request_details_Services_ServiceId` FOREIGN KEY (`ServiceId`) REFERENCES `Services` (`Id`) ON DELETE RESTRICT
+);
+
+CREATE TABLE `Transactions` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `Amount` decimal(18,2) NULL,
+    `PaymentMethod` longtext NULL,
+    `Description` longtext NULL,
+    `TransactionId` longtext NULL,
+    `TransactionDate` datetime(6) NULL,
+    `Status` longtext NULL,
+    `WalletSenderId` int NULL,
+    `WalletReceiverId` int NULL,
+    `CreatedAt` datetime(6) NULL,
+    `UpdatedAt` datetime(6) NULL,
+    PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_Transactions_Wallets_WalletReceiverId` FOREIGN KEY (`WalletReceiverId`) REFERENCES `Wallets` (`Id`) ON DELETE RESTRICT,
+    CONSTRAINT `FK_Transactions_Wallets_WalletSenderId` FOREIGN KEY (`WalletSenderId`) REFERENCES `Wallets` (`Id`) ON DELETE RESTRICT
 );
 
 CREATE TABLE `application_documents` (
@@ -434,6 +477,8 @@ CREATE INDEX `IX_Chats_SenderId` ON `Chats` (`SenderId`);
 
 CREATE INDEX `IX_Criteria_ScholarshipProgramId` ON `Criteria` (`ScholarshipProgramId`);
 
+CREATE INDEX `IX_Experiences_ApplicantProfileId` ON `Experiences` (`ApplicantProfileId`);
+
 CREATE INDEX `IX_Feedbacks_ApplicantId` ON `Feedbacks` (`ApplicantId`);
 
 CREATE INDEX `IX_Feedbacks_ServiceId` ON `Feedbacks` (`ServiceId`);
@@ -442,21 +487,29 @@ CREATE INDEX `IX_funder_documents_FunderProfileId` ON `funder_documents` (`Funde
 
 CREATE UNIQUE INDEX `IX_funder_profiles_FunderId` ON `funder_profiles` (`FunderId`);
 
+CREATE INDEX `IX_major_skills_MajorId` ON `major_skills` (`MajorId`);
+
+CREATE INDEX `IX_major_skills_ScholarshipProgramId` ON `major_skills` (`ScholarshipProgramId`);
+
+CREATE INDEX `IX_major_skills_SkillId` ON `major_skills` (`SkillId`);
+
+CREATE INDEX `IX_Majors_ParentMajorId` ON `Majors` (`ParentMajorId`);
+
 CREATE INDEX `IX_Notifications_ReceiverId` ON `Notifications` (`ReceiverId`);
 
 CREATE INDEX `IX_provider_documents_ProviderProfileId` ON `provider_documents` (`ProviderProfileId`);
 
 CREATE UNIQUE INDEX `IX_provider_profiles_ProviderId` ON `provider_profiles` (`ProviderId`);
 
-CREATE INDEX `IX_Requests_ApplicantId` ON `Requests` (`ApplicantId`);
+CREATE INDEX `IX_request_details_RequestId` ON `request_details` (`RequestId`);
 
-CREATE INDEX `IX_Requests_ServiceId` ON `Requests` (`ServiceId`);
+CREATE INDEX `IX_request_details_ServiceId` ON `request_details` (`ServiceId`);
+
+CREATE INDEX `IX_Requests_ApplicantId` ON `Requests` (`ApplicantId`);
 
 CREATE INDEX `IX_review_milestones_ScholarshipProgramId` ON `review_milestones` (`ScholarshipProgramId`);
 
 CREATE INDEX `IX_scholarship_program_certificates_CertificateId` ON `scholarship_program_certificates` (`CertificateId`);
-
-CREATE INDEX `IX_scholarship_program_majors_MajorId` ON `scholarship_program_majors` (`MajorId`);
 
 CREATE INDEX `IX_scholarship_program_universities_UniversityId` ON `scholarship_program_universities` (`UniversityId`);
 
@@ -466,87 +519,16 @@ CREATE INDEX `IX_scholarship_programs_FunderId` ON `scholarship_programs` (`Fund
 
 CREATE INDEX `IX_Services_ProviderId` ON `Services` (`ProviderId`);
 
-CREATE INDEX `IX_Skills_ScholarshipProgramId` ON `Skills` (`ScholarshipProgramId`);
+CREATE INDEX `IX_Transactions_WalletReceiverId` ON `Transactions` (`WalletReceiverId`);
 
-CREATE INDEX `IX_Transactions_ReceiverId` ON `Transactions` (`ReceiverId`);
-
-CREATE INDEX `IX_Transactions_SenderId` ON `Transactions` (`SenderId`);
+CREATE INDEX `IX_Transactions_WalletSenderId` ON `Transactions` (`WalletSenderId`);
 
 CREATE INDEX `IX_Universities_CountryId` ON `Universities` (`CountryId`);
 
-INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
-VALUES ('20241023120339_InitV2', '8.0.0');
-
-COMMIT;
-
-START TRANSACTION;
-
-ALTER TABLE `Requests` DROP CONSTRAINT `FK_Requests_Accounts_ApplicantId`;
-
-ALTER TABLE `Requests` DROP CONSTRAINT `FK_Requests_Services_ServiceId`;
-
-ALTER TABLE `Skills` DROP CONSTRAINT `FK_Skills_scholarship_programs_ScholarshipProgramId`;
-
-DROP INDEX IX_Skills_ScholarshipProgramId ON Skills;
-
-DROP INDEX IX_Requests_ServiceId ON Requests;
-
-ALTER TABLE `Skills` DROP COLUMN `ScholarshipProgramId`;
-
-ALTER TABLE `Requests` DROP COLUMN `ServiceId`;
-
-ALTER TABLE `Certificates` DROP COLUMN `ScholarshipProgramId`;
-
-ALTER TABLE `Transactions` ADD `TransactionId` longtext NULL;
-
-ALTER TABLE `Services` ADD `Duration` datetime(6) NULL;
-
-CREATE TABLE `Experiences` (
-    `Id` int NOT NULL AUTO_INCREMENT,
-    `Name` longtext NULL,
-    `Description` longtext NULL,
-    `ApplicantProfileId` int NULL,
-    `CreatedAt` datetime(6) NULL,
-    `UpdatedAt` datetime(6) NULL,
-    PRIMARY KEY (`Id`),
-    CONSTRAINT `FK_Experiences_applicant_profiles_ApplicantProfileId` FOREIGN KEY (`ApplicantProfileId`) REFERENCES `applicant_profiles` (`Id`)
-);
-
-CREATE TABLE `request_details` (
-    `Id` int NOT NULL AUTO_INCREMENT,
-    `ExpectedCompletionTime` datetime(6) NULL,
-    `ApplicationNotes` longtext NULL,
-    `ScholarshipType` longtext NULL,
-    `ApplicationFileUrl` longtext NULL,
-    `RequestId` int NULL,
-    `ServiceId` int NULL,
-    `CreatedAt` datetime(6) NULL,
-    `UpdatedAt` datetime(6) NULL,
-    PRIMARY KEY (`Id`),
-    CONSTRAINT `FK_request_details_Requests_RequestId` FOREIGN KEY (`RequestId`) REFERENCES `Requests` (`Id`) ON DELETE RESTRICT,
-    CONSTRAINT `FK_request_details_Services_ServiceId` FOREIGN KEY (`ServiceId`) REFERENCES `Services` (`Id`) ON DELETE RESTRICT
-);
-
-CREATE TABLE `scholarship_program_skills` (
-    `ScholarshipProgramId` int NOT NULL,
-    `SkillId` int NOT NULL,
-    PRIMARY KEY (`ScholarshipProgramId`, `SkillId`),
-    CONSTRAINT `FK_scholarship_program_skills_Skills_SkillId` FOREIGN KEY (`SkillId`) REFERENCES `Skills` (`Id`) ON DELETE RESTRICT,
-    CONSTRAINT `FK_scholarship_program_skills_scholarship_programs_ScholarshipP~` FOREIGN KEY (`ScholarshipProgramId`) REFERENCES `scholarship_programs` (`Id`) ON DELETE RESTRICT
-);
-
-CREATE INDEX `IX_Experiences_ApplicantProfileId` ON `Experiences` (`ApplicantProfileId`);
-
-CREATE INDEX `IX_request_details_RequestId` ON `request_details` (`RequestId`);
-
-CREATE INDEX `IX_request_details_ServiceId` ON `request_details` (`ServiceId`);
-
-CREATE INDEX `IX_scholarship_program_skills_SkillId` ON `scholarship_program_skills` (`SkillId`);
-
-ALTER TABLE `Requests` ADD CONSTRAINT `FK_Requests_Accounts_ApplicantId` FOREIGN KEY (`ApplicantId`) REFERENCES `Accounts` (`Id`);
+CREATE UNIQUE INDEX `IX_Wallets_AccountId` ON `Wallets` (`AccountId`);
 
 INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
-VALUES ('20241026035614_AddEntities', '8.0.0');
+VALUES ('20241110105819_InitV4', '8.0.0');
 
 COMMIT;
 
