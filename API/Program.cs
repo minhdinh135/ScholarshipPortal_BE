@@ -1,8 +1,10 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using Application.Common;
+using Application.Interfaces.IServices;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Hangfire;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -106,11 +108,12 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "MyAllowPolicy", policy =>
     {
-        policy.WithOrigins(/*"https://locovn.azurewebsites.net", "https://test-payment.momo.vn"*/ "http://localhost:5173");
+        policy.WithOrigins( /*"https://locovn.azurewebsites.net", "https://test-payment.momo.vn"*/
+            "http://localhost:5173");
         policy.AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
-	});
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
 
 
@@ -167,4 +170,16 @@ app.UseAuthorization();
 app.UseExceptionHandler();
 
 app.MapControllers();
+
+app.UseHangfireDashboard();
+app.MapHangfireDashboard("/hangfire");
+
+// using (var scope = app.Services.CreateScope())
+// {
+//     var serviceProvider = scope.ServiceProvider;
+//     var backgroundService = serviceProvider.GetRequiredService<IBackgroundService>();
+//
+//     RecurringJob.AddOrUpdate("ScheduleScholarshipsAfterDeadline", () => backgroundService.ScheduleScholarshipsAfterDeadline(), Cron.Minutely);
+// }
+
 app.Run();
