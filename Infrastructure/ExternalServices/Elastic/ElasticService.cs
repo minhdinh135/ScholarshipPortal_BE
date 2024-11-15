@@ -155,10 +155,10 @@ public class ElasticService<T> : IElasticService<T> where T : class
             .Size(10)
             .Query(q => q
                 .Bool(b => b
-                    .Should(
+                    .Must(
                         must => must
                             .MultiMatch(match => match
-                                .PrefixLength(5)
+                                .PrefixLength(1)
                                 .Query(scholarshipSearchOptions.Name)
                                 .Fields(new[] { "name" })
                                 .Fuzziness(new Fuzziness("AUTO"))
@@ -188,7 +188,7 @@ public class ElasticService<T> : IElasticService<T> where T : class
                                     .Lte((double?)scholarshipSearchOptions.ScholarshipMaxAmount)
                                 )
                             )
-                    ).MinimumShouldMatch(1)
+                    )
                 )));
 
         return response.Documents.ToList();
