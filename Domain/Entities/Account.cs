@@ -17,6 +17,10 @@ public class Account : BaseEntity
     public bool? LoginWithGoogle { get; set; }
 
     public string? Status { get; set; }
+    
+    public int? SubscriptionId { get; set; }
+    
+    public Subscription? Subscription { get; set; }
 
     public int? RoleId { get; set; }
 

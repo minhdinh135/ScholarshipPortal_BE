@@ -93,41 +93,15 @@ public class MappingProfile : Profile
 
         // Scholarship Program mapping
         CreateMap<ScholarshipProgram, ScholarshipProgramDto>()
-            .ForMember(dest => dest.MajorSkills, opt =>
-                opt.MapFrom(src => src.MajorSkills.GroupBy(ms => ms.Major.Id).Select(group => new MajorDto
-                {
-                    Id = group.Key,
-                    Name = group.First().Major.Name,  // Use the first major from the group
-                    Description = group.First().Major.Description,
-                    Skills = group.Select(ms => new SkillDto
-                    {
-                        Id = ms.Skill.Id,
-                        Name = ms.Skill.Name,
-                        Description = ms.Skill.Description,
-                        Type = ms.Skill.Type
-                    }).ToList() 
-                }).ToList()))
-            .ForMember(dest => dest.Universities, opt =>
-                opt.MapFrom(src => src.ScholarshipProgramUniversities.Select(spu => spu.University)))
             .ForMember(dest => dest.Certificates, opt =>
                 opt.MapFrom(src => src.ScholarshipProgramCertificates.Select(spc => spc.Certificate)))
             .ReverseMap();
         CreateMap<CreateScholarshipProgramRequest, ScholarshipProgram>()
-            .ForMember(dest => dest.MajorSkills, opt =>
-                opt.MapFrom(src => src.MajorSkills))
-            .ForMember(dest => dest.ScholarshipProgramUniversities, opt =>
-                opt.MapFrom(src =>
-                    src.UniversityIds.Select(id => new ScholarshipProgramUniversity { UniversityId = id }).ToList()))
             .ForMember(dest => dest.ScholarshipProgramCertificates, opt =>
                 opt.MapFrom(src =>
                     src.CertificateIds.Select(id => new ScholarshipProgramCertificate { CertificateId = id })
                         .ToList()));
         CreateMap<UpdateScholarshipProgramRequest, ScholarshipProgram>()
-            .ForMember(dest => dest.MajorSkills, opt =>
-                opt.MapFrom((src, dest) => src.MajorSkills))
-            .ForMember(dest => dest.ScholarshipProgramUniversities, opt =>
-                opt.MapFrom((src, dest) => src.UniversityIds.Select(id => new ScholarshipProgramUniversity
-                    { UniversityId = id, ScholarshipProgramId = dest.Id }).ToList()))
             .ForMember(dest => dest.ScholarshipProgramCertificates, opt =>
                 opt.MapFrom((src, dest) => src.CertificateIds.Select(id => new ScholarshipProgramCertificate
                     { CertificateId = id, ScholarshipProgramId = dest.Id }).ToList()));

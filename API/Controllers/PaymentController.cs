@@ -29,13 +29,13 @@ public class PaymentController : ControllerBase
         _emailService = emailService;
     }
 
-    // [HttpPost("/pay")]
-    // public async Task<IActionResult> Pay(int amount)
-    // {
-    //     var payment = await _stripeService.Pay(amount);
-    //
-    //     return Ok(new ApiResponse(StatusCodes.Status200OK, $"Pay with amount {amount} successfully", payment));
-    // }
+    [HttpPost("/pay")]
+    public async Task<IActionResult> Pay(int amount)
+    {
+        var payment = await _stripeService.Pay(amount);
+    
+        return Ok(new ApiResponse(StatusCodes.Status200OK, $"Pay with amount {amount} successfully", payment));
+    }
 
     // [HttpGet("products")]
     // public async Task<IActionResult> GetAllProducts()
@@ -66,6 +66,21 @@ public class PaymentController : ControllerBase
         {
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
         }
+    }
+
+    [HttpPost("create-checkout-session")]
+    public async Task<IActionResult> CreateCheckoutSession(CheckoutSessionRequest checkoutSessionRequest)
+    {
+	    try
+	    {
+		    var sessionUrl = await _stripeService.CreateCheckoutSession(checkoutSessionRequest.Email, checkoutSessionRequest.Amount);
+
+		    return Ok(new ApiResponse(StatusCodes.Status200OK, "Create session successfully", sessionUrl));
+	    }
+	    catch (ServiceException e)
+	    {
+		    return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+	    }
     }
 
     [HttpPost("transfer-money")]
