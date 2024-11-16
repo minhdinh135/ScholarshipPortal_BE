@@ -138,6 +138,21 @@ public class ScholarshipProgramController : ControllerBase
         }
     }
 
+    [HttpPut("update-status/{id}")]
+    public async Task<IActionResult> UpdateScholarshipProgramStatus([FromRoute] int id,
+        [FromBody] string status)
+    {
+        try
+        {
+            await _scholarshipProgramService.UpdateScholarshipProgramStatus(id, status);
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update scholarship program successfully"));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
     [HttpPut("update-name/{id}")]
     public async Task<IActionResult> UpdateScholarshipProgramName([FromRoute] int id,
         [FromBody] string name)
