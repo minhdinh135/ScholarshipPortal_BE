@@ -17,6 +17,13 @@ public class ScholarshipContextSeed
             context.Roles.AddRange(roles);
         }
 
+        if (!context.Subscriptions.Any())
+        {
+            var subscriptionsData = File.ReadAllText(basePath + "/subscriptions.json");
+            var subscriptions = JsonSerializer.Deserialize<List<Subscription>>(subscriptionsData);
+            context.Subscriptions.AddRange(subscriptions);
+        }
+
         if (!context.Accounts.Any())
         {
             var accountsData = File.ReadAllText(basePath + "/accounts.json");
@@ -47,6 +54,13 @@ public class ScholarshipContextSeed
             context.Universities.AddRange(countries);
         }
 
+        if (!context.Skills.Any())
+        {
+            var skillsData = File.ReadAllText(basePath + "/skills.json");
+            var skills = JsonSerializer.Deserialize<List<Skill>>(skillsData);
+            context.Skills.AddRange(skills);
+        }
+
         if (!context.Majors.Any())
         {
             var majorsData = File.ReadAllText(basePath + "/majors.json");
@@ -54,12 +68,6 @@ public class ScholarshipContextSeed
             context.Majors.AddRange(majors);
         }
 
-        if (!context.Skills.Any())
-        {
-            var skillsData = File.ReadAllText(basePath + "/skills.json");
-            var skills = JsonSerializer.Deserialize<List<Skill>>(skillsData);
-            context.Skills.AddRange(skills);
-        }
 
         if (!context.Certificates.Any())
         {

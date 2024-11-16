@@ -24,6 +24,14 @@ public class ScholarshipProgram : BaseEntity
     
     public Category? Category { get; set; }
     
+    public int? UniversityId { get; set; }
+    
+    public University? University { get; set; }
+    
+    public int? MajorId { get; set; }
+    
+    public Major? Major { get; set; }
+    
     public ICollection<Application>? Applications { get; set; }
     
     public ICollection<AwardMilestone> AwardMilestones { get; set; }
@@ -34,7 +42,5 @@ public class ScholarshipProgram : BaseEntity
     
     public ICollection<ScholarshipProgramCertificate> ScholarshipProgramCertificates { get; set; }
     
-    public ICollection<ScholarshipProgramUniversity>? ScholarshipProgramUniversities { get; set; }
-    
-    public ICollection<MajorSkill>? MajorSkills { get; set; }
+    // public ICollection<MajorSkill>? MajorSkills { get; set; }
 }

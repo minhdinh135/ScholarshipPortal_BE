@@ -23,23 +23,25 @@ public class ScholarshipContext : DbContext
             .Where(e => e.Entity is BaseEntity && (
                 e.State == EntityState.Added
                 || e.State == EntityState.Modified));
-
+    
         foreach (var entityEntry in entries)
         {
-            ((BaseEntity)entityEntry.Entity).UpdatedAt = DateTime.UtcNow;
-
+            ((BaseEntity)entityEntry.Entity).UpdatedAt = DateTime.Now;
+    
             if (entityEntry.State == EntityState.Added)
             {
-                ((BaseEntity)entityEntry.Entity).CreatedAt = DateTime.UtcNow;
+                ((BaseEntity)entityEntry.Entity).CreatedAt = DateTime.Now;
             }
         }
-
+    
         return await base.SaveChangesAsync(cancellationToken);
     }
 
     public virtual DbSet<Account> Accounts { get; set; }
 
     public virtual DbSet<Wallet> Wallets { get; set; }
+
+    public virtual DbSet<Subscription> Subscriptions { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
 
@@ -75,6 +77,8 @@ public class ScholarshipContext : DbContext
 
     public virtual DbSet<RequestDetail> RequestDetails { get; set; }
 
+    public virtual DbSet<RequestDetailFile> RequestDetailFiles { get; set; }
+
     public virtual DbSet<Request> Requests { get; set; }
 
     public virtual DbSet<Feedback> Feedbacks { get; set; }
@@ -104,8 +108,6 @@ public class ScholarshipContext : DbContext
     public virtual DbSet<Country> Countries { get; set; }
 
     public virtual DbSet<Major> Majors { get; set; }
-
-    public virtual DbSet<ScholarshipProgramUniversity> ScholarshipProgramUniversities { get; set; }
 
     public virtual DbSet<ScholarshipProgramCertificate> ScholarshipProgramCertificates { get; set; }
 
@@ -162,6 +164,9 @@ public class ScholarshipContext : DbContext
         modelBuilder.Entity<RequestDetail>()
             .ToTable("request_details");
 
+        modelBuilder.Entity<RequestDetailFile>()
+            .ToTable("request_detail_files");
+
         modelBuilder.Entity<ApplicationReview>()
             .ToTable("application_reviews");
 
@@ -177,9 +182,6 @@ public class ScholarshipContext : DbContext
         modelBuilder.Entity<ScholarshipProgram>()
             .ToTable("scholarship_programs");
 
-        modelBuilder.Entity<ScholarshipProgramUniversity>()
-            .ToTable("scholarship_program_universities");
-
         modelBuilder.Entity<ScholarshipProgramCertificate>()
             .ToTable("scholarship_program_certificates");
 
@@ -192,6 +194,11 @@ public class ScholarshipContext : DbContext
             entity.HasOne(account => account.Role)
                 .WithMany(role => role.Accounts)
                 .HasForeignKey(account => account.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(account => account.Subscription)
+                .WithMany(subscription => subscription.Accounts)
+                .HasForeignKey(account => account.SubscriptionId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(account => account.ApplicantProfile)
@@ -224,7 +231,7 @@ public class ScholarshipContext : DbContext
                 .HasForeignKey(account => account.FunderId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
-
+        
         modelBuilder.Entity<Chat>(entity =>
         {
             entity.HasOne(chat => chat.Sender)
@@ -345,6 +352,14 @@ public class ScholarshipContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
+        modelBuilder.Entity<RequestDetailFile>(entity =>
+        {
+            entity.HasOne(rdf => rdf.RequestDetail)
+                .WithMany(rd => rd.RequestDetailFiles)
+                .HasForeignKey(rdf => rdf.RequestDetailId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
         modelBuilder.Entity<Criteria>()
             .HasOne(criterion => criterion.ScholarshipProgram)
             .WithMany(scholarshipProgram => scholarshipProgram.Criteria)
@@ -367,6 +382,16 @@ public class ScholarshipContext : DbContext
             entity.HasOne(scholarshipProgram => scholarshipProgram.Category)
                 .WithMany(category => category.ScholarshipPrograms)
                 .HasForeignKey(scholarshipProgram => scholarshipProgram.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(scholarshipProgram => scholarshipProgram.University)
+                .WithMany(university => university.ScholarshipPrograms)
+                .HasForeignKey(scholarshipProgram => scholarshipProgram.UniversityId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(scholarshipProgram => scholarshipProgram.Major)
+                .WithMany(major => major.ScholarshipPrograms)
+                .HasForeignKey(scholarshipProgram => scholarshipProgram.MajorId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
@@ -396,7 +421,7 @@ public class ScholarshipContext : DbContext
 
         modelBuilder.Entity<MajorSkill>(entity =>
         {
-            // entity.HasKey(ms => new { ms.MajorId, ms.SkillId });
+            entity.HasKey(ms => new { ms.MajorId, ms.SkillId });
 
             entity.HasOne(ms => ms.Major)
                 .WithMany(m => m.MajorSkills)
@@ -406,11 +431,6 @@ public class ScholarshipContext : DbContext
             entity.HasOne(ms => ms.Skill)
                 .WithMany(s => s.MajorSkills)
                 .HasForeignKey(ms => ms.SkillId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            entity.HasOne(ms => ms.ScholarshipProgram)
-                .WithMany(sp => sp.MajorSkills)
-                .HasForeignKey(ms => ms.ScholarshipProgramId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
@@ -426,21 +446,6 @@ public class ScholarshipContext : DbContext
             entity.HasOne(spc => spc.Certificate)
                 .WithMany(c => c.ScholarshipProgramCertificates)
                 .HasForeignKey(spc => spc.CertificateId)
-                .OnDelete(DeleteBehavior.Restrict);
-        });
-
-        modelBuilder.Entity<ScholarshipProgramUniversity>(entity =>
-        {
-            entity.HasKey(spu => new { spu.ScholarshipProgramId, spu.UniversityId });
-
-            entity.HasOne(spu => spu.ScholarshipProgram)
-                .WithMany(sp => sp.ScholarshipProgramUniversities)
-                .HasForeignKey(spu => spu.ScholarshipProgramId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            entity.HasOne(spu => spu.University)
-                .WithMany(u => u.ScholarshipProgramUniversities)
-                .HasForeignKey(spu => spu.UniversityId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
     }

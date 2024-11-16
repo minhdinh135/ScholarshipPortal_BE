@@ -104,7 +104,6 @@ public class ScholarshipProgramService : IScholarshipProgramService
             await _scholarshipProgramRepository.DeleteRelatedInformation(existingScholarshipProgram);
 
             _mapper.Map(updateScholarshipProgramRequest, existingScholarshipProgram);
-            existingScholarshipProgram.MajorSkills.ToList().ForEach(ms => ms.ScholarshipProgramId = id);
 
             var scholarshipElasticDocument = _mapper.Map<ScholarshipProgramElasticDocument>(existingScholarshipProgram);
             await _scholarshipElasticService.AddOrUpdateScholarship(scholarshipElasticDocument);
