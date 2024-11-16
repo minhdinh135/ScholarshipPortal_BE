@@ -137,6 +137,26 @@ public class ScholarshipProgramService : IScholarshipProgramService
         }
     }
 
+    public async Task UpdateScholarshipProgramStatus(int id, string status)
+    {
+        var existingScholarshipProgram = await _scholarshipProgramRepository.GetScholarsipProgramById(id);
+        if (existingScholarshipProgram == null)
+            throw new NotFoundException($"Scholarship program with id:{id} is not found");
+
+        try
+        {
+            existingScholarshipProgram.Status = status;
+            var scholarshipElasticDocument = _mapper.Map<ScholarshipProgramElasticDocument>(existingScholarshipProgram);
+            await _scholarshipElasticService.AddOrUpdate(scholarshipElasticDocument, "scholarships");
+
+            await _scholarshipProgramRepository.Update(existingScholarshipProgram);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
 
     public async Task UploadScholarshipProgramImage(int id, IFormFile file)
     {

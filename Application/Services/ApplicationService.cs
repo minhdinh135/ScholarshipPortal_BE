@@ -4,18 +4,26 @@ using Application.Interfaces.IServices;
 using AutoMapper;
 using Domain.DTOs.Application;
 using Domain.DTOs.Common;
+using Domain.Entities;
 
 namespace Application.Services
 {
     public class ApplicationService : IApplicationService
     {
         private readonly IApplicationRepository _applicationRepository;
+        private readonly IGenericRepository<ApplicationDocument> _applicationDocumentRepository;
+        private readonly ICloudinaryService _cloudinaryService;
+
         private readonly IMapper _mapper;
 
-        public ApplicationService(IApplicationRepository applicationRepository, IMapper mapper)
+        public ApplicationService(IApplicationRepository applicationRepository, IMapper mapper,
+            IGenericRepository<ApplicationDocument> applicationDocumentRepository,
+            ICloudinaryService cloudinaryService)
         {
             _applicationRepository = applicationRepository;
             _mapper = mapper;
+            _applicationDocumentRepository = applicationDocumentRepository;
+            _cloudinaryService = cloudinaryService;
         }
 
         public async Task<ApplicationDto> Add(AddApplicationDto dto)
@@ -27,8 +35,15 @@ namespace Application.Services
 
         public async Task<ApplicationDto> Delete(int id)
         {
-            var entity = await _applicationRepository.GetById(id);
+            var entity = await _applicationRepository.GetWithDocumentsAndAccount(id);
             if (entity == null) return null;
+            foreach (var document in entity.ApplicationDocuments)
+            {
+                await _applicationDocumentRepository.DeleteById(document.Id);
+                var fileId = document.FileUrl!= null ? document.FileUrl.Split('/')[^1]:null;
+                if(fileId != null)
+                    await _cloudinaryService.DeleteFile(fileId);
+            }
             await _applicationRepository.DeleteById(id);
             return _mapper.Map<ApplicationDto>(entity);
         }
