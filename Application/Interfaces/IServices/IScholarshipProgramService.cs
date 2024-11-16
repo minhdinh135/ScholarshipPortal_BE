@@ -19,4 +19,5 @@ public interface IScholarshipProgramService
     Task<ScholarshipProgramDto> DeleteScholarshipProgramById(int id);
     Task<List<ScholarshipProgramElasticDocument>> SearchScholarships(ScholarshipSearchOptions scholarshipSearchOptions);
     Task<List<string>> SuggestScholarships(string input);
+    Task UpdateScholarshipProgramStatus(int id, string status);
 }

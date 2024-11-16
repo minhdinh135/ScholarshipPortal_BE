@@ -120,7 +120,7 @@ public static class ServiceExtension
         services.Configure<StripeSettings>(config.GetSection("StripeSettings"));
         services.AddScoped<IStripeService, StripeService>();
 
-        services.AddHangfire(configuration => configuration
+        /*services.AddHangfire(configuration => configuration
             .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
             .UseSimpleAssemblyNameTypeSerializer()
             .UseRecommendedSerializerSettings()
@@ -128,7 +128,7 @@ public static class ServiceExtension
                 config.GetConnectionString("Hangfire"),
                 new MySqlStorageOptions()
             )));
-        services.AddHangfireServer();
+        services.AddHangfireServer();*/
         services.AddScoped<IBackgroundService, BackgroundService>();
 
         FirebaseApp.Create(new AppOptions()
