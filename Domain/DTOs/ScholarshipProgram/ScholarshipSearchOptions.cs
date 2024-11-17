@@ -2,15 +2,15 @@
 
 public class ScholarshipSearchOptions
 {
-    public string Name { get; set; } = "scholarship";
+    public string? Name { get; set; }  
 
     public decimal ScholarshipMinAmount { get; set; } = 500;
 
     public decimal ScholarshipMaxAmount { get; set; } = 100000;
 
-    public string CategoryName { get; set; } = "merit-based";
+    public string? CategoryName { get; set; } 
 
-    public string Status { get; set; } = "open";
+    public string? Status { get; set; } 
     
-    public DateTime Deadline { get; set; } = DateTime.Now;
+    public DateTime? Deadline { get; set; } 
 }

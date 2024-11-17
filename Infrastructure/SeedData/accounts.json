@@ -1,16 +1,16 @@
 ﻿[
   {
-    "Username": "admin",
-    "FullName": "Admin",
+    "Username": "system",
+    "FullName": "System",
     "Email": "admin@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "",
-    "Gender": "MALE",
+    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "Gender": "",
     "RoleId": 1,
     "LoginWithGoogle": false,
-    "Status": "ACTIVE"
+    "Status": "Active"
   },
   {
     "Username": "ethan",
@@ -19,11 +19,11 @@
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "",
-    "Gender": "MALE",
+    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "Gender": "Male",
     "RoleId": 2,
     "LoginWithGoogle": false,
-    "Status": "ACTIVE"
+    "Status": "Active"
   },
   {
     "Username": "mia",
@@ -32,11 +32,11 @@
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "",
-    "Gender": "FEMALE",
+    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "Gender": "Female",
     "RoleId": 2,
     "LoginWithGoogle": false,
-    "Status": "ACTIVE"
+    "Status": "Active"
   },
   {
     "Username": "leo",
@@ -45,11 +45,11 @@
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "",
-    "Gender": "MALE",
+    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "Gender": "Male",
     "RoleId": 2,
     "LoginWithGoogle": false,
-    "Status": "ACTIVE"
+    "Status": "Active"
   },
   {
     "Username": "zoe",
@@ -58,11 +58,11 @@
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "",
-    "Gender": "FEMALE",
+    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "Gender": "Female",
     "RoleId": 3,
     "LoginWithGoogle": false,
-    "Status": "ACTIVE"
+    "Status": "Active"
   },
   {
     "Username": "noah",
@@ -71,11 +71,11 @@
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "",
-    "Gender": "MALE",
+    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "Gender": "Male",
     "RoleId": 3,
     "LoginWithGoogle": false,
-    "Status": "ACTIVE"
+    "Status": "Active"
   },
   {
     "Username": "ava",
@@ -84,11 +84,11 @@
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "",
-    "Gender": "FEMALE",
+    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "Gender": "Female",
     "RoleId": 3,
     "LoginWithGoogle": false,
-    "Status": "ACTIVE"
+    "Status": "Active"
   },
   {
     "Username": "lucas",
@@ -97,11 +97,11 @@
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "",
-    "Gender": "MALE",
+    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "Gender": "Male",
     "RoleId": 4,
     "LoginWithGoogle": false,
-    "Status": "ACTIVE"
+    "Status": "Active"
   },
   {
     "Username": "lily",
@@ -110,11 +110,11 @@
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "",
-    "Gender": "FEMALE",
+    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "Gender": "Female",
     "RoleId": 4,
     "LoginWithGoogle": false,
-    "Status": "ACTIVE"
+    "Status": "Active"
   },
   {
     "Username": "mason",
@@ -123,11 +123,11 @@
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "",
-    "Gender": "MALE",
+    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "Gender": "Male",
     "RoleId": 4,
     "LoginWithGoogle": false,
-    "Status": "ACTIVE"
+    "Status": "Active"
   },
   {
     "Username": "chloe",
@@ -136,11 +136,11 @@
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "",
-    "Gender": "FEMALE",
+    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "Gender": "Female",
     "RoleId": 5,
     "LoginWithGoogle": false,
-    "Status": "ACTIVE"
+    "Status": "Active"
   },
   {
     "Username": "oliver",
@@ -149,11 +149,11 @@
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "",
-    "Gender": "MALE",
+    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "Gender": "Male",
     "RoleId": 5,
     "LoginWithGoogle": false,
-    "Status": "ACTIVE"
+    "Status": "Active"
   },
   {
     "Username": "emma",
@@ -162,11 +162,11 @@
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "",
-    "Gender": "MALE",
+    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "Gender": "Male",
     "RoleId": 5,
     "LoginWithGoogle": false,
-    "Status": "ACTIVE"
+    "Status": "Active"
   },
   {
     "Username": "grace",
@@ -175,10 +175,10 @@
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "",
-    "Gender": "FEMALE",
+    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "Gender": "Female",
     "RoleId": 5,
     "LoginWithGoogle": false,
-    "Status": "ACTIVE"
+    "Status": "Active"
   }
 ]

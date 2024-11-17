@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.IServices;
 using Microsoft.Extensions.Options;
 using Stripe;
+using Stripe.Checkout;
 using Account = Domain.Entities.Account;
 
 namespace Infrastructure.ExternalServices.Stripe;
@@ -46,6 +47,48 @@ public class StripeService : IStripeService
         var paymentLink = await paymentLinkService.CreateAsync(paymentLinkOptions);
 
         return paymentLink.Url;
+    }
+
+    public async Task<string> CreateCheckoutSession(string email, decimal amount)
+    {
+        var options = new SessionCreateOptions
+        {
+            PaymentMethodTypes = new List<string>
+            {
+                "card",
+                "us_bank_account"
+            },
+            CustomerEmail = email,
+            Mode = "payment",
+            LineItems = new List<SessionLineItemOptions>
+            {
+                new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        Currency = "usd",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = "Amount" 
+                        },
+                        UnitAmount = (int)(amount * 100)
+                    },
+                    Quantity = 1,
+                },
+            },
+            Metadata = new Dictionary<string, string>
+            {
+                { "OrderId", "123456" }, // Include any custom data here
+                { "CustomerEmail", "customer@example.com" }
+            },
+            SuccessUrl = "http://localhost:5173/payment/result?status=successful",
+            CancelUrl = "https://localhost:5173/payment/result?status=failed",
+        };
+
+        var service = new SessionService();
+        var session = await service.CreateAsync(options);
+
+        return session.Url;
     }
 
     public async Task<string> CreateInvoice(string stripeCustomerId, decimal amount,

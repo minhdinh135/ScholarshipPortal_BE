@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities;
 
-public class MajorSkill : BaseEntity
+public class MajorSkill 
 {
     public int? MajorId { get; set; }
     
@@ -10,7 +10,7 @@ public class MajorSkill : BaseEntity
     
     public Skill? Skill { get; set; }
     
-    public int? ScholarshipProgramId { get; set; }
-    
-    public ScholarshipProgram? ScholarshipProgram { get; set; }
+    // public int? ScholarshipProgramId { get; set; }
+    //
+    // public ScholarshipProgram? ScholarshipProgram { get; set; }
 }
