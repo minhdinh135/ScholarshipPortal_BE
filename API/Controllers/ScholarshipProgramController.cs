@@ -136,6 +136,52 @@ public class ScholarshipProgramController : ControllerBase
         }
     }
 
+    [HttpPut("update-status/{id}")]
+    public async Task<IActionResult> UpdateScholarshipProgramStatus([FromRoute] int id,
+        [FromBody] string status)
+    {
+        try
+        {
+            await _scholarshipProgramService.UpdateScholarshipProgramStatus(id, status);
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update scholarship program successfully"));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
+    [HttpPut("update-name/{id}")]
+    public async Task<IActionResult> UpdateScholarshipProgramName([FromRoute] int id,
+        [FromBody] string name)
+    {
+        try
+        {
+            await _scholarshipProgramService.UpdateScholarshipProgramName(id, name);
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update scholarship program successfully"));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
+    // [HttpPut("{id}/image")]
+    // public async Task<IActionResult> UpdateScholarshipProgramImage(int id, IFormFile file)
+    // {
+    //     try
+    //     {
+    //         await _scholarshipProgramService.UploadScholarshipProgramImage(id, file);
+    //
+    //         return Ok(new ApiResponse(StatusCodes.Status200OK, "Upload image successfully", null));
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest,
+    //             "Error uploading program image: " + e.Message, null));
+    //     }
+    // }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteScholarshipProgram([FromRoute] int id)
     {

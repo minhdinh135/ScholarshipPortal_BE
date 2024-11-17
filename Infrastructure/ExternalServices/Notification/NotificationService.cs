@@ -59,6 +59,7 @@ public class NotificationsService : INotificationService
     {
         var data = new Dictionary<string, string>();
         data.Add("link", link);
+        data.Add("topic", topic);
         data.Add("icon", "https://res.cloudinary.com/djiztef3a/image/upload/v1729315324/yncpkzj4unhr7le4fzox.jpg");
         var message = new Message()
         {

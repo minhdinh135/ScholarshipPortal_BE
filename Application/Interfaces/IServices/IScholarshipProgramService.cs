@@ -15,7 +15,9 @@ public interface IScholarshipProgramService
     Task<int> CreateScholarshipProgram(CreateScholarshipProgramRequest createScholarshipProgramRequest);
     Task<int> UpdateScholarshipProgram(int id, UpdateScholarshipProgramRequest updateScholarshipProgramRequest);
     // Task UploadScholarshipProgramImage(int id, IFormFile file);
+    Task UpdateScholarshipProgramName(int id, string name);
     Task<ScholarshipProgramDto> DeleteScholarshipProgramById(int id);
     Task<List<ScholarshipProgramElasticDocument>> SearchScholarships(ScholarshipSearchOptions scholarshipSearchOptions);
     Task<List<string>> SuggestScholarships(string input);
+    Task UpdateScholarshipProgramStatus(int id, string status);
 }
