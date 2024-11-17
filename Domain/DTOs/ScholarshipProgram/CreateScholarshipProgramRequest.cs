@@ -20,9 +20,9 @@ public class CreateScholarshipProgramRequest
 
     public int? CategoryId { get; set; }
     
-    public List<int>? UniversityIds { get; set; }
+    public int? UniversityId { get; set; }
 
-    public List<MajorSkillsDto>? MajorSkills { get; set; }
+    public int? MajorId { get; set; }
     
     public List<int>? CertificateIds { get; set; }
 }

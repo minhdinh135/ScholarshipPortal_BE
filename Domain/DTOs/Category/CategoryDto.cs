@@ -2,7 +2,7 @@
 
 namespace Domain.DTOs.Category;
 
-public class CategoryDto : BaseDto
+public class CategoryDto 
 {
     public int? Id { get; set; }
     public string? Name { get; set; }

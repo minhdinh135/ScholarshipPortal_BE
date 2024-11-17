@@ -55,6 +55,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("SubscriptionId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -66,6 +69,8 @@ namespace Infrastructure.Migrations
                     b.HasIndex("FunderId");
 
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("SubscriptionId");
 
                     b.ToTable("Accounts");
                 });
@@ -694,30 +699,13 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.MajorSkill", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<int?>("MajorId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ScholarshipProgramId")
                         .HasColumnType("int");
 
                     b.Property<int?>("SkillId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MajorId");
-
-                    b.HasIndex("ScholarshipProgramId");
+                    b.HasKey("MajorId", "SkillId");
 
                     b.HasIndex("SkillId");
 
@@ -852,23 +840,14 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("ApplicationFileUrl")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ApplicationNotes")
+                    b.Property<string>("Comment")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("ExpectedCompletionTime")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<int?>("RequestId")
                         .HasColumnType("int");
-
-                    b.Property<string>("ScholarshipType")
-                        .HasColumnType("longtext");
 
                     b.Property<int?>("ServiceId")
                         .HasColumnType("int");
@@ -883,6 +862,31 @@ namespace Infrastructure.Migrations
                     b.HasIndex("ServiceId");
 
                     b.ToTable("request_details", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.RequestDetailFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("FileUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("RequestDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RequestDetailId");
+
+                    b.ToTable("request_detail_files", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ReviewMilestone", b =>
@@ -960,6 +964,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("MajorId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
@@ -972,6 +979,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("UniversityId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -980,6 +990,10 @@ namespace Infrastructure.Migrations
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("FunderId");
+
+                    b.HasIndex("MajorId");
+
+                    b.HasIndex("UniversityId");
 
                     b.ToTable("scholarship_programs", (string)null);
                 });
@@ -999,21 +1013,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("scholarship_program_certificates", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.ScholarshipProgramUniversity", b =>
-                {
-                    b.Property<int?>("ScholarshipProgramId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UniversityId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ScholarshipProgramId", "UniversityId");
-
-                    b.HasIndex("UniversityId");
-
-                    b.ToTable("scholarship_program_universities", (string)null);
-                });
-
             modelBuilder.Entity("Domain.Entities.Service", b =>
                 {
                     b.Property<int>("Id")
@@ -1025,9 +1024,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("Duration")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
@@ -1078,6 +1074,32 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Skills");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Subscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("ValidMonths")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Subscriptions");
                 });
 
             modelBuilder.Entity("Domain.Entities.Transaction", b =>
@@ -1203,9 +1225,16 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Domain.Entities.Subscription", "Subscription")
+                        .WithMany("Accounts")
+                        .HasForeignKey("SubscriptionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Funder");
 
                     b.Navigation("Role");
+
+                    b.Navigation("Subscription");
                 });
 
             modelBuilder.Entity("Domain.Entities.Achievement", b =>
@@ -1410,21 +1439,16 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Major", "Major")
                         .WithMany("MajorSkills")
                         .HasForeignKey("MajorId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
-                        .WithMany("MajorSkills")
-                        .HasForeignKey("ScholarshipProgramId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.Skill", "Skill")
                         .WithMany("MajorSkills")
                         .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Major");
-
-                    b.Navigation("ScholarshipProgram");
 
                     b.Navigation("Skill");
                 });
@@ -1485,6 +1509,16 @@ namespace Infrastructure.Migrations
                     b.Navigation("Service");
                 });
 
+            modelBuilder.Entity("Domain.Entities.RequestDetailFile", b =>
+                {
+                    b.HasOne("Domain.Entities.RequestDetail", "RequestDetail")
+                        .WithMany("RequestDetailFiles")
+                        .HasForeignKey("RequestDetailId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("RequestDetail");
+                });
+
             modelBuilder.Entity("Domain.Entities.ReviewMilestone", b =>
                 {
                     b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
@@ -1507,9 +1541,23 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("FunderId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Domain.Entities.Major", "Major")
+                        .WithMany("ScholarshipPrograms")
+                        .HasForeignKey("MajorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Entities.University", "University")
+                        .WithMany("ScholarshipPrograms")
+                        .HasForeignKey("UniversityId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Category");
 
                     b.Navigation("Funder");
+
+                    b.Navigation("Major");
+
+                    b.Navigation("University");
                 });
 
             modelBuilder.Entity("Domain.Entities.ScholarshipProgramCertificate", b =>
@@ -1529,25 +1577,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Certificate");
 
                     b.Navigation("ScholarshipProgram");
-                });
-
-            modelBuilder.Entity("Domain.Entities.ScholarshipProgramUniversity", b =>
-                {
-                    b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
-                        .WithMany("ScholarshipProgramUniversities")
-                        .HasForeignKey("ScholarshipProgramId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.University", "University")
-                        .WithMany("ScholarshipProgramUniversities")
-                        .HasForeignKey("UniversityId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("ScholarshipProgram");
-
-                    b.Navigation("University");
                 });
 
             modelBuilder.Entity("Domain.Entities.Service", b =>
@@ -1677,6 +1706,8 @@ namespace Infrastructure.Migrations
                 {
                     b.Navigation("MajorSkills");
 
+                    b.Navigation("ScholarshipPrograms");
+
                     b.Navigation("SubMajors");
                 });
 
@@ -1688,6 +1719,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Request", b =>
                 {
                     b.Navigation("RequestDetails");
+                });
+
+            modelBuilder.Entity("Domain.Entities.RequestDetail", b =>
+                {
+                    b.Navigation("RequestDetailFiles");
                 });
 
             modelBuilder.Entity("Domain.Entities.Role", b =>
@@ -1703,13 +1739,9 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("Criteria");
 
-                    b.Navigation("MajorSkills");
-
                     b.Navigation("ReviewMilestones");
 
                     b.Navigation("ScholarshipProgramCertificates");
-
-                    b.Navigation("ScholarshipProgramUniversities");
                 });
 
             modelBuilder.Entity("Domain.Entities.Service", b =>
@@ -1724,9 +1756,14 @@ namespace Infrastructure.Migrations
                     b.Navigation("MajorSkills");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Subscription", b =>
+                {
+                    b.Navigation("Accounts");
+                });
+
             modelBuilder.Entity("Domain.Entities.University", b =>
                 {
-                    b.Navigation("ScholarshipProgramUniversities");
+                    b.Navigation("ScholarshipPrograms");
                 });
 
             modelBuilder.Entity("Domain.Entities.Wallet", b =>

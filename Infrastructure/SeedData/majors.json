@@ -1,63 +1,127 @@
 [
   {
     "Id": 1,
-    "Name": "Agriculture",
-    "Description": "The science, art, and practice of cultivating plants and livestock."
+    "Name": "STEM (Science, Technology, Engineering, and Mathematics)",
+    "Description": "Majors related to scientific, technological, engineering, and mathematical fields.",
+    "MajorSkills": [
+      {
+        "SkillId": 1
+      },
+      {
+        "SkillId": 2
+      }
+    ]
   },
   {
     "Id": 2,
-    "Name": "Sciences",
-    "Description": "The systematic enterprise that builds and organizes knowledge in the form of testable explanations and predictions about the universe."
+    "Name": "Business & Economics",
+    "Description": "Majors focused on the study of business, finance, economics, and management.",
+    "MajorSkills": [
+      {
+        "SkillId": 1
+      },
+      {
+        "SkillId": 2
+      }
+    ]
   },
   {
     "Id": 3,
-    "Name": "Architecture",
-    "Description": "The art and science of designing and constructing buildings."
+    "Name": "Health & Medicine",
+    "Description": "Majors related to the study of health, medicine, and wellness fields.",
+    "MajorSkills": [
+      {
+        "SkillId": 1
+      },
+      {
+        "SkillId": 2
+      }
+    ]
   },
   {
     "Id": 4,
-    "Name": "Business & Management",
-    "Description": "The study of organizing, planning, and analyzing business activities and managing operations."
+    "Name": "Social Sciences & Humanities",
+    "Description": "Majors in disciplines that study human society, behavior, and culture.",
+    "MajorSkills": [
+      {
+        "SkillId": 1
+      },
+      {
+        "SkillId": 2
+      }
+    ]
   },
   {
     "Id": 5,
-    "Name": "Computer Science",
-    "Description": "The study of computer systems, programming, and software development."
+    "Name": "Arts & Media",
+    "Description": "Majors focused on creative and performing arts, as well as media, journalism, and digital communication.",
+    "MajorSkills": [
+      {
+        "SkillId": 1
+      },
+      {
+        "SkillId": 2
+      }
+    ]
   },
   {
     "Id": 6,
-    "Name": "Creative Art & Design",
-    "Description": "The expression of ideas through visual arts and design."
+    "Name": "Engineering",
+    "Description": "Majors related to the study of various types of engineering.",
+    "ParentMajorId": 1
   },
   {
     "Id": 7,
-    "Name": "Mechanism & Technology",
-    "Description": "The study of applied mechanics and technology in industrial processes."
+    "Name": "Computer Science",
+    "Description": "Majors related to computer systems, software, and algorithms.",
+    "ParentMajorId": 1
   },
   {
     "Id": 8,
-    "Name": "Public Health",
-    "Description": "The science of protecting and improving the health of people and their communities."
+    "Name": "Business Administration",
+    "Description": "Study of managing and overseeing business operations.",
+    "ParentMajorId": 2
   },
   {
     "Id": 9,
-    "Name": "Humanities",
-    "Description": "The study of human culture, such as literature, philosophy, and history."
+    "Name": "Economics",
+    "Description": "Focuses on the production, consumption, and distribution of goods and services.",
+    "ParentMajorId": 2
   },
   {
     "Id": 10,
-    "Name": "Law",
-    "Description": "The system of rules created and enforced through social or governmental institutions to regulate behavior."
+    "Name": "Nursing",
+    "Description": "Focuses on providing healthcare to individuals and communities.",
+    "ParentMajorId": 3
   },
   {
     "Id": 11,
-    "Name": "Social Science & Media",
-    "Description": "The study of society, communication, and media production."
+    "Name": "Medical Sciences",
+    "Description": "Deals with the scientific study of medicine and healthcare.",
+    "ParentMajorId": 3
   },
   {
     "Id": 12,
-    "Name": "Tourism & Hotel",
-    "Description": "The study of managing travel, hospitality, and accommodation services."
+    "Name": "Psychology",
+    "Description": "Study of the mind and behavior.",
+    "ParentMajorId": 4
+  },
+  {
+    "Id": 13,
+    "Name": "Sociology",
+    "Description": "Study of society, social behavior, and institutions.",
+    "ParentMajorId": 4
+  },
+  {
+    "Id": 14,
+    "Name": "Fine Arts",
+    "Description": "Study of visual and performing arts including painting, sculpture, and design.",
+    "ParentMajorId": 5
+  },
+  {
+    "Id": 15,
+    "Name": "Media Studies",
+    "Description": "Focuses on communication, journalism, and digital media.",
+    "ParentMajorId": 5
   }
 ]
-

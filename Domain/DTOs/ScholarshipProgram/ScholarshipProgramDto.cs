@@ -26,9 +26,9 @@ public class ScholarshipProgramDto
     
     public CategoryDto? Category { get; set; }
 
-    public List<UniversityDto>? Universities { get; set; }
+    public UniversityDto? University { get; set; }
 
-    public List<MajorDto>? MajorSkills { get; set; }
+    public MajorDto? Major { get; set; }
 
     public List<CertificateDto>? Certificates { get; set; }
 }

@@ -12,5 +12,5 @@ public interface IScholarshipProgramRepository : IGenericRepository<ScholarshipP
 
     Task<IEnumerable<ScholarshipProgram>> GetOpenScholarshipPrograms();
 
-    Task DeleteRelatedInformation(ScholarshipProgram scholarshipProgram);
+    Task DeleteScholarshipCertificates(ScholarshipProgram scholarshipProgram);
 }

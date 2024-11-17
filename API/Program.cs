@@ -171,15 +171,15 @@ app.UseExceptionHandler();
 
 app.MapControllers();
 
-//app.UseHangfireDashboard();
-//app.MapHangfireDashboard("/hangfire");
+app.UseHangfireDashboard();
+app.MapHangfireDashboard("/hangfire");
 
-// using (var scope = app.Services.CreateScope())
-// {
-//     var serviceProvider = scope.ServiceProvider;
-//     var backgroundService = serviceProvider.GetRequiredService<IBackgroundService>();
-//
-//     RecurringJob.AddOrUpdate("ScheduleScholarshipsAfterDeadline", () => backgroundService.ScheduleScholarshipsAfterDeadline(), Cron.Minutely);
-// }
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+    var backgroundService = serviceProvider.GetRequiredService<IBackgroundService>();
+
+    RecurringJob.AddOrUpdate("ScheduleScholarshipsAfterDeadline", () => backgroundService.ScheduleScholarshipsAfterDeadline(), Cron.Minutely);
+}
 
 app.Run();

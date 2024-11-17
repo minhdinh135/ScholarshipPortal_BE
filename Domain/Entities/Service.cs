@@ -12,8 +12,6 @@ public class Service : BaseEntity
     
     public string? Status { get; set; }
     
-    public DateTime? Duration { get; set; }
-    
     public int? ProviderId { get; set; }
     
     public Account? Provider { get; set; }

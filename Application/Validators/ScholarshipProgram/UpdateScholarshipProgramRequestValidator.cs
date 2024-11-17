@@ -25,8 +25,5 @@ public class UpdateScholarshipProgramRequestValidator : BaseValidator<UpdateScho
 
         RuleFor(x => x.FunderId)
             .NotEmpty().WithMessage("The funder id is required");
-
-        RuleFor(x => x.UniversityIds)
-            .NotEmpty().WithMessage("List of university ids is required");
     }
 }

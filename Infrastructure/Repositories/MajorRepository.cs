@@ -16,6 +16,7 @@ public class MajorRepository : GenericRepository<Major>, IMajorRepository
         var majors = await _dbContext.Majors
             .AsNoTracking()
             .AsSplitQuery()
+            .Include(m => m.SubMajors)
             .Include(m => m.MajorSkills)
             .ThenInclude(ms => ms.Skill)
             .ToListAsync();
@@ -28,6 +29,7 @@ public class MajorRepository : GenericRepository<Major>, IMajorRepository
         var major = await _dbContext.Majors
             .AsNoTracking()
             .AsSplitQuery()
+            .Include(m => m.SubMajors)
             .Include(m => m.MajorSkills)
             .ThenInclude(ms => ms.Skill)
             .FirstOrDefaultAsync(m => m.Id == id);
