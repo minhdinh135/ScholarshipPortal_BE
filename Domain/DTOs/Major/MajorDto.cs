@@ -1,8 +1,6 @@
-﻿using Domain.DTOs.Common;
+﻿namespace Domain.DTOs.Major;
 
-namespace Domain.DTOs.Major;
-
-public class MajorDto : BaseDto
+public class MajorDto 
 {
     public int? Id { get; set; }
     

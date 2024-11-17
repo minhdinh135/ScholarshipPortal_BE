@@ -171,8 +171,8 @@ app.UseExceptionHandler();
 
 app.MapControllers();
 
-//app.UseHangfireDashboard();
-//app.MapHangfireDashboard("/hangfire");
+app.UseHangfireDashboard();
+app.MapHangfireDashboard("/hangfire");
 
 using (var scope = app.Services.CreateScope())
 {
