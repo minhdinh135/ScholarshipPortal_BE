@@ -125,7 +125,7 @@ public static class ServiceExtension
             .UseSimpleAssemblyNameTypeSerializer()
             .UseRecommendedSerializerSettings()
             .UseStorage(new MySqlStorage(
-                config.GetConnectionString("Hangfire"),
+                config.GetConnectionString("Db"),
                 new MySqlStorageOptions()
             )));
         services.AddHangfireServer();

@@ -109,8 +109,7 @@ public class ScholarshipProgramController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateScholarshipProgram(
-        [FromBody] CreateScholarshipProgramRequest createScholarshipProgramRequest)
+    public async Task<IActionResult> CreateScholarshipProgram(CreateScholarshipProgramRequest createScholarshipProgramRequest)
     {
         var result =
             await _scholarshipProgramService.CreateScholarshipProgram(createScholarshipProgramRequest);
@@ -124,33 +123,16 @@ public class ScholarshipProgramController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateScholarshipProgram([FromRoute] int id,
-        [FromBody] UpdateScholarshipProgramRequest updateScholarshipProgramRequest)
+    public async Task<IActionResult> UpdateScholarshipProgram(int id, UpdateScholarshipProgramRequest updateScholarshipProgramRequest)
     {
         try
         {
-            await _scholarshipProgramService.UpdateScholarshipProgram(id, updateScholarshipProgramRequest);
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update scholarship program successfully"));
+            var result = await _scholarshipProgramService.UpdateScholarshipProgram(id, updateScholarshipProgramRequest);
+            return Ok(new ApiResponse(StatusCodes.Status200OK, $"Update scholarship program with id:{result} successfully", result));
         }
         catch (ServiceException e)
         {
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
-        }
-    }
-
-    [HttpPut("{id}/image")]
-    public async Task<IActionResult> UpdateScholarshipProgramImage(int id, IFormFile file)
-    {
-        try
-        {
-            await _scholarshipProgramService.UploadScholarshipProgramImage(id, file);
-
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Upload image successfully", null));
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest,
-                "Error uploading program image: " + e.Message, null));
         }
     }
 

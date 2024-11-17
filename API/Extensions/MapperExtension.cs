@@ -11,7 +11,6 @@ public static class MapperExtension
         {
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.AddProfile<BaseProfile>();
                 cfg.AddProfile<MappingProfile>();
             });
 

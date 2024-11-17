@@ -149,44 +149,61 @@ public class ElasticService<T> : IElasticService<T> where T : class
     public async Task<List<ScholarshipProgramElasticDocument>> SearchScholarships(
         ScholarshipSearchOptions scholarshipSearchOptions)
     {
+        var mustQueries = new List<Action<QueryDescriptor<ScholarshipProgramElasticDocument>>>();
+
+        if (!string.IsNullOrEmpty(scholarshipSearchOptions.Name))
+        {
+            mustQueries.Add(must => must.MultiMatch(match => match
+                .Query(scholarshipSearchOptions.Name)
+                .Fields(new[] { "name" })
+                .Fuzziness(new Fuzziness("AUTO"))));
+        }
+
+        if (!string.IsNullOrEmpty(scholarshipSearchOptions.Status))
+        {
+            mustQueries.Add(must => must
+                .MultiMatch(match => match
+                    .Query(scholarshipSearchOptions.Status)
+                    .Fields(new[] { "status" })
+                ));
+        }
+
+        if (!string.IsNullOrEmpty(scholarshipSearchOptions.CategoryName))
+        {
+            mustQueries.Add(must => must
+                .MultiMatch(match => match
+                    .Query(scholarshipSearchOptions.CategoryName)
+                    .Fields(new[] { "categoryName" })
+                ));
+        }
+
+        if (scholarshipSearchOptions.Deadline.HasValue)
+        {
+            mustQueries.Add(must => must
+                .Range(range => range
+                    .DateRange(dr => dr
+                        .Field(f => f.Deadline)
+                        .Lte(scholarshipSearchOptions.Deadline)
+                    )
+                ));
+        }
+
+        mustQueries.Add(must => must
+            .Range(range => range
+                .NumberRange(nr => nr
+                    .Field(f => f.ScholarshipAmount)
+                    .Gte((double?)scholarshipSearchOptions.ScholarshipMinAmount)
+                    .Lte((double?)scholarshipSearchOptions.ScholarshipMaxAmount)
+                )
+            ));
+
         var response = await _client.SearchAsync<ScholarshipProgramElasticDocument>(s => s
             .Index("scholarships")
             .From(0)
             .Size(10)
             .Query(q => q
                 .Bool(b => b
-                    .Must(must => must
-                            .MultiMatch(match => match
-                                .Query(scholarshipSearchOptions.Name)
-                                .Fields(new[] { "name" })
-                                .Fuzziness(new Fuzziness("AUTO"))
-                            ),
-                        must => must
-                            .MultiMatch(match => match
-                                .Query(scholarshipSearchOptions.Status)
-                                .Fields(new[] { "status" })
-                            ),
-                        must => must
-                            .MultiMatch(match => match
-                                .Query(scholarshipSearchOptions.CategoryName)
-                                .Fields(new[] { "categoryName" })
-                            ),
-                        must => must
-                            .Range(range => range
-                                .DateRange(dr => dr
-                                    .Field(f => f.Deadline)
-                                    .Lte(scholarshipSearchOptions.Deadline)
-                                )
-                            ),
-                        must => must
-                            .Range(range => range
-                                .NumberRange(nr => nr
-                                    .Field(f => f.ScholarshipAmount)
-                                    .Gte((double?)scholarshipSearchOptions.ScholarshipMinAmount)
-                                    .Lte((double?)scholarshipSearchOptions.ScholarshipMaxAmount)
-                                )
-                            )
-                    )
+                    .Must(mustQueries.ToArray())
                 )));
 
         return response.Documents.ToList();

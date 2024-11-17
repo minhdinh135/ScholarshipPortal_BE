@@ -13,8 +13,8 @@ public interface IScholarshipProgramService
     Task<IEnumerable<ScholarshipProgramDto>> GetScholarshipProgramsByMajorId(int majorId);
     Task<ScholarshipProgramDto> GetScholarshipProgramById(int id);
     Task<int> CreateScholarshipProgram(CreateScholarshipProgramRequest createScholarshipProgramRequest);
-    Task UpdateScholarshipProgram(int id, UpdateScholarshipProgramRequest updateScholarshipProgramRequest);
-    Task UploadScholarshipProgramImage(int id, IFormFile file);
+    Task<int> UpdateScholarshipProgram(int id, UpdateScholarshipProgramRequest updateScholarshipProgramRequest);
+    // Task UploadScholarshipProgramImage(int id, IFormFile file);
     Task<ScholarshipProgramDto> DeleteScholarshipProgramById(int id);
     Task<List<ScholarshipProgramElasticDocument>> SearchScholarships(ScholarshipSearchOptions scholarshipSearchOptions);
     Task<List<string>> SuggestScholarships(string input);

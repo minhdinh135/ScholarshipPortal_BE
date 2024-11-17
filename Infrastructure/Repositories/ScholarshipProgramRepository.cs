@@ -18,7 +18,7 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
         var includes = new Func<IQueryable<ScholarshipProgram>, IQueryable<ScholarshipProgram>>[]
         {
             q => q.Include(sp => sp.Category),
-            q => q.Include(sp => sp.University),
+            q => q.Include(sp => sp.University).ThenInclude(u => u.Country),
             q => q.Include(sp => sp.ScholarshipProgramCertificates).ThenInclude(c => c.Certificate),
             q => q.Include(sp => sp.Major).ThenInclude(m => m.MajorSkills).ThenInclude(ms => ms.Skill),
         };
@@ -33,6 +33,7 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
             .AsSplitQuery()
             .Include(sp => sp.Category)
             .Include(sp => sp.University)
+            .ThenInclude(u => u.Country)
             .Include(sp => sp.Major)
             .ThenInclude(m => m.MajorSkills)
             .ThenInclude(ms => ms.Skill)
@@ -65,7 +66,7 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
         return scholarshipPrograms;
     }
 
-    public async Task DeleteRelatedInformation(ScholarshipProgram scholarshipProgram)
+    public async Task DeleteScholarshipCertificates(ScholarshipProgram scholarshipProgram)
     {
         await _dbContext.ScholarshipProgramCertificates.Where(spc => spc.ScholarshipProgramId == scholarshipProgram.Id)
             .ExecuteDeleteAsync();

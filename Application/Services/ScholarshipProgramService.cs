@@ -92,8 +92,7 @@ public class ScholarshipProgramService : IScholarshipProgramService
         return createdScholarshipProgram.Id;
     }
 
-    public async Task UpdateScholarshipProgram(int id,
-        UpdateScholarshipProgramRequest updateScholarshipProgramRequest)
+    public async Task<int> UpdateScholarshipProgram(int id, UpdateScholarshipProgramRequest updateScholarshipProgramRequest)
     {
         var existingScholarshipProgram = await _scholarshipProgramRepository.GetScholarsipProgramById(id);
         if (existingScholarshipProgram == null)
@@ -101,14 +100,16 @@ public class ScholarshipProgramService : IScholarshipProgramService
 
         try
         {
-            await _scholarshipProgramRepository.DeleteRelatedInformation(existingScholarshipProgram);
+            await _scholarshipProgramRepository.DeleteScholarshipCertificates(existingScholarshipProgram);
 
             _mapper.Map(updateScholarshipProgramRequest, existingScholarshipProgram);
 
             var scholarshipElasticDocument = _mapper.Map<ScholarshipProgramElasticDocument>(existingScholarshipProgram);
             await _scholarshipElasticService.AddOrUpdateScholarship(scholarshipElasticDocument);
 
-            await _scholarshipProgramRepository.Update(existingScholarshipProgram);
+            var updatedScholarshipProgram = await _scholarshipProgramRepository.Update(existingScholarshipProgram);
+
+            return updatedScholarshipProgram.Id;
         }
         catch (Exception e)
         {
@@ -116,33 +117,33 @@ public class ScholarshipProgramService : IScholarshipProgramService
         }
     }
 
-    public async Task UploadScholarshipProgramImage(int id, IFormFile file)
-    {
-        var existingScholarshipProgram = await _scholarshipProgramRepository.GetById(id);
-
-        if (existingScholarshipProgram == null)
-        {
-            throw new Exception("No scholarship program found");
-        }
-
-        try
-        {
-            var imageUrl = await _cloudinaryService.UploadImage(file);
-
-            if (string.IsNullOrEmpty(imageUrl))
-            {
-                throw new Exception("Error uploading to Cloudinary");
-            }
-
-            existingScholarshipProgram.ImageUrl = imageUrl;
-
-            await _scholarshipProgramRepository.Update(existingScholarshipProgram);
-        }
-        catch (Exception e)
-        {
-            throw new Exception("Error uploading image to Cloudinary: " + e.Message);
-        }
-    }
+    // public async Task UploadScholarshipProgramImage(int id, IFormFile file)
+    // {
+    //     var existingScholarshipProgram = await _scholarshipProgramRepository.GetById(id);
+    //
+    //     if (existingScholarshipProgram == null)
+    //     {
+    //         throw new Exception("No scholarship program found");
+    //     }
+    //
+    //     try
+    //     {
+    //         var imageUrl = await _cloudinaryService.UploadImage(file);
+    //
+    //         if (string.IsNullOrEmpty(imageUrl))
+    //         {
+    //             throw new Exception("Error uploading to Cloudinary");
+    //         }
+    //
+    //         existingScholarshipProgram.ImageUrl = imageUrl;
+    //
+    //         await _scholarshipProgramRepository.Update(existingScholarshipProgram);
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         throw new Exception("Error uploading image to Cloudinary: " + e.Message);
+    //     }
+    // }
 
     public async Task<ScholarshipProgramDto> DeleteScholarshipProgramById(int id)
     {

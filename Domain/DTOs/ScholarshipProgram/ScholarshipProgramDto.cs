@@ -26,7 +26,7 @@ public class ScholarshipProgramDto
     
     public CategoryDto? Category { get; set; }
 
-    public UniversityDto? Universities { get; set; }
+    public UniversityDto? University { get; set; }
 
     public MajorDto? Major { get; set; }
 
