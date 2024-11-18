@@ -18,9 +18,9 @@ public class ServiceController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllServices()
+    public async Task<IActionResult> GetAllServices([FromQuery] ListOptions listOptions)
     {
-        var services = await _serviceService.GetAllServices();
+        var services = await _serviceService.GetAllServices(listOptions);
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all services successfully", services));
     }

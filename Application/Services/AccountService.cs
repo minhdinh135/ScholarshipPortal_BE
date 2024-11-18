@@ -60,7 +60,7 @@ public class AccountService : IAccountService
 
     public async Task<AccountDto> GetAccount(int id)
     {
-        var entity = await _accountRepository.GetById(id);
+        var entity = await _accountRepository.GetAccountById(id);
         if (entity == null) return null;
         return _mapper.Map<AccountDto>(entity);
     }
@@ -165,7 +165,7 @@ public class AccountService : IAccountService
             {
                 Amount = createWalletDto.Balance,
                 Description = "Wallet is created",
-                PaymentMethod = PaymentMethodEnum.CREDIT_CARD,
+                PaymentMethod = PaymentMethodEnum.Card.ToString(),
                 TransactionDate = DateTime.Now,
                 WalletReceiverId = createdWallet.Id,
                 WalletSenderId = createdWallet.Id,
@@ -215,7 +215,7 @@ public class AccountService : IAccountService
             {
                 Amount = amount,
                 Description = "Wallet balance updated",
-                PaymentMethod = PaymentMethodEnum.CREDIT_CARD,
+                PaymentMethod = PaymentMethodEnum.Card.ToString(),
                 TransactionDate = DateTime.Now,
                 WalletReceiverId = existingWallet.Id,
                 WalletSenderId = existingWallet.Id,

@@ -47,7 +47,7 @@ public class JwtService : ITokenService
         return new JwtDto(tokenHandler.WriteToken(jwt));
     }
 
-    public JwtDto CreateToken(IConfiguration config, AccountDto account, string role = RoleEnum.APPLICANT)
+    public JwtDto CreateToken(IConfiguration config, AccountDto account, string role = "Applicant")
     {
         //create claims details based on the user information
         var claims = new[]

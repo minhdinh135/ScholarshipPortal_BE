@@ -17,23 +17,28 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
         var query = _dbContext.Requests
             .AsNoTracking()
             .AsSplitQuery()
-            .Include(r => r.RequestDetails).ThenInclude(r => r.Service).ThenInclude(r=>r.Feedbacks)
-			.AsQueryable();
+            .Include(r => r.RequestDetails)
+            .ThenInclude(r => r.RequestDetailFiles)
+            .Include(r => r.RequestDetails)
+            .ThenInclude(r => r.Service)
+            .AsQueryable();
 
         if (requestQueryParameters.ApplicantId.HasValue)
         {
-            query =  query.Where(r => r.ApplicantId == requestQueryParameters.ApplicantId);
+            query = query.Where(r => r.ApplicantId == requestQueryParameters.ApplicantId);
         }
-        
+
         return await query.ToListAsync();
     }
 
     public async Task<IEnumerable<Request>> GetRequestsByApplicantId(int applicantId)
     {
         var requests = await _dbContext.Requests
-            .AsNoTracking()
             .AsSplitQuery()
-            .Include(r => r.RequestDetails).ThenInclude(r => r.Service)
+            .Include(r => r.RequestDetails)
+            .ThenInclude(r => r.RequestDetailFiles)
+            .Include(r => r.RequestDetails)
+            .ThenInclude(r => r.Service)
             .Where(r => r.ApplicantId == applicantId)
             .ToListAsync();
 
@@ -43,10 +48,12 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
     public async Task<Request> GetRequestById(int id)
     {
         var request = await _dbContext.Requests
-            .AsNoTracking()
             .AsSplitQuery()
-            .Include(r => r.RequestDetails).ThenInclude(r => r.Service).ThenInclude(r => r.Feedbacks)
-			.FirstOrDefaultAsync(r => r.Id == id);
+            .Include(r => r.RequestDetails)
+            .ThenInclude(r => r.RequestDetailFiles)
+            .Include(r => r.RequestDetails)
+            .ThenInclude(r => r.Service)
+            .FirstOrDefaultAsync(r => r.Id == id);
 
         return request;
     }

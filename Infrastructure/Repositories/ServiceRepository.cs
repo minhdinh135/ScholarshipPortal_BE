@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.IRepositories;
+using Domain.DTOs.Common;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Service = Domain.Entities.Service;
@@ -11,15 +12,24 @@ public class ServiceRepository : GenericRepository<Service>, IServiceRepository
     {
     }
 
-    public async Task<IEnumerable<Service>> GetAllServices()
+    public async Task<PaginatedList<Service>> GetAllServices(ListOptions listOptions)
     {
-        var services = await _dbContext.Services
-            .AsNoTracking()
-            .AsSplitQuery()
-            .Include(s => s.Feedbacks)
-            .Include(s => s.RequestDetails)
-            .ToListAsync();
+        // var services = await _dbContext.Services
+        //     .AsNoTracking()
+        //     .AsSplitQuery()
+        //     .Include(s => s.Feedbacks)
+        //     .Include(s => s.RequestDetails)
+        //     .ToListAsync();
 
+
+        var includes = new Func<IQueryable<Service>, IQueryable<Service>>[]
+        {
+            s => s.Include(s => s.Feedbacks),
+            s => s.Include(s => s.RequestDetails)
+        };
+
+        var services = await GetPaginatedList(includes, listOptions);
+        
         return services;
     }
 

@@ -10,9 +10,9 @@ public interface IRequestService
     Task<RequestDto> GetRequestById(int id);
 	Task<IEnumerable<RequestDto>> GetRequestByApplicantId(int applicantId);
 
-    Task<RequestDto> CreateRequest(AddRequestDto addRequestDto);
+    Task<int> CreateRequest(ApplicantCreateRequestDto applicantCreateRequestDto);
 
-    Task<RequestDto> UpdateRequest(int id, UpdateRequestDto updateRequestDto);
+    Task<int> UpdateRequestResult(int id, ProviderUpdateRequestDto providerUpdateRequestDto);
     Task<bool> HasUserRequestedService(int serviceId, int applicantId);
     Task<IEnumerable<Domain.Entities.Request>> GetByServiceId(int serviceId);
     Task<Request> GetWithApplicantAndRequestDetails(int id);

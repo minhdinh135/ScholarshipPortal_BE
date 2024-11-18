@@ -12,5 +12,5 @@ public class Request : BaseEntity
     
     public Account? Applicant { get; set; }
     
-    public ICollection<RequestDetail> RequestDetails { get; set; }
+    public ICollection<RequestDetail>? RequestDetails { get; set; }
 }

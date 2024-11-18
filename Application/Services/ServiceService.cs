@@ -19,11 +19,11 @@ public class ServiceService : IServiceService
         _serviceRepository = serviceRepository;
     }
 
-    public async Task<IEnumerable<ServiceDto>> GetAllServices()
+    public async Task<PaginatedList<ServiceDto>> GetAllServices(ListOptions listOptions)
     {
-        var services = await _serviceRepository.GetAllServices();
+        var services = await _serviceRepository.GetAllServices(listOptions);
 
-        return _mapper.Map<IEnumerable<ServiceDto>>(services);
+        return _mapper.Map<PaginatedList<ServiceDto>>(services);
     }
 
 	public async Task<PaginatedList<ServiceDto>> GetAll(int pageIndex, int pageSize, string sortBy, string sortOrder)
