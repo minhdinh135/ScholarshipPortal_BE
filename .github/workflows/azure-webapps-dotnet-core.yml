@@ -58,9 +58,6 @@ jobs:
       - name: dotnet publish
         run: dotnet publish ./API/API.csproj -c Release -o ${{env.AZURE_WEBAPP_PACKAGE_PATH}}
 
-      - name: Debug Publish Output
-        run: ls -la ${{env.AZURE_WEBAPP_PACKAGE_PATH}}
-
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
@@ -82,13 +79,10 @@ jobs:
         with:
           name: .net-app
 
-      - name: Debug Deployment Files
-        run: ls -la /home/runner/work/ssap-server/ssap-server
-
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.PUBLISH_PROFILE }}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          package: "./"
