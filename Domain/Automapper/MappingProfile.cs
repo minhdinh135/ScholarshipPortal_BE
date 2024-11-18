@@ -32,7 +32,7 @@ public class MappingProfile : Profile
         //     .ReverseMap();
 
         CreateMap(typeof(PaginatedList<>), typeof(PaginatedList<>));
-        
+
         //Account and Role Mapping
         CreateMap<Role, AddRoleDto>().ReverseMap();
         CreateMap<Role, UpdateRoleDto>().ReverseMap();
@@ -104,7 +104,9 @@ public class MappingProfile : Profile
             .ReverseMap();
         CreateMap<CreateScholarshipProgramRequest, ScholarshipProgram>()
             .ForMember(dest => dest.ScholarshipProgramCertificates, opt =>
-                opt.MapFrom(src => src.CertificateIds.Select(id => new ScholarshipProgramCertificate { CertificateId = id }).ToList()));
+                opt.MapFrom(src =>
+                    src.CertificateIds.Select(id => new ScholarshipProgramCertificate { CertificateId = id })
+                        .ToList()));
         CreateMap<UpdateScholarshipProgramRequest, ScholarshipProgram>()
             .ForMember(dest => dest.ScholarshipProgramCertificates, opt =>
                 opt.MapFrom((src, dest) => src.CertificateIds.Select(id => new ScholarshipProgramCertificate
@@ -170,15 +172,20 @@ public class MappingProfile : Profile
         CreateMap<UpdateServiceDto, Service>();
 
         // Request mapping
-        CreateMap<Request, RequestDto>().ReverseMap();
-        CreateMap<RequestDetail, RequestDetailsDto>()
-            .ForMember(dest => dest.Service, opt =>
-                opt.MapFrom(r => r.Service))
+        CreateMap<Request, RequestDto>()
+            .ForMember(dest => dest.RequestDetails, opt =>
+                opt.MapFrom(src => src.RequestDetails))
             .ReverseMap();
-        CreateMap<AddRequestDto, Request>();
-        CreateMap<UpdateRequestDto, Request>().ReverseMap();
-        CreateMap<AddRequestDetailsDto, RequestDetail>();
-        CreateMap<UpdateRequestDetailsDto, RequestDetail>();
+        CreateMap<RequestDetail, RequestDetailsDto>()
+            .ForMember(dest => dest.Files, opt =>
+                opt.MapFrom(src => src.RequestDetailFiles.Select(f => new RequestFile
+                {
+                    FileUrl = f.FileUrl,
+                    UploadDate = f.UploadDate,
+                    UploadedBy = f.UploadedBy
+                })))
+            .ReverseMap();
+        CreateMap<RequestDetailFile, RequestFile>().ReverseMap();
 
         // Feedback mapping
         CreateMap<Feedback, FeedbackDto>().ReverseMap();

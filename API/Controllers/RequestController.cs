@@ -107,11 +107,11 @@ public class RequestController : ControllerBase
 	}
 
 	[HttpPost]
-    public async Task<IActionResult> CreateRequest(AddRequestDto addRequestDto)
+    public async Task<IActionResult> CreateRequest(ApplicantCreateRequestDto applicantCreateRequestDto)
     {
         try
         {
-            var createdRequest = await _requestService.CreateRequest(addRequestDto);
+            var createdRequest = await _requestService.CreateRequest(applicantCreateRequestDto);
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Create request successfully", createdRequest));
         }
@@ -122,11 +122,11 @@ public class RequestController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateRequest(int id, UpdateRequestDto updateRequestDto)
+    public async Task<IActionResult> UpdateRequestResult(int id, ProviderUpdateRequestDto providerUpdateRequestDto)
     {
         try
         {
-            var updatedRequest = await _requestService.UpdateRequest(id, updateRequestDto);
+            var updatedRequest = await _requestService.UpdateRequestResult(id, providerUpdateRequestDto);
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Update request successfully", updatedRequest));
         }

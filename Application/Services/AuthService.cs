@@ -34,7 +34,7 @@ public class AuthService : IAuthService
     {
         if (login.Email == _adminAccount.Email && login.Password == _adminAccount.Password)
         {
-            var token = _tokenService.CreateToken(_configuration, login.Email, RoleEnum.ADMIN);
+            var token = _tokenService.CreateToken(_configuration, login.Email, RoleEnum.Admin.ToString());
 
             return token;
         }
@@ -91,7 +91,7 @@ public class AuthService : IAuthService
         users = users.Where(u => u.Email == userInfo.Email).ToList();
         if (users.Count() > 0)
         {
-            JwtDto jwt = _tokenService.CreateToken(_configuration, users.FirstOrDefault(), RoleEnum.APPLICANT);
+            JwtDto jwt = _tokenService.CreateToken(_configuration, users.FirstOrDefault(), RoleEnum.Applicant.ToString());
             return (jwt, false);
         }
         
@@ -104,10 +104,10 @@ public class AuthService : IAuthService
             Address = "",
             AvatarUrl = userInfo.Picture,
             RoleId = 5,
-            Status = StatusEnum.ACTIVE
+            Status = AccountStatusEnum.Active.ToString()
         };
         var user = await _accountService.AddAccount(userDto);
-        JwtDto jwt1 = _tokenService.CreateToken(_configuration, user, RoleEnum.APPLICANT);
+        JwtDto jwt1 = _tokenService.CreateToken(_configuration, user, RoleEnum.Applicant.ToString());
 
         return (jwt1, true);
     }
