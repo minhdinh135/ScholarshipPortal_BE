@@ -75,7 +75,7 @@ public class NotificationController : ControllerBase
 
             //get all admins
             var admins = await _accountService.GetAll();
-            admins = admins.Where(x => x.RoleName == RoleEnum.ADMIN).ToList();
+            admins = admins.Where(x => x.RoleName == RoleEnum.Admin.ToString()).ToList();
 
             foreach (var admin in admins)
             {
