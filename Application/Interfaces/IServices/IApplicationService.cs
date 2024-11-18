@@ -16,6 +16,8 @@ namespace Application.Interfaces.IServices
         Task<ApplicationDto> Add(AddApplicationDto dto);
         Task<ApplicationDto> Update(int id, UpdateApplicationStatusRequest dto);
         Task<ApplicationDto> Delete(int id);
+        Task<IEnumerable<ApplicationReviewDto>> GetAllReviews();
         Task AssignApplicationsToExpert(AssignApplicationsToExpertRequest request);
+        Task UpdateReviewResult(UpdateReviewResultDto updateReviewResultDto);
     }
 }
