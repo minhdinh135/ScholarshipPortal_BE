@@ -33,9 +33,13 @@ namespace Application.Services
 
         public async Task<ApplicationDto> Add(AddApplicationDto dto)
         {
-            var entity = _mapper.Map<Domain.Entities.Application>(dto);
-            await _applicationRepository.Add(entity);
-            return _mapper.Map<ApplicationDto>(entity);
+            var application = _mapper.Map<Domain.Entities.Application>(dto);
+            application.AppliedDate = DateTime.Now;
+            application.Status = ApplicationStatusEnum.Submitted.ToString();
+            
+            await _applicationRepository.Add(application);
+            
+            return _mapper.Map<ApplicationDto>(application);
         }
 
         public async Task<ApplicationDto> Delete(int id)
@@ -54,6 +58,13 @@ namespace Application.Services
             return _mapper.Map<ApplicationDto>(entity);
         }
 
+        public async Task<IEnumerable<ApplicationReviewDto>> GetAllReviews()
+        {
+            var reviews = await _applicationReviewRepository.GetAll();
+
+            return _mapper.Map<IEnumerable<ApplicationReviewDto>>(reviews);
+        }
+
         public async Task AssignApplicationsToExpert(AssignApplicationsToExpertRequest request)
         {
             try
@@ -70,11 +81,11 @@ namespace Application.Services
 
                     var review = new ApplicationReview
                     {
+                        Description = request.Description,
                         ApplicationId = applicationId,
+                        ReviewDate = request.ReviewDate,
                         ExpertId = request.ExpertId,
-                        Status = "Assigned",
-                        CreatedAt = DateTime.UtcNow,
-                        UpdatedAt = DateTime.UtcNow
+                        Status = ApplicationReviewStatusEnum.Assigned.ToString()
                     };
                     await _applicationReviewRepository.Add(review);
                 }
@@ -83,6 +94,28 @@ namespace Application.Services
             {
                 throw new ServiceException(e.Message);
             }
+        }
+
+        public async Task UpdateReviewResult(UpdateReviewResultDto updateReviewResultDto)
+        {
+            var existingApplicationReview =
+                await _applicationReviewRepository.GetById(updateReviewResultDto.ApplicationReviewId);
+            if (existingApplicationReview == null)
+                throw new ServiceException(
+                    $"Application review with ID {updateReviewResultDto.ApplicationReviewId} is not found");
+
+            existingApplicationReview.Comment = updateReviewResultDto.Comment;
+            existingApplicationReview.Status = ApplicationReviewStatusEnum.Completed.ToString();
+
+            try
+            {
+                await _applicationReviewRepository.Update(existingApplicationReview);
+            }
+            catch (Exception e)
+            {
+                throw new ServiceException(e.Message);
+            }
+            
         }
 
 
