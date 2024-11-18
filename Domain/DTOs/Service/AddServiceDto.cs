@@ -12,7 +12,5 @@ public class AddServiceDto
 
     public string? Status { get; set; }
 
-    public DateTime? Duration { get; set; }
-
     public int? ProviderId { get; set; }
 }

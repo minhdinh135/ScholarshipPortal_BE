@@ -67,17 +67,17 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
         return accounts;
     }
 
-    public async Task<bool> IsAccountValidWithRole(int userId, string role)
-    {
-        var user = _dbContext.Accounts
-            .AsNoTracking()
-            .AsSplitQuery()
-            .Include(a => a.Role)
-            .FirstOrDefault(a => a.Id == userId);
-
-        if (user.Role.Name.ToLower().Equals(role.ToLower()))
-            return true;
-
-        return false;
-    }
+    // public async Task<bool> IsAccountValidWithRole(int userId, string role)
+    // {
+    //     var user = _dbContext.Accounts
+    //         .AsNoTracking()
+    //         .AsSplitQuery()
+    //         .Include(a => a.Role)
+    //         .FirstOrDefault(a => a.Id == userId);
+    //
+    //     if (user.Role.Name.ToLower().Equals(role.ToLower()))
+    //         return true;
+    //
+    //     return false;
+    // }
 }

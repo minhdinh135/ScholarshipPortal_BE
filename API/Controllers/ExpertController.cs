@@ -29,7 +29,7 @@ public class ExpertController : ControllerBase
     public async Task<IActionResult> GetAllExperts()
     {
         var applicants = await _accountService.GetAll();
-        applicants = applicants.Where(x => x.RoleName == RoleEnum.EXPERT).ToList();
+        applicants = applicants.Where(x => x.RoleName == RoleEnum.Expert.ToString()).ToList();
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get experts successfully", applicants));
     }

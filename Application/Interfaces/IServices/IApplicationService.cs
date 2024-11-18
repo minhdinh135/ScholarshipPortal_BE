@@ -16,5 +16,6 @@ namespace Application.Interfaces.IServices
         Task<ApplicationDto> Add(AddApplicationDto dto);
         Task<ApplicationDto> Update(int id, UpdateApplicationStatusRequest dto);
         Task<ApplicationDto> Delete(int id);
+        Task AssignApplicationsToExpert(AssignApplicationsToExpertRequest request);
     }
 }

@@ -16,8 +16,6 @@ public class ServiceDto
 
     public string? Status { get; set; }
 
-    public DateTime? Duration { get; set; }
-
     public int? ProviderId { get; set; }
     
     public List<RequestDetailsDto> RequestDetails { get; set; }

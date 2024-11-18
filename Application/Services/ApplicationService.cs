@@ -2,6 +2,7 @@ using Application.Exceptions;
 using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
+using Domain.Constants;
 using Domain.DTOs.Application;
 using Domain.DTOs.Common;
 using Domain.Entities;
@@ -11,19 +12,23 @@ namespace Application.Services
     public class ApplicationService : IApplicationService
     {
         private readonly IApplicationRepository _applicationRepository;
+        private readonly IMapper _mapper;
         private readonly IGenericRepository<ApplicationDocument> _applicationDocumentRepository;
         private readonly ICloudinaryService _cloudinaryService;
+        private readonly IAccountService _accountService;
+        private readonly IApplicationReviewRepository _applicationReviewRepository;
 
-        private readonly IMapper _mapper;
 
         public ApplicationService(IApplicationRepository applicationRepository, IMapper mapper,
             IGenericRepository<ApplicationDocument> applicationDocumentRepository,
-            ICloudinaryService cloudinaryService)
+            ICloudinaryService cloudinaryService, IAccountService accountService, IApplicationReviewRepository applicationReviewRepository)
         {
             _applicationRepository = applicationRepository;
             _mapper = mapper;
             _applicationDocumentRepository = applicationDocumentRepository;
             _cloudinaryService = cloudinaryService;
+            _accountService = accountService;
+            _applicationReviewRepository = applicationReviewRepository;
         }
 
         public async Task<ApplicationDto> Add(AddApplicationDto dto)
@@ -40,12 +45,44 @@ namespace Application.Services
             foreach (var document in entity.ApplicationDocuments)
             {
                 await _applicationDocumentRepository.DeleteById(document.Id);
-                var fileId = document.FileUrl!= null ? document.FileUrl.Split('/')[^1]:null;
-                if(fileId != null)
+                var fileId = document.FileUrl != null ? document.FileUrl.Split('/')[^1] : null;
+                if (fileId != null)
                     await _cloudinaryService.DeleteFile(fileId);
             }
+
             await _applicationRepository.DeleteById(id);
             return _mapper.Map<ApplicationDto>(entity);
+        }
+
+        public async Task AssignApplicationsToExpert(AssignApplicationsToExpertRequest request)
+        {
+            try
+            {
+                var expert = await _accountService.GetAccount(request.ExpertId);
+                if (expert == null || expert.RoleName != RoleEnum.Expert.ToString())
+                    throw new ServiceException($"User with id {request.ExpertId} is not Expert");
+
+                foreach (var applicationId in request.ApplicationIds)
+                {
+                    var application = await _applicationRepository.GetById(applicationId);
+                    if (application == null)
+                        throw new ServiceException($"Application with id {applicationId} not found.");
+
+                    var review = new ApplicationReview
+                    {
+                        ApplicationId = applicationId,
+                        ExpertId = request.ExpertId,
+                        Status = "Assigned",
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
+                    };
+                    await _applicationReviewRepository.Add(review);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new ServiceException(e.Message);
+            }
         }
 
 
@@ -95,7 +132,7 @@ namespace Application.Services
             var existingApplication = await _applicationRepository.GetById(id);
             if (existingApplication == null)
                 throw new ServiceException($"Application with id:{id} is not found", new NotFoundException());
-            
+
             _mapper.Map(dto, existingApplication);
             var updatedApplication = await _applicationRepository.Update(existingApplication);
             return _mapper.Map<ApplicationDto>(updatedApplication);

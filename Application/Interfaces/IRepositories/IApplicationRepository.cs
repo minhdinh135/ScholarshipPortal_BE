@@ -1,3 +1,5 @@
+using Domain.Entities;
+
 namespace Application.Interfaces.IRepositories;
 
 public interface IApplicationRepository : IGenericRepository<Domain.Entities.Application>

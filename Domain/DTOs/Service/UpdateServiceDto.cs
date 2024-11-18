@@ -11,8 +11,4 @@ public class UpdateServiceDto
     public decimal? Price { get; set; }
 
     public string? Status { get; set; }
-
-    public DateTime? Duration { get; set; }
-
-    public int? ProviderId { get; set; }
 }
