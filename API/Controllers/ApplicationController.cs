@@ -6,33 +6,33 @@ using ServiceException = Application.Exceptions.ServiceException;
 
 namespace SSAP.API.Controllers
 {
-	[ApiController]
-	[Route("api/applications")]
-	public class ApplicationController : ControllerBase
-	{
-		private readonly IApplicationService _applicationService;
-		private readonly ILogger<ApplicationController> _logger;
+    [ApiController]
+    [Route("api/applications")]
+    public class ApplicationController : ControllerBase
+    {
+        private readonly IApplicationService _applicationService;
+        private readonly ILogger<ApplicationController> _logger;
 
-		public ApplicationController(IApplicationService applicationService, ILogger<ApplicationController> logger)
-		{
+        public ApplicationController(IApplicationService applicationService, ILogger<ApplicationController> logger)
+        {
             _applicationService = applicationService;
-			_logger = logger;
-		}
+            _logger = logger;
+        }
 
-		[HttpGet]
-		public async Task<IActionResult> GetAll()
-		{
-			try
-			{
-				var profiles = await _applicationService.GetAll();
-				return Ok(profiles);
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError($"Failed to get all applicant profiles: {ex.Message}");
-				return StatusCode(500, "Error retrieving data from the database.");
-			}
-		}
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var profiles = await _applicationService.GetAll();
+                return Ok(profiles);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get all applicant profiles: {ex.Message}");
+                return StatusCode(500, "Error retrieving data from the database.");
+            }
+        }
 
         [HttpGet("paginated")]
         public async Task<IActionResult> GetAll([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10,
@@ -107,50 +107,73 @@ namespace SSAP.API.Controllers
         }
 
         [HttpGet("with-documents-and-account-profile/{id}")]
-		public async Task<IActionResult> GetWithDocumentsAndAccount(int id)
-		{
-			try
-			{
-				var profile = await _applicationService.GetWithDocumentsAndAccount(id);
-				if (profile == null) return NotFound("Application not found.");
-				return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicantion successfully", profile));
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError($"Failed to get applicant profile by id {id}: {ex.Message}");
-				return StatusCode(500, "Error retrieving data from the database.");
-			}
-		}
+        public async Task<IActionResult> GetWithDocumentsAndAccount(int id)
+        {
+            try
+            {
+                var profile = await _applicationService.GetWithDocumentsAndAccount(id);
+                if (profile == null) return NotFound("Application not found.");
+                return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicantion successfully", profile));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get applicant profile by id {id}: {ex.Message}");
+                return StatusCode(500, "Error retrieving data from the database.");
+            }
+        }
 
         [HttpGet("get-by-scholarship/{scholarshipId}")]
-		public async Task<IActionResult> GetByScholarship(int scholarshipId)
-		{
-			try
-			{
-				var profile = await _applicationService.GetByScholarshipId(scholarshipId);
-				if (profile == null) return NotFound("Application not found.");
-				return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicantion successfully", profile));
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError($"Failed to get applicant profile by id {scholarshipId}: {ex.Message}");
-				return StatusCode(500, "Error retrieving data from the database.");
-			}
-		}
+        public async Task<IActionResult> GetByScholarship(int scholarshipId)
+        {
+            try
+            {
+                var profile = await _applicationService.GetByScholarshipId(scholarshipId);
+                if (profile == null) return NotFound("Application not found.");
+                return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicantion successfully", profile));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get applicant profile by id {scholarshipId}: {ex.Message}");
+                return StatusCode(500, "Error retrieving data from the database.");
+            }
+        }
 
-		[HttpPost("reviews/assign-expert")]
-		public async Task<IActionResult> AssignApplicationsToExpert(AssignApplicationsToExpertRequest request)
-		{
-			try
-			{
-				await _applicationService.AssignApplicationsToExpert(request);
+        [HttpGet("reviews")]
+        public async Task<IActionResult> GetAllReviews()
+        {
+            var reviews = await _applicationService.GetAllReviews();
 
-				return Ok(new ApiResponse(StatusCodes.Status200OK, "Assign successfully"));
-			}
-			catch (ServiceException e)
-			{
-				return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
-			}
-		}
-	}
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Get reviews successfully", reviews));
+        }
+
+        [HttpPost("reviews/assign-expert")]
+        public async Task<IActionResult> AssignApplicationsToExpert(AssignApplicationsToExpertRequest request)
+        {
+            try
+            {
+                await _applicationService.AssignApplicationsToExpert(request);
+
+                return Ok(new ApiResponse(StatusCodes.Status200OK, "Assign successfully"));
+            }
+            catch (ServiceException e)
+            {
+                return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+            }
+        }
+
+        [HttpPut("reviews/result")]
+        public async Task<IActionResult> UpdateReviewResult(UpdateReviewResultDto updateReviewResultDto)
+        {
+            try
+            {
+                await _applicationService.UpdateReviewResult(updateReviewResultDto);
+
+                return Ok(new ApiResponse(StatusCodes.Status200OK, "Update result successfully"));
+            }
+            catch (ServiceException e)
+            {
+                return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+            }
+        }
+    }
 }

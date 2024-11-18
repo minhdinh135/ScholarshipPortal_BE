@@ -13,7 +13,7 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
     public async Task<Domain.Entities.Application> GetWithDocumentsAndAccount(int applicationId)
     {
         var application = await _dbContext.Applications
-            .AsNoTracking()
+            .AsSplitQuery()
             .Where(a => a.Id == applicationId)
             .Include(a => a.Applicant)
             .ThenInclude(a => a.ApplicantProfile)
@@ -26,7 +26,7 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
     public async Task<IEnumerable<Domain.Entities.Application>> GetByScholarshipId(int scholarshipId)
     {
         var application = await _dbContext.Applications
-            .AsNoTracking()
+            .AsSplitQuery()
             .Where(a => a.ScholarshipProgramId == scholarshipId)
             .Include(a => a.Applicant)
             .ToListAsync();
@@ -38,7 +38,6 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
     public async Task<IEnumerable<Domain.Entities.Application>> GetByApplicantId(int applicantId)
     {
         var applications = await _dbContext.Applications
-            .AsNoTracking()
             .AsSplitQuery()
             .Where(a => a.ApplicantId == applicantId)
             .Include(a => a.ApplicationDocuments)
@@ -52,7 +51,6 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
     public async Task<IEnumerable<Domain.Entities.Application>> GetByScholarshipProgramId(int scholarshipProgramId)
     {
         var applications = await _dbContext.Applications
-            .AsNoTracking()
             .AsSplitQuery()
             .Where(a => a.ScholarshipProgramId == scholarshipProgramId)
             .Include(a => a.ApplicationDocuments)
