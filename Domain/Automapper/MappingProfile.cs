@@ -1,4 +1,5 @@
 using AutoMapper;
+using Domain.Constants;
 using Domain.DTOs.Account;
 using Domain.DTOs.Applicant;
 using Domain.DTOs.Application;
@@ -58,9 +59,9 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.TransactionId, opt =>
                 opt.MapFrom(src => Guid.NewGuid().ToString("N")))
             .ForMember(dest => dest.PaymentMethod, opt =>
-                opt.MapFrom(src => "Credit Card"))
+                opt.MapFrom(src => src.PaymentMethod))
             .ForMember(dest => dest.Status, opt =>
-                opt.MapFrom(src => "PAID"))
+                opt.MapFrom(src => TransactionStatusEnum.Successful.ToString()))
             .ForMember(dest => dest.TransactionDate, opt =>
                 opt.MapFrom(src => DateTime.UtcNow));
 

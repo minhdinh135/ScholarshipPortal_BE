@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.IServices;
+using Domain.DTOs.Payment;
 using Microsoft.Extensions.Options;
 using Stripe;
 using Stripe.Checkout;
@@ -49,14 +50,14 @@ public class StripeService : IStripeService
         return paymentLink.Url;
     }
 
-    public async Task<string> CreateCheckoutSession(string email, decimal amount)
+    public async Task<CheckoutSessionResponse> CreateCheckoutSession(string email, decimal amount, int senderId,
+        int receiverId)
     {
-        var options = new SessionCreateOptions
+        var sessionCreateOptions = new SessionCreateOptions
         {
             PaymentMethodTypes = new List<string>
             {
                 "card",
-                "us_bank_account"
             },
             CustomerEmail = email,
             Mode = "payment",
@@ -69,7 +70,7 @@ public class StripeService : IStripeService
                         Currency = "usd",
                         ProductData = new SessionLineItemPriceDataProductDataOptions
                         {
-                            Name = "Amount" 
+                            Name = "Amount"
                         },
                         UnitAmount = (int)(amount * 100)
                     },
@@ -78,17 +79,21 @@ public class StripeService : IStripeService
             },
             Metadata = new Dictionary<string, string>
             {
-                { "OrderId", "123456" }, // Include any custom data here
-                { "CustomerEmail", "customer@example.com" }
+                { "senderId", senderId.ToString() },
+                { "receiverId", receiverId.ToString() }
             },
             SuccessUrl = "http://localhost:5173/payment/result?status=successful",
-            CancelUrl = "https://localhost:5173/payment/result?status=failed",
+            CancelUrl = "http://localhost:5173/payment/result?status=failed",
         };
 
-        var service = new SessionService();
-        var session = await service.CreateAsync(options);
+        var sessionService = new SessionService();
+        var session = await sessionService.CreateAsync(sessionCreateOptions);
 
-        return session.Url;
+        return new CheckoutSessionResponse
+        {
+            SessionUrl = session.Url, 
+            PublishableKey = _stripeSettings.PublishableKey
+        };
     }
 
     public async Task<string> CreateInvoice(string stripeCustomerId, decimal amount,
@@ -142,15 +147,6 @@ public class StripeService : IStripeService
         return paymentIntent;
     }
 
-    public async Task<List<object>> GetAllProducts()
-    {
-        var options = new ProductListOptions { Limit = 3 };
-        var service = new ProductService();
-        StripeList<Product> products = await service.ListAsync(options);
-
-        return [products.ToList()];
-    }
-
     public async Task<string> CreateStripeCustomer(Account account, decimal balance)
     {
         var customerOptions = new CustomerCreateOptions
@@ -182,17 +178,5 @@ public class StripeService : IStripeService
         var customer = await service.GetAsync(stripeCustomerId);
 
         return customer;
-    }
-
-    public async Task<string> UpdateCustomerBalance(string stripeCustomerId, decimal balance)
-    {
-        var options = new CustomerUpdateOptions
-        {
-            Balance = -(int)(balance * 100)
-        };
-        var service = new CustomerService();
-        var updatedCustomer = await service.UpdateAsync(stripeCustomerId, options);
-
-        return updatedCustomer.Id;
     }
 }
