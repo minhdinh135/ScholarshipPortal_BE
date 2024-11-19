@@ -2,7 +2,8 @@
 
 public class CheckoutSessionRequest
 {
-    public string Email { get; set; }
+    public int? AccountSenderId { get; set; }
     
+    public int? AccountReceiverId { get; set; }
     public decimal Amount { get; set; }
 }
