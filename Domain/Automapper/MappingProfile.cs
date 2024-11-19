@@ -176,7 +176,9 @@ public class MappingProfile : Profile
         CreateMap<Request, RequestDto>()
             .ForMember(dest => dest.RequestDetails, opt =>
                 opt.MapFrom(src => src.RequestDetails))
-            .ReverseMap();
+			.ForMember(dest => dest.Service, opt =>
+				opt.MapFrom(src => src.RequestDetails.First().Service))
+			.ReverseMap();
         CreateMap<RequestDetail, RequestDetailsDto>()
             .ForMember(dest => dest.Files, opt =>
                 opt.MapFrom(src => src.RequestDetailFiles.Select(f => new RequestFile
