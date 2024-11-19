@@ -44,6 +44,20 @@ public class RequestController : ControllerBase
 		return NotFound(new ApiResponse(StatusCodes.Status404NotFound, "Request not found"));
 	}
 
+	[HttpPut("finish-request/{id}")]
+	public async Task<IActionResult> UpdateStatusFinish(int id)
+	{
+		try
+		{
+			var updatedRequest = await _requestService.UpdateRequestStatusFinish(id);
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Request status updated to 'Finished' successfully", updatedRequest));
+		}
+		catch (Exception ex)
+		{
+			return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Error updating request status", ex.Message));
+		}
+	}
+
 	//[HttpGet("applicant/{applicantId}")]
 	//public async Task<IActionResult> GetRequestsByApplicantId(int applicantId)
 	//{
