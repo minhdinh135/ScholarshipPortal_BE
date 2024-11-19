@@ -154,10 +154,8 @@ public class AccountService : IAccountService
         
         try
         {
-            var stripeCustomerId = await _stripeService.CreateStripeCustomer(account, createWalletDto.Balance);
             var wallet = _mapper.Map<Wallet>(createWalletDto);
             wallet.AccountId = id;
-            wallet.StripeCustomerId = stripeCustomerId;
 
             var createdWallet = await _walletRepository.Add(wallet);
 
@@ -170,7 +168,7 @@ public class AccountService : IAccountService
                 WalletReceiverId = createdWallet.Id,
                 WalletSenderId = createdWallet.Id,
                 TransactionId = Guid.NewGuid().ToString("N"),
-                Status = "Successful"
+                Status = TransactionStatusEnum.Successful.ToString()
             };
 
             await _transactionRepository.Add(transaction);
@@ -207,7 +205,6 @@ public class AccountService : IAccountService
 
         try
         {
-            await _stripeService.UpdateCustomerBalance(existingWallet.StripeCustomerId, balance);
             existingWallet.Balance = balance;
             var updatedWallet = await _walletRepository.Update(existingWallet);
 
@@ -220,7 +217,7 @@ public class AccountService : IAccountService
                 WalletReceiverId = existingWallet.Id,
                 WalletSenderId = existingWallet.Id,
                 TransactionId = Guid.NewGuid().ToString("N"),
-                Status = "Successful"
+                Status = TransactionStatusEnum.Successful.ToString()
             };
 
             var createdTransaction = await _transactionRepository.Add(transaction);
