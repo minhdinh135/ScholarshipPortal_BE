@@ -2,8 +2,8 @@
 using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
+using Domain.Constants;
 using Domain.DTOs.Payment;
-using Domain.DTOs.Transaction;
 using Domain.Entities;
 
 namespace Application.Services;
@@ -43,6 +43,54 @@ public class PaymentService : IPaymentService
         }
     }
 
+    public async Task<CheckoutSessionResponse> CreateCheckoutSession(TransferRequest transferRequest)
+    {
+        try
+        {
+            var senderAccount = await _accountService.GetAccount(transferRequest.SenderId);
+            var checkoutResponse =
+                await _stripeService.CreateCheckoutSession(senderAccount.Email, transferRequest.Amount,
+                    transferRequest.SenderId, transferRequest.ReceiverId);
+
+            return checkoutResponse;
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task AddTransaction(decimal amount, string paymentMethod, string description, string transactionId,
+        int senderId,
+        int receiverId)
+    {
+        try
+        {
+            var senderWallet = await _accountService.GetWalletByUserId(senderId);
+            var receiverWallet = await _accountService.GetWalletByUserId(receiverId);
+
+            if (senderWallet == null || receiverWallet == null)
+                throw new ServiceException("Wallet has not been created");
+
+            Transaction transaction = new Transaction
+            {
+                Amount = amount,
+                PaymentMethod = paymentMethod,
+                Description = description,
+                TransactionId = transactionId,
+                WalletSenderId = senderWallet.Id,
+                WalletReceiverId = receiverWallet.Id,
+                TransactionDate = DateTime.Now,
+                Status = TransactionStatusEnum.Successful.ToString()
+            };
+            await _transactionRepository.Add(transaction);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
     public async Task TransferMoney(TransferRequest transferRequest)
     {
         try
@@ -72,40 +120,39 @@ public class PaymentService : IPaymentService
         }
     }
 
-	public async Task<List<Transaction>> GetTransactionsByWalletSenderIdAsync(int walletSenderId)
-	{
-		try
-		{
-			return await _transactionRepository.GetTransactionsByWalletSenderIdAsync(walletSenderId);
-		}
-		catch (Exception e)
-		{
-			throw new ServiceException(e.Message);
-		}
-	}
-
-	public async Task<List<Transaction>> GetTransactionsByWalletUserIdAsync(int walletUserId)
+    public async Task<List<Transaction>> GetTransactionsByWalletSenderIdAsync(int walletSenderId)
     {
-		try
-		{
-			return await _transactionRepository.GetTransactionsByWalletUserIdAsync(walletUserId);
-		}
-		catch (Exception e)
-		{
-			throw new ServiceException(e.Message);
-		}
-	}
+        try
+        {
+            return await _transactionRepository.GetTransactionsByWalletSenderIdAsync(walletSenderId);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
 
-	public async Task<List<Transaction>> GetAllTransactionsAsync()
-	{
-		try
-		{
-			return await _transactionRepository.GetAllAsync();
-		}
-		catch (Exception e)
-		{
-			throw new ServiceException("Error fetching transactions: " + e.Message);
-		}
-	}
+    public async Task<List<Transaction>> GetTransactionsByWalletUserIdAsync(int walletUserId)
+    {
+        try
+        {
+            return await _transactionRepository.GetTransactionsByWalletUserIdAsync(walletUserId);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
 
+    public async Task<List<Transaction>> GetAllTransactionsAsync()
+    {
+        try
+        {
+            return await _transactionRepository.GetAllAsync();
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException("Error fetching transactions: " + e.Message);
+        }
+    }
 }

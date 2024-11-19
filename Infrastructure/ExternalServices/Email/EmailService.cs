@@ -46,7 +46,7 @@ public class EmailService : IEmailService
         smtp.Disconnect(true);
     }
 
-    public async Task SendInvoiceReceipt(string recipientEmail, decimal amount, string invoiceId)
+    public async Task SendPaymentReceipt(string recipientEmail, decimal amount, string referenceId)
     {
         var email = new MimeMessage();
         email.Sender = MailboxAddress.Parse(_emailSettings.Mail);
@@ -63,7 +63,7 @@ public class EmailService : IEmailService
             <p>Hello,</p>
             <p>We have received your payment. Here are the details of your transaction:</p>
             <table>
-                <tr><td><strong>Invoice ID:</strong></td><td>{invoiceId}</td></tr>
+                <tr><td><strong>Reference ID:</strong></td><td>{referenceId}</td></tr>
                 <tr><td><strong>Amount Paid:</strong></td><td>{amount} USD</td></tr>
             </table>
             <br />
