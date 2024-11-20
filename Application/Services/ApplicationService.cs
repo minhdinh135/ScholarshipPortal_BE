@@ -176,5 +176,27 @@ namespace Application.Services
             var entities = await _applicationRepository.GetByScholarshipId(scholarshipId);
             return entities;
         }
+
+
+        public async Task<Domain.Entities.Application> ExtendApplication(ExtendApplicationDto extendApplicationDto)
+        {
+            foreach (var file in extendApplicationDto.Documents)
+            {
+                var entity = new ApplicationDocument
+                {
+                    ApplicationId = extendApplicationDto.ApplicationId,
+                    Name = file.Name,
+                    Type = file.Type,
+                    FileUrl = file.FileUrl
+                };
+                await _applicationDocumentRepository.Add(entity);
+            }
+
+            var entities = await _applicationRepository.GetById(extendApplicationDto.ApplicationId);
+            entities.Status = ApplicationStatusEnum.Submitted.ToString();
+            await _applicationRepository.Update(entities);
+
+            return entities;
+        }
     }
 }
