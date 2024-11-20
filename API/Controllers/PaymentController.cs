@@ -1,6 +1,5 @@
 ﻿using Application.Exceptions;
 using Application.Interfaces.IServices;
-using Domain.Constants;
 using Domain.DTOs.Common;
 using Domain.DTOs.Payment;
 using Infrastructure.ExternalServices.Stripe;
@@ -8,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Stripe;
 using Stripe.Checkout;
+using TransferRequest = Domain.DTOs.Payment.TransferRequest;
 
 namespace SSAP.API.Controllers;
 
@@ -31,29 +31,14 @@ public class PaymentController : ControllerBase
         _emailService = emailService;
     }
 
-    // [HttpPost("create-invoice")]
-    // public async Task<IActionResult> CreateInvoice(InvoiceRequest invoiceRequest)
-    // {
-    //     try
-    //     {
-    //         var invoiceUrl = await _paymentService.CreateInvoice(invoiceRequest);
-    //
-    //         return Ok(new ApiResponse(StatusCodes.Status200OK, "Create invoice successfully", invoiceUrl));
-    //     }
-    //     catch (ServiceException e)
-    //     {
-    //         return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
-    //     }
-    // }
-
-    [HttpPost("checkout-session")]
-    public async Task<IActionResult> CreateCheckoutSession(TransferRequest transferRequest)
+    [HttpPost("stripe-checkout")]
+    public async Task<IActionResult> CreateCheckoutSession(CheckoutSessionRequest checkoutSessionRequest)
     {
         try
         {
-            var result = await _paymentService.CreateCheckoutSession(transferRequest);
+            var result = await _paymentService.CreateCheckoutSession(checkoutSessionRequest);
 
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Create session successfully", result));
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Create checkout session successfully", result));
         }
         catch (ServiceException e)
         {
@@ -132,30 +117,31 @@ public class PaymentController : ControllerBase
                 _stripeSettings.WebhookSecret
             );
 
-            // if (stripeEvent.Type == EventTypes.InvoicePaid)
-            // {
-            //     var invoice = stripeEvent.Data.Object as Invoice;
-            //     var customer = await _stripeService.GetCustomer(invoice.CustomerId) as Customer;
-            //     await _accountService.UpdateWalletBalance(int.Parse(invoice.Metadata["accountId"]),
-            //         -customer.Balance / 100);
-            //
-            //     await _emailService.SendInvoiceReceipt(customer.Email, invoice.Total, invoice.Id);
-            // }
             if (stripeEvent.Type == EventTypes.CheckoutSessionCompleted)
             {
                 var session = stripeEvent.Data.Object as Session;
-                // await _paymentService.AddTransaction((decimal)(session.AmountTotal / 100),
-                //     PaymentMethodEnum.Card.ToString(),
-                //     "Payment succeeded", session.Id, int.Parse(session.Metadata["senderId"]),
-                //     int.Parse(session.Metadata["receiverId"]));
-                await _paymentService.TransferMoney(new TransferRequest
-                {
-                    Amount = (decimal)(session.AmountTotal / 100), SenderId = int.Parse(session.Metadata["senderId"]),
-                    ReceiverId = int.Parse(session.Metadata["receiverId"])
-                });
 
-                await _emailService.SendPaymentReceipt(session.CustomerEmail, (decimal)(session.AmountTotal / 100),
-                    session.Id);
+                var amount = (decimal)(session.AmountTotal / 100);
+                var senderId = int.Parse(session.Metadata["senderId"]);
+                var receiverId = int.Parse(session.Metadata["receiverId"]);
+                var description = session.Metadata["description"];
+                var paymentMethod = session.Metadata["paymentMethod"];
+
+                var receiverWallet = await _accountService.GetWalletByUserId(receiverId);
+                await _accountService.UpdateWalletBalance(receiverId, receiverWallet.Balance + amount);
+
+                AddTransactionDto addTransactionDto = new AddTransactionDto
+                {
+                    Amount = amount,
+                    SenderId = senderId,
+                    PaymentMethod = paymentMethod,
+                    Description = description,
+                    ReceiverId = receiverId,
+                    TransactionId = session.PaymentIntentId
+                };
+                await _paymentService.AddTransaction(addTransactionDto);
+
+                await _emailService.SendPaymentReceipt(session.CustomerEmail, amount, session.PaymentIntentId);
             }
             else if (stripeEvent.Type == EventTypes.PaymentIntentSucceeded)
             {
