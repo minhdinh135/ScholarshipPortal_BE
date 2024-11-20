@@ -55,7 +55,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Amount, opt =>
                 opt.MapFrom(src => src.Amount))
             .ForMember(dest => dest.Description, opt =>
-                opt.MapFrom(src => "Wallet Balance Transfer"))
+                opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.TransactionId, opt =>
                 opt.MapFrom(src => Guid.NewGuid().ToString("N")))
             .ForMember(dest => dest.PaymentMethod, opt =>
@@ -176,7 +176,9 @@ public class MappingProfile : Profile
         CreateMap<Request, RequestDto>()
             .ForMember(dest => dest.RequestDetails, opt =>
                 opt.MapFrom(src => src.RequestDetails))
-            .ReverseMap();
+			.ForMember(dest => dest.Service, opt =>
+				opt.MapFrom(src => src.RequestDetails.First().Service))
+			.ReverseMap();
         CreateMap<RequestDetail, RequestDetailsDto>()
             .ForMember(dest => dest.Files, opt =>
                 opt.MapFrom(src => src.RequestDetailFiles.Select(f => new RequestFile

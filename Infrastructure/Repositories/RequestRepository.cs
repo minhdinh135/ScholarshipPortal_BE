@@ -36,9 +36,9 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
         var requests = await _dbContext.Requests
             .AsSplitQuery()
             .Include(r => r.RequestDetails)
-            .ThenInclude(r => r.RequestDetailFiles)
+                .ThenInclude(r => r.RequestDetailFiles)
             .Include(r => r.RequestDetails)
-            .ThenInclude(r => r.Service)
+                .ThenInclude(r => r.Service)
             .Where(r => r.ApplicantId == applicantId)
             .ToListAsync();
 
@@ -103,11 +103,20 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
             .AsNoTracking()
             .Where(r => r.Id == id)
             .Include(r => r.Applicant)
-            .ThenInclude(a => a.ApplicantProfile)
-            .Include(r => r.RequestDetails)
-            .ThenInclude(rd => rd.Service)
-            .FirstOrDefaultAsync();
+                .ThenInclude(a => a.ApplicantProfile)
+			.Include(r => r.RequestDetails)
+			    .ThenInclude(rd => rd.RequestDetailFiles)
+		    .Include(r => r.RequestDetails)
+			    .ThenInclude(rd => rd.Service)
+			.FirstOrDefaultAsync();
 
         return request;
     }
+
+	public async Task<Request> Update(Request request)
+	{
+		_dbContext.Requests.Update(request);
+		await _dbContext.SaveChangesAsync();
+		return request;
+	}
 }

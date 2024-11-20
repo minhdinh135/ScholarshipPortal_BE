@@ -12,4 +12,5 @@ public interface IRequestRepository : IGenericRepository<Request>
 	Task<IEnumerable<Request>> GetByServiceId(int serviceId);
     Task<Request> GetWithApplicantAndRequestDetails(int id);
 	Task<bool> DeleteRequestAsync(int requestId);
+	Task<Request> Update(Request request);
 }

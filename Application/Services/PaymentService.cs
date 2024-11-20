@@ -24,33 +24,13 @@ public class PaymentService : IPaymentService
         _transactionRepository = transactionRepository;
     }
 
-    public async Task<string> CreateInvoice(InvoiceRequest invoiceRequest)
+    public async Task<CheckoutSessionResponse> CreateCheckoutSession(CheckoutSessionRequest checkoutSessionRequest)
     {
         try
         {
-            var account = await _accountService.GetWalletByUserId(invoiceRequest.AccountId);
-            var invoiceUrl = await _stripeService.CreateInvoice(account.StripeCustomerId, invoiceRequest.Amount,
-                new Dictionary<string, string>()
-                {
-                    { "accountId", invoiceRequest.AccountId.ToString() }
-                });
-
-            return invoiceUrl;
-        }
-        catch (Exception e)
-        {
-            throw new ServiceException(e.Message);
-        }
-    }
-
-    public async Task<CheckoutSessionResponse> CreateCheckoutSession(TransferRequest transferRequest)
-    {
-        try
-        {
-            var senderAccount = await _accountService.GetAccount(transferRequest.SenderId);
+            var senderAccount = await _accountService.GetAccount(checkoutSessionRequest.SenderId);
             var checkoutResponse =
-                await _stripeService.CreateCheckoutSession(senderAccount.Email, transferRequest.Amount,
-                    transferRequest.SenderId, transferRequest.ReceiverId);
+                await _stripeService.CreateCheckoutSession(senderAccount.Email, checkoutSessionRequest);
 
             return checkoutResponse;
         }
@@ -60,24 +40,22 @@ public class PaymentService : IPaymentService
         }
     }
 
-    public async Task AddTransaction(decimal amount, string paymentMethod, string description, string transactionId,
-        int senderId,
-        int receiverId)
+    public async Task AddTransaction(AddTransactionDto addTransactionDto)
     {
         try
         {
-            var senderWallet = await _accountService.GetWalletByUserId(senderId);
-            var receiverWallet = await _accountService.GetWalletByUserId(receiverId);
+            var senderWallet = await _accountService.GetWalletByUserId(addTransactionDto.SenderId);
+            var receiverWallet = await _accountService.GetWalletByUserId(addTransactionDto.ReceiverId);
 
             if (senderWallet == null || receiverWallet == null)
                 throw new ServiceException("Wallet has not been created");
 
             Transaction transaction = new Transaction
             {
-                Amount = amount,
-                PaymentMethod = paymentMethod,
-                Description = description,
-                TransactionId = transactionId,
+                Amount = addTransactionDto.Amount,
+                PaymentMethod = addTransactionDto.PaymentMethod,
+                Description = addTransactionDto.Description,
+                TransactionId = addTransactionDto.TransactionId,
                 WalletSenderId = senderWallet.Id,
                 WalletReceiverId = receiverWallet.Id,
                 TransactionDate = DateTime.Now,
@@ -98,21 +76,25 @@ public class PaymentService : IPaymentService
             var senderWallet = await _accountService.GetWalletByUserId(transferRequest.SenderId);
             var receiverWallet = await _accountService.GetWalletByUserId(transferRequest.ReceiverId);
 
-            if (senderWallet.Balance < transferRequest.Amount)
+            if (transferRequest.PaymentMethod == PaymentMethodEnum.Wallet.ToString())
             {
-                throw new ServiceException("Sender wallet's balance is less than the transfer amount");
-            }
+                if (senderWallet.Balance < transferRequest.Amount)
+                {
+                    throw new ServiceException("Sender wallet balance is less than the transfer amount");
+                }
 
-            senderWallet.Balance -= transferRequest.Amount;
-            receiverWallet.Balance += transferRequest.Amount;
+                senderWallet.Balance -= transferRequest.Amount;
+                receiverWallet.Balance += transferRequest.Amount;
+
+                await _accountService.UpdateWalletBalance(transferRequest.SenderId, senderWallet.Balance);
+                await _accountService.UpdateWalletBalance(transferRequest.ReceiverId, receiverWallet.Balance);
+            }
 
             var createdTransaction = _mapper.Map<Transaction>(transferRequest);
             createdTransaction.WalletSenderId = senderWallet.Id;
             createdTransaction.WalletReceiverId = receiverWallet.Id;
-            await _transactionRepository.Add(createdTransaction);
 
-            await _accountService.UpdateWalletBalance(transferRequest.SenderId, senderWallet.Balance);
-            await _accountService.UpdateWalletBalance(transferRequest.ReceiverId, receiverWallet.Balance);
+            await _transactionRepository.Add(createdTransaction);
         }
         catch (Exception e)
         {

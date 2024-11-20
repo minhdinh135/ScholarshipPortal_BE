@@ -143,4 +143,24 @@ public class RequestService : IRequestService
             throw new ServiceException(e.Message);
         }
     }
+
+	public async Task<RequestDto> UpdateRequestStatusFinish(int id)
+	{
+		try
+		{
+			var existingRequest = await _requestRepository.GetRequestById(id);
+			if (existingRequest == null)
+				throw new ServiceException($"Request with id:{id} is not found", new NotFoundException());
+
+			existingRequest.Status = "Finished";
+
+			await _requestRepository.Update(existingRequest);
+
+			return _mapper.Map<RequestDto>(existingRequest);
+		}
+		catch (Exception e)
+		{
+			throw new ServiceException(e.Message);
+		}
+	}
 }

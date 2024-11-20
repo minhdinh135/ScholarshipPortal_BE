@@ -1,9 +1,9 @@
 ﻿using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Payment;
 using Microsoft.Extensions.Options;
 using Stripe;
 using Stripe.Checkout;
-using Account = Domain.Entities.Account;
 
 namespace Infrastructure.ExternalServices.Stripe;
 
@@ -50,8 +50,7 @@ public class StripeService : IStripeService
         return paymentLink.Url;
     }
 
-    public async Task<CheckoutSessionResponse> CreateCheckoutSession(string email, decimal amount, int senderId,
-        int receiverId)
+    public async Task<CheckoutSessionResponse> CreateCheckoutSession(string email, CheckoutSessionRequest checkoutSessionRequest)
     {
         var sessionCreateOptions = new SessionCreateOptions
         {
@@ -72,15 +71,17 @@ public class StripeService : IStripeService
                         {
                             Name = "Amount"
                         },
-                        UnitAmount = (int)(amount * 100)
+                        UnitAmount = (int)(checkoutSessionRequest.Amount * 100)
                     },
                     Quantity = 1,
                 },
             },
             Metadata = new Dictionary<string, string>
             {
-                { "senderId", senderId.ToString() },
-                { "receiverId", receiverId.ToString() }
+                { "senderId", checkoutSessionRequest.SenderId.ToString() },
+                { "receiverId", checkoutSessionRequest.ReceiverId.ToString() },
+                { "description", checkoutSessionRequest.Description },
+                { "paymentMethod", PaymentMethodEnum.Stripe.ToString() }
             },
             SuccessUrl = "http://localhost:5173/payment/result?status=successful",
             CancelUrl = "http://localhost:5173/payment/result?status=failed",
@@ -91,92 +92,8 @@ public class StripeService : IStripeService
 
         return new CheckoutSessionResponse
         {
-            SessionUrl = session.Url, 
+            SessionUrl = session.Url,
             PublishableKey = _stripeSettings.PublishableKey
         };
-    }
-
-    public async Task<string> CreateInvoice(string stripeCustomerId, decimal amount,
-        Dictionary<string, string> metaData)
-    {
-        var invoiceOptions = new InvoiceCreateOptions
-        {
-            Customer = stripeCustomerId,
-            CollectionMethod = "send_invoice",
-            DaysUntilDue = 30,
-            Metadata = metaData
-        };
-        var invoiceService = new InvoiceService();
-        var invoice = await invoiceService.CreateAsync(invoiceOptions);
-
-        // Create an Invoice Item with the Price, and Customer you want to charge
-        var invoiceItemOptions = new InvoiceItemCreateOptions
-        {
-            Customer = stripeCustomerId,
-            Amount = (int)(amount * 100),
-            Invoice = invoice.Id,
-            Description = "Test Invoice Item",
-        };
-        var invoiceItemService = new InvoiceItemService();
-        await invoiceItemService.CreateAsync(invoiceItemOptions);
-
-        await invoiceService.FinalizeInvoiceAsync(invoice.Id);
-
-        // Send the Invoice
-        await invoiceService.SendInvoiceAsync(invoice.Id);
-
-        var sentInvoice = await invoiceService.GetAsync(invoice.Id);
-
-        return sentInvoice.HostedInvoiceUrl;
-    }
-
-    public async Task<object> Pay(int amount)
-    {
-        var options = new PaymentIntentCreateOptions
-        {
-            Amount = amount,
-            Currency = "usd",
-            AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
-            {
-                Enabled = true,
-            },
-        };
-        var service = new PaymentIntentService();
-        var paymentIntent = await service.CreateAsync(options);
-
-        return paymentIntent;
-    }
-
-    public async Task<string> CreateStripeCustomer(Account account, decimal balance)
-    {
-        var customerOptions = new CustomerCreateOptions
-        {
-            Name = account.Username,
-            Email = account.Email,
-            Phone = account.PhoneNumber,
-            Balance = -(int)(balance * 100),
-        };
-        var customerService = new CustomerService();
-        var customer = await customerService.CreateAsync(customerOptions);
-
-        var paymentSourceOptions = new CustomerPaymentSourceCreateOptions { Source = "tok_visa" };
-        var paymentSourceService = new CustomerPaymentSourceService();
-        var paymentSource = await paymentSourceService.CreateAsync(customer.Id, paymentSourceOptions);
-
-        var customerUpdateOptions = new CustomerUpdateOptions
-        {
-            Source = paymentSource.Id
-        };
-        await customerService.UpdateAsync(customer.Id, customerUpdateOptions);
-
-        return customer.Id;
-    }
-
-    public async Task<object> GetCustomer(string stripeCustomerId)
-    {
-        var service = new CustomerService();
-        var customer = await service.GetAsync(stripeCustomerId);
-
-        return customer;
     }
 }
