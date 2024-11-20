@@ -3,5 +3,6 @@
 public enum TransactionStatusEnum
 {
     Successful,
-    Failed
+    Failed,
+    Pending
 }

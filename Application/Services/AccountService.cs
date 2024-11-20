@@ -159,20 +159,6 @@ public class AccountService : IAccountService
 
             var createdWallet = await _walletRepository.Add(wallet);
 
-            Transaction transaction = new Transaction
-            {
-                Amount = createWalletDto.Balance,
-                Description = "Wallet is created",
-                PaymentMethod = PaymentMethodEnum.Card.ToString(),
-                TransactionDate = DateTime.Now,
-                WalletReceiverId = createdWallet.Id,
-                WalletSenderId = createdWallet.Id,
-                TransactionId = Guid.NewGuid().ToString("N"),
-                Status = TransactionStatusEnum.Successful.ToString()
-            };
-
-            await _transactionRepository.Add(transaction);
-
             return _mapper.Map<WalletDto>(createdWallet);
         }
         catch (Exception e)
@@ -201,26 +187,10 @@ public class AccountService : IAccountService
         if (existingWallet == null)
             throw new ServiceException($"Wallet with userId:{userId} is not found", new NotFoundException());
 
-        var amount = balance - existingWallet.Balance;
-
         try
         {
             existingWallet.Balance = balance;
             var updatedWallet = await _walletRepository.Update(existingWallet);
-
-            Transaction transaction = new Transaction
-            {
-                Amount = amount,
-                Description = "Wallet balance updated",
-                PaymentMethod = PaymentMethodEnum.Card.ToString(),
-                TransactionDate = DateTime.Now,
-                WalletReceiverId = existingWallet.Id,
-                WalletSenderId = existingWallet.Id,
-                TransactionId = Guid.NewGuid().ToString("N"),
-                Status = TransactionStatusEnum.Successful.ToString()
-            };
-
-            var createdTransaction = await _transactionRepository.Add(transaction);
 
             return _mapper.Map<WalletDto>(updatedWallet);
         }

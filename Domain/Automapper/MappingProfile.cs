@@ -55,7 +55,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Amount, opt =>
                 opt.MapFrom(src => src.Amount))
             .ForMember(dest => dest.Description, opt =>
-                opt.MapFrom(src => "Wallet Balance Transfer"))
+                opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.TransactionId, opt =>
                 opt.MapFrom(src => Guid.NewGuid().ToString("N")))
             .ForMember(dest => dest.PaymentMethod, opt =>

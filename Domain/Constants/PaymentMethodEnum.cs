@@ -2,8 +2,7 @@
 
 public enum PaymentMethodEnum
 {
-    Bank,
-    Card,
     Wallet,
-    Cash
+    Cash,
+    Stripe
 }
