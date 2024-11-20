@@ -2,8 +2,8 @@
 using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
+using Domain.Constants;
 using Domain.DTOs.Payment;
-using Domain.DTOs.Transaction;
 using Domain.Entities;
 
 namespace Application.Services;
@@ -24,18 +24,44 @@ public class PaymentService : IPaymentService
         _transactionRepository = transactionRepository;
     }
 
-    public async Task<string> CreateInvoice(InvoiceRequest invoiceRequest)
+    public async Task<CheckoutSessionResponse> CreateCheckoutSession(CheckoutSessionRequest checkoutSessionRequest)
     {
         try
         {
-            var account = await _accountService.GetWalletByUserId(invoiceRequest.AccountId);
-            var invoiceUrl = await _stripeService.CreateInvoice(account.StripeCustomerId, invoiceRequest.Amount,
-                new Dictionary<string, string>()
-                {
-                    { "accountId", invoiceRequest.AccountId.ToString() }
-                });
+            var senderAccount = await _accountService.GetAccount(checkoutSessionRequest.SenderId);
+            var checkoutResponse =
+                await _stripeService.CreateCheckoutSession(senderAccount.Email, checkoutSessionRequest);
 
-            return invoiceUrl;
+            return checkoutResponse;
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task AddTransaction(AddTransactionDto addTransactionDto)
+    {
+        try
+        {
+            var senderWallet = await _accountService.GetWalletByUserId(addTransactionDto.SenderId);
+            var receiverWallet = await _accountService.GetWalletByUserId(addTransactionDto.ReceiverId);
+
+            if (senderWallet == null || receiverWallet == null)
+                throw new ServiceException("Wallet has not been created");
+
+            Transaction transaction = new Transaction
+            {
+                Amount = addTransactionDto.Amount,
+                PaymentMethod = addTransactionDto.PaymentMethod,
+                Description = addTransactionDto.Description,
+                TransactionId = addTransactionDto.TransactionId,
+                WalletSenderId = senderWallet.Id,
+                WalletReceiverId = receiverWallet.Id,
+                TransactionDate = DateTime.Now,
+                Status = TransactionStatusEnum.Successful.ToString()
+            };
+            await _transactionRepository.Add(transaction);
         }
         catch (Exception e)
         {
@@ -50,21 +76,25 @@ public class PaymentService : IPaymentService
             var senderWallet = await _accountService.GetWalletByUserId(transferRequest.SenderId);
             var receiverWallet = await _accountService.GetWalletByUserId(transferRequest.ReceiverId);
 
-            if (senderWallet.Balance < transferRequest.Amount)
+            if (transferRequest.PaymentMethod == PaymentMethodEnum.Wallet.ToString())
             {
-                throw new ServiceException("Sender wallet's balance is less than the transfer amount");
-            }
+                if (senderWallet.Balance < transferRequest.Amount)
+                {
+                    throw new ServiceException("Sender wallet balance is less than the transfer amount");
+                }
 
-            senderWallet.Balance -= transferRequest.Amount;
-            receiverWallet.Balance += transferRequest.Amount;
+                senderWallet.Balance -= transferRequest.Amount;
+                receiverWallet.Balance += transferRequest.Amount;
+
+                await _accountService.UpdateWalletBalance(transferRequest.SenderId, senderWallet.Balance);
+                await _accountService.UpdateWalletBalance(transferRequest.ReceiverId, receiverWallet.Balance);
+            }
 
             var createdTransaction = _mapper.Map<Transaction>(transferRequest);
             createdTransaction.WalletSenderId = senderWallet.Id;
             createdTransaction.WalletReceiverId = receiverWallet.Id;
-            await _transactionRepository.Add(createdTransaction);
 
-            await _accountService.UpdateWalletBalance(transferRequest.SenderId, senderWallet.Balance);
-            await _accountService.UpdateWalletBalance(transferRequest.ReceiverId, receiverWallet.Balance);
+            await _transactionRepository.Add(createdTransaction);
         }
         catch (Exception e)
         {
@@ -72,40 +102,39 @@ public class PaymentService : IPaymentService
         }
     }
 
-	public async Task<List<Transaction>> GetTransactionsByWalletSenderIdAsync(int walletSenderId)
-	{
-		try
-		{
-			return await _transactionRepository.GetTransactionsByWalletSenderIdAsync(walletSenderId);
-		}
-		catch (Exception e)
-		{
-			throw new ServiceException(e.Message);
-		}
-	}
-
-	public async Task<List<Transaction>> GetTransactionsByWalletUserIdAsync(int walletUserId)
+    public async Task<List<Transaction>> GetTransactionsByWalletSenderIdAsync(int walletSenderId)
     {
-		try
-		{
-			return await _transactionRepository.GetTransactionsByWalletUserIdAsync(walletUserId);
-		}
-		catch (Exception e)
-		{
-			throw new ServiceException(e.Message);
-		}
-	}
+        try
+        {
+            return await _transactionRepository.GetTransactionsByWalletSenderIdAsync(walletSenderId);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
 
-	public async Task<List<Transaction>> GetAllTransactionsAsync()
-	{
-		try
-		{
-			return await _transactionRepository.GetAllAsync();
-		}
-		catch (Exception e)
-		{
-			throw new ServiceException("Error fetching transactions: " + e.Message);
-		}
-	}
+    public async Task<List<Transaction>> GetTransactionsByWalletUserIdAsync(int walletUserId)
+    {
+        try
+        {
+            return await _transactionRepository.GetTransactionsByWalletUserIdAsync(walletUserId);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
 
+    public async Task<List<Transaction>> GetAllTransactionsAsync()
+    {
+        try
+        {
+            return await _transactionRepository.GetAllAsync();
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException("Error fetching transactions: " + e.Message);
+        }
+    }
 }

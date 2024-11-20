@@ -6,6 +6,8 @@ using Infrastructure.ExternalServices.Stripe;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Stripe;
+using Stripe.Checkout;
+using TransferRequest = Domain.DTOs.Payment.TransferRequest;
 
 namespace SSAP.API.Controllers;
 
@@ -29,58 +31,19 @@ public class PaymentController : ControllerBase
         _emailService = emailService;
     }
 
-    [HttpPost("/pay")]
-    public async Task<IActionResult> Pay(int amount)
-    {
-        var payment = await _stripeService.Pay(amount);
-    
-        return Ok(new ApiResponse(StatusCodes.Status200OK, $"Pay with amount {amount} successfully", payment));
-    }
-
-    // [HttpGet("products")]
-    // public async Task<IActionResult> GetAllProducts()
-    // {
-    //     var products = await _stripeService.GetAllProducts();
-    //
-    //     return Ok(new ApiResponse(StatusCodes.Status200OK, "Get products successfully", products));
-    // }
-
-    // [HttpPost("create-payment")]
-    // public async Task<IActionResult> CreatePayment()
-    // {
-    //     var paymentUrl = await _stripeService.CreatePayment("prod_R7QW3darhZATeM");
-    //
-    //     return Ok(paymentUrl);
-    // }
-
-    [HttpPost("create-invoice")]
-    public async Task<IActionResult> CreateInvoice(InvoiceRequest invoiceRequest)
+    [HttpPost("stripe-checkout")]
+    public async Task<IActionResult> CreateCheckoutSession(CheckoutSessionRequest checkoutSessionRequest)
     {
         try
         {
-            var invoiceUrl = await _paymentService.CreateInvoice(invoiceRequest);
+            var result = await _paymentService.CreateCheckoutSession(checkoutSessionRequest);
 
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Create invoice successfully", invoiceUrl));
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Create checkout session successfully", result));
         }
         catch (ServiceException e)
         {
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
         }
-    }
-
-    [HttpPost("create-checkout-session")]
-    public async Task<IActionResult> CreateCheckoutSession(CheckoutSessionRequest checkoutSessionRequest)
-    {
-	    try
-	    {
-		    var sessionUrl = await _stripeService.CreateCheckoutSession(checkoutSessionRequest.Email, checkoutSessionRequest.Amount);
-
-		    return Ok(new ApiResponse(StatusCodes.Status200OK, "Create session successfully", sessionUrl));
-	    }
-	    catch (ServiceException e)
-	    {
-		    return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
-	    }
     }
 
     [HttpPost("transfer-money")]
@@ -99,88 +62,105 @@ public class PaymentController : ControllerBase
         }
     }
 
-	[HttpGet("transactions/{walletUserId}")]
-	public async Task<IActionResult> GetTransactionsByWalletSenderId(int walletUserId)
-	{
-		try
-		{
-			var transactions = await _paymentService.GetTransactionsByWalletUserIdAsync(walletUserId);
+    [HttpGet("transactions/{walletUserId}")]
+    public async Task<IActionResult> GetTransactionsByWalletSenderId(int walletUserId)
+    {
+        try
+        {
+            var transactions = await _paymentService.GetTransactionsByWalletUserIdAsync(walletUserId);
 
-			if (transactions == null || transactions.Count() == 0)
-			{
-				return NotFound(new ApiResponse(StatusCodes.Status404NotFound, "No transactions found for this wallet"));
-			}
+            if (transactions == null || transactions.Count() == 0)
+            {
+                return NotFound(new ApiResponse(StatusCodes.Status404NotFound,
+                    "No transactions found for this wallet"));
+            }
 
-			return Ok(new ApiResponse(StatusCodes.Status200OK, "Transactions fetched successfully", transactions));
-		}
-		catch (ServiceException e)
-		{
-			return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
-		}
-	}
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Transactions fetched successfully", transactions));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
 
-	[HttpGet("transactions")]
-	public async Task<IActionResult> GetAllTransactions()
-	{
-		try
-		{
-			var transactions = await _paymentService.GetAllTransactionsAsync();
+    [HttpGet("transactions")]
+    public async Task<IActionResult> GetAllTransactions()
+    {
+        try
+        {
+            var transactions = await _paymentService.GetAllTransactionsAsync();
 
-			if (transactions == null || transactions.Count() == 0)
-			{
-				return NotFound(new ApiResponse(StatusCodes.Status404NotFound, "No transactions found"));
-			}
+            if (transactions == null || transactions.Count() == 0)
+            {
+                return NotFound(new ApiResponse(StatusCodes.Status404NotFound, "No transactions found"));
+            }
 
-			return Ok(new ApiResponse(StatusCodes.Status200OK, "Transactions fetched successfully", transactions));
-		}
-		catch (ServiceException e)
-		{
-			return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
-		}
-	}
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Transactions fetched successfully", transactions));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
 
 
-	[HttpPost("webhook")]
+    [HttpPost("webhook")]
     public async Task<IActionResult> HandleWebhook()
     {
         var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
 
         try
         {
-	        // var stripeEvent = EventUtility.ParseEvent(json);
-	        var stripeEvent = EventUtility.ConstructEvent(
-		        json,
-		        Request.Headers["Stripe-Signature"],
-		        _stripeSettings.WebhookSecret
-	        );
+            var stripeEvent = EventUtility.ConstructEvent(
+                json,
+                Request.Headers["Stripe-Signature"],
+                _stripeSettings.WebhookSecret
+            );
 
-	        // Handle the event
-	        // If on SDK version < 46, use class Events instead of EventTypes
-	        if (stripeEvent.Type == EventTypes.InvoicePaid)
-	        {
-		        var invoice = stripeEvent.Data.Object as Invoice;
-		        var customer = await _stripeService.GetCustomer(invoice.CustomerId) as Customer;
-		        await _accountService.UpdateWalletBalance(int.Parse(invoice.Metadata["accountId"]),
-			        -customer.Balance / 100);
+            if (stripeEvent.Type == EventTypes.CheckoutSessionCompleted)
+            {
+                var session = stripeEvent.Data.Object as Session;
 
-		        await _emailService.SendInvoiceReceipt(customer.Email, invoice.Total, invoice.Id);
-	        }
-	        // ... handle other event types
-	        else
-	        {
-		        // Unexpected event type
-		        Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
-	        }
+                var amount = (decimal)(session.AmountTotal / 100);
+                var senderId = int.Parse(session.Metadata["senderId"]);
+                var receiverId = int.Parse(session.Metadata["receiverId"]);
+                var description = session.Metadata["description"];
+                var paymentMethod = session.Metadata["paymentMethod"];
 
-	        return Ok();
+                var receiverWallet = await _accountService.GetWalletByUserId(receiverId);
+                await _accountService.UpdateWalletBalance(receiverId, receiverWallet.Balance + amount);
+
+                AddTransactionDto addTransactionDto = new AddTransactionDto
+                {
+                    Amount = amount,
+                    SenderId = senderId,
+                    PaymentMethod = paymentMethod,
+                    Description = description,
+                    ReceiverId = receiverId,
+                    TransactionId = session.PaymentIntentId
+                };
+                await _paymentService.AddTransaction(addTransactionDto);
+
+                await _emailService.SendPaymentReceipt(session.CustomerEmail, amount, session.PaymentIntentId);
+            }
+            else if (stripeEvent.Type == EventTypes.PaymentIntentSucceeded)
+            {
+                var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
+            }
+            else
+            {
+                Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
+            }
+
+            return Ok();
         }
         catch (StripeException e)
         {
-	        return BadRequest(e.Message);
+            return BadRequest(e.Message);
         }
         catch (ServiceException e)
         {
-	        return BadRequest(e.Message);
+            return BadRequest(e.Message);
         }
     }
 }

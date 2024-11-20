@@ -39,6 +39,7 @@ public class ServiceRepository : GenericRepository<Service>, IServiceRepository
             .AsSplitQuery()
             .Include(s => s.Feedbacks)
             .Include(s => s.RequestDetails)
+            .ThenInclude(x => x.RequestDetailFiles)
             .FirstOrDefaultAsync(s => s.Id == id);
 
         return service;

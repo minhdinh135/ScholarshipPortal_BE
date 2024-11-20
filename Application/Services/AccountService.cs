@@ -154,26 +154,10 @@ public class AccountService : IAccountService
         
         try
         {
-            var stripeCustomerId = await _stripeService.CreateStripeCustomer(account, createWalletDto.Balance);
             var wallet = _mapper.Map<Wallet>(createWalletDto);
             wallet.AccountId = id;
-            wallet.StripeCustomerId = stripeCustomerId;
 
             var createdWallet = await _walletRepository.Add(wallet);
-
-            Transaction transaction = new Transaction
-            {
-                Amount = createWalletDto.Balance,
-                Description = "Wallet is created",
-                PaymentMethod = PaymentMethodEnum.Card.ToString(),
-                TransactionDate = DateTime.Now,
-                WalletReceiverId = createdWallet.Id,
-                WalletSenderId = createdWallet.Id,
-                TransactionId = Guid.NewGuid().ToString("N"),
-                Status = "Successful"
-            };
-
-            await _transactionRepository.Add(transaction);
 
             return _mapper.Map<WalletDto>(createdWallet);
         }
@@ -203,27 +187,10 @@ public class AccountService : IAccountService
         if (existingWallet == null)
             throw new ServiceException($"Wallet with userId:{userId} is not found", new NotFoundException());
 
-        var amount = balance - existingWallet.Balance;
-
         try
         {
-            await _stripeService.UpdateCustomerBalance(existingWallet.StripeCustomerId, balance);
             existingWallet.Balance = balance;
             var updatedWallet = await _walletRepository.Update(existingWallet);
-
-            Transaction transaction = new Transaction
-            {
-                Amount = amount,
-                Description = "Wallet balance updated",
-                PaymentMethod = PaymentMethodEnum.Card.ToString(),
-                TransactionDate = DateTime.Now,
-                WalletReceiverId = existingWallet.Id,
-                WalletSenderId = existingWallet.Id,
-                TransactionId = Guid.NewGuid().ToString("N"),
-                Status = "Successful"
-            };
-
-            var createdTransaction = await _transactionRepository.Add(transaction);
 
             return _mapper.Map<WalletDto>(updatedWallet);
         }

@@ -20,14 +20,4 @@ public class WalletRepository : GenericRepository<Wallet>, IWalletRepository
 
         return wallet;
     }
-
-    public async Task<Wallet> GetWalletByStripeCustomerId(string stripeCustomerId)
-    {
-        var wallet = await _dbContext.Wallets
-            .AsSplitQuery()
-            .Include(w => w.Account)
-            .FirstOrDefaultAsync(w => w.StripeCustomerId == stripeCustomerId);
-
-        return wallet;
-    }
 }
