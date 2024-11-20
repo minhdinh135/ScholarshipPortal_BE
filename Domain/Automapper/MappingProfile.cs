@@ -4,6 +4,7 @@ using Domain.DTOs.Account;
 using Domain.DTOs.Applicant;
 using Domain.DTOs.Application;
 using Domain.DTOs.Authentication;
+using Domain.DTOs.AwardMilestone;
 using Domain.DTOs.Category;
 using Domain.DTOs.Common;
 using Domain.DTOs.Country;
@@ -205,5 +206,10 @@ public class MappingProfile : Profile
         CreateMap<ReviewMilestone, ReviewMilestoneDto>().ReverseMap();
         CreateMap<AddReviewMilestoneDto, ReviewMilestone>();
         CreateMap<UpdateReviewMilestoneDto, ReviewMilestone>();
+
+        // Award milestone mapping
+        CreateMap<AwardMilestone, AwardMilestoneDto>().ReverseMap();
+        CreateMap<CreateAwardMilestoneDto, AwardMilestone>();
+        CreateMap<UpdateAwardMilestoneDto, AwardMilestone>();
     }
 }
