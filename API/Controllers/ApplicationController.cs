@@ -175,5 +175,20 @@ namespace SSAP.API.Controllers
                 return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
             }
         }
+
+        [HttpPut("extend")]
+        public async Task<IActionResult> ExtendApplication(ExtendApplicationDto dto)
+        {
+            try
+            {
+                await _applicationService.ExtendApplication(dto);
+
+                return Ok(new ApiResponse(StatusCodes.Status200OK, "Update result successfully"));
+            }
+            catch (ServiceException e)
+            {
+                return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+            }
+        }
     }
 }

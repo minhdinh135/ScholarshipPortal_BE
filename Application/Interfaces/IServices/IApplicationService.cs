@@ -19,5 +19,6 @@ namespace Application.Interfaces.IServices
         Task<IEnumerable<ApplicationReviewDto>> GetAllReviews();
         Task AssignApplicationsToExpert(AssignApplicationsToExpertRequest request);
         Task UpdateReviewResult(UpdateReviewResultDto updateReviewResultDto);
+        Task<Domain.Entities.Application> ExtendApplication(ExtendApplicationDto extendApplicationDto);
     }
 }
