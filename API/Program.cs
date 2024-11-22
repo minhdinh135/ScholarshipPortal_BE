@@ -5,8 +5,10 @@ using Application.Interfaces.IServices;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Hangfire;
+using HealthChecks.UI.Client;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -50,6 +52,12 @@ builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
+// Add health check
+builder.Services.AddHealthChecks()
+    .AddMySql(builder.Configuration.GetConnectionString("Db")!, tags: ["database"]);
+builder.Services.AddHealthChecksUI()
+    .AddInMemoryStorage();
+    
 //Add Jwt
 builder.Services.AddSwaggerGen(
     c =>
@@ -160,6 +168,12 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+app.MapHealthChecksUI(config => config.UIPath="/healthcheck-ui");
 
 app.UseCors("MyAllowPolicy");
 

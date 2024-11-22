@@ -1,4 +1,5 @@
 using Application.Interfaces.IRepositories;
+using Domain.Constants;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,8 +7,23 @@ namespace Infrastructure.Repositories;
 
 public class ApplicationRepository : GenericRepository<Domain.Entities.Application>, IApplicationRepository
 {
-    public ApplicationRepository(ScholarshipContext dbContext) : base(dbContext)
+    private readonly IApplicationReviewRepository _applicationReviewRepository;
+
+    public ApplicationRepository(ScholarshipContext dbContext, IApplicationReviewRepository applicationReviewRepository)
+        : base(dbContext)
     {
+        _applicationReviewRepository = applicationReviewRepository;
+    }
+
+    public async Task<Domain.Entities.Application> GetApplicationById(int id)
+    {
+        var application = await _dbContext.Applications
+            .AsSplitQuery()
+            .Include(a => a.ApplicationDocuments)
+            .Include(a => a.ApplicationReviews)
+            .FirstOrDefaultAsync(a => a.Id == id);
+
+        return application;
     }
 
     public async Task<Domain.Entities.Application> GetWithDocumentsAndAccount(int applicationId)
@@ -32,9 +48,8 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
             .ToListAsync();
 
         return application;
-
     }
-    
+
     public async Task<IEnumerable<Domain.Entities.Application>> GetByApplicantId(int applicantId)
     {
         var applications = await _dbContext.Applications
@@ -45,7 +60,6 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
             .ToListAsync();
 
         return applications;
-
     }
 
     public async Task<IEnumerable<Domain.Entities.Application>> GetByScholarshipProgramId(int scholarshipProgramId)
@@ -55,6 +69,24 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
             .Where(a => a.ScholarshipProgramId == scholarshipProgramId)
             .Include(a => a.ApplicationDocuments)
             .Include(a => a.ApplicationReviews)
+            .ToListAsync();
+
+        return applications;
+    }
+
+    public async Task<IEnumerable<Domain.Entities.Application>> GetExpertAssignedApplications(int expertId)
+    {
+        var expertAssignedReviews =
+            await _applicationReviewRepository.GetAll(q => q.Where(ar =>
+                    ar.ExpertId == expertId && ar.Status == ApplicationReviewStatusEnum.Assigned.ToString()));
+
+        var expertAssignedReviewIds = expertAssignedReviews.Select(ar => ar.ApplicationId);
+
+        var applications = await _dbContext.Applications
+            .AsSplitQuery()
+            .Include(a => a.ApplicationDocuments)
+            .Include(a => a.ApplicationReviews)
+            .Where(a => expertAssignedReviewIds.Any(id => a.Id == id))
             .ToListAsync();
 
         return applications;

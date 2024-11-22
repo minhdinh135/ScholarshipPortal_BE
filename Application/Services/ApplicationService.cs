@@ -121,9 +121,16 @@ namespace Application.Services
 
         public async Task<ApplicationDto> Get(int id)
         {
-            var entity = await _applicationRepository.GetById(id);
+            var entity = await _applicationRepository.GetApplicationById(id);
             if (entity == null) return null;
             return _mapper.Map<ApplicationDto>(entity);
+        }
+
+        public async Task<IEnumerable<ApplicationDto>> GetExpertAssignedApplications(int expertId)
+        {
+            var expertAssignedApplications = await _applicationRepository.GetExpertAssignedApplications(expertId);
+
+            return _mapper.Map<IEnumerable<ApplicationDto>>(expertAssignedApplications);
         }
 
         public async Task<IEnumerable<ApplicationDto>> GetAll()
