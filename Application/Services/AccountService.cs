@@ -132,7 +132,17 @@ public class AccountService : IAccountService
         return true;
     }
 
-    public async Task<WalletDto> GetWalletByUserId(int userId)
+	public async Task<List<WalletDto>> GetAllWallets()
+	{
+		var wallets = await _walletRepository.GetAll();
+
+		if (wallets == null || wallets.Count() == 0)
+			throw new ServiceException("No wallets found", new NotFoundException());
+
+		return _mapper.Map<List<WalletDto>>(wallets);
+	}
+
+	public async Task<WalletDto> GetWalletByUserId(int userId)
     {
         var wallet = await _walletRepository.GetWalletByUserId(userId);
 

@@ -11,10 +11,15 @@ namespace SSAP.API.Controllers;
 public class ServiceController : ControllerBase
 {
     private readonly IServiceService _serviceService;
+    private readonly INotificationService _notificationService;
+    private IAccountService _accountService;
 
-    public ServiceController(IServiceService serviceService)
+    public ServiceController(IServiceService serviceService, INotificationService notificationService,
+        IAccountService accountService)
     {
         _serviceService = serviceService;
+        _notificationService = notificationService;
+        _accountService = accountService;
     }
 
     [HttpGet]
@@ -24,7 +29,6 @@ public class ServiceController : ControllerBase
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all services successfully", services));
     }
-
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetServiceById(int id)
@@ -65,6 +69,14 @@ public class ServiceController : ControllerBase
         try
         {
             var addedService = await _serviceService.AddService(addServiceDto);
+            var accounts = await _accountService.GetAll();
+            foreach(var account in accounts)
+            {
+                await _notificationService.SendDataMessage(account.Id.ToString(), new Dictionary<string, string>
+                {
+					{ "entity", "service" }
+				} );
+            }
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Add service successfully", addedService));
         }
