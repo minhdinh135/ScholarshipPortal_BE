@@ -18,7 +18,8 @@ namespace Application.Interfaces.IServices
         Task<AccountDto> UpdateAccount(int id, UpdateAccountDto dto);
         Task<bool> UpdateAvatar(int id, IFormFile avatar);
         Task<AccountDto> DeleteAccount(int id);
-        Task<WalletDto> GetWalletByUserId(int userId);
+		Task<List<WalletDto>> GetAllWallets();
+		Task<WalletDto> GetWalletByUserId(int userId);
         Task<WalletDto> CreateWallet(int id, CreateWalletDto createWalletDto);
         Task<WalletDto> UpdateWalletBalance(int userId, decimal balance);
 		Task<WalletDto> UpdateWalletBankInformation(int userId, UpdateWalletBankInformationDto dto);
