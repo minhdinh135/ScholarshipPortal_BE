@@ -42,6 +42,14 @@ public class ExpertController : ControllerBase
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get Expert details successfully", expert));
     }
 
+    [HttpGet("{id}/assigned-applications")]
+    public async Task<IActionResult> GetExpertAssignedApplications(int id)
+    {
+        var assignedApplications = await _applicationService.GetExpertAssignedApplications(id);
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get Expert assigned applications successfully", assignedApplications));
+    }
+
     [HttpPost("{id}")]
     public async Task<IActionResult> AddExpertDetails(CreateExpertDetailsDto createExpertDetailsDto)
     {
@@ -49,7 +57,8 @@ public class ExpertController : ControllerBase
         {
             var createdExpertDetails = await _expertService.CreateExpertProfile(createExpertDetailsDto);
 
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Create expert details successully", createdExpertDetails));
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Create expert details successully",
+                createdExpertDetails));
         }
         catch (ServiceException e)
         {
@@ -64,7 +73,8 @@ public class ExpertController : ControllerBase
         {
             var updatedExpertDetails = await _expertService.UpdateExpertProfile(id, updateExpertDetailsDto);
 
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update expert details successfully", updatedExpertDetails));
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update expert details successfully",
+                updatedExpertDetails));
         }
         catch (ServiceException e)
         {
