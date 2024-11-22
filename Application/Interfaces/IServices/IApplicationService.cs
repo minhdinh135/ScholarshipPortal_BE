@@ -11,6 +11,7 @@ namespace Application.Interfaces.IServices
         Task<IEnumerable<ApplicationDto>> GetApplicationsByApplicantId(int applicantId);
         Task<IEnumerable<ApplicationDto>> GetApplicationsByScholarshipProgramId(int scholarshipProgramId);
         Task<ApplicationDto> Get(int id);
+        Task<IEnumerable<ApplicationDto>> GetExpertAssignedApplications(int expertId);
         Task<Domain.Entities.Application> GetWithDocumentsAndAccount(int applicationId);
         Task<IEnumerable<Domain.Entities.Application>> GetByScholarshipId(int scholarshipId);
         Task<ApplicationDto> Add(AddApplicationDto dto);
