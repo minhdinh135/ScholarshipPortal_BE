@@ -11,5 +11,5 @@ public interface IServiceService
     Task<ServiceDto> UpdateService(int id, UpdateServiceDto updateServiceDto);
 	Task<IEnumerable<ServiceDto>> GetServicesByProviderId(int providerId);
 	Task<PaginatedList<ServiceDto>> GetAll(int pageIndex, int pageSize, string sortBy, string sortOrder);
-
+    Task<PaginatedList<ServiceDto>> GetAllByProviderId(int id, int pageIndex, int pageSize, string sortBy, string sortOrder);
 }
