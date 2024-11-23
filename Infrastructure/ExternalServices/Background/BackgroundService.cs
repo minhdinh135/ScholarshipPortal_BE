@@ -82,18 +82,6 @@ public class BackgroundService : IBackgroundService
                 {
                     needExtendApplications.Add((awardedApplication, 
                         awardMilestones.First().FromDate.Value));
-                    await _notificationService.SendNotification(awardedApplication.ApplicantId.ToString(),
-                            $"/funder/application/{awardedApplication.Id}",
-                            "Need Extend",
-                            $"Your application to scholarship {awardedApplication.ScholarshipProgram.Name} is waiting for extend."
-                    );
-                    try{
-                    await _emailService.SendEmailAsync(awardedApplication.Applicant.Email.ToString(),
-                            "Need Extend",
-                            $"Your application to scholarship {awardedApplication.ScholarshipProgram.Name} is waiting for extend."
-                   );}
-                    catch (Exception e){
-                    }
                 }
 
             }
@@ -103,7 +91,7 @@ public class BackgroundService : IBackgroundService
                 var application = await _applicationRepository.GetById(needExtendApplication.application.Id);
                 application.Status = ApplicationStatusEnum.NeedExtend.ToString();
 
-                BackgroundJob.Schedule(() => _applicationRepository.Update(application),
+                BackgroundJob.Schedule(() => UpdateAndNotifyApplication(application),
                     delayedTimeSpan);
                 _logger.LogInformation(
                     $"Application with id:{needExtendApplication.application.Id} is scheduled for updating status after {delayedTimeSpan}");
@@ -115,6 +103,32 @@ public class BackgroundService : IBackgroundService
             _logger.LogError(e.InnerException.Message);
             _logger.LogError(e.StackTrace);
         }
+    }
+    
+    public async Task UpdateAndNotifyApplication(Domain.Entities.Application application)
+    {
+        var awardedApplications = await _applicationRepository.GetAll(x => x.Include(x => x.ScholarshipProgram)
+                .Include(x => x.Applicant));
+        awardedApplications = awardedApplications
+            .Where(a => a.Id == application.Id);
+
+        var awardedApplication = awardedApplications.First();
+
+        await _applicationRepository.Update(application);
+
+        await _notificationService.SendNotification(awardedApplication.ApplicantId.ToString(),
+                $"/funder/application/{awardedApplication.Id}",
+                "Need Extend",
+                $"Your application to scholarship {awardedApplication.ScholarshipProgram.Name} is waiting for extend."
+        );
+        try{
+        await _emailService.SendEmailAsync(awardedApplication.Applicant.Email.ToString(),
+                "Need Extend",
+                $"Your application to scholarship {awardedApplication.ScholarshipProgram.Name} is waiting for extend."
+       );}
+        catch (Exception e){
+        }
+
     }
 
 }
