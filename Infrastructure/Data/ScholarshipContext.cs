@@ -26,6 +26,9 @@ public class ScholarshipContext : DbContext
     
         foreach (var entityEntry in entries)
         {
+            if(((BaseEntity)entityEntry.Entity).UpdatedAt.HasValue &&
+                ((BaseEntity)entityEntry.Entity).UpdatedAt > DateTime.Now)
+                continue;
             ((BaseEntity)entityEntry.Entity).UpdatedAt = DateTime.Now;
     
             if (entityEntry.State == EntityState.Added)
