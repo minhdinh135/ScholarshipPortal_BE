@@ -45,6 +45,15 @@ public class ServiceController : ControllerBase
         }
     }
 
+	[HttpGet("by-provider-paginated/{id}")]
+	public async Task<IActionResult> GetAllByProviderId(int id, [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10,
+	[FromQuery] string sortBy = default, [FromQuery] string sortOrder = default)
+	{
+		var services = await _serviceService.GetAllByProviderId(id, pageIndex, pageSize, sortBy, sortOrder);
+
+		return Ok(new ApiResponse(StatusCodes.Status200OK, "Get services successfully", services));
+	}
+
 	[HttpGet("paginated")]
 	public async Task<IActionResult> GetAll([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10,
 	[FromQuery] string sortBy = default, [FromQuery] string sortOrder = default)
