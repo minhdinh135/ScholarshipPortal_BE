@@ -11,10 +11,15 @@ namespace SSAP.API.Controllers;
 public class ServiceController : ControllerBase
 {
     private readonly IServiceService _serviceService;
+    private readonly INotificationService _notificationService;
+    private IAccountService _accountService;
 
-    public ServiceController(IServiceService serviceService)
+    public ServiceController(IServiceService serviceService, INotificationService notificationService,
+        IAccountService accountService)
     {
         _serviceService = serviceService;
+        _notificationService = notificationService;
+        _accountService = accountService;
     }
 
     [HttpGet]
@@ -24,7 +29,6 @@ public class ServiceController : ControllerBase
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all services successfully", services));
     }
-
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetServiceById(int id)
@@ -40,6 +44,15 @@ public class ServiceController : ControllerBase
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
         }
     }
+
+	[HttpGet("by-provider-paginated/{id}")]
+	public async Task<IActionResult> GetAllByProviderId(int id, [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10,
+	[FromQuery] string sortBy = default, [FromQuery] string sortOrder = default)
+	{
+		var services = await _serviceService.GetAllByProviderId(id, pageIndex, pageSize, sortBy, sortOrder);
+
+		return Ok(new ApiResponse(StatusCodes.Status200OK, "Get services successfully", services));
+	}
 
 	[HttpGet("paginated")]
 	public async Task<IActionResult> GetAll([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10,
@@ -65,6 +78,14 @@ public class ServiceController : ControllerBase
         try
         {
             var addedService = await _serviceService.AddService(addServiceDto);
+            var accounts = await _accountService.GetAll();
+            foreach(var account in accounts)
+            {
+                await _notificationService.SendDataMessage(account.Id.ToString(), new Dictionary<string, string>
+                {
+					{ "entity", "service" }
+				} );
+            }
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Add service successfully", addedService));
         }

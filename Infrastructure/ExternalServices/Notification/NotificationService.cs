@@ -4,6 +4,7 @@ using Domain.DTOs.Notification;
 using Domain.DTOs.Common;
 using AutoMapper;
 using Application.Interfaces.IRepositories;
+using MimeKit;
 
 namespace Infrastructure.ExternalServices.Notification;
 public class NotificationsService : INotificationService
@@ -89,7 +90,20 @@ public class NotificationsService : INotificationService
         return response;
     }
 
-    public async Task<string> SubscribeToTopic(string token, string topic)
+	public async Task<string> SendDataMessage(string topic, Dictionary<string, string> data)
+	{
+		data.Add("topic", topic);
+		var message = new Message()
+		{
+			Data = data,
+			Topic = $"{topic}"
+		};
+
+		string response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
+		return response;
+	}
+
+	public async Task<string> SubscribeToTopic(string token, string topic)
     {
         try
         {
