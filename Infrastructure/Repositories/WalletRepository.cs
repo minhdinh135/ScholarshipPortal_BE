@@ -20,4 +20,9 @@ public class WalletRepository : GenericRepository<Wallet>, IWalletRepository
 
         return wallet;
     }
+
+	public async Task<List<Wallet>> GetAll()
+	{
+		return await _dbContext.Wallets.ToListAsync();
+	}
 }

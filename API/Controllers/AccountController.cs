@@ -270,7 +270,23 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpGet("{id}/wallet")]
+	[HttpGet("wallets")]
+	public async Task<IActionResult> GetAllWallets()
+	{
+		try
+		{
+			var wallets = await _accountService.GetAllWallets();
+
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all wallets successfully", wallets));
+		}
+		catch (ServiceException e)
+		{
+			return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+		}
+	}
+
+
+	[HttpGet("{id}/wallet")]
     public async Task<IActionResult> GetAccountWallet(int id)
     {
         try

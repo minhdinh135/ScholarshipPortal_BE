@@ -14,4 +14,5 @@ public interface INotificationService
 
     Task<string> SendNotification(string topic, string link, string title, string body);
     Task<string> SubscribeToTopic(string token, string topic);
+    Task<string> SendDataMessage(string topic, Dictionary<string, string> data);
 }
