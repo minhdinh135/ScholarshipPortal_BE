@@ -18,5 +18,7 @@ public class RegisterDto
 
     public string? Status { get; set; }
 
+    public int? FunderId { get; set; }
+
     public int? RoleId { get; set; }
 }
