@@ -1,22 +1,23 @@
-using FirebaseAdmin.Messaging;
-using Application.Interfaces.IServices;
-using Domain.DTOs.Notification;
-using Domain.DTOs.Common;
-using AutoMapper;
 using Application.Interfaces.IRepositories;
-using MimeKit;
+using Application.Interfaces.IServices;
+using AutoMapper;
+using Domain.DTOs.Common;
+using Domain.DTOs.Notification;
+using FirebaseAdmin.Messaging;
 
 namespace Infrastructure.ExternalServices.Notification;
 public class NotificationsService : INotificationService
 {
     private readonly IMapper _mapper;
     private readonly IGenericRepository<Domain.Entities.Notification> _notificationRepository;
+    private readonly IFirebaseNotificationService _firebaseNotificationService;
 
     public NotificationsService(IMapper mapper, 
-            IGenericRepository<Domain.Entities.Notification> notificationService)
+            IGenericRepository<Domain.Entities.Notification> notificationService, IFirebaseNotificationService firebaseNotificationService)
     {
         _mapper = mapper;
         _notificationRepository = notificationService;
+        _firebaseNotificationService = firebaseNotificationService;
     }
 
     public async Task<NotificationDTO> Add(NotificationAddDTO dto)
@@ -58,23 +59,26 @@ public class NotificationsService : INotificationService
 
     public async Task<string> SendNotification(string topic, string link, string title, string body)
     {
-        var data = new Dictionary<string, string>();
-        data.Add("link", link);
-        data.Add("topic", topic);
-        data.Add("icon", "https://res.cloudinary.com/djiztef3a/image/upload/v1729315324/yncpkzj4unhr7le4fzox.jpg");
-        var message = new Message()
-        {
-            Notification = new FirebaseAdmin.Messaging.Notification
-            {
-                Title = title,
-                Body = body,
-                //ImageUrl = "https://res.cloudinary.com/djiztef3a/image/upload/v1729315324/yncpkzj4unhr7le4fzox.jpg"
-            },
-            Topic = topic,
-            Data = data
-        };
-
-        string response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
+        // var data = new Dictionary<string, string>();
+        // data.Add("link", link);
+        // data.Add("topic", topic);
+        // data.Add("icon", "https://res.cloudinary.com/djiztef3a/image/upload/v1729315324/yncpkzj4unhr7le4fzox.jpg");
+        // var message = new Message()
+        // {
+        //     Notification = new FirebaseAdmin.Messaging.Notification
+        //     {
+        //         Title = title,
+        //         Body = body,
+        //         //ImageUrl = "https://res.cloudinary.com/djiztef3a/image/upload/v1729315324/yncpkzj4unhr7le4fzox.jpg"
+        //     },
+        //     Topic = topic,
+        //     Data = data
+        // };
+        //
+        // string response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
+        
+        var response = await _firebaseNotificationService.SendNotification(topic, link, title, body);
+        
         var noti = await _notificationRepository.Add(new Domain.Entities.Notification
         {
              ReceiverId = Int32.Parse(topic),
@@ -87,6 +91,7 @@ public class NotificationsService : INotificationService
         //     Time = DateTime.Now,
         //     Status = "UNREAD"
         });
+        
         return response;
     }
 
@@ -108,9 +113,12 @@ public class NotificationsService : INotificationService
         try
         {
             // Subscribe the token to the topic (which could be the user's unique ID)
-            var res = await FirebaseMessaging.DefaultInstance.SubscribeToTopicAsync(new List<string> { token }, topic);
-            if(res.Errors.Count > 0) Console.WriteLine(res.Errors.FirstOrDefault().Reason);
-            return res.SuccessCount.ToString();
+            // var res = await FirebaseMessaging.DefaultInstance.SubscribeToTopicAsync(new List<string> { token }, topic);
+            // if(res.Errors.Count > 0) Console.WriteLine(res.Errors.FirstOrDefault().Reason);
+            // return res.SuccessCount.ToString();
+            var response = await _firebaseNotificationService.SubscribeToTopic(token, topic);
+
+            return response;
         }
         catch (FirebaseMessagingException e)
         {
