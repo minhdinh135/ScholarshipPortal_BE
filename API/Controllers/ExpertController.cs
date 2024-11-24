@@ -1,6 +1,7 @@
 using Application.Exceptions;
 using Application.Interfaces.IServices;
 using Domain.Constants;
+using Domain.DTOs.Authentication;
 using Domain.DTOs.Common;
 using Domain.DTOs.Expert;
 using Microsoft.AspNetCore.Mvc;
@@ -50,12 +51,25 @@ public class ExpertController : ControllerBase
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get Expert assigned applications successfully", assignedApplications));
     }
 
-    [HttpPost("{id}")]
-    public async Task<IActionResult> AddExpertDetails(CreateExpertDetailsDto createExpertDetailsDto)
+    [HttpPost]
+    public async Task<IActionResult> AddExpertDetails(CreateExpertDetailsDto dto)
     {
         try
         {
-            var createdExpertDetails = await _expertService.CreateExpertProfile(createExpertDetailsDto);
+            var addedProfile = await _accountService.AddAccount(new RegisterDto {
+                Username = dto.Name,
+                Email = dto.Email,
+                PhoneNumber = dto.PhoneNumber,
+                Password = dto.Password,
+                Address = dto.Address,
+                AvatarUrl = dto.AvatarUrl,
+                LoginWithGoogle = dto.LoginWithGoogle,
+                Status = dto.Status,
+                FunderId = dto.FunderId,
+                RoleId = dto.RoleId
+            });
+            dto.ExpertId = addedProfile.Id;
+            var createdExpertDetails = await _expertService.CreateExpertProfile(dto);
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Create expert details successully",
                 createdExpertDetails));
