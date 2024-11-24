@@ -2,6 +2,7 @@
 using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
+using Domain.DTOs.Expert;
 using Domain.DTOs.Funder;
 using Domain.Entities;
 
@@ -52,5 +53,12 @@ public class FunderService : IFunderService
         var updatedFunder = await _funderRepository.Update(existingFunder);
 
         return _mapper.Map<FunderProfileDto>(updatedFunder);
+    }
+
+    public async Task<IEnumerable<ExpertDetailsDto>> GetExpertsByFunderId(int id)
+    {
+        var experts = await _funderRepository.GetExpertsByFunderId(id);
+
+        return _mapper.Map<IEnumerable<ExpertDetailsDto>>(experts);
     }
 }

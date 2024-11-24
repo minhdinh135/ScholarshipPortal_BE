@@ -28,5 +28,4 @@ public class CreateExpertDetailsDto
     public int? FunderId { get; set; }
 
     public int? RoleId { get; set; }
-
 }
