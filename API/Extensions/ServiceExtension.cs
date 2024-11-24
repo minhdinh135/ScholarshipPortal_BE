@@ -136,6 +136,7 @@ public static class ServiceExtension
         {
             Credential = GoogleCredential.FromFile("./firebase-adminsdk.json"),
         });
+        services.AddScoped<IFirebaseNotificationService, FirebaseNotificationService>();
 
         services.AddScoped<INotificationService, NotificationsService>();
         services.AddScoped<IReviewMilestoneService, ReviewMilestoneService>();
