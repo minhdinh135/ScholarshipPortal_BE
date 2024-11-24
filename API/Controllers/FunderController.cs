@@ -24,6 +24,14 @@ public class FunderController : ControllerBase
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get Funder details successfully", funder));
     }
+    
+    [HttpGet("{id}/experts")]
+        public async Task<IActionResult> GetFunderExperts(int id)
+        {
+            var experts = await _funderService.GetExpertsByFunderId(id);
+    
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Get funder experts successfully", experts));
+        }
 
     [HttpPost("{id}")]
     public async Task<IActionResult> AddFunderDetails(AddFunderDetailsDto addFunderDetailsDto)

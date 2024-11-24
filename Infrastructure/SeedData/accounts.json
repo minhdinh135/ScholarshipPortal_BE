@@ -61,6 +61,7 @@
     "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
     "Gender": "Female",
     "RoleId": 3,
+    "FunderId": 2,
     "LoginWithGoogle": false,
     "Status": "Active"
   },
@@ -74,6 +75,7 @@
     "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
     "Gender": "Male",
     "RoleId": 3,
+    "FunderId": 2,
     "LoginWithGoogle": false,
     "Status": "Active"
   },
@@ -87,6 +89,7 @@
     "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
     "Gender": "Female",
     "RoleId": 3,
+    "FunderId": 3,
     "LoginWithGoogle": false,
     "Status": "Active"
   },

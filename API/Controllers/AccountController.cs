@@ -1,6 +1,5 @@
 using Application.Exceptions;
 using Application.Interfaces.IServices;
-using AutoMapper;
 using Domain.DTOs.Account;
 using Domain.DTOs.Authentication;
 using Domain.DTOs.Common;
