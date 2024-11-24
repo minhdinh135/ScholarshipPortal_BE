@@ -185,16 +185,16 @@ app.UseExceptionHandler();
 
 app.MapControllers();
 
-app.UseHangfireDashboard();
-app.MapHangfireDashboard("/hangfire");
+//app.UseHangfireDashboard();
+//app.MapHangfireDashboard("/hangfire");
 
 using (var scope = app.Services.CreateScope())
 {
     var serviceProvider = scope.ServiceProvider;
     var backgroundService = serviceProvider.GetRequiredService<IBackgroundService>();
 
-    RecurringJob.AddOrUpdate("ScheduleScholarshipsAfterDeadline", () => backgroundService.ScheduleScholarshipsAfterDeadline(), Cron.Minutely);
-    RecurringJob.AddOrUpdate("ScheduleApplicationsNeedExtend", () => backgroundService.ScheduleApplicationsNeedExtend(), Cron.Minutely);
+    //RecurringJob.AddOrUpdate("ScheduleScholarshipsAfterDeadline", () => backgroundService.ScheduleScholarshipsAfterDeadline(), Cron.Hourly);
+    //RecurringJob.AddOrUpdate("ScheduleApplicationsNeedExtend", () => backgroundService.ScheduleApplicationsNeedExtend(), Cron.Hourly);
 }
 
 app.Run();
