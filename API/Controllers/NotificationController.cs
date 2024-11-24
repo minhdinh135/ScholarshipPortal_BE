@@ -148,9 +148,33 @@ public class NotificationController : ControllerBase
         }
     }
 
+	[HttpPost("notify-applicant-service-comment")]
+	public async Task<IActionResult> NotifyApplicantServiceComment([FromQuery] int serviceId, [FromQuery] int applicantId)
+	{
+		try
+		{
+			var service = await _serviceService.GetServiceById(serviceId);
+			var applicant = await _accountService.GetAccount(applicantId);
+
+			if (service == null || applicant == null)
+				return BadRequest(new { Message = "Invalid service, provider, or applicant information." });
+
+			var notificationMessage = $"Provider has commented to your Service's request {service.Name}.";
+
+			await _notificationService.SendNotification(applicant.Id.ToString(), $"/services/{serviceId}", "Service Comment", notificationMessage);
+
+			await _emailService.SendEmailAsync(applicant.Email, "New Comment on Your Service Request", notificationMessage);
+
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Notification sent successfully", null));
+		}
+		catch (Exception ex)
+		{
+			return BadRequest(new { Message = ex.Message });
+		}
+	}
 
 
-    [HttpPut("read/{id}")]
+	[HttpPut("read/{id}")]
     public async Task<IActionResult> ReadNotification(int id)
     {
         var response = await _notificationService.GetById(id);

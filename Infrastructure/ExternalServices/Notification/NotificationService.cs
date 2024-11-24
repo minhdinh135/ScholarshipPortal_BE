@@ -59,24 +59,7 @@ public class NotificationsService : INotificationService
 
     public async Task<string> SendNotification(string topic, string link, string title, string body)
     {
-        // var data = new Dictionary<string, string>();
-        // data.Add("link", link);
-        // data.Add("topic", topic);
-        // data.Add("icon", "https://res.cloudinary.com/djiztef3a/image/upload/v1729315324/yncpkzj4unhr7le4fzox.jpg");
-        // var message = new Message()
-        // {
-        //     Notification = new FirebaseAdmin.Messaging.Notification
-        //     {
-        //         Title = title,
-        //         Body = body,
-        //         //ImageUrl = "https://res.cloudinary.com/djiztef3a/image/upload/v1729315324/yncpkzj4unhr7le4fzox.jpg"
-        //     },
-        //     Topic = topic,
-        //     Data = data
-        // };
-        //
-        // string response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
-        
+   
         var response = await _firebaseNotificationService.SendNotification(topic, link, title, body);
         
         var noti = await _notificationRepository.Add(new Domain.Entities.Notification
