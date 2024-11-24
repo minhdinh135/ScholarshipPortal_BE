@@ -50,7 +50,7 @@ public class ExpertController : ControllerBase
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get Expert assigned applications successfully", assignedApplications));
     }
 
-    [HttpPost("{id}")]
+    [HttpPost]
     public async Task<IActionResult> AddExpertDetails(CreateExpertDetailsDto createExpertDetailsDto)
     {
         try

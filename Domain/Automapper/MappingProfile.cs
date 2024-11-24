@@ -47,6 +47,7 @@ public class MappingProfile : Profile
                 opt.MapFrom(src => src.Role.Name))
             .ReverseMap();
         CreateMap<AccountDto, UpdateAccountDto>().ReverseMap();
+        CreateMap<Account, ExpertDetailsDto>().ReverseMap();
 
         CreateMap<Wallet, WalletDto>().ReverseMap();
         CreateMap<CreateWalletDto, Wallet>();
