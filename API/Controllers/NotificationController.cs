@@ -177,18 +177,3 @@ public class NotificationController : ControllerBase
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Send notification successfully", response));
     }
 }
-
-public class NotificationRequest
-{
-    public string Topic { get; set; }
-    public string Link { get; set; }
-    public string Title { get; set; }
-    public string Body { get; set; }
-}
-
-
-public class TopicRequest
-{
-    public string Token { get; set; }
-    public string Topic { get; set; }
-}
