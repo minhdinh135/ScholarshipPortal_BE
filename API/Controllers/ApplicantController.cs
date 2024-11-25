@@ -14,7 +14,8 @@ public class ApplicantController : ControllerBase
     private readonly IApplicantService _applicantService;
     private readonly IApplicationService _applicationService;
 
-    public ApplicantController(ILogger<ApplicantController> logger, IApplicantService applicantService, IApplicationService applicationService)
+    public ApplicantController(ILogger<ApplicantController> logger, IApplicantService applicantService,
+        IApplicationService applicationService)
     {
         _logger = logger;
         _applicantService = applicantService;
@@ -37,6 +38,14 @@ public class ApplicantController : ControllerBase
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicant successfully", applicant));
     }
 
+    [HttpGet("{id}/profile")]
+    public async Task<IActionResult> GetApplicantProfileDetails(int id)
+    {
+        var applicant = await _applicantService.GetApplicantProfileDetails(id);
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicant successfully", applicant));
+    }
+
     [HttpGet("{applicantId}/applications")]
     public async Task<IActionResult> GetApplicationsByApplicantId(int applicantId)
     {
@@ -46,8 +55,8 @@ public class ApplicantController : ControllerBase
     }
 
     [HttpGet("by-applicantId-and-scholarshipId")]
-    public async Task<IActionResult> GetApplicationsByApplicantIdAndScholarshipId([FromQuery]int applicantId,
-            [FromQuery]int scholarshipId)
+    public async Task<IActionResult> GetApplicationsByApplicantIdAndScholarshipId([FromQuery] int applicantId,
+        [FromQuery] int scholarshipId)
     {
         var applications = await _applicationService.GetApplicationsByApplicantId(applicantId);
         applications = applications.Where(x => x.ScholarshipProgramId == scholarshipId).ToList();
@@ -77,6 +86,24 @@ public class ApplicantController : ControllerBase
         try
         {
             var updatedProfile = await _applicantService.UpdateApplicantProfile(applicantId, updateApplicantProfileDto);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update applicant profile successfully",
+                updatedProfile));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Update applicant profile failed",
+                null));
+        }
+    }
+
+    [HttpPut("{applicantId}/profile")]
+    public async Task<IActionResult> UpdateApplicantProfileDetails(int applicantId,
+        UpdateApplicantProfileDetails updateProfileDetails)
+    {
+        try
+        {
+            var updatedProfile = await _applicantService.UpdateApplicantProfileDetails(applicantId, updateProfileDetails);
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Update applicant profile successfully",
                 updatedProfile));
@@ -151,7 +178,7 @@ public class ApplicantController : ControllerBase
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message, null));
         }
     }
-    
+
     [HttpGet("{applicantId}/profile/pdf")]
     public async Task<IActionResult> ExportApplicantProfileToPdf(int applicantId)
     {

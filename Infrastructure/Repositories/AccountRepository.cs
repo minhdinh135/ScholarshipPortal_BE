@@ -46,6 +46,10 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
     {
         var account = await _dbContext.Accounts
             .AsSplitQuery()
+            .Include(a => a.ApplicantProfile)
+            .Include(a => a.FunderProfile)
+            .Include(a => a.ExpertProfile)
+            .Include(a => a.ProviderProfile)
             .Include(a => a.Role)
             .Include(a => a.Wallet)
             .ThenInclude(w => w.ReceiverTransactions)

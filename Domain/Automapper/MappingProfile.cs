@@ -92,6 +92,26 @@ public class MappingProfile : Profile
 
         // Applicant Profile mapping
         CreateMap<ApplicantProfile, AddApplicantProfileDto>().ReverseMap();
+        CreateMap<ApplicantProfile, ApplicantProfileDetails>()
+            .ForMember(dest => dest.Avatar, opt => opt
+                .MapFrom(src => src.Applicant.AvatarUrl))
+            .ForMember(dest => dest.Username, opt => opt
+                .MapFrom(src => src.Applicant.Username))
+            .ForMember(dest => dest.Email, opt => opt
+                .MapFrom(src => src.Applicant.Email))
+            .ForMember(dest => dest.Phone, opt => opt
+                .MapFrom(src => src.Applicant.PhoneNumber))
+            .ForMember(dest => dest.Address, opt => opt
+                .MapFrom(src => src.Applicant.Address))
+            .ForMember(dest => dest.Achievements, opt => opt
+                .MapFrom(src => src.Achievements.Select(a => a.Name)))
+            .ForMember(dest => dest.Skills, opt => opt
+                .MapFrom(src => src.ApplicantSkills.Select(s => s.Name)))
+            .ForMember(dest => dest.Experience, opt => opt
+                .MapFrom(src => src.Experiences.Select(e => e.Name)))
+            .ForMember(dest => dest.Certificates, opt => opt
+                .MapFrom(src => src.ApplicantCertificates.Select(c => c.Name)))
+            .ReverseMap();
         CreateMap<ApplicantProfile, UpdateApplicantProfileDto>().ReverseMap();
         CreateMap<ApplicantProfile, ApplicantProfileDto>().ReverseMap();
 
@@ -185,9 +205,9 @@ public class MappingProfile : Profile
         CreateMap<Request, RequestDto>()
             .ForMember(dest => dest.RequestDetails, opt =>
                 opt.MapFrom(src => src.RequestDetails))
-			.ForMember(dest => dest.Service, opt =>
-				opt.MapFrom(src => src.RequestDetails.First().Service))
-			.ReverseMap();
+            .ForMember(dest => dest.Service, opt =>
+                opt.MapFrom(src => src.RequestDetails.First().Service))
+            .ReverseMap();
         CreateMap<RequestDetail, RequestDetailsDto>()
             .ForMember(dest => dest.Files, opt =>
                 opt.MapFrom(src => src.RequestDetailFiles.Select(f => new RequestFile

@@ -1,7 +1,6 @@
 ﻿[
   {
     "Username": "system",
-    "FullName": "System",
     "Email": "admin@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -14,7 +13,6 @@
   },
   {
     "Username": "ethan",
-    "FullName": "Ethan Carter",
     "Email": "ethan@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -27,7 +25,6 @@
   },
   {
     "Username": "mia",
-    "FullName": "Mia Thompson",
     "Email": "mia@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -40,7 +37,6 @@
   },
   {
     "Username": "leo",
-    "FullName": "Leo Patel",
     "Email": "leo@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -53,7 +49,6 @@
   },
   {
     "Username": "zoe",
-    "FullName": "Zoe Johnson",
     "Email": "zoe@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -67,7 +62,6 @@
   },
   {
     "Username": "noah",
-    "FullName": "Noah Kim",
     "Email": "noah@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -81,7 +75,6 @@
   },
   {
     "Username": "ava",
-    "FullName": "Ava Martinez",
     "Email": "ava@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -95,7 +88,6 @@
   },
   {
     "Username": "lucas",
-    "FullName": "Lucas Brown",
     "Email": "lucas@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -108,7 +100,6 @@
   },
   {
     "Username": "lily",
-    "FullName": "Lily Chen",
     "Email": "lily@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -121,7 +112,6 @@
   },
   {
     "Username": "mason",
-    "FullName": "Mason Rodriguez",
     "Email": "mason@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -134,54 +124,66 @@
   },
   {
     "Username": "chloe",
-    "FullName": "Chloe Davis",
     "Email": "chloe@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
-    "Gender": "Female",
     "RoleId": 5,
     "LoginWithGoogle": false,
-    "Status": "Active"
+    "Status": "Active",
+    "ApplicantProfile": {
+      "FirstName": "Chloe",
+      "LastName": "Williams",
+      "Gender": "Female"
+    }
   },
   {
     "Username": "oliver",
-    "FullName": "Oliver Garcia",
     "Email": "oliver@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
-    "Gender": "Male",
     "RoleId": 5,
     "LoginWithGoogle": false,
-    "Status": "Active"
+    "Status": "Active",
+    "ApplicantProfile": {
+      "FirstName": "Oliver",
+      "LastName": "Johnson",
+      "Gender": "Male"
+    }
   },
   {
     "Username": "emma",
-    "FullName": "Emma Wilson",
     "Email": "emma@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
-    "Gender": "Male",
     "RoleId": 5,
     "LoginWithGoogle": false,
-    "Status": "Active"
+    "Status": "Active",
+    "ApplicantProfile": {
+      "FirstName": "Emma",
+      "LastName": "Doe",
+      "Gender": "Female"
+    }
   },
   {
     "Username": "grace",
-    "FullName": "Grace Miller",
     "Email": "grace@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
-    "Gender": "Female",
     "RoleId": 5,
     "LoginWithGoogle": false,
-    "Status": "Active"
+    "Status": "Active",
+    "ApplicantProfile": {
+      "FirstName": "Grace",
+      "LastName": "Halland",
+      "Gender": "Female"
+    }
   }
 ]
