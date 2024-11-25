@@ -17,20 +17,12 @@ public class ApplicantRepository : GenericRepository<ApplicantProfile>, IApplica
             // .AsNoTracking()
             .AsSplitQuery()
             .Include(a => a.Applicant)
+            .Include(a => a.Experiences)
             .Include(a => a.Achievements)
             .Include(a => a.ApplicantSkills)
             .Include(a => a.ApplicantCertificates)
             .FirstOrDefaultAsync(a => a.ApplicantId == applicantId);
     }
-
-    // public async Task<List<int>> AddProfileAchievements(List<Achievement> achievements)
-    // {
-    //     await _dbContext.Achievements
-    //         .AddRangeAsync(achievements);
-    //     await _dbContext.SaveChangesAsync();
-    //
-    //     return achievements.Select(a => a.Id).ToList();
-    // }
 
     public async Task UpdateProfileAchievements(int applicantProfileId, List<Achievement> achievements)
     {
@@ -44,15 +36,6 @@ public class ApplicantRepository : GenericRepository<ApplicantProfile>, IApplica
         await _dbContext.SaveChangesAsync();
     }
 
-    // public async Task<List<int>> AddProfileSkills(List<ApplicantSkill> skills)
-    // {
-    //     await _dbContext.ApplicantSkills
-    //         .AddRangeAsync(skills);
-    //     await _dbContext.SaveChangesAsync();
-    //
-    //     return skills.Select(a => a.Id).ToList();
-    // }
-
     public async Task UpdateProfileSkills(int applicantProfileId, List<ApplicantSkill> skills)
     {
         await _dbContext.ApplicantSkills
@@ -65,15 +48,6 @@ public class ApplicantRepository : GenericRepository<ApplicantProfile>, IApplica
         await _dbContext.SaveChangesAsync();
     }
 
-    // public async Task<List<int>> AddProfileCertificates(List<ApplicantCertificate> certificates)
-    // {
-    //     await _dbContext.ApplicantCertificates
-    //         .AddRangeAsync(certificates);
-    //     await _dbContext.SaveChangesAsync();
-    //
-    //     return certificates.Select(a => a.Id).ToList();
-    // }
-
     public async Task UpdateProfileCertificates(int applicantProfileId, List<ApplicantCertificate> certificates)
     {
         await _dbContext.ApplicantCertificates
@@ -81,6 +55,17 @@ public class ApplicantRepository : GenericRepository<ApplicantProfile>, IApplica
             .ExecuteDeleteAsync();
         await _dbContext.ApplicantCertificates
             .AddRangeAsync(certificates);
+
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task UpdateProfileExperiences(int applicantProfileId, List<Experience> experiences)
+    {
+        await _dbContext.Experiences
+            .Where(a => a.ApplicantProfileId == applicantProfileId)
+            .ExecuteDeleteAsync();
+        await _dbContext.Experiences
+            .AddRangeAsync(experiences);
 
         await _dbContext.SaveChangesAsync();
     }
