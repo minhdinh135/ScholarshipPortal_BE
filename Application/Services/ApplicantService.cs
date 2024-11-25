@@ -15,14 +15,16 @@ public class ApplicantService : IApplicantService
     private readonly IApplicantRepository _applicantRepository;
     private readonly IPdfService _pdfService;
     private readonly ICloudinaryService _cloudinaryService;
+    private readonly IAccountRepository _accountRepository;
 
     public ApplicantService(IMapper mapper, IApplicantRepository applicantRepository, IPdfService pdfService,
-        ICloudinaryService cloudinaryService)
+        ICloudinaryService cloudinaryService, IAccountRepository accountRepository)
     {
         _mapper = mapper;
         _applicantRepository = applicantRepository;
         _pdfService = pdfService;
         _cloudinaryService = cloudinaryService;
+        _accountRepository = accountRepository;
     }
 
     public async Task<IEnumerable<ApplicantProfileDto>> GetAllApplicantProfiles()
@@ -40,6 +42,13 @@ public class ApplicantService : IApplicantService
             throw new NotFoundException($"Applicant Profile with applicantId: {applicantId} is not found");
 
         return _mapper.Map<ApplicantProfileDto>(applicantProfile);
+    }
+
+    public async Task<ApplicantProfileDetails> GetApplicantProfileDetails(int applicantId)
+    {
+        var profile = await _applicantRepository.GetByApplicantId(applicantId);
+
+        return _mapper.Map<ApplicantProfileDetails>(profile);
     }
 
     public async Task<ApplicantProfileDto> AddApplicantProfile(AddApplicantProfileDto dto)
@@ -61,6 +70,57 @@ public class ApplicantService : IApplicantService
         var updatedScholarshipProgram = await _applicantRepository.Update(existingApplicantProfile);
 
         return _mapper.Map<ApplicantProfileDto>(updatedScholarshipProgram);
+    }
+
+    public async Task<int> UpdateApplicantProfileDetails(int applicantId,
+        UpdateApplicantProfileDetails updateDetails)
+    {
+        var applicant = await _accountRepository.GetAccountById(applicantId);
+        if (applicant == null)
+            throw new ServiceException($"Applicant with ID {applicantId} is not found", new NotFoundException());
+
+        try
+        {
+            applicant.Username = updateDetails.Username;
+            applicant.PhoneNumber = updateDetails.Phone;
+            applicant.Address = updateDetails.Address;
+            applicant.AvatarUrl = updateDetails.AvatarUrl;
+            await _accountRepository.Update(applicant);
+
+            var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+            applicantProfile.FirstName = updateDetails.FirstName;
+            applicantProfile.LastName = updateDetails.LastName;
+            applicantProfile.BirthDate = updateDetails.Birthdate;
+            applicantProfile.Gender = updateDetails.Gender;
+            applicantProfile.Nationality = updateDetails.Nationality;
+            applicantProfile.Ethnicity = updateDetails.Ethnicity;
+
+            List<Achievement> achievements =
+                updateDetails.Achievements.Select(a => new Achievement { Name = a }).ToList();
+            achievements.ForEach(a => a.ApplicantProfileId = applicant.ApplicantProfile.Id);
+            await _applicantRepository.UpdateProfileAchievements(applicant.ApplicantProfile.Id, achievements);
+
+            List<ApplicantSkill> skills =
+                updateDetails.Skills.Select(a => new ApplicantSkill { Name = a }).ToList();
+            skills.ForEach(a => a.ApplicantProfileId = applicant.ApplicantProfile.Id);
+            await _applicantRepository.UpdateProfileSkills(applicant.ApplicantProfile.Id, skills);
+
+            List<ApplicantCertificate> certificates =
+                updateDetails.Certificates.Select(a => new ApplicantCertificate { Name = a }).ToList();
+            certificates.ForEach(a => a.ApplicantProfileId = applicant.ApplicantProfile.Id);
+            await _applicantRepository.UpdateProfileCertificates(applicant.ApplicantProfile.Id, certificates);
+
+            List<Experience> experiences =
+                updateDetails.Experience.Select(a => new Experience { Name = a }).ToList();
+            experiences.ForEach(a => a.ApplicantProfileId = applicant.ApplicantProfile.Id);
+            await _applicantRepository.UpdateProfileExperiences(applicant.ApplicantProfile.Id, experiences);
+
+            return applicant.Id;
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
     }
 
     public async Task UpdateProfileAchievements(int applicantId, List<UpdateAchievementDto> dtos)
