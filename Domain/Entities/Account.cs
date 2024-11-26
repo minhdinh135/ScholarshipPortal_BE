@@ -15,6 +15,8 @@ public class Account : BaseEntity
     public string? AvatarUrl { get; set; }
 
     public bool? LoginWithGoogle { get; set; }
+    
+    public DateTime? SubscriptionEndDate { get; set; }
 
     public string? Status { get; set; }
     

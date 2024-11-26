@@ -3,6 +3,7 @@
     "Id": 1,
     "Description": "Subscription for Provider",
     "Amount": 5,
-    "ValidMonths": 1
+    "ValidMonths": 1,
+    "NumberOfServices": 20
   }
 ]
