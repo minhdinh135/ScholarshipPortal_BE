@@ -4,6 +4,8 @@ public class ApplicationReview : BaseEntity
 {
     public string? Description { get; set; }
     
+    public int? Score { get; set; }
+    
     public string? Comment { get; set; }
     
     public DateTime? ReviewDate { get; set; }
