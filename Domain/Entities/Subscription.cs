@@ -6,6 +6,8 @@ public class Subscription : BaseEntity
 
     public decimal? Amount { get; set; } 
     
+    public int? NumberOfServices { get; set; }
+    
     public int? ValidMonths { get; set; }
     
     public ICollection<Account>? Accounts { get; set; }

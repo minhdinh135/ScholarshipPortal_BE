@@ -10,6 +10,8 @@ public class ScholarshipProgram : BaseEntity
     
     public decimal? ScholarshipAmount { get; set; }
     
+    public int? NumberOfAwardMilestones { get; set; }
+    
     public int? NumberOfScholarships { get; set; }
     
     public DateTime? Deadline { get; set; }
@@ -41,6 +43,4 @@ public class ScholarshipProgram : BaseEntity
     public ICollection<Criteria>? Criteria { get; set; }
     
     public ICollection<ScholarshipProgramCertificate> ScholarshipProgramCertificates { get; set; }
-    
-    // public ICollection<MajorSkill>? MajorSkills { get; set; }
 }
