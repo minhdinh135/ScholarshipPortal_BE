@@ -6,7 +6,6 @@
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
     "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
-    "Gender": "",
     "RoleId": 1,
     "LoginWithGoogle": false,
     "Status": "Active"
@@ -21,7 +20,11 @@
     "Gender": "Male",
     "RoleId": 2,
     "LoginWithGoogle": false,
-    "Status": "Active"
+    "Status": "Active",
+    "FunderProfile": {
+      "OrganizationName": "Coca Cola",
+      "ContactPersonName": "Ethan"
+    }
   },
   {
     "Username": "mia",
@@ -33,7 +36,11 @@
     "Gender": "Female",
     "RoleId": 2,
     "LoginWithGoogle": false,
-    "Status": "Active"
+    "Status": "Active",
+    "FunderProfile": {
+      "OrganizationName": "Pepsi",
+      "ContactPersonName": "Mia"
+    }
   },
   {
     "Username": "leo",
@@ -45,7 +52,11 @@
     "Gender": "Male",
     "RoleId": 2,
     "LoginWithGoogle": false,
-    "Status": "Active"
+    "Status": "Active",
+    "FunderProfile": {
+      "OrganizationName": "Full Bright Org",
+      "ContactPersonName": "Leo"
+    }
   },
   {
     "Username": "zoe",
@@ -58,7 +69,12 @@
     "RoleId": 3,
     "FunderId": 2,
     "LoginWithGoogle": false,
-    "Status": "Active"
+    "Status": "Active",
+    "ExpertProfile": {
+      "Name": "Zoe",
+      "Description": "Expert",
+      "Major": "STEM"
+    }
   },
   {
     "Username": "noah",
@@ -71,7 +87,12 @@
     "RoleId": 3,
     "FunderId": 2,
     "LoginWithGoogle": false,
-    "Status": "Active"
+    "Status": "Active",
+    "ExpertProfile": {
+      "Name": "Zoe",
+      "Description": "Expert",
+      "Major": "STEM"
+    }
   },
   {
     "Username": "ava",
@@ -84,7 +105,12 @@
     "RoleId": 3,
     "FunderId": 3,
     "LoginWithGoogle": false,
-    "Status": "Active"
+    "Status": "Active",
+    "ExpertProfile": {
+      "Name": "Zoe",
+      "Description": "Expert",
+      "Major": "STEM"
+    }
   },
   {
     "Username": "lucas",
@@ -96,7 +122,11 @@
     "Gender": "Male",
     "RoleId": 4,
     "LoginWithGoogle": false,
-    "Status": "Active"
+    "Status": "Active",
+    "ProviderProfile": {
+      "OrganizationName": "IDP",
+      "ContactPersonName": "Lucas"
+    }
   },
   {
     "Username": "lily",
@@ -108,7 +138,11 @@
     "Gender": "Female",
     "RoleId": 4,
     "LoginWithGoogle": false,
-    "Status": "Active"
+    "Status": "Active",
+    "ProviderProfile": {
+      "OrganizationName": "Consulting Org",
+      "ContactPersonName": "Lily"
+    }
   },
   {
     "Username": "mason",
@@ -120,7 +154,11 @@
     "Gender": "Male",
     "RoleId": 4,
     "LoginWithGoogle": false,
-    "Status": "Active"
+    "Status": "Active",
+    "ProviderProfile": {
+      "OrganizationName": "America Study Abroad Comp",
+      "ContactPersonName": "Mason"
+    }
   },
   {
     "Username": "chloe",
