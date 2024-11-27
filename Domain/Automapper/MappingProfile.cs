@@ -21,6 +21,7 @@ using Domain.DTOs.ReviewMilestone;
 using Domain.DTOs.Role;
 using Domain.DTOs.ScholarshipProgram;
 using Domain.DTOs.Service;
+using Domain.DTOs.Subscription;
 using Domain.DTOs.University;
 using Domain.Entities;
 
@@ -60,6 +61,10 @@ public class MappingProfile : Profile
         CreateMap<CreateWalletDto, Wallet>();
         CreateMap<UpdateWalletBalanceDto, Wallet>();
 
+        CreateMap<Subscription, SubscriptionDto>().ReverseMap();
+        CreateMap<AddSubscriptionDto, Subscription>();
+        CreateMap<UpdateSubscriptionDto, Subscription>();
+        
         CreateMap<TransferRequest, Transaction>()
             .ForMember(dest => dest.Amount, opt =>
                 opt.MapFrom(src => src.Amount))
@@ -167,6 +172,7 @@ public class MappingProfile : Profile
         CreateMap<University, UniversityDto>().ReverseMap();
 
         CreateMap<Criteria, CriteriaDto>().ReverseMap();
+        CreateMap<Criteria, CriteriaDetails>().ReverseMap();
         CreateMap<CreateCriteriaRequest, Criteria>();
         CreateMap<UpdateCriteriaRequest, Criteria>();
 
@@ -232,11 +238,13 @@ public class MappingProfile : Profile
 
         // Review milestone mapping
         CreateMap<ReviewMilestone, ReviewMilestoneDto>().ReverseMap();
+        CreateMap<ReviewMilestone, ReviewMilestoneDetails>().ReverseMap();
         CreateMap<AddReviewMilestoneDto, ReviewMilestone>();
         CreateMap<UpdateReviewMilestoneDto, ReviewMilestone>();
 
         // Award milestone mapping
         CreateMap<AwardMilestone, AwardMilestoneDto>().ReverseMap();
+        CreateMap<AwardMilestone, AwardMilestoneDetails>().ReverseMap();
         CreateMap<CreateAwardMilestoneDto, AwardMilestone>();
         CreateMap<UpdateAwardMilestoneDto, AwardMilestone>();
     }

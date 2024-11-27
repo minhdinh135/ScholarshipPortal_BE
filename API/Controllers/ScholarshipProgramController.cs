@@ -104,12 +104,22 @@ public class ScholarshipProgramController : ControllerBase
     {
         var applications = await _applicationService.GetApplicationsByScholarshipProgramId(id);
 
-        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get scholarship prograom applications successfully",
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get scholarship program applications successfully",
             applications));
     }
 
+    [HttpGet("{id}/experts")]
+    public async Task<IActionResult> GetAllScholarshipProgramExperts(int id)
+    {
+        var experts = await _scholarshipProgramService.GetScholarshipProgramExperts(id);
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get scholarship program experts successfully",
+            experts));
+    }
+
     [HttpPost]
-    public async Task<IActionResult> CreateScholarshipProgram(CreateScholarshipProgramRequest createScholarshipProgramRequest)
+    public async Task<IActionResult> CreateScholarshipProgram(
+        CreateScholarshipProgramRequest createScholarshipProgramRequest)
     {
         var result =
             await _scholarshipProgramService.CreateScholarshipProgram(createScholarshipProgramRequest);
@@ -123,12 +133,14 @@ public class ScholarshipProgramController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateScholarshipProgram(int id, UpdateScholarshipProgramRequest updateScholarshipProgramRequest)
+    public async Task<IActionResult> UpdateScholarshipProgram(int id,
+        UpdateScholarshipProgramRequest updateScholarshipProgramRequest)
     {
         try
         {
             var result = await _scholarshipProgramService.UpdateScholarshipProgram(id, updateScholarshipProgramRequest);
-            return Ok(new ApiResponse(StatusCodes.Status200OK, $"Update scholarship program with id:{result} successfully", result));
+            return Ok(new ApiResponse(StatusCodes.Status200OK,
+                $"Update scholarship program with id:{result} successfully", result));
         }
         catch (ServiceException e)
         {
@@ -165,22 +177,6 @@ public class ScholarshipProgramController : ControllerBase
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
         }
     }
-
-    // [HttpPut("{id}/image")]
-    // public async Task<IActionResult> UpdateScholarshipProgramImage(int id, IFormFile file)
-    // {
-    //     try
-    //     {
-    //         await _scholarshipProgramService.UploadScholarshipProgramImage(id, file);
-    //
-    //         return Ok(new ApiResponse(StatusCodes.Status200OK, "Upload image successfully", null));
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest,
-    //             "Error uploading program image: " + e.Message, null));
-    //     }
-    // }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteScholarshipProgram([FromRoute] int id)

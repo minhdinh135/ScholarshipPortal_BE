@@ -1,22 +1,29 @@
 ﻿[
   {
+    "Id": 1,
     "Username": "system",
     "Email": "admin@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "AvatarUrl": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
     "RoleId": 1,
     "LoginWithGoogle": false,
-    "Status": "Active"
+    "Status": "Active",
+    "Wallet": {
+      "BankAccountName": "Scholarship Portal",
+      "BankAccountNumber": "42424242424242",
+      "Balance": 0.00
+    }
   },
   {
+    "Id": 2,
     "Username": "ethan",
     "Email": "ethan@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "AvatarUrl": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
     "Gender": "Male",
     "RoleId": 2,
     "LoginWithGoogle": false,
@@ -24,15 +31,21 @@
     "FunderProfile": {
       "OrganizationName": "Coca Cola",
       "ContactPersonName": "Ethan"
+    },
+    "Wallet": {
+      "BankAccountName": "Ethan Ho",
+      "BankAccountNumber": "424242424242",
+      "Balance": 0.00
     }
   },
   {
+    "Id": 3,
     "Username": "mia",
     "Email": "mia@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "AvatarUrl": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
     "Gender": "Female",
     "RoleId": 2,
     "LoginWithGoogle": false,
@@ -40,15 +53,21 @@
     "FunderProfile": {
       "OrganizationName": "Pepsi",
       "ContactPersonName": "Mia"
+    },
+    "Wallet": {
+      "BankAccountName": "Mia Nguyen",
+      "BankAccountNumber": "424242424242",
+      "Balance": 0.00
     }
   },
   {
+    "Id": 4,
     "Username": "leo",
     "Email": "leo@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "AvatarUrl": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
     "Gender": "Male",
     "RoleId": 2,
     "LoginWithGoogle": false,
@@ -56,15 +75,21 @@
     "FunderProfile": {
       "OrganizationName": "Full Bright Org",
       "ContactPersonName": "Leo"
+    },
+    "Wallet": {
+      "BankAccountName": "Leo Panther",
+      "BankAccountNumber": "4242424242",
+      "Balance": 0.00
     }
   },
   {
+    "Id": 5,
     "Username": "zoe",
     "Email": "zoe@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "AvatarUrl": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
     "Gender": "Female",
     "RoleId": 3,
     "FunderId": 2,
@@ -73,16 +98,22 @@
     "ExpertProfile": {
       "Name": "Zoe",
       "Description": "Expert",
-      "Major": "STEM"
+      "Major": "STEM (Science, Technology, Engineering, and Mathematics)"
+    },
+    "Wallet": {
+      "BankAccountName": "Zoe",
+      "BankAccountNumber": "4242424242",
+      "Balance": 0.00
     }
   },
   {
+    "Id": 6,
     "Username": "noah",
     "Email": "noah@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "AvatarUrl": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
     "Gender": "Male",
     "RoleId": 3,
     "FunderId": 2,
@@ -91,16 +122,22 @@
     "ExpertProfile": {
       "Name": "Zoe",
       "Description": "Expert",
-      "Major": "STEM"
+      "Major": "STEM (Science, Technology, Engineering, and Mathematics)"
+    },
+    "Wallet": {
+      "BankAccountName": "Noah Christ",
+      "BankAccountNumber": "4242424242",
+      "Balance": 0.00
     }
   },
   {
+    "Id": 7,
     "Username": "ava",
     "Email": "ava@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "AvatarUrl": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
     "Gender": "Female",
     "RoleId": 3,
     "FunderId": 3,
@@ -109,64 +146,94 @@
     "ExpertProfile": {
       "Name": "Zoe",
       "Description": "Expert",
-      "Major": "STEM"
+      "Major": "Business & Economics"
+    },
+    "Wallet": {
+      "BankAccountName": "Ava John",
+      "BankAccountNumber": "42424242424242",
+      "Balance": 0.00
     }
   },
   {
+    "Id": 8,
     "Username": "lucas",
     "Email": "lucas@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "AvatarUrl": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
     "Gender": "Male",
     "RoleId": 4,
     "LoginWithGoogle": false,
     "Status": "Active",
+    "SubscriptionId": 1,
+    "SubscriptionEndDate": "2025-01-01",
     "ProviderProfile": {
       "OrganizationName": "IDP",
       "ContactPersonName": "Lucas"
+    },
+    "Wallet": {
+      "BankAccountName": "Lucas Vo",
+      "BankAccountNumber": "424242424242",
+      "Balance": 0.00
     }
   },
   {
+    "Id": 9,
     "Username": "lily",
     "Email": "lily@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "AvatarUrl": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
     "Gender": "Female",
     "RoleId": 4,
     "LoginWithGoogle": false,
     "Status": "Active",
+    "SubscriptionId": 1,
+    "SubscriptionEndDate": "2025-01-01",
     "ProviderProfile": {
       "OrganizationName": "Consulting Org",
       "ContactPersonName": "Lily"
+    },
+    "Wallet": {
+      "BankAccountName": "Lily Anna",
+      "BankAccountNumber": "424242424242",
+      "Balance": 0.00
     }
   },
   {
+    "Id": 10,
     "Username": "mason",
     "Email": "mason@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "AvatarUrl": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
     "Gender": "Male",
     "RoleId": 4,
     "LoginWithGoogle": false,
     "Status": "Active",
+    "SubscriptionId": 1,
+    "SubscriptionEndDate": "2025-01-01",
     "ProviderProfile": {
       "OrganizationName": "America Study Abroad Comp",
       "ContactPersonName": "Mason"
+    },
+    "Wallet": {
+      "BankAccountName": "Mason Ho",
+      "BankAccountNumber": "4242424242",
+      "Balance": 0.00
     }
   },
   {
+    "Id": 11,
     "Username": "chloe",
     "Email": "chloe@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "AvatarUrl": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
     "RoleId": 5,
     "LoginWithGoogle": false,
     "Status": "Active",
@@ -174,15 +241,21 @@
       "FirstName": "Chloe",
       "LastName": "Williams",
       "Gender": "Female"
+    },
+    "Wallet": {
+      "BankAccountName": "Chloe Han",
+      "BankAccountNumber": "4242424242",
+      "Balance": 0.00
     }
   },
   {
+    "Id": 12,
     "Username": "oliver",
     "Email": "oliver@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "AvatarUrl": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
     "RoleId": 5,
     "LoginWithGoogle": false,
     "Status": "Active",
@@ -190,15 +263,21 @@
       "FirstName": "Oliver",
       "LastName": "Johnson",
       "Gender": "Male"
+    },
+    "Wallet": {
+      "BankAccountName": "Oliver Giant",
+      "BankAccountNumber": "4242424242",
+      "Balance": 0.00
     }
   },
   {
+    "Id": 13,
     "Username": "emma",
     "Email": "emma@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "AvatarUrl": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
     "RoleId": 5,
     "LoginWithGoogle": false,
     "Status": "Active",
@@ -206,15 +285,21 @@
       "FirstName": "Emma",
       "LastName": "Doe",
       "Gender": "Female"
+    },
+    "Wallet": {
+      "BankAccountName": "Emma",
+      "BankAccountNumber": "42424242424242",
+      "Balance": 0.00
     }
   },
   {
+    "Id": 14,
     "Username": "grace",
     "Email": "grace@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
-    "Avatar": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
+    "AvatarUrl": "https://res.cloudinary.com/djiztef3a/image/upload/v1731735243/srsbudawgg7wqbvsswhw",
     "RoleId": 5,
     "LoginWithGoogle": false,
     "Status": "Active",
@@ -222,6 +307,11 @@
       "FirstName": "Grace",
       "LastName": "Halland",
       "Gender": "Female"
+    },
+    "Wallet": {
+      "BankAccountName": "Grace Nguyen",
+      "BankAccountNumber": "424242424242",
+      "Balance": 0.00
     }
   }
 ]

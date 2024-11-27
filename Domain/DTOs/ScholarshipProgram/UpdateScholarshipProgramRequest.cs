@@ -14,6 +14,8 @@ public class UpdateScholarshipProgramRequest
 
     public int? NumberOfScholarships { get; set; }
 
+    public int NumberOfAwardMilestones { get; set; }
+
     public DateTime? Deadline { get; set; }
 
     public string? Status { get; set; }
@@ -25,6 +27,10 @@ public class UpdateScholarshipProgramRequest
     public int? UniversityId { get; set; }
 
     public int? MajorId { get; set; }
-    
+
     public List<int>? CertificateIds { get; set; }
+
+    public List<CriteriaDetails> Criteria { get; set; }
+
+    public List<ReviewMilestoneDetails> ReviewMilestones { get; set; }
 }
