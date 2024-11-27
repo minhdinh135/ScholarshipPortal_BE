@@ -23,20 +23,31 @@ public class ScholarshipContext : DbContext
             .Where(e => e.Entity is BaseEntity && (
                 e.State == EntityState.Added
                 || e.State == EntityState.Modified));
-    
+
         foreach (var entityEntry in entries)
         {
-            if(((BaseEntity)entityEntry.Entity).UpdatedAt.HasValue &&
+            if (((BaseEntity)entityEntry.Entity).UpdatedAt.HasValue &&
                 ((BaseEntity)entityEntry.Entity).UpdatedAt > DateTime.Now)
                 continue;
-            ((BaseEntity)entityEntry.Entity).UpdatedAt = DateTime.Now;
-    
+            if (entityEntry.State == EntityState.Modified)
+            {
+                ((BaseEntity)entityEntry.Entity).UpdatedAt = DateTime.Now;
+            }
+
             if (entityEntry.State == EntityState.Added)
             {
-                ((BaseEntity)entityEntry.Entity).CreatedAt = DateTime.Now;
+                if (!((BaseEntity)entityEntry.Entity).CreatedAt.HasValue)
+                {
+                    ((BaseEntity)entityEntry.Entity).CreatedAt = DateTime.Now;
+                }
+
+                if (!((BaseEntity)entityEntry.Entity).UpdatedAt.HasValue)
+                {
+                    ((BaseEntity)entityEntry.Entity).UpdatedAt = DateTime.Now;
+                }
             }
         }
-    
+
         return await base.SaveChangesAsync(cancellationToken);
     }
 
@@ -234,7 +245,7 @@ public class ScholarshipContext : DbContext
                 .HasForeignKey(account => account.FunderId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
-        
+
         modelBuilder.Entity<Chat>(entity =>
         {
             entity.HasOne(chat => chat.Sender)
