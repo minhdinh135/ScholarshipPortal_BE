@@ -4,6 +4,7 @@ using AutoMapper;
 using Domain.DTOs.AwardMilestone;
 using Domain.DTOs.Common;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services;
 
@@ -20,7 +21,7 @@ public class AwardMilestoneService : IAwardMilestoneService
 
     public async Task<IEnumerable<AwardMilestoneDto>> GetAll()
     {
-        var allCategories = await _awardMilestoneRepository.GetAll();
+        var allCategories = await _awardMilestoneRepository.GetAll(x => x.Include(x => x.AwardMilestoneDocuments));
 
          return _mapper.Map<IEnumerable<AwardMilestoneDto>>(allCategories);
     }
