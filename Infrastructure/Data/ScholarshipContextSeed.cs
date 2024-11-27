@@ -76,6 +76,27 @@ public class ScholarshipContextSeed
             context.Certificates.AddRange(certificates);
         }
 
+        if (!context.ScholarshipPrograms.Any())
+        {
+            var scholarshipsData = File.ReadAllText(basePath + "/scholarships.json");
+            var scholarships = JsonSerializer.Deserialize<List<ScholarshipProgram>>(scholarshipsData);
+            context.ScholarshipPrograms.AddRange(scholarships);
+        }
+
+        if (!context.Applications.Any())
+        {
+            var applicationsData = File.ReadAllText(basePath + "/applications.json");
+            var applications = JsonSerializer.Deserialize<List<Domain.Entities.Application>>(applicationsData);
+            context.Applications.AddRange(applications);
+        }
+
+        if (!context.Services.Any())
+        {
+            var servicesData = File.ReadAllText(basePath + "/services.json");
+            var services = JsonSerializer.Deserialize<List<Service>>(servicesData);
+            context.Services.AddRange(services);
+        }
+
         if (context.ChangeTracker.HasChanges()) await context.SaveChangesAsync();
     }
 }

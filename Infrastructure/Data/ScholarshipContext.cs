@@ -258,7 +258,7 @@ public class ScholarshipContext : DbContext
                 .HasForeignKey(account => account.FunderId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
-        
+
         modelBuilder.Entity<Chat>(entity =>
         {
             entity.HasOne(chat => chat.Sender)

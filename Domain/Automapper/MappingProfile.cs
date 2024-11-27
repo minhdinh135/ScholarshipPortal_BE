@@ -21,6 +21,7 @@ using Domain.DTOs.ReviewMilestone;
 using Domain.DTOs.Role;
 using Domain.DTOs.ScholarshipProgram;
 using Domain.DTOs.Service;
+using Domain.DTOs.Subscription;
 using Domain.DTOs.University;
 using Domain.Entities;
 
@@ -60,6 +61,10 @@ public class MappingProfile : Profile
         CreateMap<CreateWalletDto, Wallet>();
         CreateMap<UpdateWalletBalanceDto, Wallet>();
 
+        CreateMap<Subscription, SubscriptionDto>().ReverseMap();
+        CreateMap<AddSubscriptionDto, Subscription>();
+        CreateMap<UpdateSubscriptionDto, Subscription>();
+        
         CreateMap<TransferRequest, Transaction>()
             .ForMember(dest => dest.Amount, opt =>
                 opt.MapFrom(src => src.Amount))

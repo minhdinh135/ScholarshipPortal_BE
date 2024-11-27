@@ -35,6 +35,9 @@ public static class ServiceExtension
 
         services.AddScoped<IRoleService, RoleService>();
 
+        services.AddScoped<ISubscriptionService, SubscriptionService>();
+        services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IAccountRepository, AccountRepository>();
 
