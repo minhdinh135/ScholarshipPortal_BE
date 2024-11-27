@@ -17,6 +17,8 @@ public class ScholarshipProgramDto
     public decimal? ScholarshipAmount { get; set; }
 
     public int? NumberOfScholarships { get; set; }
+    
+    public int? NumberOfAwardMilestones { get; set; }
 
     public DateTime? Deadline { get; set; }
 
@@ -31,4 +33,10 @@ public class ScholarshipProgramDto
     public MajorDto? Major { get; set; }
 
     public List<CertificateDto>? Certificates { get; set; }
+    
+    public List<AwardMilestoneDetails> AwardMilestones { get; set; }
+    
+    public List<CriteriaDetails> Criteria { get; set; }
+    
+    public List<ReviewMilestoneDetails> ReviewMilestones { get; set; }
 }
