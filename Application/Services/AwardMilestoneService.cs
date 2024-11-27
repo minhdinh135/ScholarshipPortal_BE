@@ -43,7 +43,7 @@ public class AwardMilestoneService : IAwardMilestoneService
 
     public async Task<IEnumerable<AwardMilestoneDto>> GetByScholarshipId(int scholarshipId)
     {
-        var allCategories = await _awardMilestoneRepository.GetAll();
+        var allCategories = await _awardMilestoneRepository.GetAll(x => x.Include(x => x.AwardMilestoneDocuments));
 
         allCategories = allCategories.Where(x => x.ScholarshipProgramId == scholarshipId);
 

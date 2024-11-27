@@ -124,8 +124,8 @@ namespace Application.Services
             else if(profile.Status == ApplicationStatusEnum.NeedExtend.ToString())
             {
                 var awards = await _awardMilestoneRepository.GetAll();
-                awards = awards.Where(x => x.ScholarshipProgramId == profile.ScholarshipProgramId).ToList();
                 var award = awards.Where(x => 
+                    x.ScholarshipProgramId == profile.ScholarshipProgramId &&
                     x.FromDate < profile.UpdatedAt &&
                     x.ToDate > profile.UpdatedAt)
                 .FirstOrDefault();
