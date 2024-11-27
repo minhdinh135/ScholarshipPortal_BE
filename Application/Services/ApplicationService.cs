@@ -17,11 +17,13 @@ namespace Application.Services
         private readonly ICloudinaryService _cloudinaryService;
         private readonly IAccountService _accountService;
         private readonly IApplicationReviewRepository _applicationReviewRepository;
+        private readonly IGenericRepository<AwardMilestone> _awardMilestoneRepository;
 
 
         public ApplicationService(IApplicationRepository applicationRepository, IMapper mapper,
             IGenericRepository<ApplicationDocument> applicationDocumentRepository,
-            ICloudinaryService cloudinaryService, IAccountService accountService, IApplicationReviewRepository applicationReviewRepository)
+            ICloudinaryService cloudinaryService, IAccountService accountService, IApplicationReviewRepository applicationReviewRepository,
+            IGenericRepository<AwardMilestone> awardMilestoneRepository)
         {
             _applicationRepository = applicationRepository;
             _mapper = mapper;
@@ -29,6 +31,7 @@ namespace Application.Services
             _cloudinaryService = cloudinaryService;
             _accountService = accountService;
             _applicationReviewRepository = applicationReviewRepository;
+            _awardMilestoneRepository = awardMilestoneRepository;
         }
 
         public async Task<ApplicationDto> Add(AddApplicationDto dto)
@@ -94,6 +97,52 @@ namespace Application.Services
             {
                 throw new ServiceException(e.Message);
             }
+        }
+
+        public async Task CheckApplicationAward(Domain.Entities.Application profile)
+        {
+            if(profile.Status == ApplicationStatusEnum.Awarded.ToString())
+            {
+                var awards = await _awardMilestoneRepository.GetAll();
+                awards = awards.Where(x => x.ScholarshipProgramId == profile.ScholarshipProgramId).ToList();
+                var award = awards.Where(x => 
+                    x.FromDate < profile.UpdatedAt &&
+                    x.ToDate > profile.UpdatedAt)
+                .FirstOrDefault();
+                if(award == null)
+                {
+                    profile.Status = ApplicationStatusEnum.Awarded.ToString();
+                    await _applicationRepository.Update(profile);
+                    return;
+                }
+
+                if(award.ToDate.Value < DateTime.Now){
+                    profile.Status = ApplicationStatusEnum.NeedExtend.ToString();
+                    await _applicationRepository.Update(profile);
+                }
+            }
+            else if(profile.Status == ApplicationStatusEnum.NeedExtend.ToString())
+            {
+                var awards = await _awardMilestoneRepository.GetAll();
+                awards = awards.Where(x => x.ScholarshipProgramId == profile.ScholarshipProgramId).ToList();
+                var award = awards.Where(x => 
+                    x.FromDate < profile.UpdatedAt &&
+                    x.ToDate > profile.UpdatedAt)
+                .FirstOrDefault();
+                if(award == null)
+                {
+                    profile.Status = ApplicationStatusEnum.Awarded.ToString();
+                    await _applicationRepository.Update(profile);
+                    return;
+                }
+
+                if(award.ToDate.Value < DateTime.Now){
+                    profile.Status = ApplicationStatusEnum.Rejected.ToString();
+                    profile.UpdatedAt = award.ToDate.Value.AddDays(-1);
+                    await _applicationRepository.Update(profile);
+                }
+            }
+            
         }
 
         public async Task UpdateReviewResult(UpdateReviewResultDto updateReviewResultDto)

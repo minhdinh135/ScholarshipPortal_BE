@@ -4,27 +4,27 @@ VALUES
 (18, 'PhD Research Excellence Award', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQmkvlHDU2Ut2U_rlwukwpHtnQCF0f2b_1bw&s', 
  'Supporting PhD students with outstanding research proposals.', '25000.00', 3, 
  '2024-11-09 00:00:00.000000', 'FINISHED', 2, 1, 1, 1, 
- '2024-11-24 17:35:03.423805', '2024-11-24 17:41:09.742665'),
+ '2024-11-24 17:35:03.423805', '2024-11-24 17:41:09.742665', 5),
 (19, 'Community Leadership Scholarship', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQmkvlHDU2Ut2U_rlwukwpHtnQCF0f2b_1bw&s', 
  'Awarded to students showing significant community impact.', '7000.00', 3, 
  '2024-11-09 00:00:00.000000', 'FINISHED', 2, 1, 1, 1, 
- '2024-11-24 17:51:58.381189', '2024-11-24 17:57:06.234577'),
+ '2024-11-24 17:51:58.381189', '2024-11-24 17:57:06.234577', 4),
 (1, 'Global Excellence Scholarship', 'https://example.com/images/global_excellence.jpg', 
  'Awarded to outstanding students demonstrating academic excellence and leadership potential.', '10000.00', 5, 
  '2024-12-15 23:59:59.000000', 'Open', 1, 2, 3, 5, 
- '2024-11-23 15:09:38.822461', '2024-11-23 15:09:38.822460'),
+ '2024-11-23 15:09:38.822461', '2024-11-23 15:09:38.822460', 6),
 (2, 'Future Innovators Fellowship', 'https://example.com/images/future_innovators.jpg', 
  'Supporting aspiring scientists and engineers working on innovative projects.', '15000.00', 3, 
  '2025-01-20 23:59:59.000000', 'Open', 2, 1, 4, 2, 
- '2024-11-23 15:10:04.211540', '2024-11-23 15:10:04.211539'),
+ '2024-11-23 15:10:04.211540', '2024-11-23 15:10:04.211539', 7),
 (3, 'Global Women in STEM Award', 'https://example.com/images/women_in_stem.jpg', 
  'Encouraging women to pursue careers in STEM fields through financial aid and mentorship.', '12000.00', 10, 
  '2024-11-30 23:59:59.000000', 'Open', 3, 3, 2, 7, 
- '2024-11-23 15:10:25.404868', '2024-11-23 15:10:25.404867'),
+ '2024-11-23 15:10:25.404868', '2024-11-23 15:10:25.404867', 8),
 (13, 'Global Change-Maker Scholarship', 'https://example.com/images/change_maker.jpg', 
  'Recognizing students with initiatives addressing global challenges.', '10000.00', 8, 
  '2024-12-25 23:59:59.000000', 'Open', 6, 2, 5, 8, 
- '2024-11-23 15:13:45.727921', '2024-11-23 15:13:45.727920');
+ '2024-11-23 15:13:45.727921', '2024-11-23 15:13:45.727920', 9);
 
 
 -- Insert into scholarship_program_certificates
