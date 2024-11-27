@@ -247,5 +247,9 @@ public class MappingProfile : Profile
         CreateMap<AwardMilestone, AwardMilestoneDetails>().ReverseMap();
         CreateMap<CreateAwardMilestoneDto, AwardMilestone>();
         CreateMap<UpdateAwardMilestoneDto, AwardMilestone>();
+
+        // Award milestone mapping
+        CreateMap<AwardMilestoneDocument, AwardMilestoneDocumentDto>().ReverseMap();
+
     }
 }

@@ -1,4 +1,6 @@
 using Application.Interfaces.IServices;
+using AutoMapper;
+using Domain.Constants;
 using Domain.DTOs.Application;
 using Domain.DTOs.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +13,17 @@ namespace SSAP.API.Controllers
     public class ApplicationController : ControllerBase
     {
         private readonly IApplicationService _applicationService;
+        private readonly IAwardMilestoneService _awardMilestoneService;
         private readonly ILogger<ApplicationController> _logger;
+        private readonly IMapper _mapper;
 
-        public ApplicationController(IApplicationService applicationService, ILogger<ApplicationController> logger)
+        public ApplicationController(IApplicationService applicationService, ILogger<ApplicationController> logger,
+            IAwardMilestoneService awardMilestoneService, IMapper mapper)
         {
             _applicationService = applicationService;
             _logger = logger;
+            _awardMilestoneService = awardMilestoneService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -50,6 +57,23 @@ namespace SSAP.API.Controllers
             {
                 var profile = await _applicationService.Get(id);
                 if (profile == null) return NotFound("Application not found.");
+                /*if(profile.Status == ApplicationStatusEnum.NeedExtend.ToString())
+                {
+                    Console.WriteLine("Hello asdasdsadsad");
+                    var awards = await _awardMilestoneService.GetByScholarshipId(profile.ScholarshipProgramId.Value);
+                    var profileEntity = _mapper.Map<Domain.Entities.Application>(profile);
+                    var award = awards.Where(x => 
+                        x.FromDate < profileEntity.UpdatedAt &&
+                        x.ToDate > profile.UpdatedAt)
+                    .FirstOrDefault();
+
+                    if(award.ToDate < DateTime.Now){
+                        profileEntity.Status = ApplicationStatusEnum.Rejected.ToString();
+                        var profileUpdateDto = _mapper.Map<UpdateApplicationStatusRequest>(profile);
+                        await _applicationService.Update(profile.Id, profileUpdateDto);
+                    }
+                }*/
+                
                 return Ok(profile);
             }
             catch (Exception ex)
@@ -109,17 +133,20 @@ namespace SSAP.API.Controllers
         [HttpGet("with-documents-and-account-profile/{id}")]
         public async Task<IActionResult> GetWithDocumentsAndAccount(int id)
         {
-            try
-            {
+            /*try
+            {*/
                 var profile = await _applicationService.GetWithDocumentsAndAccount(id);
                 if (profile == null) return NotFound("Application not found.");
+
+                await _applicationService.CheckApplicationAward(profile);
+
                 return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicantion successfully", profile));
-            }
-            catch (Exception ex)
+            //}
+            /*catch (Exception ex)
             {
                 _logger.LogError($"Failed to get applicant profile by id {id}: {ex.Message}");
                 return StatusCode(500, "Error retrieving data from the database.");
-            }
+            }*/
         }
 
         [HttpGet("get-by-scholarship/{scholarshipId}")]
