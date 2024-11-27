@@ -172,6 +172,7 @@ public class MappingProfile : Profile
         CreateMap<University, UniversityDto>().ReverseMap();
 
         CreateMap<Criteria, CriteriaDto>().ReverseMap();
+        CreateMap<Criteria, CriteriaDetails>().ReverseMap();
         CreateMap<CreateCriteriaRequest, Criteria>();
         CreateMap<UpdateCriteriaRequest, Criteria>();
 
@@ -237,11 +238,13 @@ public class MappingProfile : Profile
 
         // Review milestone mapping
         CreateMap<ReviewMilestone, ReviewMilestoneDto>().ReverseMap();
+        CreateMap<ReviewMilestone, ReviewMilestoneDetails>().ReverseMap();
         CreateMap<AddReviewMilestoneDto, ReviewMilestone>();
         CreateMap<UpdateReviewMilestoneDto, ReviewMilestone>();
 
         // Award milestone mapping
         CreateMap<AwardMilestone, AwardMilestoneDto>().ReverseMap();
+        CreateMap<AwardMilestone, AwardMilestoneDetails>().ReverseMap();
         CreateMap<CreateAwardMilestoneDto, AwardMilestone>();
         CreateMap<UpdateAwardMilestoneDto, AwardMilestone>();
     }

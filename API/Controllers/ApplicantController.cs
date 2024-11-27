@@ -115,22 +115,6 @@ public class ApplicantController : ControllerBase
         }
     }
 
-    [HttpPut("{applicantId}/achievements")]
-    public async Task<IActionResult> UpdateProfileAchievements(int applicantId,
-        List<UpdateAchievementDto> updateAchievementDtos)
-    {
-        try
-        {
-            await _applicantService.UpdateProfileAchievements(applicantId, updateAchievementDtos);
-
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update achievements successfuly", null));
-        }
-        catch (ServiceException e)
-        {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message, null));
-        }
-    }
-
     [HttpPut("{applicantId}/skills")]
     public async Task<IActionResult> UpdateProfileSkills(int applicantId,
         List<UpdateApplicantSkillDto> updateSkillDtos)
@@ -140,38 +124,6 @@ public class ApplicantController : ControllerBase
             await _applicantService.UpdateProfileSkills(applicantId, updateSkillDtos);
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Update skills successfuly", null));
-        }
-        catch (ServiceException e)
-        {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message, null));
-        }
-    }
-
-    [HttpPut("{applicantId}/certificates")]
-    public async Task<IActionResult> UpdateProfileAchievements(int applicantId,
-        List<UpdateApplicantCertificateDto> updateApplicantCertificateDtos)
-    {
-        try
-        {
-            await _applicantService.UpdateProfileCertificates(applicantId, updateApplicantCertificateDtos);
-
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update certificates successfuly", null));
-        }
-        catch (ServiceException e)
-        {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message, null));
-        }
-    }
-
-    [HttpPost("certificates/images")]
-    public async Task<IActionResult> UploadCertificateImages(IFormFileCollection images)
-    {
-        try
-        {
-            List<string> certificateUrls = await _applicantService.UploadCertificateImages(images);
-
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Upload certificate images successfully",
-                certificateUrls));
         }
         catch (ServiceException e)
         {

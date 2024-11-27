@@ -153,6 +153,7 @@ namespace Application.Services
                 throw new ServiceException(
                     $"Application review with ID {updateReviewResultDto.ApplicationReviewId} is not found");
 
+            existingApplicationReview.Score = updateReviewResultDto.Score;
             existingApplicationReview.Comment = updateReviewResultDto.Comment;
             existingApplicationReview.Status = ApplicationReviewStatusEnum.Completed.ToString();
 
