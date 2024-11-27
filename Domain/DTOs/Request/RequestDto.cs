@@ -14,6 +14,7 @@ public class RequestDto
 
     public int? ApplicantId { get; set; }
     public ServiceDto Service { get; set; }
+    public DateTime UpdatedAt { get; set; }
     
     public List<RequestDetailsDto> RequestDetails { get; set; }
 }
