@@ -69,4 +69,21 @@ public class SubscriptionController : ControllerBase
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
         }
     }
+
+	[HttpGet("by-provider/{providerId}")]
+	public async Task<IActionResult> GetSubscriptionByProviderId(int providerId)
+	{
+		try
+		{
+			var subscription = await _subscriptionService.GetSubscriptionByProviderId(providerId);
+
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Get subscription by provider ID successfully", subscription));
+		}
+		catch (Exception e)
+		{
+			return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+		}
+	}
+
+
 }
