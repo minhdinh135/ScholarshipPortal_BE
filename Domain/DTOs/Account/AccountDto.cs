@@ -10,7 +10,10 @@ public class AccountDto
 
     public string? PhoneNumber { get; set; }
 
-    public string? HashedPassword { get; set; }
+	public DateTime? SubscriptionEndDate { get; set; }
+	public int? SubscriptionId { get; set; }
+
+	public string? HashedPassword { get; set; }
 
     public string? Address { get; set; }
 

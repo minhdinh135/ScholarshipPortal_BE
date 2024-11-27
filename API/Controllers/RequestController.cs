@@ -79,6 +79,11 @@ public class RequestController : ControllerBase
         try
         {
             var request = await _requestService.GetRequestById(id);
+            if(request == null) { return BadRequest(); }
+            if(request.Status == "Finished" && request.UpdatedAt.AddDays(3) < DateTime.Now )
+            {
+
+            }
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Get request successfully", request));
         }
