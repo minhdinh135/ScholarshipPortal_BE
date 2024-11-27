@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs.Common;
+using Domain.DTOs.Expert;
 using Domain.DTOs.ScholarshipProgram;
 using Microsoft.AspNetCore.Http;
 
@@ -12,6 +13,7 @@ public interface IScholarshipProgramService
     Task<IEnumerable<ScholarshipProgramDto>> GetScholarshipProgramsByFunderId(int funderId);
     Task<IEnumerable<ScholarshipProgramDto>> GetScholarshipProgramsByMajorId(int majorId);
     Task<ScholarshipProgramDto> GetScholarshipProgramById(int id);
+    Task<IEnumerable<ExpertDetailsDto>> GetScholarshipProgramExperts(int scholarshipProgramId);
     Task<int> CreateScholarshipProgram(CreateScholarshipProgramRequest createScholarshipProgramRequest);
     Task<int> UpdateScholarshipProgram(int id, UpdateScholarshipProgramRequest updateScholarshipProgramRequest);
     // Task UploadScholarshipProgramImage(int id, IFormFile file);

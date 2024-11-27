@@ -10,6 +10,8 @@ public class AwardMilestoneDto
     
     public decimal? Amount { get; set; }
     
+    public string? Note { get; set; }
+    
     public int? ScholarshipProgramId { get; set; }
 
     public ICollection<AwardMilestoneDocumentDto>? AwardMilestoneDocuments { get; set; }
