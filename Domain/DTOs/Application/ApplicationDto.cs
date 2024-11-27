@@ -11,6 +11,8 @@ public class ApplicationDto
     public int? ApplicantId { get; set; }
 
     public int? ScholarshipProgramId { get; set; }
+
+    public DateTime UpdatedAt { get; set; }
     
     public List<ApplicationDocumentDto> ApplicationDocuments { get; set; }
     

@@ -16,6 +16,7 @@ public class ScholarshipContext : DbContext
     {
     }
 
+    
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var entries = ChangeTracker
@@ -26,30 +27,42 @@ public class ScholarshipContext : DbContext
 
         foreach (var entityEntry in entries)
         {
-            if (((BaseEntity)entityEntry.Entity).UpdatedAt.HasValue &&
-                ((BaseEntity)entityEntry.Entity).UpdatedAt > DateTime.Now)
-                continue;
-            if (entityEntry.State == EntityState.Modified)
+            var baseEntity = (BaseEntity)entityEntry.Entity;
+
+            // Handle UpdatedAt logic
+            var updatedAtProperty = entityEntry.Properties.FirstOrDefault(p => p.Metadata.Name == nameof(BaseEntity.UpdatedAt));
+            if (entityEntry.State == EntityState.Modified && updatedAtProperty != null)
             {
-                ((BaseEntity)entityEntry.Entity).UpdatedAt = DateTime.Now;
+                // Get the original value from the database
+                var databaseValues = await entityEntry.GetDatabaseValuesAsync(cancellationToken);
+                var originalValue = databaseValues?.GetValue<DateTime?>(nameof(BaseEntity.UpdatedAt));
+
+                if (originalValue.HasValue && originalValue.Value != (DateTime?)updatedAtProperty.CurrentValue)
+                {
+                    // If the value is explicitly different, retain the new value
+                    baseEntity.UpdatedAt = (DateTime?)updatedAtProperty.CurrentValue;
+                }
+                else
+                {
+                    // If the value is the same, update UpdatedAt to DateTime.Now
+                    baseEntity.UpdatedAt = DateTime.Now;
+                }
+            }
+            else
+            {
+                // Default UpdatedAt to DateTime.Now if not explicitly modified
+                baseEntity.UpdatedAt = DateTime.Now;
             }
 
             if (entityEntry.State == EntityState.Added)
             {
-                if (!((BaseEntity)entityEntry.Entity).CreatedAt.HasValue)
-                {
-                    ((BaseEntity)entityEntry.Entity).CreatedAt = DateTime.Now;
-                }
-
-                if (!((BaseEntity)entityEntry.Entity).UpdatedAt.HasValue)
-                {
-                    ((BaseEntity)entityEntry.Entity).UpdatedAt = DateTime.Now;
-                }
+                baseEntity.CreatedAt = DateTime.Now;
             }
         }
 
         return await base.SaveChangesAsync(cancellationToken);
     }
+
 
     public virtual DbSet<Account> Accounts { get; set; }
 
