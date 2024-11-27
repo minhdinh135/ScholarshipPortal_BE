@@ -21,6 +21,9 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
             q => q.Include(sp => sp.University).ThenInclude(u => u.Country),
             q => q.Include(sp => sp.ScholarshipProgramCertificates).ThenInclude(c => c.Certificate),
             q => q.Include(sp => sp.Major).ThenInclude(m => m.MajorSkills).ThenInclude(ms => ms.Skill),
+            q => q.Include(sp => sp.Criteria),
+            q => q.Include(sp => sp.ReviewMilestones),
+            q => q.Include(sp => sp.AwardMilestones)
         };
         var scholarshipPrograms = await GetPaginatedList(includes, listOptions);
 
@@ -31,6 +34,9 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
     {
         var scholarshipProgram = await _dbContext.ScholarshipPrograms
             .AsSplitQuery()
+            .Include(sp => sp.Criteria)
+            .Include(sp => sp.ReviewMilestones)
+            .Include(sp => sp.AwardMilestones)
             .Include(sp => sp.Category)
             .Include(sp => sp.University)
             .ThenInclude(u => u.Country)
