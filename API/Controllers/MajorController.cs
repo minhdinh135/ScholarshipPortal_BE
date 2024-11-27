@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.IServices;
+﻿using System.Security.Cryptography.Pkcs;
+using Application.Interfaces.IServices;
 using Domain.DTOs.Common;
 using Domain.DTOs.Major;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ public class MajorController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllMajors()
     {
-        var allMajors = await _majorService.GetAllMajors();
+        var allMajors = await _majorService.GetAllParentMajors();
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all majors successfully", allMajors));
     }
@@ -34,7 +35,7 @@ public class MajorController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetMajorById([FromRoute] int id)
+    public async Task<IActionResult> GetMajorById(int id)
     {
         var major = await _majorService.GetMajorById(id);
 
@@ -42,6 +43,14 @@ public class MajorController : ControllerBase
             return NotFound(new ApiResponse(StatusCodes.Status404NotFound, "Major not found", null));
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get major successfully", major));
+    }
+
+    [HttpGet("{id}/sub-majors")]
+    public async Task<IActionResult> GetSubMajorsByParentMajor(int id)
+    {
+        var subMajors = await _majorService.GetSubMajorsByParentMajor(id);
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get sub-majors successfully", subMajors));
     }
 
     [HttpPost]
@@ -60,7 +69,7 @@ public class MajorController : ControllerBase
     public async Task<IActionResult> UpdateMajor([FromRoute] int id,
         [FromBody] UpdateMajorRequest updateMajorRequest)
     {
-       var updatedMajor = await _majorService.UpdateMajor(id, updateMajorRequest);
+        var updatedMajor = await _majorService.UpdateMajor(id, updateMajorRequest);
 
         if (updatedMajor == null)
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Update major failed", null));

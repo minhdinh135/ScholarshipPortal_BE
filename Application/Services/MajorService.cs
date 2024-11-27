@@ -25,6 +25,20 @@ public class MajorService : IMajorService
         return _mapper.Map<IEnumerable<MajorDto>>(allMajors);
     }
 
+    public async Task<IEnumerable<MajorDto>> GetAllParentMajors()
+    {
+        var allParentMajors = await _majorRepository.GetAllParentMajors();
+
+        return _mapper.Map<IEnumerable<MajorDto>>(allParentMajors);
+    }
+
+    public async Task<IEnumerable<MajorDto>> GetSubMajorsByParentMajor(int parentMajorId)
+    {
+        var allSubMajors = await _majorRepository.GetAllSubMajorsByParentMajor(parentMajorId);
+
+        return _mapper.Map<IEnumerable<MajorDto>>(allSubMajors);
+    }
+
     public async Task<PaginatedList<MajorDto>> GetMajors(int pageIndex, int pageSize, string sortBy, string sortOrder)
     {
         var majors = await _majorRepository.GetPaginatedList(pageIndex, pageSize, sortBy, sortOrder);
