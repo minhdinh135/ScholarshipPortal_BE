@@ -1,0 +1,134 @@
+﻿[
+  {
+    "Id": 1,
+    "Name": "CV Polish for Competitive Scholarships",
+    "Description": "Ensure your CV meets the highest standards for competitive scholarship programs.",
+    "Type": "CV_REVIEW",
+    "Price": 65.00,
+    "Status": "Active",
+    "ProviderId": 8,
+    "CreatedAt": "2024-11-24T05:29:31Z",
+    "UpdatedAt": "2024-11-24T05:29:31Z"
+  },
+  {
+    "Id": 2,
+    "Name": "Scholarship Document Translation",
+    "Description": "Professional translation for scholarship-related documents.",
+    "Type": "TRANSLATION",
+    "Price": 85.00,
+    "Status": "Active",
+    "ProviderId": 8,
+    "CreatedAt": "2024-11-24T05:30:47Z",
+    "UpdatedAt": "2024-11-24T05:30:47Z"
+  },
+  {
+    "Id": 3,
+    "Name": "Scholarship Essay Feedback",
+    "Description": "Detailed critique and enhancement of your scholarship essay drafts.",
+    "Type": "ESSAY_WRITING",
+    "Price": 85.00,
+    "Status": "Active",
+    "ProviderId": 8,
+    "CreatedAt": "2024-11-24T05:31:12Z",
+    "UpdatedAt": "2024-11-24T05:31:12Z"
+  },
+  {
+    "Id": 4,
+    "Name": "Comprehensive Application Review",
+    "Description": "Full evaluation of your scholarship application with actionable improvements.",
+    "Type": "APPLICATION_REVIEW",
+    "Price": 85.00,
+    "Status": "Active",
+    "ProviderId": 8,
+    "CreatedAt": "2024-11-24T05:31:38Z",
+    "UpdatedAt": "2024-11-24T05:31:38Z"
+  },
+  {
+    "Id": 5,
+    "Name": "Virtual Interview Preparation",
+    "Description": "Practice and tips for acing virtual scholarship interviews.",
+    "Type": "INTERVIEW_COACHING",
+    "Price": 85.00,
+    "Status": "Active",
+    "ProviderId": 8,
+    "CreatedAt": "2024-11-24T05:32:00Z",
+    "UpdatedAt": "2024-11-24T05:32:00Z"
+  },
+  {
+    "Id": 6,
+    "Name": "Custom Recommendation Letter Draft",
+    "Description": "Assistance in drafting personalized recommendation letters.",
+    "Type": "RECOMMENDATION_LETTER",
+    "Price": 85.00,
+    "Status": "Active",
+    "ProviderId": 8,
+    "CreatedAt": "2024-11-24T05:32:24Z",
+    "UpdatedAt": "2024-11-24T05:32:24Z"
+  },
+  {
+    "Id": 7,
+    "Name": "Scholarship Finder Tool Access",
+    "Description": "Access to a curated database of scholarships tailored to your profile.",
+    "Type": "SCHOLARSHIP_SEARCH",
+    "Price": 45.00,
+    "Status": "Active",
+    "ProviderId": 10,
+    "CreatedAt": "2024-11-24T05:35:25Z",
+    "UpdatedAt": "2024-11-24T05:35:25Z"
+  },
+  {
+    "Id": 8,
+    "Name": "Scholarship Finder Tool Access",
+    "Description": "Access to a curated database of scholarships tailored to your profile.",
+    "Type": "SCHOLARSHIP_SEARCH",
+    "Price": 45.00,
+    "Status": "Active",
+    "ProviderId": 10,
+    "CreatedAt": "2024-11-24T05:36:22Z",
+    "UpdatedAt": "2024-11-24T05:36:22Z"
+  },
+  {
+    "Id": 9,
+    "Name": "CV Tailoring for Scholarships",
+    "Description": "Personalized CV review and enhancement to highlight scholarship-specific achievements.",
+    "Type": "CV_REVIEW",
+    "Price": 45.00,
+    "Status": "Active",
+    "ProviderId": 10,
+    "CreatedAt": "2024-11-24T05:36:55Z",
+    "UpdatedAt": "2024-11-24T05:36:55Z"
+  },
+  {
+    "Id": 10,
+    "Name": "Academic Translation Services",
+    "Description": "Translation of academic documents to the required language for scholarship applications.",
+    "Type": "TRANSLATION",
+    "Price": 45.00,
+    "Status": "Active",
+    "ProviderId": 10,
+    "CreatedAt": "2024-11-24T05:37:16Z",
+    "UpdatedAt": "2024-11-24T05:37:16Z"
+  },
+  {
+    "Id": 11,
+    "Name": "Winning Scholarship Essay Guide",
+    "Description": "Professional assistance in crafting compelling scholarship essays.",
+    "Type": "ESSAY_WRITING",
+    "Price": 45.00,
+    "Status": "Active",
+    "ProviderId": 10,
+    "CreatedAt": "2024-11-24T05:37:39Z",
+    "UpdatedAt": "2024-11-24T05:37:39Z"
+  },
+  {
+    "Id": 12,
+    "Name": "Scholarship Application Critique",
+    "Description": "Detailed feedback on your entire scholarship application to ensure success.",
+    "Type": "APPLICATION_REVIEW",
+    "Price": 45.00,
+    "Status": "Active",
+    "ProviderId": 10,
+    "CreatedAt": "2024-11-24T05:38:01Z",
+    "UpdatedAt": "2024-11-24T05:38:01Z"
+  }
+]
