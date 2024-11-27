@@ -8,6 +8,8 @@ public class AwardMilestone : BaseEntity
     
     public decimal? Amount { get; set; }
     
+    public string? Note { get; set; }
+    
     public int? ScholarshipProgramId { get; set; }
     
     public ScholarshipProgram? ScholarshipProgram { get; set; }
