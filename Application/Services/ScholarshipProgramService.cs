@@ -3,6 +3,7 @@ using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
 using Domain.DTOs.Common;
+using Domain.DTOs.Expert;
 using Domain.DTOs.ScholarshipProgram;
 using Domain.Entities;
 
@@ -14,15 +15,18 @@ public class ScholarshipProgramService : IScholarshipProgramService
     private readonly IScholarshipProgramRepository _scholarshipProgramRepository;
     private readonly ICloudinaryService _cloudinaryService;
     private readonly IElasticService<ScholarshipProgramElasticDocument> _scholarshipElasticService;
+    private readonly IFunderService _funderService;
 
     public ScholarshipProgramService(IMapper mapper, IScholarshipProgramRepository scholarshipProgramRepository,
         ICloudinaryService cloudinaryService,
-        IElasticService<ScholarshipProgramElasticDocument> scholarshipElasticService)
+        IElasticService<ScholarshipProgramElasticDocument> scholarshipElasticService,
+        IFunderService funderService)
     {
         _mapper = mapper;
         _scholarshipProgramRepository = scholarshipProgramRepository;
         _cloudinaryService = cloudinaryService;
         _scholarshipElasticService = scholarshipElasticService;
+        _funderService = funderService;
     }
 
     public async Task<PaginatedList<ScholarshipProgramDto>> GetAllPrograms(ListOptions listOptions)
@@ -76,6 +80,15 @@ public class ScholarshipProgramService : IScholarshipProgramService
         return _mapper.Map<ScholarshipProgramDto>(scholarshipProgram);
     }
 
+    public async Task<IEnumerable<ExpertDetailsDto>> GetScholarshipProgramExperts(int scholarshipProgramId)
+    {
+        var scholarshipProgram = await _scholarshipProgramRepository.GetScholarsipProgramById(scholarshipProgramId);
+        var funderExperts = await _funderService.GetExpertsByFunderId((int)scholarshipProgram.FunderId);
+        var scholarshipExperts = funderExperts.Where(e => e.Major == scholarshipProgram.Major.Name);
+
+        return scholarshipExperts;
+    }
+
     public async Task<int> CreateScholarshipProgram(
         CreateScholarshipProgramRequest createScholarshipProgramRequest)
     {
@@ -116,33 +129,6 @@ public class ScholarshipProgramService : IScholarshipProgramService
         }
     }
 
-    // public async Task UploadScholarshipProgramImage(int id, IFormFile file)
-    // {
-    //     var existingScholarshipProgram = await _scholarshipProgramRepository.GetById(id);
-    //
-    //     if (existingScholarshipProgram == null)
-    //     {
-    //         throw new Exception("No scholarship program found");
-    //     }
-    //
-    //     try
-    //     {
-    //         var imageUrl = await _cloudinaryService.UploadImage(file);
-    //
-    //         if (string.IsNullOrEmpty(imageUrl))
-    //         {
-    //             throw new Exception("Error uploading to Cloudinary");
-    //         }
-    //
-    //         existingScholarshipProgram.ImageUrl = imageUrl;
-    //
-    //         await _scholarshipProgramRepository.Update(existingScholarshipProgram);
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         throw new Exception("Error uploading image to Cloudinary: " + e.Message);
-    //     }
-    // }
     public async Task UpdateScholarshipProgramName(int id, string name)
     {
         var existingScholarshipProgram = await _scholarshipProgramRepository.GetScholarsipProgramById(id);

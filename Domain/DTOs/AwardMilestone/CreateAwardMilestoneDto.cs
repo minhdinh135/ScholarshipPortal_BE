@@ -8,5 +8,7 @@ public class CreateAwardMilestoneDto
     
     public decimal? Amount { get; set; }
     
+    public string? Note { get; set; }
+    
     public int? ScholarshipProgramId { get; set; }
 }
