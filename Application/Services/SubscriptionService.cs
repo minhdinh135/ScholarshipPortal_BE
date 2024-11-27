@@ -63,4 +63,14 @@ public class SubscriptionService : ISubscriptionService
             throw new ServiceException(e.Message);
         }
     }
+
+	public async Task<SubscriptionDto> GetSubscriptionByProviderId(int providerId)
+	{
+		var subscription = await _subscriptionRepository.GetSubscriptionByProviderId(providerId);
+		if (subscription == null)
+			throw new ServiceException($"No subscription found for provider with ID: {providerId}");
+
+		return _mapper.Map<SubscriptionDto>(subscription);
+	}
+
 }

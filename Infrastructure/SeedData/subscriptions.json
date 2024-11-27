@@ -1,6 +1,7 @@
 ﻿[
   {
     "Id": 1,
+    "Name": "Basic",
     "Description": "Subscription for Provider",
     "Amount": 5,
     "ValidMonths": 1,
