@@ -2,6 +2,8 @@
 
 public enum ApplicationReviewStatusEnum
 {
-    Assigned,
-    Completed
+    Reviewing,
+    Passed,
+    Approved,
+    Failed
 }

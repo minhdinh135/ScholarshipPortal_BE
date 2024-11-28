@@ -2,7 +2,6 @@
 using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
-using Domain.DTOs.Funder;
 using Domain.DTOs.Provider;
 using Domain.Entities;
 
@@ -12,19 +11,21 @@ public class ProviderService : IProviderService
 {
     private readonly IMapper _mapper;
     private readonly IProviderRepository _providerRepository;
+    private readonly IAccountRepository _accountRepository;
 
-    public ProviderService(IMapper mapper, IProviderRepository providerRepository)
+    public ProviderService(IMapper mapper, IProviderRepository providerRepository, IAccountRepository accountRepository)
     {
         _mapper = mapper;
         _providerRepository = providerRepository;
+        _accountRepository = accountRepository;
     }
 
 
-    public async Task<ProviderProfileDto> GetProviderDetailsByProviderId(int providerId)
+    public async Task<ProviderProfileDetails> GetProviderDetailsByProviderId(int providerId)
     {
         var provider = await _providerRepository.GetProviderDetailsByProviderId(providerId);
 
-        return _mapper.Map<ProviderProfileDto>(provider);
+        return _mapper.Map<ProviderProfileDetails>(provider);
     }
 
     public async Task<ProviderProfileDto> AddProviderDetails(AddProviderDetailsDto addProviderDetailsDto)
@@ -43,17 +44,43 @@ public class ProviderService : IProviderService
         }
     }
 
-    public async Task<ProviderProfileDto> UpdateProviderDetails(int providerId,
-        UpdateProviderDetailsDto updateProviderDetailsDto)
+    public async Task<int> UpdateProviderDetails(int providerId,
+        UpdateProviderDetailsDto updateDetails)
     {
-        var existingProvider = await _providerRepository.GetProviderDetailsByProviderId(providerId);
+        var existingProvider = await _accountRepository.GetAccountById(providerId);
         if (existingProvider == null)
             throw new ServiceException($"Funder with providerId:{providerId} is not found", new NotFoundException());
 
-        _mapper.Map(updateProviderDetailsDto, existingProvider);
+        try
+        {
+            existingProvider.Email = updateDetails.Email;
+            existingProvider.Username = updateDetails.Username;
+            existingProvider.PhoneNumber = updateDetails.Phone;
+            existingProvider.Address = updateDetails.Address;
+            existingProvider.AvatarUrl = updateDetails.Avatar;
+            existingProvider.Status = updateDetails.Status;
+            await _accountRepository.Update(existingProvider);
 
-        var updatedProvider = await _providerRepository.Update(existingProvider);
+            var providerProfile = await _providerRepository.GetProviderDetailsByProviderId(providerId);
+            providerProfile.OrganizationName = updateDetails.OrganizationName;
+            providerProfile.ContactPersonName = updateDetails.ContactPersonName;
+            foreach (var providerDocument in updateDetails.ProviderDocuments)
+            {
+                providerProfile.ProviderDocuments.Add(new ProviderDocument
+                {
+                    Name = providerDocument.Name,
+                    Type = providerDocument.Type,
+                    FileUrl = providerDocument.FileUrl
+                });
+            }
 
-        return _mapper.Map<ProviderProfileDto>(updatedProvider);
+            await _providerRepository.Update(providerProfile);
+
+            return existingProvider.Id;
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
     }
 }

@@ -12,18 +12,20 @@ public class FunderService : IFunderService
 {
     private readonly IMapper _mapper;
     private readonly IFunderRepository _funderRepository;
+    private readonly IAccountRepository _accountRepository;
 
-    public FunderService(IMapper mapper, IFunderRepository funderRepository)
+    public FunderService(IMapper mapper, IFunderRepository funderRepository, IAccountRepository accountRepository)
     {
         _mapper = mapper;
         _funderRepository = funderRepository;
+        _accountRepository = accountRepository;
     }
-    
-    public async Task<FunderProfileDto> GetFunderDetailsByFunderId(int funderId)
+
+    public async Task<FunderProfileDetails> GetFunderDetailsByFunderId(int funderId)
     {
         var funder = await _funderRepository.GetFunderDetailsByFunderId(funderId);
 
-        return _mapper.Map<FunderProfileDto>(funder);
+        return _mapper.Map<FunderProfileDetails>(funder);
     }
 
     public async Task<FunderProfileDto> AddFunderDetails(AddFunderDetailsDto addFunderDetailsDto)
@@ -31,7 +33,7 @@ public class FunderService : IFunderService
         try
         {
             var addedProfile = _mapper.Map<FunderProfile>(addFunderDetailsDto);
-            
+
             var addedFunderDetails = await _funderRepository.Add(addedProfile);
 
             return _mapper.Map<FunderProfileDto>(addedProfile);
@@ -42,17 +44,43 @@ public class FunderService : IFunderService
         }
     }
 
-    public async Task<FunderProfileDto> UpdateFunderDetails(int funderId, UpdateFunderDetailsDto updateFunderDetailsDto)
+    public async Task<int> UpdateFunderDetails(int funderId, UpdateFunderDetailsDto updateDetails)
     {
-        var existingFunder = await _funderRepository.GetFunderDetailsByFunderId(funderId);
+        var existingFunder = await _accountRepository.GetAccountById(funderId);
         if (existingFunder == null)
             throw new ServiceException($"Funder with funderId:{funderId} is not found", new NotFoundException());
 
-        _mapper.Map(updateFunderDetailsDto, existingFunder);
+        try
+        {
+            existingFunder.Email = updateDetails.Email;
+            existingFunder.Username = updateDetails.Username;
+            existingFunder.PhoneNumber = updateDetails.Phone;
+            existingFunder.Address = updateDetails.Address;
+            existingFunder.AvatarUrl = updateDetails.Avatar;
+            existingFunder.Status = updateDetails.Status;
+            await _accountRepository.Update(existingFunder);
 
-        var updatedFunder = await _funderRepository.Update(existingFunder);
+            var funderProfile = await _funderRepository.GetFunderDetailsByFunderId(funderId);
+            funderProfile.OrganizationName = updateDetails.OrganizationName;
+            funderProfile.ContactPersonName = updateDetails.ContactPersonName;
+            foreach (var funderDocument in updateDetails.FunderDocuments)
+            {
+                funderProfile.FunderDocuments.Add(new FunderDocument
+                {
+                    Name = funderDocument.Name,
+                    Type = funderDocument.Type,
+                    FileUrl = funderDocument.FileUrl
+                });
+            }
 
-        return _mapper.Map<FunderProfileDto>(updatedFunder);
+            await _funderRepository.Update(funderProfile);
+
+            return existingFunder.Id;
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
     }
 
     public async Task<IEnumerable<ExpertDetailsDto>> GetExpertsByFunderId(int id)
