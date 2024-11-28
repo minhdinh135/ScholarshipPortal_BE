@@ -78,7 +78,7 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
     {
         var expertAssignedReviews =
             await _applicationReviewRepository.GetAll(q => q.Where(ar =>
-                    ar.ExpertId == expertId && ar.Status == ApplicationReviewStatusEnum.Assigned.ToString()));
+                ar.ExpertId == expertId));
 
         var expertAssignedReviewIds = expertAssignedReviews.Select(ar => ar.ApplicationId);
 

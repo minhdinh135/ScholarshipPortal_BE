@@ -26,20 +26,20 @@ public class ProviderController : ControllerBase
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get Provider details successfully", provider));
     }
 
-    [HttpPost("{id}")]
-    public async Task<IActionResult> AddProviderDetails(AddProviderDetailsDto addProviderDetailsDto)
-    {
-        try
-        {
-            var addedProviderDetails = await _providerService.AddProviderDetails(addProviderDetailsDto);
-
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Add provider details successully", addedProviderDetails));
-        }
-        catch (ServiceException e)
-        {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
-        }
-    }
+    // [HttpPost("{id}")]
+    // public async Task<IActionResult> AddProviderDetails(AddProviderDetailsDto addProviderDetailsDto)
+    // {
+    //     try
+    //     {
+    //         var addedProviderDetails = await _providerService.AddProviderDetails(addProviderDetailsDto);
+    //
+    //         return Ok(new ApiResponse(StatusCodes.Status200OK, "Add provider details successully", addedProviderDetails));
+    //     }
+    //     catch (ServiceException e)
+    //     {
+    //         return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+    //     }
+    // }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateProviderDetails(int id, UpdateProviderDetailsDto updateProviderDetailsDto)
