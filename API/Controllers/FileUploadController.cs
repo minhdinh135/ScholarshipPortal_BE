@@ -1,7 +1,6 @@
 ﻿using Application.Exceptions;
 using Application.Interfaces.IServices;
 using Domain.DTOs.Common;
-using Infrastructure.ExternalServices.Cloudinary;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SSAP.API.Controllers;

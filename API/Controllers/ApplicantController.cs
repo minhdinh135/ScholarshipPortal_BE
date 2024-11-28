@@ -136,7 +136,7 @@ public class ApplicantController : ControllerBase
     {
         try
         {
-            var applicantProfile = await _applicantService.GetApplicantProfile(applicantId);
+            var applicantProfile = await _applicantService.GetApplicantProfileDetails(applicantId);
             var pdf = await _applicantService.ExportApplicantProfileToPdf(applicantId);
 
             return File(pdf, "application/pdf",
