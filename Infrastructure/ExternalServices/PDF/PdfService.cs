@@ -15,7 +15,7 @@ public class PdfService : IPdfService
         Settings.License = LicenseType.Community;
     }
 
-    public async Task<byte[]> GenerateProfileInPdf(ApplicantProfileDto profile)
+    public async Task<byte[]> GenerateProfileInPdf(ApplicantProfileDetails profile)
     {
         var document = Document.Create(container =>
         {
@@ -27,7 +27,7 @@ public class PdfService : IPdfService
                 page.DefaultTextStyle(x => x.FontSize(11));
 
                 page.Header()
-                    .Text("Scholarship Application")
+                    .Text("Applicant Resume")
                     .SemiBold().FontSize(20).FontColor(Colors.Blue.Medium);
 
                 page.Content()
@@ -49,17 +49,26 @@ public class PdfService : IPdfService
                             table.Cell().Text("Name:");
                             table.Cell().Text($"{profile.FirstName} {profile.LastName}");
 
+                            table.Cell().Text("Gender:");
+                            table.Cell().Text($"{profile.Gender}");
+
                             table.Cell().Text("Date of Birth:");
-                            table.Cell().Text($"{profile.BirthDate?.ToString("yyyy-MM-dd") ?? "N/A"}");
+                            table.Cell().Text($"{profile.Birthdate.ToString("yyyy-MM-dd") ?? "N/A"}");
 
                             table.Cell().Text("Address:");
-                            table.Cell().Text($"{profile.Applicant?.Address ?? "N/A"}");
+                            table.Cell().Text($"{profile.Address ?? "N/A"}");
 
                             table.Cell().Text("Email:");
-                            table.Cell().Text($"{profile.Applicant?.Email}");
+                            table.Cell().Text($"{profile.Email}");
 
                             table.Cell().Text("Phone:");
-                            table.Cell().Text($"{profile.Applicant?.PhoneNumber}");
+                            table.Cell().Text($"{profile.Phone}");
+
+                            table.Cell().Text("Nationality:");
+                            table.Cell().Text($"{profile.Nationality}");
+
+                            table.Cell().Text("Phone:");
+                            table.Cell().Text($"{profile.Ethnicity}");
                         });
 
                         // Academic Information
@@ -72,17 +81,14 @@ public class PdfService : IPdfService
                                 columns.RelativeColumn();
                             });
 
+                            table.Cell().Text("Major");
+                            table.Cell().Text($"{profile.Major}");
+
                             table.Cell().Text("Current School:");
-                            table.Cell().Text("University of Example");
-
-                            table.Cell().Text("Major:");
-                            table.Cell().Text("Computer Science");
-
-                            table.Cell().Text("Expected Graduation:");
-                            table.Cell().Text("May 2024");
+                            table.Cell().Text($"{profile.School}");
 
                             table.Cell().Text("GPA:");
-                            table.Cell().Text("3.8/4.0");
+                            table.Cell().Text($"{profile.Gpa}/4.0");
                         });
 
                         // Achievements
@@ -97,53 +103,59 @@ public class PdfService : IPdfService
                             {
                                 foreach (var achievement in profile.Achievements)
                                 {
-                                    column.Item().Text($"• {achievement.Name}");
+                                    column.Item().Text($"• {achievement}");
                                 }
                             });
                         }
 
 
-                        // Extracurricular Activities
-                        x.Item().Text("Extracurricular Activities").FontSize(14).SemiBold();
-                        x.Item().Column(column =>
+                        x.Item().Text("Experience").FontSize(14).SemiBold();
+                        if (profile.Experience.IsNullOrEmpty())
                         {
-                            column.Item().Text("• Student Government Association - Vice President");
-                            column.Item().Text("• Coding Club - Founder and President");
-                            column.Item().Text("• Volunteer at Local Food Bank - 100+ hours");
-                        });
-
-                        // Awards and Honors
-                        x.Item().Text("Awards and Honors").FontSize(14).SemiBold();
-                        x.Item().Column(column =>
+                            x.Item().Text("N/A");
+                        }
+                        else
                         {
-                            column.Item().Text("• Dean's List - All Semesters");
-                            column.Item().Text("• First Place, University Hackathon 2022");
-                            column.Item().Text("• National Merit Scholar");
-                        });
-
-                        // Personal Statement
-                        x.Item().Text("Personal Statement").FontSize(14).SemiBold();
-                        x.Item().Text(Placeholders.LoremIpsum());
-
-                        // References
-                        x.Item().Text("References").FontSize(14).SemiBold();
-                        x.Item().Table(table =>
-                        {
-                            table.ColumnsDefinition(columns =>
+                            x.Item().Column(column =>
                             {
-                                columns.ConstantColumn(100);
-                                columns.RelativeColumn();
+                                foreach (var experience in profile.Experience)
+                                {
+                                    column.Item().Text($"• {experience}");
+                                }
                             });
+                        }
 
-                            table.Cell().Text("Name:");
-                            table.Cell().Text("Dr. Jane Smith");
+                        x.Item().Text("Skills").FontSize(14).SemiBold();
+                        if (profile.Skills.IsNullOrEmpty())
+                        {
+                            x.Item().Text("N/A");
+                        }
+                        else
+                        {
+                            x.Item().Column(column =>
+                            {
+                                foreach (var skill in profile.Skills)
+                                {
+                                    column.Item().Text($"• {skill}");
+                                }
+                            });
+                        }
 
-                            table.Cell().Text("Position:");
-                            table.Cell().Text("Professor of Computer Science");
-
-                            table.Cell().Text("Contact:");
-                            table.Cell().Text("jsmith@university.edu | (987) 654-3210");
-                        });
+                        x.Item().Text("Certificates").FontSize(14).SemiBold();
+                        if (profile.Certificates.IsNullOrEmpty())
+                        {
+                            x.Item().Text("N/A");
+                        }
+                        else
+                        {
+                            x.Item().Column(column =>
+                            {
+                                foreach (var certificate in profile.Certificates)
+                                {
+                                    column.Item().Text($"• {certificate}");
+                                }
+                            });
+                        }
                     });
 
                 page.Footer()

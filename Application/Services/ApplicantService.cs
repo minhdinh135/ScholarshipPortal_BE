@@ -94,6 +94,9 @@ public class ApplicantService : IApplicantService
             applicantProfile.Gender = updateDetails.Gender;
             applicantProfile.Nationality = updateDetails.Nationality;
             applicantProfile.Ethnicity = updateDetails.Ethnicity;
+            applicantProfile.Major = updateDetails.Major;
+            applicantProfile.School = updateDetails.School;
+            applicantProfile.Gpa = updateDetails.Gpa;
 
             List<Achievement> achievements =
                 updateDetails.Achievements.Select(a => new Achievement { Name = a }).ToList();
@@ -205,11 +208,11 @@ public class ApplicantService : IApplicantService
 
     public async Task<byte[]> ExportApplicantProfileToPdf(int applicantId)
     {
-        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
-        if (applicantProfile == null)
-            throw new NotFoundException($"Applicant profile with applicantId: {applicantId} is not found");
+        var profile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (profile == null)
+            throw new NotFoundException($"Profile with applicantId: {applicantId} is not found");
 
-        var pdf = await _pdfService.GenerateProfileInPdf(_mapper.Map<ApplicantProfileDto>(applicantProfile));
+        var pdf = await _pdfService.GenerateProfileInPdf(_mapper.Map<ApplicantProfileDetails>(profile));
 
         return pdf;
     }
