@@ -18,6 +18,7 @@ public class ProviderRepository : GenericRepository<ProviderProfile>, IProviderR
             .AsSplitQuery()
             .Include(p => p.ProviderDocuments)
             .Include(p => p.Provider)
+            .ThenInclude(p => p.Subscription)
             .FirstOrDefaultAsync(p => p.ProviderId == providerId);
 
         return provider;

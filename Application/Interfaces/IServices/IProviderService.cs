@@ -4,7 +4,7 @@ namespace Application.Interfaces.IServices;
 
 public interface IProviderService
 {
-    Task<ProviderProfileDto> GetProviderDetailsByProviderId(int providerId);
+    Task<ProviderProfileDetails> GetProviderDetailsByProviderId(int providerId);
     Task<ProviderProfileDto> AddProviderDetails(AddProviderDetailsDto addProviderDetailsDto);
-    Task<ProviderProfileDto> UpdateProviderDetails(int providerId, UpdateProviderDetailsDto updateProviderDetailsDto);
+    Task<int> UpdateProviderDetails(int providerId, UpdateProviderDetailsDto updateProviderDetailsDto);
 }

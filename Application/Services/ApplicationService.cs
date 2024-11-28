@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Constants;
 using Domain.DTOs.Application;
 using Domain.DTOs.Common;
+using Domain.DTOs.Expert;
 using Domain.Entities;
 
 namespace Application.Services
@@ -22,7 +23,8 @@ namespace Application.Services
 
         public ApplicationService(IApplicationRepository applicationRepository, IMapper mapper,
             IGenericRepository<ApplicationDocument> applicationDocumentRepository,
-            ICloudinaryService cloudinaryService, IAccountService accountService, IApplicationReviewRepository applicationReviewRepository,
+            ICloudinaryService cloudinaryService, IAccountService accountService,
+            IApplicationReviewRepository applicationReviewRepository,
             IGenericRepository<AwardMilestone> awardMilestoneRepository)
         {
             _applicationRepository = applicationRepository;
@@ -39,9 +41,9 @@ namespace Application.Services
             var application = _mapper.Map<Domain.Entities.Application>(dto);
             application.AppliedDate = DateTime.Now;
             application.Status = ApplicationStatusEnum.Submitted.ToString();
-            
+
             await _applicationRepository.Add(application);
-            
+
             return _mapper.Map<ApplicationDto>(application);
         }
 
@@ -81,6 +83,8 @@ namespace Application.Services
                     var application = await _applicationRepository.GetById(applicationId);
                     if (application == null)
                         throw new ServiceException($"Application with id {applicationId} not found.");
+                    application.Status = ApplicationStatusEnum.Reviewing.ToString();
+                    await _applicationRepository.Update(application);
 
                     var review = new ApplicationReview
                     {
@@ -88,7 +92,7 @@ namespace Application.Services
                         ApplicationId = applicationId,
                         ReviewDate = request.ReviewDate,
                         ExpertId = request.ExpertId,
-                        Status = ApplicationReviewStatusEnum.Assigned.ToString()
+                        Status = ApplicationReviewStatusEnum.Reviewing.ToString()
                     };
                     await _applicationReviewRepository.Add(review);
                 }
@@ -101,48 +105,49 @@ namespace Application.Services
 
         public async Task CheckApplicationAward(Domain.Entities.Application profile)
         {
-            if(profile.Status == ApplicationStatusEnum.Awarded.ToString())
+            if (profile.Status == ApplicationStatusEnum.Awarded.ToString())
             {
                 var awards = await _awardMilestoneRepository.GetAll();
                 awards = awards.Where(x => x.ScholarshipProgramId == profile.ScholarshipProgramId).ToList();
-                var award = awards.Where(x => 
-                    x.FromDate < profile.UpdatedAt &&
-                    x.ToDate > profile.UpdatedAt)
-                .FirstOrDefault();
-                if(award == null)
+                var award = awards.Where(x =>
+                        x.FromDate < profile.UpdatedAt &&
+                        x.ToDate > profile.UpdatedAt)
+                    .FirstOrDefault();
+                if (award == null)
                 {
                     profile.Status = ApplicationStatusEnum.Awarded.ToString();
                     await _applicationRepository.Update(profile);
                     return;
                 }
 
-                if(award.ToDate.Value < DateTime.Now){
+                if (award.ToDate.Value < DateTime.Now)
+                {
                     profile.Status = ApplicationStatusEnum.NeedExtend.ToString();
                     await _applicationRepository.Update(profile);
                 }
             }
-            else if(profile.Status == ApplicationStatusEnum.NeedExtend.ToString())
+            else if (profile.Status == ApplicationStatusEnum.NeedExtend.ToString())
             {
                 var awards = await _awardMilestoneRepository.GetAll();
-                var award = awards.Where(x => 
-                    x.ScholarshipProgramId == profile.ScholarshipProgramId &&
-                    x.FromDate < profile.UpdatedAt &&
-                    x.ToDate > profile.UpdatedAt)
-                .FirstOrDefault();
-                if(award == null)
+                var award = awards.Where(x =>
+                        x.ScholarshipProgramId == profile.ScholarshipProgramId &&
+                        x.FromDate < profile.UpdatedAt &&
+                        x.ToDate > profile.UpdatedAt)
+                    .FirstOrDefault();
+                if (award == null)
                 {
                     profile.Status = ApplicationStatusEnum.Awarded.ToString();
                     await _applicationRepository.Update(profile);
                     return;
                 }
 
-                if(award.ToDate.Value < DateTime.Now){
+                if (award.ToDate.Value < DateTime.Now)
+                {
                     profile.Status = ApplicationStatusEnum.Rejected.ToString();
                     profile.UpdatedAt = award.ToDate.Value.AddDays(-1);
                     await _applicationRepository.Update(profile);
                 }
             }
-            
         }
 
         public async Task UpdateReviewResult(UpdateReviewResultDto updateReviewResultDto)
@@ -153,9 +158,22 @@ namespace Application.Services
                 throw new ServiceException(
                     $"Application review with ID {updateReviewResultDto.ApplicationReviewId} is not found");
 
+            if (!updateReviewResultDto.IsPassed)
+            {
+                var application =
+                    await _applicationRepository.GetApplicationById((int)existingApplicationReview.ApplicationId);
+                application.Status = ApplicationStatusEnum.Rejected.ToString();
+                await _applicationRepository.Update(application);
+            }
+
+
             existingApplicationReview.Score = updateReviewResultDto.Score;
             existingApplicationReview.Comment = updateReviewResultDto.Comment;
-            existingApplicationReview.Status = ApplicationReviewStatusEnum.Completed.ToString();
+            existingApplicationReview.Status = updateReviewResultDto.IsPassed
+                ? updateReviewResultDto.IsFirstReview
+                    ? ApplicationReviewStatusEnum.Approved.ToString()
+                    : ApplicationReviewStatusEnum.Passed.ToString()
+                : ApplicationReviewStatusEnum.Failed.ToString();
 
             try
             {
@@ -165,7 +183,6 @@ namespace Application.Services
             {
                 throw new ServiceException(e.Message);
             }
-            
         }
 
 

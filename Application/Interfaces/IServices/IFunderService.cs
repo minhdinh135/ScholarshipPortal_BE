@@ -5,8 +5,8 @@ namespace Application.Interfaces.IServices;
 
 public interface IFunderService
 {
-    Task<FunderProfileDto> GetFunderDetailsByFunderId(int funderId);
+    Task<FunderProfileDetails> GetFunderDetailsByFunderId(int funderId);
     Task<FunderProfileDto> AddFunderDetails(AddFunderDetailsDto addFunderDetailsDto);
-    Task<FunderProfileDto> UpdateFunderDetails(int funderId, UpdateFunderDetailsDto updateFunderDetailsDto);
+    Task<int> UpdateFunderDetails(int funderId, UpdateFunderDetailsDto updateFunderDetailsDto);
     Task<IEnumerable<ExpertDetailsDto>> GetExpertsByFunderId(int id);
 }
