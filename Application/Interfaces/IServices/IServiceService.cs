@@ -12,4 +12,5 @@ public interface IServiceService
 	Task<IEnumerable<ServiceDto>> GetServicesByProviderId(int providerId);
 	Task<PaginatedList<ServiceDto>> GetAll(int pageIndex, int pageSize, string sortBy, string sortOrder);
     Task<PaginatedList<ServiceDto>> GetAllByProviderId(int id, int pageIndex, int pageSize, string sortBy, string sortOrder);
+    Task CheckSubscriptionEndDateProvider(int id);
 }
