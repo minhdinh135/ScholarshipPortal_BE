@@ -1,7 +1,9 @@
 ﻿namespace Domain.DTOs.Provider;
 
-public class UpdateProviderDetailsDto
+public class ProviderProfileDetails
 {
+    public int Id { get; set; }
+    
     public string Avatar { get; set; }
     
     public string Username { get; set; }

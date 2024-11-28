@@ -64,7 +64,7 @@ public class MappingProfile : Profile
         CreateMap<Subscription, SubscriptionDto>().ReverseMap();
         CreateMap<AddSubscriptionDto, Subscription>();
         CreateMap<UpdateSubscriptionDto, Subscription>();
-        
+
         CreateMap<TransferRequest, Transaction>()
             .ForMember(dest => dest.Amount, opt =>
                 opt.MapFrom(src => src.Amount))
@@ -82,6 +82,22 @@ public class MappingProfile : Profile
 
         // Funder Profile mapping
         CreateMap<FunderProfile, FunderProfileDto>().ReverseMap();
+        CreateMap<FunderProfile, FunderProfileDetails>()
+            .ForMember(dest => dest.Avatar, opt => opt
+                .MapFrom(src => src.Funder.AvatarUrl))
+            .ForMember(dest => dest.Username, opt => opt
+                .MapFrom(src => src.Funder.Username))
+            .ForMember(dest => dest.Email, opt => opt
+                .MapFrom(src => src.Funder.Email))
+            .ForMember(dest => dest.Phone, opt => opt
+                .MapFrom(src => src.Funder.PhoneNumber))
+            .ForMember(dest => dest.Address, opt => opt
+                .MapFrom(src => src.Funder.Address))
+            .ForMember(dest => dest.Status, opt =>
+                opt.MapFrom(src => src.Funder.Status))
+            .ForMember(dest => dest.FunderDocuments, opt =>
+                opt.MapFrom(src => src.FunderDocuments))
+            .ReverseMap();
         CreateMap<UpdateFunderDetailsDto, FunderProfile>();
         CreateMap<FunderDocument, FunderDocumentDto>().ReverseMap();
 
@@ -92,6 +108,25 @@ public class MappingProfile : Profile
 
         // Provider Profile mapping
         CreateMap<ProviderProfile, ProviderProfileDto>().ReverseMap();
+        CreateMap<ProviderProfile, ProviderProfileDetails>()
+            .ForMember(dest => dest.Avatar, opt => opt
+                .MapFrom(src => src.Provider.AvatarUrl))
+            .ForMember(dest => dest.Username, opt => opt
+                .MapFrom(src => src.Provider.Username))
+            .ForMember(dest => dest.Email, opt => opt
+                .MapFrom(src => src.Provider.Email))
+            .ForMember(dest => dest.Phone, opt => opt
+                .MapFrom(src => src.Provider.PhoneNumber))
+            .ForMember(dest => dest.Address, opt => opt
+                .MapFrom(src => src.Provider.Address))
+            .ForMember(dest => dest.Status, opt =>
+                opt.MapFrom(src => src.Provider.Status))
+            .ForMember(dest => dest.SubscriptionName, opt =>
+                opt.MapFrom(src => src.Provider.Subscription.Name))
+            .ForMember(dest => dest.ProviderDocuments, opt =>
+                opt.MapFrom(src => src.ProviderDocuments))
+            .ReverseMap();
+        CreateMap<ProviderDocument, ProviderDocumentDto>().ReverseMap();
         CreateMap<AddProviderDetailsDto, ProviderProfile>();
         CreateMap<UpdateProviderDetailsDto, ProviderProfile>();
 
@@ -250,6 +285,5 @@ public class MappingProfile : Profile
 
         // Award milestone mapping
         CreateMap<AwardMilestoneDocument, AwardMilestoneDocumentDto>().ReverseMap();
-
     }
 }
