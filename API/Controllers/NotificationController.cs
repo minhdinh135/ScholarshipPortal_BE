@@ -18,12 +18,14 @@ public class NotificationController : ControllerBase
     private readonly IServiceService _serviceService;
     private readonly IEmailService _emailService;
     private readonly IMapper _mapper;
+    private readonly ISubscriptionService _subscriptionService;
 
     public NotificationController(INotificationService notificationService, IMapper mapper,
         IAccountService accountService,
         IScholarshipProgramService scholarshipProgramService,
         IEmailService emailService,
-        IServiceService serviceService)
+        IServiceService serviceService,
+        ISubscriptionService subscriptionService)
     {
         _notificationService = notificationService;
         _mapper = mapper;
@@ -31,6 +33,7 @@ public class NotificationController : ControllerBase
         _scholarshipProgramService = scholarshipProgramService;
         _emailService = emailService;
         _serviceService = serviceService;
+        _subscriptionService = subscriptionService;
     }
 
     [HttpGet("get-all-by-id/{id}")]
@@ -214,4 +217,32 @@ public class NotificationController : ControllerBase
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Send notification successfully", response));
     }
+
+	[HttpPost("notify-subscription-purchase")]
+	public async Task<IActionResult> NotifySubscriptionPurchase([FromQuery] int subscriptionId, [FromQuery] int userId)
+	{
+		try
+		{
+			var subscription = await _subscriptionService.GetSubscriptionById(subscriptionId);
+			var user = await _accountService.GetAccount(userId);
+
+			if (subscription == null || user == null)
+				return BadRequest(new { Message = "Invalid subscription or user information." });
+
+			var notificationMessage = $"You have successfully purchased the subscription package '{subscription.Name}'.";
+
+			await _notificationService.SendNotification(user.Id.ToString(), "/my-subscriptions", "Subscription Purchased", notificationMessage);
+
+			await _emailService.SendEmailAsync(user.Email, "Subscription Purchase Confirmation",
+				$"Dear {user.Username},\n\n{notificationMessage}\n\nThank you for your purchase!");
+
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Notification sent successfully", null));
+		}
+		catch (Exception ex)
+		{
+			return BadRequest(new { Message = ex.Message });
+		}
+	}
+
+
 }
