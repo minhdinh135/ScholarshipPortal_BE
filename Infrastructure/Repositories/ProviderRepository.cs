@@ -23,4 +23,16 @@ public class ProviderRepository : GenericRepository<ProviderProfile>, IProviderR
 
         return provider;
     }
+
+    public async Task UpdateProfileDocuments(int providerProfileId, List<ProviderDocument> documents)
+    {
+        await _dbContext.ProviderDocuments
+            .Where(a => a.ProviderProfileId == providerProfileId)
+            .ExecuteDeleteAsync();
+
+        await _dbContext.ProviderDocuments
+            .AddRangeAsync(documents);
+
+        await _dbContext.SaveChangesAsync();
+    }
 }

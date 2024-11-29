@@ -53,7 +53,6 @@ public class ProviderService : IProviderService
 
         try
         {
-            existingProvider.Email = updateDetails.Email;
             existingProvider.Username = updateDetails.Username;
             existingProvider.PhoneNumber = updateDetails.Phone;
             existingProvider.Address = updateDetails.Address;
@@ -64,18 +63,16 @@ public class ProviderService : IProviderService
             var providerProfile = await _providerRepository.GetProviderDetailsByProviderId(providerId);
             providerProfile.OrganizationName = updateDetails.OrganizationName;
             providerProfile.ContactPersonName = updateDetails.ContactPersonName;
-            foreach (var providerDocument in updateDetails.ProviderDocuments)
+
+            List<ProviderDocument> providerDocuments = updateDetails.ProviderDocuments.Select(d => new ProviderDocument
             {
-                providerProfile.ProviderDocuments.Add(new ProviderDocument
-                {
-                    Name = providerDocument.Name,
-                    Type = providerDocument.Type,
-                    FileUrl = providerDocument.FileUrl
-                });
-            }
-
-            await _providerRepository.Update(providerProfile);
-
+                Name = d.Name,
+                Type = d.Type,
+                FileUrl = d.FileUrl
+            }).ToList();
+            providerDocuments.ForEach(d => d.ProviderProfileId = providerProfile.Id);
+            await _providerRepository.UpdateProfileDocuments(providerProfile.Id, providerDocuments);
+            
             return existingProvider.Id;
         }
         catch (Exception e)

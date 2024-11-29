@@ -19,7 +19,7 @@
   {
     "Id": 2,
     "Username": "ethan",
-    "Email": "ethan@gmail.com",
+    "Email": "ethan@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
@@ -41,7 +41,7 @@
   {
     "Id": 3,
     "Username": "mia",
-    "Email": "mia@gmail.com",
+    "Email": "mia@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
@@ -63,7 +63,7 @@
   {
     "Id": 4,
     "Username": "leo",
-    "Email": "leo@gmail.com",
+    "Email": "leo@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
@@ -85,7 +85,7 @@
   {
     "Id": 5,
     "Username": "zoe",
-    "Email": "zoe@gmail.com",
+    "Email": "zoe@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
@@ -109,7 +109,7 @@
   {
     "Id": 6,
     "Username": "noah",
-    "Email": "noah@gmail.com",
+    "Email": "noah@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
@@ -133,7 +133,7 @@
   {
     "Id": 7,
     "Username": "ava",
-    "Email": "ava@gmail.com",
+    "Email": "ava@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
@@ -157,7 +157,7 @@
   {
     "Id": 8,
     "Username": "lucas",
-    "Email": "lucas@gmail.com",
+    "Email": "lucas@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
@@ -181,7 +181,7 @@
   {
     "Id": 9,
     "Username": "lily",
-    "Email": "lily@gmail.com",
+    "Email": "lily@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
@@ -205,7 +205,7 @@
   {
     "Id": 10,
     "Username": "mason",
-    "Email": "mason@gmail.com",
+    "Email": "mason@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
@@ -229,7 +229,7 @@
   {
     "Id": 11,
     "Username": "chloe",
-    "Email": "chloe@gmail.com",
+    "Email": "chloe@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
@@ -251,7 +251,7 @@
   {
     "Id": 12,
     "Username": "oliver",
-    "Email": "oliver@gmail.com",
+    "Email": "oliver@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
@@ -273,7 +273,7 @@
   {
     "Id": 13,
     "Username": "emma",
-    "Email": "emma@gmail.com",
+    "Email": "emma@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",
@@ -295,7 +295,7 @@
   {
     "Id": 14,
     "Username": "grace",
-    "Email": "grace@gmail.com",
+    "Email": "grace@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
     "Address": "Ho Chi Minh, Vietnam",

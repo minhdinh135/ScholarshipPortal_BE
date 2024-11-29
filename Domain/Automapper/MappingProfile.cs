@@ -24,6 +24,7 @@ using Domain.DTOs.Service;
 using Domain.DTOs.Subscription;
 using Domain.DTOs.University;
 using Domain.Entities;
+using Org.BouncyCastle.Tls.Crypto;
 
 namespace Domain.Automapper;
 
@@ -41,7 +42,10 @@ public class MappingProfile : Profile
         CreateMap<Role, UpdateRoleDto>().ReverseMap();
         CreateMap<Role, RoleDto>().ReverseMap();
 
-        CreateMap<Account, RegisterDto>().ReverseMap();
+        CreateMap<Account, RegisterDto>();
+        CreateMap<RegisterDto, Account>()
+            .ForMember(dest => dest.FunderId, opt =>
+                opt.MapFrom(r => (r.FunderId == null || r.FunderId == 0) ? null : r.FunderId));
         CreateMap<Account, UpdateAccountDto>().ReverseMap();
         CreateMap<Account, AccountDto>()
             .ForMember(dest => dest.RoleName, opt =>

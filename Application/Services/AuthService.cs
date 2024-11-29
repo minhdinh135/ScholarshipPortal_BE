@@ -78,7 +78,8 @@ public class AuthService : IAuthService
             throw new Exception("Phone number has already been registered to system");
         
         var user = await _accountService.AddAccount(registerDto);
-        JwtDto token = _tokenService.CreateToken(_configuration, user, user.RoleName);
+        var existingUser = await _accountService.GetAccount(user.Id);
+        JwtDto token = _tokenService.CreateToken(_configuration, existingUser, existingUser.RoleName);
 
         return token;
     }
