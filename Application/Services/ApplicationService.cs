@@ -5,7 +5,6 @@ using AutoMapper;
 using Domain.Constants;
 using Domain.DTOs.Application;
 using Domain.DTOs.Common;
-using Domain.DTOs.Expert;
 using Domain.Entities;
 
 namespace Application.Services
