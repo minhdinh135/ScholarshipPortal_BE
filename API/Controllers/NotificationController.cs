@@ -55,6 +55,20 @@ public class NotificationController : ControllerBase
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Send notification successfully", response));
     }
 
+    [HttpPost("send-extend-reason")]
+    public async Task<IActionResult> SendExtendReason([FromBody] NotificationRequest request)
+    {
+        var response = await _notificationService.SendNotification(request.Topic, request.Link, "Your application need more document",
+            "An email has been sent to your email. Kindly check your email for more information.");
+        AccountDto? user = null;
+        if(int.TryParse(request.Topic, out var id)){
+           user = await _accountService.GetAccount(id);
+        }
+        if (user != null) await _emailService.SendEmailAsync(user.Email, request.Title, request.Body);
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Send notification successfully", response));
+    }
+
     [HttpPost("send-notification")]
     public async Task<IActionResult> SendNotification([FromBody] NotificationRequest request)
     {
