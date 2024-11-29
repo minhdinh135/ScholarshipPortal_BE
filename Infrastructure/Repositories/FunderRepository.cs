@@ -35,4 +35,16 @@ public class FunderRepository : GenericRepository<FunderProfile>, IFunderReposit
 
         return experts;
     }
+
+    public async Task UpdateProfileDocuments(int funderProfileId, List<FunderDocument> documents)
+    {
+        await _dbContext.FunderDocuments
+            .Where(a => a.FunderProfileId == funderProfileId)
+            .ExecuteDeleteAsync();
+
+        await _dbContext.FunderDocuments
+            .AddRangeAsync(documents);
+
+        await _dbContext.SaveChangesAsync();
+    }
 }

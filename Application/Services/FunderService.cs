@@ -52,7 +52,6 @@ public class FunderService : IFunderService
 
         try
         {
-            existingFunder.Email = updateDetails.Email;
             existingFunder.Username = updateDetails.Username;
             existingFunder.PhoneNumber = updateDetails.Phone;
             existingFunder.Address = updateDetails.Address;
@@ -63,17 +62,15 @@ public class FunderService : IFunderService
             var funderProfile = await _funderRepository.GetFunderDetailsByFunderId(funderId);
             funderProfile.OrganizationName = updateDetails.OrganizationName;
             funderProfile.ContactPersonName = updateDetails.ContactPersonName;
-            foreach (var funderDocument in updateDetails.FunderDocuments)
+            
+            List<FunderDocument> funderDocuments = updateDetails.FunderDocuments.Select(d => new FunderDocument
             {
-                funderProfile.FunderDocuments.Add(new FunderDocument
-                {
-                    Name = funderDocument.Name,
-                    Type = funderDocument.Type,
-                    FileUrl = funderDocument.FileUrl
-                });
-            }
-
-            await _funderRepository.Update(funderProfile);
+                Name = d.Name,
+                Type = d.Type,
+                FileUrl = d.FileUrl
+            }).ToList();
+            funderDocuments.ForEach(d => d.FunderProfileId = funderProfile.Id);
+            await _funderRepository.UpdateProfileDocuments(funderProfile.Id, funderDocuments);
 
             return existingFunder.Id;
         }
