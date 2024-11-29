@@ -12,11 +12,16 @@ public class ServiceService : IServiceService
 {
     private readonly IMapper _mapper;
     private readonly IServiceRepository _serviceRepository;
+    private readonly IAccountRepository _accountRepository;
+    private readonly IEmailService _emailService;
 
-    public ServiceService(IMapper mapper, IServiceRepository serviceRepository)
+    public ServiceService(IMapper mapper, IServiceRepository serviceRepository, IAccountRepository accountRepository,
+        IEmailService emailService)
     {
         _mapper = mapper;
         _serviceRepository = serviceRepository;
+        _accountRepository = accountRepository;
+        _emailService = emailService;
     }
 
     public async Task<PaginatedList<ServiceDto>> GetAllServices(ListOptions listOptions)
@@ -37,6 +42,42 @@ public class ServiceService : IServiceService
 		var services = await _serviceRepository.GetAllServicesByProviderId(id, pageIndex, pageSize, sortBy, sortOrder);
 		return _mapper.Map<PaginatedList<ServiceDto>>(services);
 	}
+
+	public async Task CheckSubscriptionEndDateProvider(int id)
+	{
+		var provider = await _accountRepository.GetAccountById(id);
+		if (provider == null)
+		{
+			return;
+		}
+
+		var today = DateTime.Now;
+		var subscriptionEndDate = provider.SubscriptionEndDate;
+
+		if (subscriptionEndDate.HasValue && subscriptionEndDate.Value.Date == today.AddDays(7).Date)
+		{
+			await _emailService.SendEmailAsync(
+				provider.Email,
+				"Subscription Expiration Notice",
+				"Your subscription will expire in 7 days, you can renew it."
+			);
+		}
+
+		if (subscriptionEndDate.HasValue && subscriptionEndDate.Value.Date < today.Date)
+		{
+			provider.SubscriptionId = null;
+			await _accountRepository.Update(provider);
+
+			var providerServices = await _serviceRepository.GetServicesByProviderId(provider.Id);
+			foreach (var service in providerServices)
+			{
+				service.Status = "Inactive";
+				await _serviceRepository.Update(service);
+			}
+		}
+	}
+
+
 
 	public async Task<ServiceDto> GetServiceById(int id)
     {

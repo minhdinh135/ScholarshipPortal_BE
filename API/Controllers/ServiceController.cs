@@ -50,6 +50,7 @@ public class ServiceController : ControllerBase
 	[FromQuery] string sortBy = default, [FromQuery] string sortOrder = default)
 	{
 		var services = await _serviceService.GetAllByProviderId(id, pageIndex, pageSize, sortBy, sortOrder);
+        await _serviceService.CheckSubscriptionEndDateProvider(id);
 
 		return Ok(new ApiResponse(StatusCodes.Status200OK, "Get services successfully", services));
 	}
