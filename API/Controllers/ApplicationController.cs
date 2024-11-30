@@ -62,7 +62,7 @@ namespace SSAP.API.Controllers
                     Console.WriteLine("Hello asdasdsadsad");
                     var awards = await _awardMilestoneService.GetByScholarshipId(profile.ScholarshipProgramId.Value);
                     var profileEntity = _mapper.Map<Domain.Entities.Application>(profile);
-                    var award = awards.Where(x => 
+                    var award = awards.Where(x =>
                         x.FromDate < profileEntity.UpdatedAt &&
                         x.ToDate > profile.UpdatedAt)
                     .FirstOrDefault();
@@ -73,7 +73,7 @@ namespace SSAP.API.Controllers
                         await _applicationService.Update(profile.Id, profileUpdateDto);
                     }
                 }*/
-                
+
                 return Ok(profile);
             }
             catch (Exception ex)
@@ -135,12 +135,12 @@ namespace SSAP.API.Controllers
         {
             /*try
             {*/
-                var profile = await _applicationService.GetWithDocumentsAndAccount(id);
-                if (profile == null) return NotFound("Application not found.");
+            var profile = await _applicationService.GetWithDocumentsAndAccount(id);
+            if (profile == null) return NotFound("Application not found.");
 
-                await _applicationService.CheckApplicationAward(profile);
+            await _applicationService.CheckApplicationAward(profile);
 
-                return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicantion successfully", profile));
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicantion successfully", profile));
             //}
             /*catch (Exception ex)
             {
@@ -172,7 +172,15 @@ namespace SSAP.API.Controllers
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Get reviews successfully", reviews));
         }
-        
+
+        [HttpGet("reviews/result")]
+        public async Task<IActionResult> GetReviewsResult([FromQuery] bool isFirstReview)
+        {
+            var reviews = await _applicationService.GetReviewsResult(isFirstReview);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Get reviews successfully", reviews));
+        }
+
         [HttpPost("reviews/assign-expert")]
         public async Task<IActionResult> AssignApplicationsToExpert(AssignApplicationsToExpertRequest request)
         {
