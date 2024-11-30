@@ -51,9 +51,10 @@ public class ApplicantService : IApplicantService
         return _mapper.Map<ApplicantProfileDetails>(profile);
     }
 
-    public async Task<ApplicantProfileDto> AddApplicantProfile(AddApplicantProfileDto dto)
+    public async Task<ApplicantProfileDto> AddApplicantProfile(int applicantId, AddApplicantProfileDto dto)
     {
         var applicantProfile = _mapper.Map<ApplicantProfile>(dto);
+        applicantProfile.ApplicantId = applicantId;
         var addedApplicantProfile = await _applicantRepository.Add(applicantProfile);
 
         return _mapper.Map<ApplicantProfileDto>(addedApplicantProfile);

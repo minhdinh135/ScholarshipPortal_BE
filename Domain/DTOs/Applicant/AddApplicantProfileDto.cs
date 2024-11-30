@@ -19,6 +19,4 @@ public class AddApplicantProfileDto
     public string? Nationality { get; set; }
 
     public string? Ethnicity { get; set; }
-
-    public int? ApplicantId { get; set; }
 }
