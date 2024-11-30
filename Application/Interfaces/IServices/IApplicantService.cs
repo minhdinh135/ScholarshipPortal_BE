@@ -8,7 +8,7 @@ public interface IApplicantService
     Task<IEnumerable<ApplicantProfileDto>> GetAllApplicantProfiles();
     Task<ApplicantProfileDto> GetApplicantProfile(int applicantId);
     Task<ApplicantProfileDetails> GetApplicantProfileDetails(int applicantId);
-    Task<ApplicantProfileDto> AddApplicantProfile(AddApplicantProfileDto dto);
+    Task<ApplicantProfileDto> AddApplicantProfile(int applicantId, AddApplicantProfileDto dto);
     Task<ApplicantProfileDto> UpdateApplicantProfile(int applicantId, UpdateApplicantProfileDto dto);
     Task<int> UpdateApplicantProfileDetails(int applicantId, UpdateApplicantProfileDetails updateDetails);
     Task UpdateProfileAchievements(int applicantId, List<UpdateAchievementDto> dtos);

@@ -6,7 +6,5 @@ public class AddProviderDetailsDto
 
     public string? ContactPersonName { get; set; }
 
-    public int? ProviderId { get; set; }
-
     public List<ProviderDocumentDto> ProviderDocuments { get; set; }
 }
