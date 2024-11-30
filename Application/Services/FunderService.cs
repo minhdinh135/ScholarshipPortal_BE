@@ -28,11 +28,12 @@ public class FunderService : IFunderService
         return _mapper.Map<FunderProfileDetails>(funder);
     }
 
-    public async Task<FunderProfileDto> AddFunderDetails(AddFunderDetailsDto addFunderDetailsDto)
+    public async Task<FunderProfileDto> AddFunderDetails(int funderId, AddFunderDetailsDto addFunderDetailsDto)
     {
         try
         {
             var addedProfile = _mapper.Map<FunderProfile>(addFunderDetailsDto);
+            addedProfile.FunderId = funderId;
 
             var addedFunderDetails = await _funderRepository.Add(addedProfile);
 

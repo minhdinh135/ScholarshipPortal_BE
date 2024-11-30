@@ -6,7 +6,5 @@ public class AddFunderDetailsDto
 
     public string? ContactPersonName { get; set; }
 
-    public int? FunderId { get; set; }
-
     public List<FunderDocumentDto> FunderDocuments { get; set; }
 }

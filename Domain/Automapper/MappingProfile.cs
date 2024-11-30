@@ -102,6 +102,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.FunderDocuments, opt =>
                 opt.MapFrom(src => src.FunderDocuments))
             .ReverseMap();
+        CreateMap<AddFunderDetailsDto, FunderProfile>();
         CreateMap<UpdateFunderDetailsDto, FunderProfile>();
         CreateMap<FunderDocument, FunderDocumentDto>().ReverseMap();
 
@@ -129,7 +130,7 @@ public class MappingProfile : Profile
                 opt.MapFrom(src => src.Provider.Subscription.Name))
             .ForMember(dest => dest.ProviderDocuments, opt =>
                 opt.MapFrom(src => src.ProviderDocuments))
-            .ReverseMap();
+            .ReverseMap()sa
         CreateMap<ProviderDocument, ProviderDocumentDto>().ReverseMap();
         CreateMap<AddProviderDetailsDto, ProviderProfile>();
         CreateMap<UpdateProviderDetailsDto, ProviderProfile>();

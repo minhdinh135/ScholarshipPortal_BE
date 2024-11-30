@@ -64,12 +64,12 @@ public class ApplicantController : ControllerBase
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applications successfully", applications));
     }
 
-    [HttpPost]
-    public async Task<IActionResult> AddApplicantProfile(AddApplicantProfileDto addApplicantProfileDto)
+    [HttpPost("{id}")]
+    public async Task<IActionResult> AddApplicantProfile(int id, AddApplicantProfileDto addApplicantProfileDto)
     {
         try
         {
-            var addedProfile = await _applicantService.AddApplicantProfile(addApplicantProfileDto);
+            var addedProfile = await _applicantService.AddApplicantProfile(id, addApplicantProfileDto);
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Add applicant profile successfully", addedProfile));
         }
