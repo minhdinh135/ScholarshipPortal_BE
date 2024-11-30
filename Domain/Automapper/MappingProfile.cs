@@ -130,7 +130,7 @@ public class MappingProfile : Profile
                 opt.MapFrom(src => src.Provider.Subscription.Name))
             .ForMember(dest => dest.ProviderDocuments, opt =>
                 opt.MapFrom(src => src.ProviderDocuments))
-            .ReverseMap()sa
+            .ReverseMap();
         CreateMap<ProviderDocument, ProviderDocumentDto>().ReverseMap();
         CreateMap<AddProviderDetailsDto, ProviderProfile>();
         CreateMap<UpdateProviderDetailsDto, ProviderProfile>();
