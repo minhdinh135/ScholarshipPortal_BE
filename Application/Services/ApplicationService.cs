@@ -191,7 +191,6 @@ namespace Application.Services
             }
         }
 
-
         public async Task<ApplicationDto> Get(int id)
         {
             var entity = await _applicationRepository.GetApplicationById(id);
@@ -256,7 +255,6 @@ namespace Application.Services
             var entities = await _applicationRepository.GetByScholarshipId(scholarshipId);
             return entities;
         }
-
 
         public async Task<Domain.Entities.Application> ExtendApplication(ExtendApplicationDto extendApplicationDto)
         {

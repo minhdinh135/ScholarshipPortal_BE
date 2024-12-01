@@ -6,9 +6,10 @@ namespace Infrastructure.Data;
 
 public class ScholarshipContextSeed
 {
+    private const string basePath = "../Infrastructure/SeedData";
+
     public static async Task SeedAsync(ScholarshipContext context)
     {
-        var basePath = "../Infrastructure/SeedData";
 
         if (!context.Roles.Any())
         {
@@ -67,7 +68,6 @@ public class ScholarshipContextSeed
             var majors = JsonSerializer.Deserialize<List<Major>>(majorsData);
             context.Majors.AddRange(majors);
         }
-
 
         if (!context.Certificates.Any())
         {
