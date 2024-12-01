@@ -1,4 +1,3 @@
-using Application.Interfaces.IRepositories;
 using Domain.DTOs.Application;
 using Domain.DTOs.Common;
 
@@ -18,11 +17,10 @@ namespace Application.Interfaces.IServices
         Task<ApplicationDto> Update(int id, UpdateApplicationStatusRequest dto);
         Task<ApplicationDto> Delete(int id);
         Task<IEnumerable<ApplicationReviewDto>> GetAllReviews();
+        Task<IEnumerable<ApplicationReviewDto>> GetReviewsResult(bool isFirstReview);
         Task AssignApplicationsToExpert(AssignApplicationsToExpertRequest request);
         Task UpdateReviewResult(UpdateReviewResultDto updateReviewResultDto);
         Task<Domain.Entities.Application> ExtendApplication(ExtendApplicationDto extendApplicationDto);
-
-
         Task CheckApplicationAward(Domain.Entities.Application profile);
     }
 }

@@ -69,6 +69,13 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<ApplicationReviewDto>>(reviews);
         }
 
+        public async Task<IEnumerable<ApplicationReviewDto>> GetReviewsResult(bool isFirstReview)
+        {
+            var reviews = await _applicationReviewRepository.GetApplicationReviewsResult(isFirstReview);
+
+            return _mapper.Map<IEnumerable<ApplicationReviewDto>>(reviews);
+        }
+
         public async Task AssignApplicationsToExpert(AssignApplicationsToExpertRequest request)
         {
             try
@@ -157,15 +164,6 @@ namespace Application.Services
                 throw new ServiceException(
                     $"Application review with ID {updateReviewResultDto.ApplicationReviewId} is not found");
 
-            if (!updateReviewResultDto.IsPassed)
-            {
-                var application =
-                    await _applicationRepository.GetApplicationById((int)existingApplicationReview.ApplicationId);
-                application.Status = ApplicationStatusEnum.Rejected.ToString();
-                await _applicationRepository.Update(application);
-            }
-
-
             existingApplicationReview.Score = updateReviewResultDto.Score;
             existingApplicationReview.Comment = updateReviewResultDto.Comment;
             existingApplicationReview.Status = updateReviewResultDto.IsPassed
@@ -177,6 +175,15 @@ namespace Application.Services
             try
             {
                 await _applicationReviewRepository.Update(existingApplicationReview);
+
+                var application =
+                    await _applicationRepository.GetApplicationById((int)existingApplicationReview.ApplicationId);
+
+                if (!updateReviewResultDto.IsPassed)
+                {
+                    application.Status = ApplicationStatusEnum.Rejected.ToString();
+                    await _applicationRepository.Update(application);
+                }
             }
             catch (Exception e)
             {

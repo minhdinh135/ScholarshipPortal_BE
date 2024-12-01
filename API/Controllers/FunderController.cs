@@ -33,20 +33,20 @@ public class FunderController : ControllerBase
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Get funder experts successfully", experts));
         }
 
-    // [HttpPost("{id}")]
-    // public async Task<IActionResult> AddFunderDetails(AddFunderDetailsDto addFunderDetailsDto)
-    // {
-    //     try
-    //     {
-    //         var addedFunderDetails = await _funderService.AddFunderDetails(addFunderDetailsDto);
-    //
-    //         return Ok(new ApiResponse(StatusCodes.Status200OK, "Add funder details successully", addedFunderDetails));
-    //     }
-    //     catch (ServiceException e)
-    //     {
-    //         return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
-    //     }
-    // }
+    [HttpPost("{id}")]
+    public async Task<IActionResult> AddFunderDetails(int id, AddFunderDetailsDto addFunderDetailsDto)
+    {
+        try
+        {
+            var addedFunderDetails = await _funderService.AddFunderDetails(id, addFunderDetailsDto);
+    
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Add funder details successully", addedFunderDetails));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateFunderDetails(int id, UpdateFunderDetailsDto updateFunderDetailsDto)

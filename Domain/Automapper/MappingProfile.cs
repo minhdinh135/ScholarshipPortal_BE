@@ -102,6 +102,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.FunderDocuments, opt =>
                 opt.MapFrom(src => src.FunderDocuments))
             .ReverseMap();
+        CreateMap<AddFunderDetailsDto, FunderProfile>();
         CreateMap<UpdateFunderDetailsDto, FunderProfile>();
         CreateMap<FunderDocument, FunderDocumentDto>().ReverseMap();
 

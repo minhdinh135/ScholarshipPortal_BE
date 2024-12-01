@@ -28,11 +28,12 @@ public class ProviderService : IProviderService
         return _mapper.Map<ProviderProfileDetails>(provider);
     }
 
-    public async Task<ProviderProfileDto> AddProviderDetails(AddProviderDetailsDto addProviderDetailsDto)
+    public async Task<ProviderProfileDto> AddProviderDetails(int providerId, AddProviderDetailsDto addProviderDetailsDto)
     {
         try
         {
             var addedProfile = _mapper.Map<ProviderProfile>(addProviderDetailsDto);
+            addedProfile.ProviderId = providerId;
 
             var addedProviderDetails = await _providerRepository.Add(addedProfile);
 
