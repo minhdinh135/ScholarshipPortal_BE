@@ -1,6 +1,7 @@
 ﻿using Application.Exceptions;
 using Application.Interfaces.IServices;
 using Domain.DTOs.Common;
+using Domain.DTOs.University;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SSAP.API.Controllers;
@@ -39,4 +40,36 @@ public class UniversityController : ControllerBase
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
         }
     }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateUniversity(
+        AddUniversityDto dto)
+    {
+        var result =
+            await _universityService.CreateUniversity(dto);
+
+        if (result == null)
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Create university failed"));
+
+        return Created("api/universities/" + result, new ApiResponse(
+            StatusCodes.Status201Created, $"Create university successfully with id:{result}",
+            new { Id = result }));
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateScholarshipProgram(int id,
+        UpdateUniversityDto dto)
+    {
+        try
+        {
+            var result = await _universityService.UpdateUniversity(id, dto);
+            return Ok(new ApiResponse(StatusCodes.Status200OK,
+                $"Update university with id:{result} successfully", result));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
 }

@@ -3,6 +3,7 @@ using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
 using Domain.DTOs.University;
+using Domain.Entities;
 
 namespace Application.Services;
 
@@ -32,4 +33,25 @@ public class UniversityService : IUniversityService
 
         return _mapper.Map<UniversityDto>(university);
     }
+
+    public async Task<UniversityDto> CreateUniversity(AddUniversityDto dto)
+    {
+        var university = _mapper.Map<University>(dto);
+
+        var createdUniversity = await _universityRepository.Add(university);
+
+        return _mapper.Map<UniversityDto>(createdUniversity);
+    }
+
+    public async Task<UniversityDto> UpdateUniversity(int id, UpdateUniversityDto dto)
+    {
+        var existingUniversity = await _universityRepository.GetById(id);
+
+        _mapper.Map(dto, existingUniversity);
+
+        var updatedUniversity = await _universityRepository.Update(existingUniversity);
+
+        return _mapper.Map<UniversityDto>(updatedUniversity);
+    }
+
 }
