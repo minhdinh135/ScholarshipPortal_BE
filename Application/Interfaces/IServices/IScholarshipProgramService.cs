@@ -1,7 +1,6 @@
 ﻿using Domain.DTOs.Common;
 using Domain.DTOs.Expert;
 using Domain.DTOs.ScholarshipProgram;
-using Microsoft.AspNetCore.Http;
 
 namespace Application.Interfaces.IServices;
 

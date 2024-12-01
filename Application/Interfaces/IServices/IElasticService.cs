@@ -12,6 +12,8 @@ public interface IElasticService<T> where T : class
 
     Task<bool> AddOrUpdateScholarship(ScholarshipProgramElasticDocument scholarship);
 
+    Task<bool> AddOrUpdateBulkScholarship(IEnumerable<ScholarshipProgramElasticDocument> entities);
+
     Task<bool> AddOrUpdateBulk(IEnumerable<T> entities, string indexName);
 
     Task<T> Get(int key);

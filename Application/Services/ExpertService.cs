@@ -11,20 +11,23 @@ public class ExpertService : IExpertService
 {
     private readonly IMapper _mapper;
     private readonly IExpertRepository _expertRepository;
+    private readonly IAccountRepository _accountRepository;
 
-    public ExpertService(IMapper mapper, IExpertRepository expertRepository)
+    public ExpertService(IMapper mapper, IExpertRepository expertRepository, IAccountRepository accountRepository)
     {
         _mapper = mapper;
         _expertRepository = expertRepository;
+        _accountRepository = accountRepository;
     }
 
-    public async Task<ExpertProfileDto> GetExpertProfileByExpertId(int expertId)
+    public async Task<ExpertDetailsDto> GetExpertProfileByExpertId(int expertId)
     {
         var expert = await _expertRepository.GetExpertDetailsByExpertId(expertId);
         if (expert == null)
-            throw new ServiceException($"Expert profile with expertId:{expertId} is not found", new NotFoundException());
+            throw new ServiceException($"Expert profile with expertId:{expertId} is not found",
+                new NotFoundException());
 
-        return _mapper.Map<ExpertProfileDto>(expert);
+        return _mapper.Map<ExpertDetailsDto>(expert);
     }
 
     public async Task<ExpertProfileDto> CreateExpertProfile(CreateExpertDetailsDto createExpertDetailsDto)
@@ -42,18 +45,28 @@ public class ExpertService : IExpertService
         }
     }
 
-    public async Task<ExpertProfileDto> UpdateExpertProfile(int expertId, UpdateExpertDetailsDto updateExpertDetailsDto)
+    public async Task<int> UpdateExpertProfile(int expertId, UpdateExpertDetailsDto updateDetails)
     {
+        var existingExpert = await _accountRepository.GetAccountById(expertId);
+        if (existingExpert == null)
+            throw new ServiceException($"Expert profile with expertId:{expertId} is not found",
+                new NotFoundException());
         try
         {
-            var existingExpert = await _expertRepository.GetExpertDetailsByExpertId(expertId);
-            if(existingExpert == null)
-                throw new ServiceException($"Expert profile with expertId:{expertId} is not found", new NotFoundException());
-            
-            _mapper.Map(updateExpertDetailsDto, existingExpert);
-            var updatedExpert = await _expertRepository.Update(existingExpert);
+            existingExpert.Username = updateDetails.Username;
+            existingExpert.PhoneNumber = updateDetails.Phone;
+            existingExpert.Address = updateDetails.Address;
+            existingExpert.AvatarUrl = updateDetails.Avatar;
+            existingExpert.Status = updateDetails.Status;
+            await _accountRepository.Update(existingExpert);
 
-            return _mapper.Map<ExpertProfileDto>(updatedExpert);
+            var  expertProfile = await _expertRepository.GetExpertDetailsByExpertId(expertId);
+            expertProfile.Name = updateDetails.Name;
+            expertProfile.Description = updateDetails.Description;
+            expertProfile.Major = updateDetails.Major;
+            await _expertRepository.Update(expertProfile);
+
+            return existingExpert.Id;
         }
         catch (Exception e)
         {

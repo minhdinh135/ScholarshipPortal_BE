@@ -24,7 +24,6 @@ using Domain.DTOs.Service;
 using Domain.DTOs.Subscription;
 using Domain.DTOs.University;
 using Domain.Entities;
-using Org.BouncyCastle.Tls.Crypto;
 
 namespace Domain.Automapper;
 
@@ -108,6 +107,22 @@ public class MappingProfile : Profile
 
         // Expert Profile mapping
         CreateMap<ExpertProfile, ExpertProfileDto>().ReverseMap();
+        CreateMap<ExpertProfile, ExpertDetailsDto>()
+            .ForMember(dest => dest.AvatarUrl, opt => opt
+                .MapFrom(src => src.Expert.AvatarUrl))
+            .ForMember(dest => dest.Username, opt => opt
+                .MapFrom(src => src.Expert.Username))
+            .ForMember(dest => dest.Email, opt => opt
+                .MapFrom(src => src.Expert.Email))
+            .ForMember(dest => dest.PhoneNumber, opt => opt
+                .MapFrom(src => src.Expert.PhoneNumber))
+            .ForMember(dest => dest.Address, opt => opt
+                .MapFrom(src => src.Expert.Address))
+            .ForMember(dest => dest.Status, opt =>
+                opt.MapFrom(src => src.Expert.Status))
+            .ForMember(dest => dest.FunderId, opt =>
+                opt.MapFrom(src => src.Expert.FunderId))
+            .ReverseMap();
         CreateMap<CreateExpertDetailsDto, ExpertProfile>();
         CreateMap<UpdateExpertDetailsDto, ExpertProfile>();
 

@@ -1,11 +1,9 @@
-﻿using Application.Exceptions;
-using Application.Interfaces.IServices;
+﻿using Application.Interfaces.IServices;
 using Domain.DTOs.ScholarshipProgram;
 using Elastic.Clients.Elasticsearch;
 using Elastic.Clients.Elasticsearch.Mapping;
 using Elastic.Clients.Elasticsearch.QueryDsl;
 using Microsoft.Extensions.Options;
-using ServiceException = Application.Exceptions.ServiceException;
 
 namespace Infrastructure.ExternalServices.Elastic;
 
@@ -96,6 +94,22 @@ public class ElasticService<T> : IElasticService<T> where T : class
 
         return response.IsValidResponse;
     }
+    
+    public async Task<bool> AddOrUpdateBulkScholarship(IEnumerable<ScholarshipProgramElasticDocument> entities)
+        {
+            var indexExist = await _client.Indices.ExistsAsync("scholarships");
+    
+            if (!indexExist.Exists)
+            {
+                await CreateScholarshipIndex();
+            }
+    
+            var response = await _client.BulkAsync(b => b.Index("scholarships")
+                .UpdateMany(entities, (ed, e) =>
+                    ed.Doc(e).DocAsUpsert(true)));
+    
+            return response.IsValidResponse;
+        }
 
     public async Task<bool> AddOrUpdateBulk(IEnumerable<T> entities, string indexName)
     {
