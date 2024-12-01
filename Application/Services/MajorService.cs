@@ -11,11 +11,16 @@ public class MajorService : IMajorService
 {
     private readonly IMapper _mapper;
     private readonly IMajorRepository _majorRepository;
+    private readonly ISkillRepository _skillRepository;
+    private readonly IGenericRepository<MajorSkill> _majorSkillRepository;
 
-    public MajorService(IMapper mapper, IMajorRepository majorRepository)
+    public MajorService(IMapper mapper, IMajorRepository majorRepository, ISkillRepository skillRepository,
+        IGenericRepository<MajorSkill> majorSkillRepository)
     {
         _mapper = mapper;
         _majorRepository = majorRepository;
+        _skillRepository = skillRepository;
+        _majorSkillRepository = majorSkillRepository;
     }
 
     public async Task<IEnumerable<MajorDto>> GetAllMajors()
@@ -69,6 +74,43 @@ public class MajorService : IMajorService
         _mapper.Map(updateMajorRequest, existingMajor);
 
         var updatedMajor = await _majorRepository.Update(existingMajor);
+
+        return _mapper.Map<MajorDto>(updatedMajor);
+    }
+
+    public async Task<MajorDto> UpdateMajorSkills(int id, UpdateMajorSkillsRequest updateMajorRequest)
+    {
+        
+        /*var skills = await _skillRepository.GetAll();
+        skills = skills.Where(s => updateMajorRequest.SkillIds.Contains(s.Id)).ToList();*/
+        var existingMajor = await _majorRepository.GetById(id);
+
+        var existingMajorSkills = await _majorSkillRepository.GetAll();
+        existingMajorSkills = existingMajorSkills.Where(s => s.MajorId == id).ToList();
+
+        foreach (var majorSkill in existingMajorSkills)
+        {
+            await _majorSkillRepository.DeleteById(majorSkill.MajorId.Value, majorSkill.SkillId.Value);
+        }
+
+        var newMajorSkills = new List<MajorSkill>();
+     
+        foreach (var skillId in updateMajorRequest.SkillIds)
+        {
+            var majorSkill = existingMajorSkills.Where(s => s.SkillId == skillId)
+                .FirstOrDefault();
+            var newMajorSkill = new MajorSkill
+            {
+                SkillId = skillId,
+                MajorId = id
+            };
+            await _majorSkillRepository.Add(newMajorSkill);
+        }
+        //existingMajor.MajorSkills = newMajorSkills;
+
+        //_mapper.Map(updateMajorRequest, existingMajor);
+
+        var updatedMajor = await _majorRepository.GetById(id);
 
         return _mapper.Map<MajorDto>(updatedMajor);
     }
