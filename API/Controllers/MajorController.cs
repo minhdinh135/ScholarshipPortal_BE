@@ -11,10 +11,12 @@ namespace SSAP.API.Controllers;
 public class MajorController : ControllerBase
 {
     private readonly IMajorService _majorService;
+    private readonly ISkillService _skillService;
 
-    public MajorController(IMajorService majorService)
+    public MajorController(IMajorService majorService, ISkillService skillService)
     {
         _majorService = majorService;
+        _skillService = skillService;
     }
 
     [HttpGet]
@@ -69,7 +71,21 @@ public class MajorController : ControllerBase
     public async Task<IActionResult> UpdateMajor([FromRoute] int id,
         [FromBody] UpdateMajorRequest updateMajorRequest)
     {
+
         var updatedMajor = await _majorService.UpdateMajor(id, updateMajorRequest);
+
+        if (updatedMajor == null)
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Update major failed", null));
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Update major successfully", updatedMajor));
+    }
+
+    [HttpPut("update-skills/{id}")]
+    public async Task<IActionResult> UpdateMajorSkills([FromRoute] int id,
+        [FromBody] UpdateMajorSkillsRequest updateMajorSkillsRequest)
+    {
+        
+        var updatedMajor = await _majorService.UpdateMajorSkills(id, updateMajorSkillsRequest);
 
         if (updatedMajor == null)
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Update major failed", null));
