@@ -14,4 +14,5 @@ public interface IMajorService
     Task<MajorDto> CreateMajor(CreateMajorRequest createMajorRequest);
     Task<MajorDto> UpdateMajor(int id, UpdateMajorRequest updateMajorRequest);
     Task<MajorDto> DeleteMajorById(int id);
+    Task<MajorDto> UpdateMajorSkills(int id, UpdateMajorSkillsRequest updateMajorRequest);
 }
