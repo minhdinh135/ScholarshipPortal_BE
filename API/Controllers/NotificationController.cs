@@ -244,5 +244,24 @@ public class NotificationController : ControllerBase
 		}
 	}
 
+	[HttpPost("send-notification-and-email-reject")]
+	public async Task<IActionResult> SendNotificationAndEmailReject([FromBody] RejectNotificationRequest request)
+	{
+		var response = await _notificationService.SendNotification(request.Topic, request.Link, request.Title, request.Body);
+
+		AccountDto? user = null;
+		if (int.TryParse(request.Topic, out var id))
+		{
+			user = await _accountService.GetAccount(id);
+		}
+
+		if (user != null)
+		{
+			await _emailService.SendEmailAsync(user.Email, request.Title, request.Body);
+		}
+
+		return Ok(new ApiResponse(StatusCodes.Status200OK, "Send rejection notification and email successfully", response));
+	}
+
 
 }

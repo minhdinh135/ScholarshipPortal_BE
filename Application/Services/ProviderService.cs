@@ -20,6 +20,11 @@ public class ProviderService : IProviderService
         _accountRepository = accountRepository;
     }
 
+	public async Task<List<ProviderProfileDetails>> GetAllProviderDetails()
+	{
+		var providers = await _providerRepository.GetAllProviderDetails();
+		return _mapper.Map<List<ProviderProfileDetails>>(providers);
+	}
 
     public async Task<ProviderProfileDetails> GetProviderDetailsByProviderId(int providerId)
     {

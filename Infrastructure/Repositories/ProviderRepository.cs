@@ -11,6 +11,15 @@ public class ProviderRepository : GenericRepository<ProviderProfile>, IProviderR
     {
     }
 
+	public async Task<List<ProviderProfile>> GetAllProviderDetails()
+	{
+		return await _dbContext.ProviderProfiles
+			.AsSplitQuery()
+			.Include(p => p.ProviderDocuments)
+			.Include(p => p.Provider)
+			.ThenInclude(p => p.Subscription)
+			.ToListAsync();
+	}
 
     public async Task<ProviderProfile> GetProviderDetailsByProviderId(int providerId)
     {

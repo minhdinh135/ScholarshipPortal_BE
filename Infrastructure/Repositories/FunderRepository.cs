@@ -15,7 +15,16 @@ public class FunderRepository : GenericRepository<FunderProfile>, IFunderReposit
         _accountRepository = accountRepository;
     }
 
-    public async Task<FunderProfile> GetFunderDetailsByFunderId(int funderId)
+	public async Task<List<FunderProfile>> GetAllFunderDetails()
+	{
+		return await _dbContext.FunderProfiles
+			.AsSplitQuery()
+			.Include(f => f.FunderDocuments)
+			.Include(f => f.Funder)
+			.ToListAsync();
+	}
+
+	public async Task<FunderProfile> GetFunderDetailsByFunderId(int funderId)
     {
         var funder = await _dbContext.FunderProfiles
             .AsSplitQuery()
