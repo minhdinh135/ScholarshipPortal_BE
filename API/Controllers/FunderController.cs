@@ -17,7 +17,14 @@ public class FunderController : ControllerBase
         _funderService = funderService;
     }
 
-    [HttpGet("{id}")]
+	[HttpGet]
+	public async Task<IActionResult> GetAllFunderDetails()
+	{
+		var funders = await _funderService.GetAllFunderDetails();
+		return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all funder details successfully", funders));
+	}
+
+	[HttpGet("{id}")]
     public async Task<IActionResult> GetFunderDetails(int id)
     {
         var funder = await _funderService.GetFunderDetailsByFunderId(id);

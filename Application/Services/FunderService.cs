@@ -21,6 +21,12 @@ public class FunderService : IFunderService
         _accountRepository = accountRepository;
     }
 
+	public async Task<List<FunderProfileDetails>> GetAllFunderDetails()
+	{
+		var funders = await _funderRepository.GetAllFunderDetails();
+		return _mapper.Map<List<FunderProfileDetails>>(funders);
+	}
+
     public async Task<FunderProfileDetails> GetFunderDetailsByFunderId(int funderId)
     {
         var funder = await _funderRepository.GetFunderDetailsByFunderId(funderId);

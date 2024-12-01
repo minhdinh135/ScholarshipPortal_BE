@@ -119,4 +119,5 @@ public class NotificationsService : INotificationService
 
         return _mapper.Map<NotificationDTO>(updatedMajor);
     }
+
 }

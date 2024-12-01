@@ -18,7 +18,14 @@ public class ProviderController : ControllerBase
         _providerService = providerService;
     }
 
-    [HttpGet("{id}")]
+	[HttpGet]
+	public async Task<IActionResult> GetAllProviderDetails()
+	{
+		var providers = await _providerService.GetAllProviderDetails();
+		return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all provider details successfully", providers));
+	}
+
+	[HttpGet("{id}")]
     public async Task<IActionResult> GetProviderDetails(int id)
     {
         var provider = await _providerService.GetProviderDetailsByProviderId(id);
