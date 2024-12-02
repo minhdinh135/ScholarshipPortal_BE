@@ -6,6 +6,7 @@ namespace Application.Interfaces.IServices;
 public interface IServiceService
 {
     Task<PaginatedList<ServiceDto>> GetAllServices(ListOptions listOptions);
+    Task<IEnumerable<ServiceDto>> GetAllServices();
     Task<ServiceDto> GetServiceById(int id);
     Task<ServiceDto> AddService(AddServiceDto addServiceDto);
     Task<ServiceDto> UpdateService(int id, UpdateServiceDto updateServiceDto);

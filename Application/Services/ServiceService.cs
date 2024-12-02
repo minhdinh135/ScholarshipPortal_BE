@@ -31,6 +31,13 @@ public class ServiceService : IServiceService
         return _mapper.Map<PaginatedList<ServiceDto>>(services);
     }
 
+    public async Task<IEnumerable<ServiceDto>> GetAllServices()
+    {
+        var services = await _serviceRepository.GetAll();
+
+        return _mapper.Map<IEnumerable<ServiceDto>>(services);
+    }
+
 	public async Task<PaginatedList<ServiceDto>> GetAll(int pageIndex, int pageSize, string sortBy, string sortOrder)
 	{
 		var services = await _serviceRepository.GetPaginatedList(pageIndex, pageSize, sortBy, sortOrder);

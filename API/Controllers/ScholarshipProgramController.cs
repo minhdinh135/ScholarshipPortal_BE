@@ -30,6 +30,17 @@ public class ScholarshipProgramController : ControllerBase
             allScholarshipPrograms));
     }
 
+    [HttpGet("count")]
+    public async Task<IActionResult> CountScholarshipPrograms()
+    {
+        // var allScholarshipPrograms = await _scholarshipProgramService.GetAllScholarshipPrograms();
+        var allScholarshipPrograms = await _scholarshipProgramService.GetAllScholarshipPrograms();
+        var count = allScholarshipPrograms.Count();
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all scholarship programs successfully",
+            count));
+    }
+
     [HttpGet("search")]
     public async Task<IActionResult> SearchScholarships([FromQuery] ScholarshipSearchOptions scholarshipSearchOptions)
     {
