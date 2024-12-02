@@ -22,6 +22,7 @@ public class JwtService : ITokenService
                 , Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Iat
                 , DateTime.UtcNow.ToString()),
+            new Claim("id", "1"),
             new Claim("email", email),
             new Claim("role", role),
         };
@@ -63,6 +64,7 @@ public class JwtService : ITokenService
             new Claim("avatar", account.AvatarUrl ?? ""),
             new Claim("email", account.Email),
             new Claim("role", role),
+            new Claim("status", account.Status),
         };
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(config["Jwt:Key"]));
