@@ -30,6 +30,15 @@ public class ServiceController : ControllerBase
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all services successfully", services));
     }
 
+    [HttpGet("count")]
+    public async Task<IActionResult> CountServices()
+    {
+        var services = await _serviceService.GetAllServices();
+        var count = services.Count();
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all services successfully", count));
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetServiceById(int id)
     {
