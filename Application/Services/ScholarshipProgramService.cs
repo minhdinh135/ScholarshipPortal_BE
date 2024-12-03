@@ -39,7 +39,7 @@ public class ScholarshipProgramService : IScholarshipProgramService
     public async Task<IEnumerable<ScholarshipProgramDto>> GetAllScholarshipPrograms()
     {
         var allScholarshipPrograms = await _scholarshipProgramRepository.GetAll();
-        
+
         return _mapper.Map<IEnumerable<ScholarshipProgramDto>>(allScholarshipPrograms);
     }
 
@@ -104,7 +104,24 @@ public class ScholarshipProgramService : IScholarshipProgramService
         return createdScholarshipProgram.Id;
     }
 
-    public async Task<int> UpdateScholarshipProgram(int id, UpdateScholarshipProgramRequest updateScholarshipProgramRequest)
+    public async Task SeedElasticsearchData()
+    {
+        try
+        {
+            await _scholarshipElasticService.RemoveAllScholarships();
+            var scholarshipPrograms = await _scholarshipProgramRepository.GetAllScholarshipPrograms();
+            var scholarshipElasticDocuments =
+                _mapper.Map<IEnumerable<ScholarshipProgramElasticDocument>>(scholarshipPrograms);
+            await _scholarshipElasticService.AddOrUpdateBulkScholarship(scholarshipElasticDocuments);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task<int> UpdateScholarshipProgram(int id,
+        UpdateScholarshipProgramRequest updateScholarshipProgramRequest)
     {
         var existingScholarshipProgram = await _scholarshipProgramRepository.GetScholarsipProgramById(id);
         if (existingScholarshipProgram == null)

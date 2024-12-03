@@ -7,6 +7,8 @@ public interface IScholarshipProgramRepository : IGenericRepository<ScholarshipP
 {
     Task<PaginatedList<ScholarshipProgram>> GetAllScholarshipPrograms(ListOptions listOptions);
 
+    Task<IEnumerable<ScholarshipProgram>> GetAllScholarshipPrograms();
+
     Task<ScholarshipProgram> GetScholarsipProgramById(int id);
     Task<IEnumerable<ScholarshipProgram>> GetScholarshipProgramByMajorId(int majorId);
 
