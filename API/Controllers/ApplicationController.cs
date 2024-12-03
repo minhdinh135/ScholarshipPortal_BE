@@ -174,9 +174,9 @@ namespace SSAP.API.Controllers
         }
 
         [HttpGet("reviews/result")]
-        public async Task<IActionResult> GetReviewsResult([FromQuery] bool isFirstReview)
+        public async Task<IActionResult> GetReviewsResult([FromQuery] int scholarshipProgramId, [FromQuery] bool isFirstReview)
         {
-            var reviews = await _applicationService.GetReviewsResult(isFirstReview);
+            var reviews = await _applicationService.GetReviewsResult(scholarshipProgramId, isFirstReview);
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Get reviews successfully", reviews));
         }
