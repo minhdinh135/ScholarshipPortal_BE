@@ -1,5 +1,6 @@
 using Application.Interfaces.IRepositories;
 using Domain.Constants;
+using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -67,6 +68,7 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
         var applications = await _dbContext.Applications
             .AsSplitQuery()
             .Where(a => a.ScholarshipProgramId == scholarshipProgramId)
+            .Include(a => a.Applicant)
             .Include(a => a.ApplicationDocuments)
             .Include(a => a.ApplicationReviews)
             .ToListAsync();
@@ -90,5 +92,28 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
             .ToListAsync();
 
         return applications;
+    }
+
+    public async Task<IEnumerable<ApplicationReview>> GetApplicationReviewsResult(int scholarshipProgramId,
+        bool isFirstReview)
+    {
+        var applications = await _dbContext.Applications
+            .AsSplitQuery()
+            .Where(a => a.ScholarshipProgramId == scholarshipProgramId)
+            .ToListAsync();
+
+        var applicationIds = applications.Select(a => a.Id);
+
+        var applicationReviews = await _dbContext
+            .ApplicationReviews
+            .Where(review =>
+                isFirstReview
+                    ? review.Status == ApplicationReviewStatusEnum.Approved.ToString()
+                    : review.Status == ApplicationReviewStatusEnum.Passed.ToString() &&
+                      applicationIds.Contains((int)review.ApplicationId))
+            .OrderByDescending(review => review.Score)
+            .ToListAsync();
+
+        return applicationReviews;
     }
 }
