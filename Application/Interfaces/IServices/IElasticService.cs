@@ -23,6 +23,8 @@ public interface IElasticService<T> where T : class
     Task<bool> Remove(string key);
 
     Task<long?> RemoveAll();
+    
+    Task<long?> RemoveAllScholarships();
 
     Task<List<ScholarshipProgramElasticDocument>> SearchScholarships(ScholarshipSearchOptions scholarshipSearchOptions);
 
