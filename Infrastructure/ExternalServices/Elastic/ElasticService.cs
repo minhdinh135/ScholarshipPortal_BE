@@ -94,22 +94,22 @@ public class ElasticService<T> : IElasticService<T> where T : class
 
         return response.IsValidResponse;
     }
-    
+
     public async Task<bool> AddOrUpdateBulkScholarship(IEnumerable<ScholarshipProgramElasticDocument> entities)
+    {
+        var indexExist = await _client.Indices.ExistsAsync("scholarships");
+
+        if (!indexExist.Exists)
         {
-            var indexExist = await _client.Indices.ExistsAsync("scholarships");
-    
-            if (!indexExist.Exists)
-            {
-                await CreateScholarshipIndex();
-            }
-    
-            var response = await _client.BulkAsync(b => b.Index("scholarships")
-                .UpdateMany(entities, (ed, e) =>
-                    ed.Doc(e).DocAsUpsert(true)));
-    
-            return response.IsValidResponse;
+            await CreateScholarshipIndex();
         }
+
+        var response = await _client.BulkAsync(b => b.Index("scholarships")
+            .UpdateMany(entities, (ed, e) =>
+                ed.Doc(e).DocAsUpsert(true)));
+
+        return response.IsValidResponse;
+    }
 
     public async Task<bool> AddOrUpdateBulk(IEnumerable<T> entities, string indexName)
     {
@@ -155,6 +155,15 @@ public class ElasticService<T> : IElasticService<T> where T : class
     {
         var response = await _client.DeleteByQueryAsync<T>(d =>
             d.Indices(_elasticSettings.DefaultIndex)
+                .Query(q => q.MatchAll(new MatchAllQuery())));
+
+        return response.IsValidResponse ? response.Deleted : default;
+    }
+
+    public async Task<long?> RemoveAllScholarships()
+    {
+        var response = await _client.DeleteByQueryAsync<ScholarshipProgramElasticDocument>(d =>
+            d.Indices("scholarships")
                 .Query(q => q.MatchAll(new MatchAllQuery())));
 
         return response.IsValidResponse ? response.Deleted : default;
