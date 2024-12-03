@@ -1,3 +1,5 @@
+using Domain.Entities;
+
 namespace Application.Interfaces.IRepositories;
 
 public interface IApplicationRepository : IGenericRepository<Domain.Entities.Application>
@@ -8,4 +10,5 @@ public interface IApplicationRepository : IGenericRepository<Domain.Entities.App
     Task<IEnumerable<Domain.Entities.Application>> GetByApplicantId(int applicantId);
     Task<IEnumerable<Domain.Entities.Application>> GetByScholarshipProgramId(int scholarshipProgramId);
     Task<IEnumerable<Domain.Entities.Application>> GetExpertAssignedApplications(int expertId);
+    Task<IEnumerable<ApplicationReview>> GetApplicationReviewsResult(int scholarshipProgramId, bool isFirstReview);
 }

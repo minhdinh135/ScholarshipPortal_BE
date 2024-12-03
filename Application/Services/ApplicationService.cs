@@ -69,9 +69,9 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<ApplicationReviewDto>>(reviews);
         }
 
-        public async Task<IEnumerable<ApplicationReviewDto>> GetReviewsResult(bool isFirstReview)
+        public async Task<IEnumerable<ApplicationReviewDto>> GetReviewsResult(int scholarshipProgramId, bool isFirstReview)
         {
-            var reviews = await _applicationReviewRepository.GetApplicationReviewsResult(isFirstReview);
+            var reviews = await _applicationRepository.GetApplicationReviewsResult(scholarshipProgramId, isFirstReview);
 
             return _mapper.Map<IEnumerable<ApplicationReviewDto>>(reviews);
         }
