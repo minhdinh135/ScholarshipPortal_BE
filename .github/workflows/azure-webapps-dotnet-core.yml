@@ -39,11 +39,15 @@ jobs:
     steps:
       - name: Clean up old artifacts
         run: |
-          # List and delete artifacts older than 7 days
+          # Get the date 7 days ago in UTC format
+          SEVEN_DAYS_AGO=$(date --date="7 days ago" --utc +%Y-%m-%dT%H:%M:%SZ)
+
+          # Fetch the list of artifacts and filter out those older than 7 days
           ARTIFACTS=$(curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             "https://api.github.com/repos/${{ github.repository }}/actions/artifacts?per_page=100" \
-            | jq -r '.artifacts[] | select(.created_at < "'$(date --date="7 days ago" --utc +%Y-%m-%dT%H:%M:%SZ')'") | .id')
+            | jq -r ".artifacts[] | select(.created_at < \"$SEVEN_DAYS_AGO\") | .id")
 
+          # Iterate over the artifact IDs and delete them
           for ARTIFACT_ID in $ARTIFACTS; do
             curl -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$ARTIFACT_ID"
