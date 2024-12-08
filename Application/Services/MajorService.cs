@@ -90,7 +90,7 @@ public class MajorService : IMajorService
 
         foreach (var majorSkill in existingMajorSkills)
         {
-            await _majorSkillRepository.DeleteById(majorSkill.MajorId.Value, majorSkill.SkillId.Value);
+            await _majorSkillRepository.DeleteById(majorSkill.MajorId, majorSkill.SkillId);
         }
 
         var newMajorSkills = new List<MajorSkill>();

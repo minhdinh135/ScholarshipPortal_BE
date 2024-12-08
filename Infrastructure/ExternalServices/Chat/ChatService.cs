@@ -67,7 +67,7 @@ namespace Infrastructure.ExternalServices.Chat
 		{
 			var chatHistory = await _chatMessageRepository.GetChatHistoryAsync(userId, contactId);
 
-			foreach (var message in chatHistory.Where(m => m.ReceiverId == userId && !m.IsRead.HasValue || m.IsRead == false))
+			foreach (var message in chatHistory.Where(m => m.ReceiverId == userId || m.IsRead == false))
 			{
 				message.IsRead = true;
 			}
@@ -76,7 +76,7 @@ namespace Infrastructure.ExternalServices.Chat
 
 			foreach (var message in chatHistory)
 			{
-				message.SentDate = DateTime.SpecifyKind(message.SentDate.Value, DateTimeKind.Local);
+				message.SentDate = DateTime.SpecifyKind(message.SentDate, DateTimeKind.Local);
 			}
 
 			return chatHistory;

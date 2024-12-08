@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitV5 : Migration
+    public partial class InitV6 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,8 +21,8 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -38,9 +38,9 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
-                    Type = table.Column<string>(type: "longtext", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    Type = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -56,8 +56,8 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Code = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Code = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -73,8 +73,8 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
                     ParentMajorId = table.Column<int>(type: "int", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
@@ -97,7 +97,7 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -113,9 +113,9 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
-                    Type = table.Column<string>(type: "longtext", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    Type = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -131,9 +131,11 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    ValidMonths = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    NumberOfServices = table.Column<int>(type: "int", nullable: false),
+                    ValidMonths = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -149,10 +151,10 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
-                    City = table.Column<string>(type: "longtext", nullable: true),
-                    CountryId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    City = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    CountryId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -199,16 +201,17 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Username = table.Column<string>(type: "longtext", nullable: true),
-                    Email = table.Column<string>(type: "longtext", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "longtext", nullable: true),
-                    HashedPassword = table.Column<string>(type: "longtext", nullable: true),
-                    Address = table.Column<string>(type: "longtext", nullable: true),
-                    AvatarUrl = table.Column<string>(type: "longtext", nullable: true),
-                    LoginWithGoogle = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    Status = table.Column<string>(type: "longtext", nullable: true),
+                    Username = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    HashedPassword = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Address = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    AvatarUrl = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true),
+                    LoginWithGoogle = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    SubscriptionEndDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Status = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     SubscriptionId = table.Column<int>(type: "int", nullable: true),
-                    RoleId = table.Column<int>(type: "int", nullable: true),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
                     FunderId = table.Column<int>(type: "int", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
@@ -243,13 +246,16 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    FirstName = table.Column<string>(type: "longtext", nullable: true),
-                    LastName = table.Column<string>(type: "longtext", nullable: true),
+                    FirstName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    LastName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     BirthDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Gender = table.Column<string>(type: "longtext", nullable: true),
-                    Nationality = table.Column<string>(type: "longtext", nullable: true),
-                    Ethnicity = table.Column<string>(type: "longtext", nullable: true),
-                    ApplicantId = table.Column<int>(type: "int", nullable: true),
+                    Gender = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    Nationality = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    Ethnicity = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    Major = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    Gpa = table.Column<double>(type: "double", nullable: true),
+                    School = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    ApplicantId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -271,11 +277,11 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Message = table.Column<string>(type: "longtext", nullable: true),
-                    SentDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    SenderId = table.Column<int>(type: "int", nullable: true),
-                    IsRead = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    ReceiverId = table.Column<int>(type: "int", nullable: true),
+                    Message = table.Column<string>(type: "longtext", nullable: false),
+                    SentDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    SenderId = table.Column<int>(type: "int", nullable: false),
+                    IsRead = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    ReceiverId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -303,10 +309,10 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
-                    Major = table.Column<string>(type: "longtext", nullable: true),
-                    ExpertId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    Major = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    ExpertId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -328,9 +334,9 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    OrganizationName = table.Column<string>(type: "longtext", nullable: true),
-                    ContactPersonName = table.Column<string>(type: "longtext", nullable: true),
-                    FunderId = table.Column<int>(type: "int", nullable: true),
+                    OrganizationName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    ContactPersonName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    FunderId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -352,10 +358,10 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Message = table.Column<string>(type: "longtext", nullable: true),
-                    IsRead = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    SentDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    ReceiverId = table.Column<int>(type: "int", nullable: true),
+                    Message = table.Column<string>(type: "longtext", nullable: false),
+                    IsRead = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    SentDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ReceiverId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -377,9 +383,9 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    OrganizationName = table.Column<string>(type: "longtext", nullable: true),
-                    ContactPersonName = table.Column<string>(type: "longtext", nullable: true),
-                    ProviderId = table.Column<int>(type: "int", nullable: true),
+                    OrganizationName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    ContactPersonName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    ProviderId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -401,10 +407,10 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
-                    RequestDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Status = table.Column<string>(type: "longtext", nullable: true),
-                    ApplicantId = table.Column<int>(type: "int", nullable: true),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
+                    RequestDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Status = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    ApplicantId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -415,7 +421,8 @@ namespace Infrastructure.Migrations
                         name: "FK_Requests_Accounts_ApplicantId",
                         column: x => x.ApplicantId,
                         principalTable: "Accounts",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -425,17 +432,18 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    ImageUrl = table.Column<string>(type: "longtext", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
-                    ScholarshipAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    NumberOfScholarships = table.Column<int>(type: "int", nullable: true),
-                    Deadline = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Status = table.Column<string>(type: "longtext", nullable: true),
-                    FunderId = table.Column<int>(type: "int", nullable: true),
-                    CategoryId = table.Column<int>(type: "int", nullable: true),
-                    UniversityId = table.Column<int>(type: "int", nullable: true),
-                    MajorId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    ImageUrl = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
+                    ScholarshipAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    NumberOfAwardMilestones = table.Column<int>(type: "int", nullable: false),
+                    NumberOfScholarships = table.Column<int>(type: "int", nullable: false),
+                    Deadline = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Status = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    FunderId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    UniversityId = table.Column<int>(type: "int", nullable: false),
+                    MajorId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -475,12 +483,12 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
-                    Type = table.Column<string>(type: "longtext", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    Type = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    Status = table.Column<string>(type: "longtext", nullable: true),
-                    ProviderId = table.Column<int>(type: "int", nullable: true),
+                    Status = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    ProviderId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -491,7 +499,8 @@ namespace Infrastructure.Migrations
                         name: "FK_Services_Accounts_ProviderId",
                         column: x => x.ProviderId,
                         principalTable: "Accounts",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -501,11 +510,10 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    BankAccountName = table.Column<string>(type: "longtext", nullable: true),
-                    BankAccountNumber = table.Column<string>(type: "longtext", nullable: true),
-                    Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    StripeCustomerId = table.Column<string>(type: "longtext", nullable: true),
-                    AccountId = table.Column<int>(type: "int", nullable: true),
+                    BankAccountName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    BankAccountNumber = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    AccountId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -527,10 +535,10 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
                     AchievedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    ApplicantProfileId = table.Column<int>(type: "int", nullable: true),
+                    ApplicantProfileId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -552,11 +560,11 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
-                    Type = table.Column<string>(type: "longtext", nullable: true),
-                    ImageUrl = table.Column<string>(type: "longtext", nullable: true),
-                    ApplicantProfileId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    Type = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    ImageUrl = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true),
+                    ApplicantProfileId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -578,10 +586,10 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Type = table.Column<string>(type: "longtext", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
-                    ApplicantProfileId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Type = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    ApplicantProfileId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -603,9 +611,9 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
-                    ApplicantProfileId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    ApplicantProfileId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -616,7 +624,8 @@ namespace Infrastructure.Migrations
                         name: "FK_Experiences_applicant_profiles_ApplicantProfileId",
                         column: x => x.ApplicantProfileId,
                         principalTable: "applicant_profiles",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -626,10 +635,10 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Type = table.Column<string>(type: "longtext", nullable: true),
-                    FileUrl = table.Column<string>(type: "longtext", nullable: true),
-                    FunderProfileId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Type = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    FileUrl = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: false),
+                    FunderProfileId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -651,10 +660,10 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Type = table.Column<string>(type: "longtext", nullable: true),
-                    FileUrl = table.Column<string>(type: "longtext", nullable: true),
-                    ProviderProfileId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Type = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    FileUrl = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: false),
+                    ProviderProfileId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -676,10 +685,10 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    AppliedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Status = table.Column<string>(type: "longtext", nullable: true),
-                    ApplicantId = table.Column<int>(type: "int", nullable: true),
-                    ScholarshipProgramId = table.Column<int>(type: "int", nullable: true),
+                    AppliedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Status = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    ApplicantId = table.Column<int>(type: "int", nullable: false),
+                    ScholarshipProgramId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -707,10 +716,11 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    FromDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    ToDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    ScholarshipProgramId = table.Column<int>(type: "int", nullable: true),
+                    FromDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ToDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Note = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    ScholarshipProgramId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -732,9 +742,9 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
-                    ScholarshipProgramId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    ScholarshipProgramId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -756,10 +766,10 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
-                    FromDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    ToDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    ScholarshipProgramId = table.Column<int>(type: "int", nullable: true),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
+                    FromDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ToDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ScholarshipProgramId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -806,11 +816,11 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Content = table.Column<string>(type: "longtext", nullable: true),
-                    Rating = table.Column<double>(type: "double", nullable: true),
-                    FeedbackDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    ApplicantId = table.Column<int>(type: "int", nullable: true),
-                    ServiceId = table.Column<int>(type: "int", nullable: true),
+                    Content = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
+                    Rating = table.Column<double>(type: "double", nullable: false),
+                    FeedbackDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ApplicantId = table.Column<int>(type: "int", nullable: false),
+                    ServiceId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -838,9 +848,9 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Comment = table.Column<string>(type: "longtext", nullable: true),
-                    RequestId = table.Column<int>(type: "int", nullable: true),
-                    ServiceId = table.Column<int>(type: "int", nullable: true),
+                    Comment = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    RequestId = table.Column<int>(type: "int", nullable: false),
+                    ServiceId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -868,14 +878,14 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    PaymentMethod = table.Column<string>(type: "longtext", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
-                    TransactionId = table.Column<string>(type: "longtext", nullable: true),
-                    TransactionDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Status = table.Column<string>(type: "longtext", nullable: true),
-                    WalletSenderId = table.Column<int>(type: "int", nullable: true),
-                    WalletReceiverId = table.Column<int>(type: "int", nullable: true),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PaymentMethod = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    TransactionId = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    TransactionDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Status = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    WalletSenderId = table.Column<int>(type: "int", nullable: false),
+                    WalletReceiverId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -903,10 +913,10 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Type = table.Column<string>(type: "longtext", nullable: true),
-                    FileUrl = table.Column<string>(type: "longtext", nullable: true),
-                    ApplicationId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Type = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    FileUrl = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: false),
+                    ApplicationId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -928,12 +938,13 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
-                    Comment = table.Column<string>(type: "longtext", nullable: true),
-                    ReviewDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Status = table.Column<string>(type: "longtext", nullable: true),
-                    ExpertId = table.Column<int>(type: "int", nullable: true),
-                    ApplicationId = table.Column<int>(type: "int", nullable: true),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    Score = table.Column<int>(type: "int", nullable: true),
+                    Comment = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    ReviewDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Status = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    ExpertId = table.Column<int>(type: "int", nullable: false),
+                    ApplicationId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -961,10 +972,8 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Type = table.Column<string>(type: "longtext", nullable: true),
-                    FileUrl = table.Column<string>(type: "longtext", nullable: true),
-                    AwardMilestoneId = table.Column<int>(type: "int", nullable: true),
+                    Type = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    AwardMilestoneId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -986,8 +995,10 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    FileUrl = table.Column<string>(type: "longtext", nullable: true),
-                    RequestDetailId = table.Column<int>(type: "int", nullable: true),
+                    FileUrl = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: false),
+                    UploadedBy = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    UploadDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    RequestDetailId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
