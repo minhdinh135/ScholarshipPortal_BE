@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ScholarshipContext))]
-    [Migration("20241117225500_AddFieldsInRequestDetailFiles")]
-    partial class AddFieldsInRequestDetailFiles
+    [Migration("20241208161025_InitV6")]
+    partial class InitV6
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,34 +29,47 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("AvatarUrl")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(1024)
+                        .HasColumnType("varchar(1024)");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int?>("FunderId")
                         .HasColumnType("int");
 
                     b.Property<string>("HashedPassword")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
-                    b.Property<bool?>("LoginWithGoogle")
+                    b.Property<bool>("LoginWithGoogle")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
-                    b.Property<int?>("RoleId")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime?>("SubscriptionEndDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int?>("SubscriptionId")
                         .HasColumnType("int");
@@ -65,7 +78,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Username")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
@@ -87,17 +102,20 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("AchievedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("ApplicantProfileId")
+                    b.Property<int>("ApplicantProfileId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -115,23 +133,29 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ApplicantProfileId")
+                    b.Property<int>("ApplicantProfileId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("ImageUrl")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(1024)
+                        .HasColumnType("varchar(1024)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Type")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -149,7 +173,7 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ApplicantId")
+                    b.Property<int>("ApplicantId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("BirthDate")
@@ -159,19 +183,37 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Ethnicity")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Gender")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<double?>("Gpa")
+                        .HasColumnType("double");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Major")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Nationality")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("School")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -190,20 +232,25 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ApplicantProfileId")
+                    b.Property<int>("ApplicantProfileId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Type")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -221,20 +268,22 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ApplicantId")
+                    b.Property<int>("ApplicantId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("AppliedDate")
+                    b.Property<DateTime>("AppliedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("ScholarshipProgramId")
+                    b.Property<int>("ScholarshipProgramId")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -254,20 +303,26 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ApplicationId")
+                    b.Property<int>("ApplicationId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("FileUrl")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("varchar(1024)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Type")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -285,26 +340,33 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ApplicationId")
+                    b.Property<int>("ApplicationId")
                         .HasColumnType("int");
 
                     b.Property<string>("Comment")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
-                    b.Property<int?>("ExpertId")
+                    b.Property<int>("ExpertId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("ReviewDate")
+                    b.Property<DateTime>("ReviewDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int?>("Score")
+                        .HasColumnType("int");
+
                     b.Property<string>("Status")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -324,19 +386,23 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Amount")
+                    b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("FromDate")
+                    b.Property<DateTime>("FromDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("ScholarshipProgramId")
+                    b.Property<string>("Note")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int>("ScholarshipProgramId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("ToDate")
+                    b.Property<DateTime>("ToDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -355,20 +421,16 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("AwardMilestoneId")
+                    b.Property<int>("AwardMilestoneId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("FileUrl")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Type")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -390,10 +452,13 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -413,13 +478,18 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Type")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -438,19 +508,20 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool?>("IsRead")
+                    b.Property<bool>("IsRead")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Message")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("ReceiverId")
+                    b.Property<int>("ReceiverId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SenderId")
+                    b.Property<int>("SenderId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("SentDate")
+                    b.Property<DateTime>("SentDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -471,14 +542,16 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("Code")
+                    b.Property<int>("Code")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -498,12 +571,15 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
-                    b.Property<int?>("ScholarshipProgramId")
+                    b.Property<int>("ScholarshipProgramId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -522,17 +598,20 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ApplicantProfileId")
+                    b.Property<int>("ApplicantProfileId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -554,16 +633,21 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
-                    b.Property<int?>("ExpertId")
+                    b.Property<int>("ExpertId")
                         .HasColumnType("int");
 
                     b.Property<string>("Major")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -582,22 +666,24 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ApplicantId")
+                    b.Property<int>("ApplicantId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("FeedbackDate")
+                    b.Property<DateTime>("FeedbackDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<double?>("Rating")
+                    b.Property<double>("Rating")
                         .HasColumnType("double");
 
-                    b.Property<int?>("ServiceId")
+                    b.Property<int>("ServiceId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -622,16 +708,22 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("FileUrl")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("varchar(1024)");
 
-                    b.Property<int?>("FunderProfileId")
+                    b.Property<int>("FunderProfileId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Type")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -650,16 +742,19 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ContactPersonName")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("FunderId")
+                    b.Property<int>("FunderId")
                         .HasColumnType("int");
 
                     b.Property<string>("OrganizationName")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -682,10 +777,13 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int?>("ParentMajorId")
                         .HasColumnType("int");
@@ -702,10 +800,10 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.MajorSkill", b =>
                 {
-                    b.Property<int?>("MajorId")
+                    b.Property<int>("MajorId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SkillId")
+                    b.Property<int>("SkillId")
                         .HasColumnType("int");
 
                     b.HasKey("MajorId", "SkillId");
@@ -724,16 +822,17 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool?>("IsRead")
+                    b.Property<bool>("IsRead")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Message")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("ReceiverId")
+                    b.Property<int>("ReceiverId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("SentDate")
+                    b.Property<DateTime>("SentDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -756,16 +855,22 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("FileUrl")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("varchar(1024)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
-                    b.Property<int?>("ProviderProfileId")
+                    b.Property<int>("ProviderProfileId")
                         .HasColumnType("int");
 
                     b.Property<string>("Type")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -784,15 +889,18 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ContactPersonName")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("OrganizationName")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
-                    b.Property<int?>("ProviderId")
+                    b.Property<int>("ProviderId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -812,20 +920,24 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ApplicantId")
+                    b.Property<int>("ApplicantId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
-                    b.Property<DateTime?>("RequestDate")
+                    b.Property<DateTime>("RequestDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Status")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -844,15 +956,16 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Comment")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("RequestId")
+                    b.Property<int>("RequestId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ServiceId")
+                    b.Property<int>("ServiceId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -877,19 +990,23 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("FileUrl")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("varchar(1024)");
 
-                    b.Property<int?>("RequestDetailId")
+                    b.Property<int>("RequestDetailId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("UploadDate")
+                    b.Property<DateTime>("UploadDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UploadedBy")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
@@ -908,15 +1025,17 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
-                    b.Property<DateTime?>("FromDate")
+                    b.Property<DateTime>("FromDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("ScholarshipProgramId")
+                    b.Property<int>("ScholarshipProgramId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("ToDate")
+                    b.Property<DateTime>("ToDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -939,7 +1058,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -955,40 +1076,50 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("Deadline")
+                    b.Property<DateTime>("Deadline")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
-                    b.Property<int?>("FunderId")
+                    b.Property<int>("FunderId")
                         .HasColumnType("int");
 
                     b.Property<string>("ImageUrl")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(1024)
+                        .HasColumnType("varchar(1024)");
 
-                    b.Property<int?>("MajorId")
+                    b.Property<int>("MajorId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
-                    b.Property<int?>("NumberOfScholarships")
+                    b.Property<int>("NumberOfAwardMilestones")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("ScholarshipAmount")
+                    b.Property<int>("NumberOfScholarships")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("ScholarshipAmount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Status")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
-                    b.Property<int?>("UniversityId")
+                    b.Property<int>("UniversityId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -1009,10 +1140,10 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.ScholarshipProgramCertificate", b =>
                 {
-                    b.Property<int?>("ScholarshipProgramId")
+                    b.Property<int>("ScholarshipProgramId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CertificateId")
+                    b.Property<int>("CertificateId")
                         .HasColumnType("int");
 
                     b.HasKey("ScholarshipProgramId", "CertificateId");
@@ -1032,22 +1163,29 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("ProviderId")
+                    b.Property<int>("ProviderId")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Type")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -1069,13 +1207,18 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Type")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -1091,19 +1234,28 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Amount")
+                    b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("NumberOfServices")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("ValidMonths")
+                    b.Property<int>("ValidMonths")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -1117,34 +1269,41 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Amount")
+                    b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("PaymentMethod")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Status")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
-                    b.Property<DateTime?>("TransactionDate")
+                    b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("TransactionId")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("WalletReceiverId")
+                    b.Property<int>("WalletReceiverId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WalletSenderId")
+                    b.Property<int>("WalletSenderId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -1163,19 +1322,24 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("City")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
-                    b.Property<int?>("CountryId")
+                    b.Property<int>("CountryId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -1193,23 +1357,24 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("AccountId")
+                    b.Property<int>("AccountId")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Balance")
+                    b.Property<decimal>("Balance")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("BankAccountName")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("BankAccountNumber")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("StripeCustomerId")
-                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -1232,7 +1397,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Role", "Role")
                         .WithMany("Accounts")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.Subscription", "Subscription")
                         .WithMany("Accounts")
@@ -1251,7 +1417,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.ApplicantProfile", "ApplicantProfile")
                         .WithMany("Achievements")
                         .HasForeignKey("ApplicantProfileId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("ApplicantProfile");
                 });
@@ -1261,7 +1428,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.ApplicantProfile", "ApplicantProfile")
                         .WithMany("ApplicantCertificates")
                         .HasForeignKey("ApplicantProfileId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("ApplicantProfile");
                 });
@@ -1271,7 +1439,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Account", "Applicant")
                         .WithOne("ApplicantProfile")
                         .HasForeignKey("Domain.Entities.ApplicantProfile", "ApplicantId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Applicant");
                 });
@@ -1281,7 +1450,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.ApplicantProfile", "ApplicantProfile")
                         .WithMany("ApplicantSkills")
                         .HasForeignKey("ApplicantProfileId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("ApplicantProfile");
                 });
@@ -1291,12 +1461,14 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Account", "Applicant")
                         .WithMany("Applications")
                         .HasForeignKey("ApplicantId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
                         .WithMany("Applications")
                         .HasForeignKey("ScholarshipProgramId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Applicant");
 
@@ -1308,7 +1480,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Application", "Application")
                         .WithMany("ApplicationDocuments")
                         .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Application");
                 });
@@ -1318,12 +1491,14 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Application", "Application")
                         .WithMany("ApplicationReviews")
                         .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.Account", "Expert")
                         .WithMany("ApplicationReviews")
                         .HasForeignKey("ExpertId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Application");
 
@@ -1335,7 +1510,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
                         .WithMany("AwardMilestones")
                         .HasForeignKey("ScholarshipProgramId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("ScholarshipProgram");
                 });
@@ -1345,7 +1521,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.AwardMilestone", "AwardMilestone")
                         .WithMany("AwardMilestoneDocuments")
                         .HasForeignKey("AwardMilestoneId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("AwardMilestone");
                 });
@@ -1355,12 +1532,14 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Account", "Receiver")
                         .WithMany("ReceiverChats")
                         .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.Account", "Sender")
                         .WithMany("SenderChats")
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Receiver");
 
@@ -1372,7 +1551,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
                         .WithMany("Criteria")
                         .HasForeignKey("ScholarshipProgramId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("ScholarshipProgram");
                 });
@@ -1381,7 +1561,9 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Entities.ApplicantProfile", "ApplicantProfile")
                         .WithMany("Experiences")
-                        .HasForeignKey("ApplicantProfileId");
+                        .HasForeignKey("ApplicantProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ApplicantProfile");
                 });
@@ -1391,7 +1573,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Account", "Expert")
                         .WithOne("ExpertProfile")
                         .HasForeignKey("Domain.Entities.ExpertProfile", "ExpertId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Expert");
                 });
@@ -1401,12 +1584,14 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Account", "Applicant")
                         .WithMany("Feedbacks")
                         .HasForeignKey("ApplicantId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.Service", "Service")
                         .WithMany("Feedbacks")
                         .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Applicant");
 
@@ -1418,7 +1603,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.FunderProfile", "FunderProfile")
                         .WithMany("FunderDocuments")
                         .HasForeignKey("FunderProfileId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("FunderProfile");
                 });
@@ -1428,7 +1614,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Account", "Funder")
                         .WithOne("FunderProfile")
                         .HasForeignKey("Domain.Entities.FunderProfile", "FunderId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Funder");
                 });
@@ -1467,7 +1654,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Account", "Receiver")
                         .WithMany("Notifications")
                         .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Receiver");
                 });
@@ -1477,7 +1665,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.ProviderProfile", "ProviderProfile")
                         .WithMany("ProviderDocuments")
                         .HasForeignKey("ProviderProfileId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("ProviderProfile");
                 });
@@ -1487,7 +1676,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Account", "Provider")
                         .WithOne("ProviderProfile")
                         .HasForeignKey("Domain.Entities.ProviderProfile", "ProviderId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Provider");
                 });
@@ -1496,7 +1686,9 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Entities.Account", "Applicant")
                         .WithMany("Requests")
-                        .HasForeignKey("ApplicantId");
+                        .HasForeignKey("ApplicantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Applicant");
                 });
@@ -1506,12 +1698,14 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Request", "Request")
                         .WithMany("RequestDetails")
                         .HasForeignKey("RequestId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.Service", "Service")
                         .WithMany("RequestDetails")
                         .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Request");
 
@@ -1523,7 +1717,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.RequestDetail", "RequestDetail")
                         .WithMany("RequestDetailFiles")
                         .HasForeignKey("RequestDetailId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("RequestDetail");
                 });
@@ -1533,7 +1728,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
                         .WithMany("ReviewMilestones")
                         .HasForeignKey("ScholarshipProgramId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("ScholarshipProgram");
                 });
@@ -1543,22 +1739,26 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Category", "Category")
                         .WithMany("ScholarshipPrograms")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.Account", "Funder")
                         .WithMany("FunderScholarshipPrograms")
                         .HasForeignKey("FunderId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.Major", "Major")
                         .WithMany("ScholarshipPrograms")
                         .HasForeignKey("MajorId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.University", "University")
                         .WithMany("ScholarshipPrograms")
                         .HasForeignKey("UniversityId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Category");
 
@@ -1592,7 +1792,9 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Entities.Account", "Provider")
                         .WithMany("Services")
-                        .HasForeignKey("ProviderId");
+                        .HasForeignKey("ProviderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Provider");
                 });
@@ -1602,12 +1804,14 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Wallet", "WalletReceiver")
                         .WithMany("ReceiverTransactions")
                         .HasForeignKey("WalletReceiverId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.Wallet", "WalletSender")
                         .WithMany("SenderTransactions")
                         .HasForeignKey("WalletSenderId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("WalletReceiver");
 
@@ -1619,7 +1823,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Country", "Country")
                         .WithMany("Universities")
                         .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Country");
                 });
@@ -1629,7 +1834,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Account", "Account")
                         .WithOne("Wallet")
                         .HasForeignKey("Domain.Entities.Wallet", "AccountId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Account");
                 });

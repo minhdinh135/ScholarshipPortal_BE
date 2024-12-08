@@ -81,7 +81,7 @@ public class BackgroundService : IBackgroundService
                 if (awardMilestones.Any())
                 {
                     needExtendApplications.Add((awardedApplication, 
-                        awardMilestones.First().FromDate.Value));
+                        awardMilestones.First().FromDate));
                 }
 
             }
