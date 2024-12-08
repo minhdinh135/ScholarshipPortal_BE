@@ -42,16 +42,27 @@ jobs:
           # Get the date 7 days ago in UTC format
           SEVEN_DAYS_AGO=$(date --date="7 days ago" --utc +%Y-%m-%dT%H:%M:%SZ)
 
-          # Fetch the list of artifacts and filter out those older than 7 days
-          ARTIFACTS=$(curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts?per_page=100" \
-            | jq -r ".artifacts[] | select(.created_at < \"$SEVEN_DAYS_AGO\") | .id")
+          # Fetch the list of artifacts and print the response for debugging
+          RESPONSE=$(curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts?per_page=100")
 
+          # Output the response for debugging
+          echo "Response: $RESPONSE"
+
+          # Check if artifacts exist
+          ARTIFACTS=$(echo "$RESPONSE" | jq -r ".artifacts[]? | select(.created_at < \"$SEVEN_DAYS_AGO\") | .id")
+
+          # Handle the case where no artifacts are found
+          if [ -z "$ARTIFACTS" ]; then
+            echo "No artifacts older than 7 days found."
+          else
           # Iterate over the artifact IDs and delete them
-          for ARTIFACT_ID in $ARTIFACTS; do
-            curl -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$ARTIFACT_ID"
-          done
+            for ARTIFACT_ID in $ARTIFACTS; do
+              echo "Deleting artifact $ARTIFACT_ID"
+              curl -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$ARTIFACT_ID"
+            done
+          fi
 
   build:
     runs-on: ubuntu-latest
