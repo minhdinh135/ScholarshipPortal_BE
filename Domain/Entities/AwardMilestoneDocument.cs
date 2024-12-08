@@ -1,10 +1,13 @@
-﻿namespace Domain.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Domain.Entities;
 
 public class AwardMilestoneDocument : BaseEntity
 {
-    public string? Type { get; set; }
+    [MaxLength(100)]
+    public string Type { get; set; }
     
-    public int? AwardMilestoneId { get; set; }    
+    public int AwardMilestoneId { get; set; }    
     
-    public AwardMilestone? AwardMilestone { get; set; }
+    public AwardMilestone AwardMilestone { get; set; }
 }

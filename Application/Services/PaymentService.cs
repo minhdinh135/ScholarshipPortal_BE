@@ -56,8 +56,8 @@ public class PaymentService : IPaymentService
                 PaymentMethod = addTransactionDto.PaymentMethod,
                 Description = addTransactionDto.Description,
                 TransactionId = addTransactionDto.TransactionId,
-                WalletSenderId = senderWallet.Id,
-                WalletReceiverId = receiverWallet.Id,
+                WalletSenderId = (int)senderWallet.Id,
+                WalletReceiverId = (int)receiverWallet.Id,
                 TransactionDate = DateTime.Now,
                 Status = TransactionStatusEnum.Successful.ToString()
             };
@@ -91,8 +91,8 @@ public class PaymentService : IPaymentService
             }
 
             var createdTransaction = _mapper.Map<Transaction>(transferRequest);
-            createdTransaction.WalletSenderId = senderWallet.Id;
-            createdTransaction.WalletReceiverId = receiverWallet.Id;
+            createdTransaction.WalletSenderId = (int)senderWallet.Id;
+            createdTransaction.WalletReceiverId = (int)receiverWallet.Id;
 
             await _transactionRepository.Add(createdTransaction);
         }

@@ -1,32 +1,41 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Domain.Entities;
 
 public class Account : BaseEntity
 {
-    public string? Username { get; set; }
+    [MaxLength(100)]
+    public string Username { get; set; }
 
-    public string? Email { get; set; }
+    [MaxLength(100)]
+    public string Email { get; set; }
 
-    public string? PhoneNumber { get; set; }
+    [MaxLength(100)]
+    public string PhoneNumber { get; set; }
 
-    public string? HashedPassword { get; set; }
+    [MaxLength(100)]
+    public string HashedPassword { get; set; }
 
+    [MaxLength(100)] 
     public string? Address { get; set; }
 
+    [MaxLength(1024)]
     public string? AvatarUrl { get; set; }
 
-    public bool? LoginWithGoogle { get; set; }
+    public bool LoginWithGoogle { get; set; }
     
     public DateTime? SubscriptionEndDate { get; set; }
 
-    public string? Status { get; set; }
+    [MaxLength(100)]
+    public string Status { get; set; }
     
     public int? SubscriptionId { get; set; }
     
     public Subscription? Subscription { get; set; }
 
-    public int? RoleId { get; set; }
+    public int RoleId { get; set; }
 
-    public Role? Role { get; set; }
+    public Role Role { get; set; }
     
     public int? FunderId { get; set; }
     

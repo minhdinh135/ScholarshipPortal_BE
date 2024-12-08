@@ -1,8 +1,11 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Domain.Entities;
 
 public class Role : BaseEntity
 {
-  public string? Name { get; set; }
+  [MaxLength(100)]
+  public string Name { get; set; }
 
   public ICollection<Account>? Accounts { get; set; }
 }

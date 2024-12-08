@@ -1,11 +1,13 @@
-﻿namespace Domain.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Domain.Entities;
 
 public class Country : BaseEntity
 {
-    public string? Name { get; set; }
+    [MaxLength(100)]
+    public string Name { get; set; }
     
-    public int? Code { get; set; }
+    public int Code { get; set; }
     
-    public ICollection<University> Universities { get; set; }
-    
+    public ICollection<University>? Universities { get; set; }
 }

@@ -126,7 +126,7 @@ namespace Application.Services
                     return;
                 }
 
-                if (award.ToDate.Value < DateTime.Now)
+                if (award.ToDate < DateTime.Now)
                 {
                     profile.Status = ApplicationStatusEnum.NeedExtend.ToString();
                     await _applicationRepository.Update(profile);
@@ -147,10 +147,10 @@ namespace Application.Services
                     return;
                 }
 
-                if (award.ToDate.Value < DateTime.Now)
+                if (award.ToDate < DateTime.Now)
                 {
                     profile.Status = ApplicationStatusEnum.Rejected.ToString();
-                    profile.UpdatedAt = award.ToDate.Value.AddDays(-1);
+                    profile.UpdatedAt = award.ToDate.AddDays(-1);
                     await _applicationRepository.Update(profile);
                 }
             }

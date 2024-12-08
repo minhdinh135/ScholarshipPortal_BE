@@ -1,24 +1,31 @@
-﻿namespace Domain.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Domain.Entities;
 
 public class Transaction : BaseEntity
 {
-    public decimal? Amount { get; set; }
+    public decimal Amount { get; set; }
     
-    public string? PaymentMethod { get; set; }
+    [MaxLength(100)]
+    public string PaymentMethod { get; set; }
     
+    [MaxLength(200)]
     public string? Description { get; set; }
     
-    public string? TransactionId { get; set; }
+    [MaxLength(100)]
+    public string TransactionId { get; set; }
     
-    public DateTime? TransactionDate { get; set; }
+    public DateTime TransactionDate { get; set; }
     
-    public string? Status { get; set; }
+    [MaxLength(100)]
+    public string Status { get; set; }
     
-    public int? WalletSenderId { get; set; }
+    public int WalletSenderId { get; set; }
     
-    public Wallet? WalletSender { get; set; }
+    public Wallet WalletSender { get; set; }
     
-    public int? WalletReceiverId { get; set; }
+    public int WalletReceiverId { get; set; }
     
-    public Wallet? WalletReceiver { get; set; }
+    public Wallet WalletReceiver { get; set; }
 }
