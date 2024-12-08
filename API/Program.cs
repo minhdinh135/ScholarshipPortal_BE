@@ -116,8 +116,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "MyAllowPolicy", policy =>
     {
-        policy.WithOrigins( /*"https://locovn.azurewebsites.net", "https://test-payment.momo.vn"*/
-            "http://localhost:5173");
+        policy.WithOrigins("http://localhost:5173", "https://scholarship-portal-nu.vercel.app");
         policy.AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
