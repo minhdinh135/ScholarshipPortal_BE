@@ -32,10 +32,6 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 builder.Services.AddSignalR();
 
-//Not throw errors imidiately
-// builder.Services.Configure<ApiBehaviorOptions>(options
-//     => options.SuppressModelStateInvalidFilter = true);
-
 builder.Services.AddDbContext<ScholarshipContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("Db") ?? string.Empty));
 
@@ -184,7 +180,7 @@ app.UseExceptionHandler();
 
 app.MapControllers();
 
-/*app.UseHangfireDashboard();
+app.UseHangfireDashboard();
 app.MapHangfireDashboard("/hangfire");
 
 using (var scope = app.Services.CreateScope())
@@ -192,8 +188,8 @@ using (var scope = app.Services.CreateScope())
     var serviceProvider = scope.ServiceProvider;
     var backgroundService = serviceProvider.GetRequiredService<IBackgroundService>();
 
-    RecurringJob.AddOrUpdate("ScheduleScholarshipsAfterDeadline", () => backgroundService.ScheduleScholarshipsAfterDeadline(), Cron.Hourly);
-    RecurringJob.AddOrUpdate("ScheduleApplicationsNeedExtend", () => backgroundService.ScheduleApplicationsNeedExtend(), Cron.Hourly);
-}*/
+    RecurringJob.AddOrUpdate("ScheduleScholarshipsAfterDeadline", () => backgroundService.ScheduleScholarshipsAfterDeadline(), Cron.Daily);
+    RecurringJob.AddOrUpdate("ScheduleApplicationsNeedExtend", () => backgroundService.ScheduleApplicationsNeedExtend(), Cron.Daily);
+}
 
 app.Run();

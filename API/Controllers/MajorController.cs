@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.Pkcs;
-using Application.Interfaces.IServices;
+﻿using Application.Interfaces.IServices;
 using Domain.DTOs.Common;
 using Domain.DTOs.Major;
 using Microsoft.AspNetCore.Mvc;

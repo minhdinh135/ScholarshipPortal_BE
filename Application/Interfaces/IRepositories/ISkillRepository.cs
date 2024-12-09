@@ -2,6 +2,4 @@
 
 namespace Application.Interfaces.IRepositories;
 
-public interface ISkillRepository : IGenericRepository<Skill>
-{
-}
+public interface ISkillRepository : IGenericRepository<Skill>;

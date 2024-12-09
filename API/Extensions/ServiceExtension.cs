@@ -10,7 +10,6 @@ using Infrastructure.ExternalServices.Chat;
 using Infrastructure.ExternalServices.Cloudinary;
 using Infrastructure.ExternalServices.Elastic;
 using Infrastructure.ExternalServices.Email;
-using Infrastructure.ExternalServices.Gemini;
 using Infrastructure.ExternalServices.Google;
 using Infrastructure.ExternalServices.Notification;
 using Infrastructure.ExternalServices.Password;
@@ -98,12 +97,6 @@ public static class ServiceExtension
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<ITransactionRepository, TransactionRepository>();
 
-        services.AddHttpClient<GeminiService>();
-        services.AddSingleton(sp => new GeminiService(
-            sp.GetRequiredService<HttpClient>(),
-            config.GetSection("OpenAI").GetSection("ApiKey").Value ?? string.Empty
-        ));
-
         services.AddScoped<GoogleService>(s => new GoogleService(
             config.GetSection("Google").GetSection("ClientId").Value ?? string.Empty,
             config.GetSection("Google").GetSection("ClientSecret").Value ?? string.Empty,
@@ -124,7 +117,7 @@ public static class ServiceExtension
         services.Configure<StripeSettings>(config.GetSection("StripeSettings"));
         services.AddScoped<IStripeService, StripeService>();
 
-        /*services.AddHangfire(configuration => configuration
+        services.AddHangfire(configuration => configuration
             .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
             .UseSimpleAssemblyNameTypeSerializer()
             .UseRecommendedSerializerSettings()
@@ -132,7 +125,7 @@ public static class ServiceExtension
                 config.GetConnectionString("Db"),
                 new MySqlStorageOptions()
             )));
-        services.AddHangfireServer();*/
+        services.AddHangfireServer();
         services.AddScoped<IBackgroundService, BackgroundService>();
 
         FirebaseApp.Create(new AppOptions()

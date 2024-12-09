@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Domain.DTOs.Common;
+﻿using Domain.DTOs.Common;
 using Domain.DTOs.Major;
 
 namespace Application.Interfaces.IServices;

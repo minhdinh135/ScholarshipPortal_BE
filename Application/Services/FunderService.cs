@@ -43,7 +43,7 @@ public class FunderService : IFunderService
 
             var addedFunderDetails = await _funderRepository.Add(addedProfile);
 
-            return _mapper.Map<FunderProfileDto>(addedProfile);
+            return _mapper.Map<FunderProfileDto>(addedFunderDetails);
         }
         catch (Exception e)
         {

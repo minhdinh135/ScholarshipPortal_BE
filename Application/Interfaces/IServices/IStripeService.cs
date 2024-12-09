@@ -1,5 +1,4 @@
 ﻿using Domain.DTOs.Payment;
-using Domain.Entities;
 
 namespace Application.Interfaces.IServices;
 

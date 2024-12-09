@@ -127,6 +127,7 @@ public class BackgroundService : IBackgroundService
                 $"Your application to scholarship {awardedApplication.ScholarshipProgram.Name} is waiting for extend."
        );}
         catch (Exception e){
+            _logger.LogError(e.Message);
         }
 
     }
