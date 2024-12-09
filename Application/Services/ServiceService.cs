@@ -40,7 +40,7 @@ public class ServiceService : IServiceService
 
 	public async Task<PaginatedList<ServiceDto>> GetAll(int pageIndex, int pageSize, string sortBy, string sortOrder)
 	{
-		var services = await _serviceRepository.GetPaginatedList(pageIndex, pageSize, sortBy, sortOrder);
+		var services = await _serviceRepository.GetAllActiveServices(pageIndex, pageSize, sortBy, sortOrder);
 		return _mapper.Map<PaginatedList<ServiceDto>>(services);
 	}
 
@@ -84,8 +84,6 @@ public class ServiceService : IServiceService
 		}
 	}
 
-
-
 	public async Task<ServiceDto> GetServiceById(int id)
     {
         var service = await _serviceRepository.GetServiceById(id);
@@ -97,9 +95,6 @@ public class ServiceService : IServiceService
 
 	public async Task<IEnumerable<ServiceDto>> GetServicesByProviderId(int providerId)
 	{
-		// var services = await _serviceRepository.GetAll();
-		// var providerServices = services.Where(service => service.ProviderId == providerId);
-
         var providerServices = await _serviceRepository.GetServicesByProviderId(providerId);
 
 		return _mapper.Map<IEnumerable<ServiceDto>>(providerServices);

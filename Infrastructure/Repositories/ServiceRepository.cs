@@ -73,4 +73,28 @@ public class ServiceRepository : GenericRepository<Service>, IServiceRepository
 
         return services;
     }
+
+	public async Task<PaginatedList<Service>> GetAllActiveServices(int pageIndex, int pageSize, string sortBy, string sortOrder)
+	{
+		var query = _dbContext.Set<Service>().AsNoTracking().AsSplitQuery();
+
+		if (!string.IsNullOrEmpty(sortBy))
+		{
+			var orderByExpression = ExpressionUtils.GetOrderByExpression<Service>(sortBy);
+			query = sortOrder?.ToLower() == "desc"
+				? query.OrderByDescending(orderByExpression)
+				: query.OrderBy(orderByExpression);
+		}
+
+		var items = await query
+			.Where(x => x.Status == "Active")
+			.Skip((pageIndex - 1) * pageSize)
+			.Take(pageSize)
+			.ToListAsync();
+
+		var totalCount = await _dbContext.Set<Service>().Where(x => x.Status == "Active").CountAsync();
+		var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+		return new PaginatedList<Service>(items, pageIndex, totalPages);
+	}
 }
