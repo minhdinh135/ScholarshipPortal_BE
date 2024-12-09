@@ -83,8 +83,8 @@ public class StripeService : IStripeService
                 { "description", checkoutSessionRequest.Description },
                 { "paymentMethod", PaymentMethodEnum.Stripe.ToString() }
             },
-            SuccessUrl = "http://localhost:5173/payment/result?status=successful",
-            CancelUrl = "http://localhost:5173/payment/result?status=failed",
+            SuccessUrl = _stripeSettings.RedirectBaseUrl + "/payment/result?status=successful",
+            CancelUrl = _stripeSettings.RedirectBaseUrl + "/payment/result?status=failed",
         };
 
         var sessionService = new SessionService();
