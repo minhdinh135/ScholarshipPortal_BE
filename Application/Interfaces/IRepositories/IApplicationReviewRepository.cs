@@ -2,6 +2,4 @@
 
 namespace Application.Interfaces.IRepositories;
 
-public interface IApplicationReviewRepository : IGenericRepository<ApplicationReview>
-{
-}
+public interface IApplicationReviewRepository : IGenericRepository<ApplicationReview>;

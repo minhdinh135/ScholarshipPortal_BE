@@ -10,14 +10,12 @@ namespace SSAP.API.Controllers;
 [Route("api/applicants")]
 public class ApplicantController : ControllerBase
 {
-    private readonly ILogger<ApplicantController> _logger;
     private readonly IApplicantService _applicantService;
     private readonly IApplicationService _applicationService;
 
-    public ApplicantController(ILogger<ApplicantController> logger, IApplicantService applicantService,
+    public ApplicantController(IApplicantService applicantService,
         IApplicationService applicationService)
     {
-        _logger = logger;
         _applicantService = applicantService;
         _applicationService = applicationService;
     }

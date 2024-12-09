@@ -29,5 +29,4 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
 	{
 		return await _dbContext.Transactions.ToListAsync();
 	}
-
 }

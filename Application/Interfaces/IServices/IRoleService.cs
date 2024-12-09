@@ -1,6 +1,5 @@
 using Domain.DTOs.Common;
 using Domain.DTOs.Role;
-using Domain.Entities;
 
 namespace Application.Interfaces.IServices
 {

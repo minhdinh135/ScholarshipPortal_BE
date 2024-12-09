@@ -1,6 +1,5 @@
 using Application.Interfaces.IServices;
 using AutoMapper;
-using Domain.Constants;
 using Domain.DTOs.Application;
 using Domain.DTOs.Common;
 using Microsoft.AspNetCore.Mvc;

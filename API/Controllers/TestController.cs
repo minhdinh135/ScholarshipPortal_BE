@@ -1,8 +1,6 @@
 ﻿using Application.Interfaces.IServices;
 using Domain.DTOs.Major;
-using Domain.DTOs.ScholarshipProgram;
 using Infrastructure.ExternalServices.Email;
-using Infrastructure.ExternalServices.Gemini;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SSAP.API.Controllers;
@@ -14,17 +12,14 @@ public class TestController : ControllerBase
     private readonly ILogger<TestController> _logger;
     private readonly ICloudinaryService _cloudinaryService;
     private readonly IEmailService _emailService;
-    private readonly GeminiService _geminiService;
     private readonly IElasticService<MajorDto> _elasticService;
 
     public TestController(ILogger<TestController> logger, ICloudinaryService cloudinaryService,
-        IEmailService emailService, GeminiService geminiService, IElasticService<MajorDto> elasticService)
+        IEmailService emailService, IElasticService<MajorDto> elasticService)
     {
         _logger = logger;
         _cloudinaryService = cloudinaryService;
         _emailService = emailService;
-        _geminiService = geminiService;
-        _elasticService = elasticService;
     }
 
     [HttpPost("upload-image")]
@@ -116,13 +111,6 @@ public class TestController : ControllerBase
         {
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
-    }
-
-    [HttpPost("prompt")]
-    public async Task<IActionResult> GetGeminiResponse([FromBody] ChatRequest request)
-    {
-        var response = await _geminiService.GetResponseFromGemini(request.Prompt);
-        return Ok(new { Response = response });
     }
 
     [HttpPost("/elastic")]

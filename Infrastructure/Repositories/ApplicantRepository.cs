@@ -14,7 +14,6 @@ public class ApplicantRepository : GenericRepository<ApplicantProfile>, IApplica
     public async Task<ApplicantProfile> GetByApplicantId(int applicantId)
     {
         return await _dbContext.ApplicantProfiles
-            // .AsNoTracking()
             .AsSplitQuery()
             .Include(a => a.Applicant)
             .Include(a => a.Experiences)

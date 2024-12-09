@@ -19,7 +19,7 @@ public class ServiceRepository : GenericRepository<Service>, IServiceRepository
 		if (!string.IsNullOrEmpty(sortBy))
 		{
 			var orderByExpression = ExpressionUtils.GetOrderByExpression<Service>(sortBy);
-			query = sortOrder?.ToLower() == "desc"
+			query = sortOrder.ToLower() == "desc"
 				? query.OrderByDescending(orderByExpression)
 				: query.OrderBy(orderByExpression);
 		}
@@ -38,18 +38,10 @@ public class ServiceRepository : GenericRepository<Service>, IServiceRepository
 
 	public async Task<PaginatedList<Service>> GetAllServices(ListOptions listOptions)
     {
-        // var services = await _dbContext.Services
-        //     .AsNoTracking()
-        //     .AsSplitQuery()
-        //     .Include(s => s.Feedbacks)
-        //     .Include(s => s.RequestDetails)
-        //     .ToListAsync();
-
-
         var includes = new Func<IQueryable<Service>, IQueryable<Service>>[]
         {
-            s => s.Include(s => s.Feedbacks),
-            s => s.Include(s => s.RequestDetails)
+            q => q.Include(s => s.Feedbacks),
+            q => q.Include(s => s.RequestDetails)
         };
 
         var services = await GetPaginatedList(includes, listOptions);
