@@ -112,11 +112,4 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
 
         return request;
     }
-
-	public async Task<Request> Update(Request request)
-	{
-		_dbContext.Requests.Update(request);
-		await _dbContext.SaveChangesAsync();
-		return request;
-	}
 }

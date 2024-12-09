@@ -14,19 +14,17 @@ public class AuthService : IAuthService
     private readonly IPasswordService _passwordService;
     private readonly IAccountService _accountService;
     private readonly IConfiguration _configuration;
-    private readonly IMapper _mapper;
     private readonly AdminAccount _adminAccount;
 
     public AuthService(ITokenService tokenService,
         IPasswordService passwordService,
         IAccountService accountService,
-        IConfiguration configuration, IMapper mapper, IOptions<AdminAccount> adminAccount)
+        IConfiguration configuration, IOptions<AdminAccount> adminAccount)
     {
         _tokenService = tokenService;
         _passwordService = passwordService;
         _accountService = accountService;
         _configuration = configuration;
-        _mapper = mapper;
         _adminAccount = adminAccount.Value;
     }
 
@@ -45,10 +43,6 @@ public class AuthService : IAuthService
         {
             throw new Exception("Email or User name not found");
         }
-
-        // var roles = await _roleService.GetAll();
-        // roles = roles.Where(r => r.Id == userLogin.RoleId).ToList();
-        // if(roles.Count() == 0) throw new Exception("Account doesn't have any role");
 
         if (_passwordService.VerifyPassword(login.Password, userLogin.HashedPassword))
         {

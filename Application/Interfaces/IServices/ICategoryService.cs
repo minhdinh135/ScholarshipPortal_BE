@@ -1,6 +1,5 @@
 ﻿using Domain.DTOs.Category;
 using Domain.DTOs.Common;
-using Domain.Entities;
 
 namespace Application.Interfaces.IServices;
 

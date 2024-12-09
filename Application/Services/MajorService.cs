@@ -11,15 +11,13 @@ public class MajorService : IMajorService
 {
     private readonly IMapper _mapper;
     private readonly IMajorRepository _majorRepository;
-    private readonly ISkillRepository _skillRepository;
     private readonly IGenericRepository<MajorSkill> _majorSkillRepository;
 
-    public MajorService(IMapper mapper, IMajorRepository majorRepository, ISkillRepository skillRepository,
+    public MajorService(IMapper mapper, IMajorRepository majorRepository,
         IGenericRepository<MajorSkill> majorSkillRepository)
     {
         _mapper = mapper;
         _majorRepository = majorRepository;
-        _skillRepository = skillRepository;
         _majorSkillRepository = majorSkillRepository;
     }
 
@@ -80,11 +78,6 @@ public class MajorService : IMajorService
 
     public async Task<MajorDto> UpdateMajorSkills(int id, UpdateMajorSkillsRequest updateMajorRequest)
     {
-        
-        /*var skills = await _skillRepository.GetAll();
-        skills = skills.Where(s => updateMajorRequest.SkillIds.Contains(s.Id)).ToList();*/
-        var existingMajor = await _majorRepository.GetById(id);
-
         var existingMajorSkills = await _majorSkillRepository.GetAll();
         existingMajorSkills = existingMajorSkills.Where(s => s.MajorId == id).ToList();
 
@@ -93,12 +86,8 @@ public class MajorService : IMajorService
             await _majorSkillRepository.DeleteById(majorSkill.MajorId, majorSkill.SkillId);
         }
 
-        var newMajorSkills = new List<MajorSkill>();
-     
         foreach (var skillId in updateMajorRequest.SkillIds)
         {
-            var majorSkill = existingMajorSkills.Where(s => s.SkillId == skillId)
-                .FirstOrDefault();
             var newMajorSkill = new MajorSkill
             {
                 SkillId = skillId,
@@ -106,9 +95,6 @@ public class MajorService : IMajorService
             };
             await _majorSkillRepository.Add(newMajorSkill);
         }
-        //existingMajor.MajorSkills = newMajorSkills;
-
-        //_mapper.Map(updateMajorRequest, existingMajor);
 
         var updatedMajor = await _majorRepository.GetById(id);
 

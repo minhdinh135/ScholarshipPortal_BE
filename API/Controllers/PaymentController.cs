@@ -16,16 +16,14 @@ namespace SSAP.API.Controllers;
 public class PaymentController : ControllerBase
 {
     private readonly StripeSettings _stripeSettings;
-    private readonly IStripeService _stripeService;
     private readonly IPaymentService _paymentService;
     private readonly IAccountService _accountService;
     private readonly IEmailService _emailService;
 
-    public PaymentController(IOptions<StripeSettings> stripeSettings, IStripeService stripeService,
+    public PaymentController(IOptions<StripeSettings> stripeSettings,
         IPaymentService paymentService, IAccountService accountService, IEmailService emailService)
     {
         _stripeSettings = stripeSettings.Value;
-        _stripeService = stripeService;
         _paymentService = paymentService;
         _accountService = accountService;
         _emailService = emailService;

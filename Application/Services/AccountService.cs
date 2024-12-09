@@ -18,17 +18,13 @@ public class AccountService : IAccountService
     private readonly IPasswordService _passwordService;
     private readonly ICloudinaryService _cloudinaryService;
     private readonly IWalletRepository _walletRepository;
-    private readonly IStripeService _stripeService;
-    private readonly ITransactionRepository _transactionRepository;
 
     public AccountService(
         IAccountRepository accountRepository,
         IMapper mapper,
         IPasswordService passwordService,
         ICloudinaryService cloudinaryService,
-        IWalletRepository walletRepository,
-        IStripeService stripeService,
-        ITransactionRepository transactionRepository
+        IWalletRepository walletRepository
     )
     {
         _accountRepository = accountRepository;
@@ -36,8 +32,6 @@ public class AccountService : IAccountService
         _passwordService = passwordService;
         _cloudinaryService = cloudinaryService;
         _walletRepository = walletRepository;
-        _stripeService = stripeService;
-        _transactionRepository = transactionRepository;
     }
 
     public async Task<AccountDto> AddAccount(RegisterDto dto)
@@ -132,17 +126,17 @@ public class AccountService : IAccountService
         return true;
     }
 
-	public async Task<List<WalletDto>> GetAllWallets()
-	{
-		var wallets = await _walletRepository.GetAll();
+    public async Task<List<WalletDto>> GetAllWallets()
+    {
+        var wallets = await _walletRepository.GetAll();
 
-		if (wallets == null || wallets.Count() == 0)
-			throw new ServiceException("No wallets found", new NotFoundException());
+        if (wallets == null || wallets.Count() == 0)
+            throw new ServiceException("No wallets found", new NotFoundException());
 
-		return _mapper.Map<List<WalletDto>>(wallets);
-	}
+        return _mapper.Map<List<WalletDto>>(wallets);
+    }
 
-	public async Task<WalletDto> GetWalletByUserId(int userId)
+    public async Task<WalletDto> GetWalletByUserId(int userId)
     {
         var wallet = await _walletRepository.GetWalletByUserId(userId);
 
@@ -161,7 +155,7 @@ public class AccountService : IAccountService
 
         if (account.Wallet != null)
             throw new ServiceException($"Account with id:{id} already has wallet");
-        
+
         try
         {
             var wallet = _mapper.Map<Wallet>(createWalletDto);

@@ -1,6 +1,5 @@
 using Application.Interfaces.IServices;
 using Domain.DTOs.AwardMilestone;
-using Domain.DTOs.Category;
 using Domain.DTOs.Common;
 using Microsoft.AspNetCore.Mvc;
 

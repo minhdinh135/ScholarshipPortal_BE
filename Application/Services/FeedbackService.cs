@@ -47,7 +47,7 @@ public class FeedbackService : IFeedbackService
             var feedback = _mapper.Map<Feedback>(addFeedbackDto);
             var addedFeedback = await _feedbackRepository.Add(feedback);
 
-            return _mapper.Map<FeedbackDto>(feedback);
+            return _mapper.Map<FeedbackDto>(addedFeedback);
         }
         catch (Exception e)
         {

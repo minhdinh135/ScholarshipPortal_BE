@@ -1,5 +1,4 @@
 ﻿using Domain.DTOs.Major;
-using Domain.DTOs.ScholarshipProgram;
 
 namespace Application.Interfaces.IServices;
 

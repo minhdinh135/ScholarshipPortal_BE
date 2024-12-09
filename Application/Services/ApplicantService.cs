@@ -127,26 +127,6 @@ public class ApplicantService : IApplicantService
         }
     }
 
-    public async Task UpdateProfileAchievements(int applicantId, List<UpdateAchievementDto> dtos)
-    {
-        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
-        if (applicantProfile == null)
-            throw new NotFoundException($"Applicant profile with applicantId:{applicantId} is not found");
-
-        var achievements = _mapper.Map<List<Achievement>>(dtos);
-
-        achievements.ForEach(a => a.ApplicantProfileId = applicantProfile.Id);
-
-        try
-        {
-            await _applicantRepository.UpdateProfileAchievements(applicantProfile.Id, achievements);
-        }
-        catch (Exception e)
-        {
-            throw new ServiceException(e.Message);
-        }
-    }
-
     public async Task UpdateProfileSkills(int applicantId, List<UpdateApplicantSkillDto> dtos)
     {
         var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
@@ -160,46 +140,6 @@ public class ApplicantService : IApplicantService
         try
         {
             await _applicantRepository.UpdateProfileSkills(applicantProfile.Id, skills);
-        }
-        catch (Exception e)
-        {
-            throw new ServiceException(e.Message);
-        }
-    }
-
-    public async Task UpdateProfileCertificates(int applicantId, List<UpdateApplicantCertificateDto> dtos)
-    {
-        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
-        if (applicantProfile == null)
-            throw new NotFoundException($"Applicant profile with applicantId:{applicantId} s not found");
-
-        var certificates = _mapper.Map<List<ApplicantCertificate>>(dtos);
-
-        certificates.ForEach(a => a.ApplicantProfileId = applicantProfile.Id);
-
-        try
-        {
-            await _applicantRepository.UpdateProfileCertificates(applicantProfile.Id, certificates);
-        }
-        catch (Exception e)
-        {
-            throw new ServiceException(e.Message);
-        }
-    }
-
-    public async Task<List<string>> UploadCertificateImages(IFormFileCollection certificateFiles)
-    {
-        try
-        {
-            var certificateUrls = new List<string>();
-
-            foreach (var certificateFile in certificateFiles)
-            {
-                var certificateUrl = await _cloudinaryService.UploadImage(certificateFile);
-                certificateUrls.Add(certificateUrl);
-            }
-
-            return certificateUrls;
         }
         catch (Exception e)
         {

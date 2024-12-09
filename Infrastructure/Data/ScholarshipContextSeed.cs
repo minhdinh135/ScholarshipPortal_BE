@@ -41,9 +41,6 @@ public class ScholarshipContextSeed
 
         if (!context.Countries.Any())
         {
-            // var countriesData = File.ReadAllText(basePath + "/countries.json");
-            // var countries = JsonSerializer.Deserialize<List<Country>>(countriesData);
-
             var countries = CsvUtils.ReadFile<Country>(basePath + "/countries.csv");
             context.Countries.AddRange(countries);
         }
