@@ -25,7 +25,7 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
         if (!string.IsNullOrEmpty(sortBy))
         {
             var orderByExpression = ExpressionUtils.GetOrderByExpression<Account>(sortBy);
-            query = sortOrder?.ToLower() == "desc"
+            query = sortOrder.ToLower() == "desc"
                 ? query.OrderByDescending(orderByExpression)
                 : query.OrderBy(orderByExpression);
         }
@@ -70,18 +70,4 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
 
         return accounts;
     }
-
-    // public async Task<bool> IsAccountValidWithRole(int userId, string role)
-    // {
-    //     var user = _dbContext.Accounts
-    //         .AsNoTracking()
-    //         .AsSplitQuery()
-    //         .Include(a => a.Role)
-    //         .FirstOrDefault(a => a.Id == userId);
-    //
-    //     if (user.Role.Name.ToLower().Equals(role.ToLower()))
-    //         return true;
-    //
-    //     return false;
-    // }
 }

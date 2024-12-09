@@ -1,5 +1,4 @@
 ﻿using Application.Interfaces.IRepositories;
-using Domain.DTOs.Expert;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;

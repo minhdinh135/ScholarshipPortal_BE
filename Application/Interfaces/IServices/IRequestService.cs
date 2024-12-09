@@ -14,7 +14,7 @@ public interface IRequestService
 
     Task<int> UpdateRequestResult(int id, ProviderUpdateRequestDto providerUpdateRequestDto);
     Task<bool> HasUserRequestedService(int serviceId, int applicantId);
-    Task<IEnumerable<Domain.Entities.Request>> GetByServiceId(int serviceId);
+    Task<IEnumerable<Request>> GetByServiceId(int serviceId);
     Task<Request> GetWithApplicantAndRequestDetails(int id);
     Task<bool> CancelRequestAsync(int requestId);
 	Task<RequestDto> UpdateRequestStatusFinish(int id);

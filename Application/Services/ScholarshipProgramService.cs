@@ -13,18 +13,15 @@ public class ScholarshipProgramService : IScholarshipProgramService
 {
     private readonly IMapper _mapper;
     private readonly IScholarshipProgramRepository _scholarshipProgramRepository;
-    private readonly ICloudinaryService _cloudinaryService;
     private readonly IElasticService<ScholarshipProgramElasticDocument> _scholarshipElasticService;
     private readonly IFunderService _funderService;
 
     public ScholarshipProgramService(IMapper mapper, IScholarshipProgramRepository scholarshipProgramRepository,
-        ICloudinaryService cloudinaryService,
         IElasticService<ScholarshipProgramElasticDocument> scholarshipElasticService,
         IFunderService funderService)
     {
         _mapper = mapper;
         _scholarshipProgramRepository = scholarshipProgramRepository;
-        _cloudinaryService = cloudinaryService;
         _scholarshipElasticService = scholarshipElasticService;
         _funderService = funderService;
     }
@@ -83,7 +80,7 @@ public class ScholarshipProgramService : IScholarshipProgramService
     public async Task<IEnumerable<ExpertDetailsDto>> GetScholarshipProgramExperts(int scholarshipProgramId)
     {
         var scholarshipProgram = await _scholarshipProgramRepository.GetScholarsipProgramById(scholarshipProgramId);
-        var funderExperts = await _funderService.GetExpertsByFunderId((int)scholarshipProgram.FunderId);
+        var funderExperts = await _funderService.GetExpertsByFunderId(scholarshipProgram.FunderId);
         var scholarshipExperts = funderExperts.Where(e => e.Major == scholarshipProgram.Major.Name);
 
         return scholarshipExperts;

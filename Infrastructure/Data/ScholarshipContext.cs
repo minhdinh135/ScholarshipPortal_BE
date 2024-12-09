@@ -29,28 +29,23 @@ public class ScholarshipContext : DbContext
         {
             var baseEntity = (BaseEntity)entityEntry.Entity;
 
-            // Handle UpdatedAt logic
             var updatedAtProperty = entityEntry.Properties.FirstOrDefault(p => p.Metadata.Name == nameof(BaseEntity.UpdatedAt));
             if (entityEntry.State == EntityState.Modified && updatedAtProperty != null)
             {
-                // Get the original value from the database
                 var databaseValues = await entityEntry.GetDatabaseValuesAsync(cancellationToken);
                 var originalValue = databaseValues?.GetValue<DateTime?>(nameof(BaseEntity.UpdatedAt));
 
                 if (originalValue.HasValue && originalValue.Value != (DateTime?)updatedAtProperty.CurrentValue)
                 {
-                    // If the value is explicitly different, retain the new value
                     baseEntity.UpdatedAt = (DateTime?)updatedAtProperty.CurrentValue;
                 }
                 else
                 {
-                    // If the value is the same, update UpdatedAt to DateTime.Now
                     baseEntity.UpdatedAt = DateTime.Now;
                 }
             }
             else
             {
-                // Default UpdatedAt to DateTime.Now if not explicitly modified
                 baseEntity.UpdatedAt = DateTime.Now;
             }
 

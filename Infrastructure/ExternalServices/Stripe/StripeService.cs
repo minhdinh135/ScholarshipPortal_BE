@@ -17,39 +17,6 @@ public class StripeService : IStripeService
         StripeConfiguration.ApiKey = _stripeSettings.ApiKey;
     }
 
-    public async Task<string> CreatePayment(string productId)
-    {
-        var priceOptions = new PriceCreateOptions
-        {
-            Currency = "usd",
-            UnitAmount = 1000,
-            Product = productId,
-        };
-        var priceService = new PriceService();
-        var price = await priceService.CreateAsync(priceOptions);
-
-
-        var paymentLinkOptions = new PaymentLinkCreateOptions
-        {
-            LineItems = new List<PaymentLinkLineItemOptions>
-            {
-                new PaymentLinkLineItemOptions { Price = price.Id, Quantity = 1 },
-            },
-            AfterCompletion = new PaymentLinkAfterCompletionOptions()
-            {
-                Type = "redirect",
-                Redirect = new PaymentLinkAfterCompletionRedirectOptions
-                {
-                    Url = "http://localhost:5173/payment/result",
-                },
-            }
-        };
-        var paymentLinkService = new PaymentLinkService();
-        var paymentLink = await paymentLinkService.CreateAsync(paymentLinkOptions);
-
-        return paymentLink.Url;
-    }
-
     public async Task<CheckoutSessionResponse> CreateCheckoutSession(string email, CheckoutSessionRequest checkoutSessionRequest)
     {
         var sessionCreateOptions = new SessionCreateOptions

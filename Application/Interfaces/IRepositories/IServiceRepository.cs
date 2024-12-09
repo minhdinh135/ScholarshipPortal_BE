@@ -1,7 +1,5 @@
-﻿using Application.Helper;
-using Domain.DTOs.Common;
+﻿using Domain.DTOs.Common;
 using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Interfaces.IRepositories;
 

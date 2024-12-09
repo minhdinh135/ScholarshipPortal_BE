@@ -2,9 +2,7 @@
 using Application.Interfaces.IServices;
 using Domain.DTOs.Common;
 using Domain.DTOs.ScholarshipProgram;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Exception = System.Exception;
 
 namespace SSAP.API.Controllers;
 
