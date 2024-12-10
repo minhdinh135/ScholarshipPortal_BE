@@ -74,6 +74,9 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
     {
         var scholarshipPrograms = await _dbContext.ScholarshipPrograms
             .AsSplitQuery()
+            .Include(sp => sp.University)
+            .ThenInclude(u => u.Country)
+            .Include(sp => sp.Category)
             .Include(sp => sp.Major)
             .ThenInclude(m => m.MajorSkills)
             .ThenInclude(ms => ms.Skill)
