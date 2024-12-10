@@ -201,7 +201,28 @@ public class AccountController : ControllerBase
         return Ok(new { Message = "OTP has been sent to your email." });
     }
 
-    [HttpPost("verify-otp")]
+	[HttpPost("send-otp")]
+	public async Task<IActionResult> SendOtp([FromBody] SendOtpDto model)
+	{
+		try
+		{
+			var otp = _random.Next(100000, 999999).ToString();
+
+			_otpStore[model.Email] = otp;
+
+			await _emailService.SendEmailAsync(model.Email, "Your OTP Code", $"Your OTP code is: {otp}");
+
+			return Ok(new { Message = "OTP has been sent to your email." });
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError($"Failed to send OTP: {ex.Message}");
+			return StatusCode(500, "Error sending OTP.");
+		}
+	}
+
+
+	[HttpPost("verify-otp")]
     public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDto model)
     {
         if (_otpStore.TryGetValue(model.Email, out var storedOtp))
