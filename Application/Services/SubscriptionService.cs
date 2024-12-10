@@ -11,11 +11,14 @@ public class SubscriptionService : ISubscriptionService
 {
     private readonly IMapper _mapper;
     private readonly ISubscriptionRepository _subscriptionRepository;
+    private readonly IAccountRepository _accountRepository;
 
-    public SubscriptionService(IMapper mapper, ISubscriptionRepository subscriptionRepository)
+    public SubscriptionService(IMapper mapper, ISubscriptionRepository subscriptionRepository,
+        IAccountRepository accountRepository)
     {
         _mapper = mapper;
         _subscriptionRepository = subscriptionRepository;
+        _accountRepository = accountRepository;
     }
 
     public async Task<IEnumerable<SubscriptionDto>> GetAllSubscriptions()
@@ -72,5 +75,77 @@ public class SubscriptionService : ISubscriptionService
 
 		return _mapper.Map<SubscriptionDto>(subscription);
 	}
+
+    public async Task<decimal> GetRevenue()
+    {
+        var subscriptions = await _subscriptionRepository.GetAll();
+        var subscriptionBuy = await _accountRepository.GetAll();
+        subscriptionBuy = subscriptionBuy.Where(x => 
+            x.SubscriptionId != null).ToList();
+
+        var total = 0m;
+        foreach (var sub in subscriptionBuy)
+        {
+            var subscription = subscriptions
+                .Where(x => x.Id == sub.SubscriptionId)
+                .FirstOrDefault();
+            total += subscription.Amount;
+        }
+        return total;
+    }
+
+    public async Task<object> GetSubscriptionSold(DateTime fromDate, 
+        DateTime toDate)
+    {
+        var res = new List<object>();
+        var monthRes = new List<string>();
+        var months = new List<DateTime>();
+
+        var current = new DateTime(fromDate.Year, fromDate.Month, 1); // Start at the beginning of the first month
+        while (current <= toDate)
+        {
+            monthRes.Add(current.ToString("MMM")); // Add abbreviated month name
+            months.Add(current);
+            current = current.AddMonths(1); // Move to the next month
+        }
+
+        var subscriptions = await _subscriptionRepository.GetAll();
+        var subscriptionBuy = await _accountRepository.GetAll();
+        subscriptionBuy = subscriptionBuy.Where(x => 
+            x.SubscriptionId != null).ToList();
+
+        foreach (var subscription in subscriptions)
+        {
+            var monthBuy = new List<int>();
+
+            var subscriptionBuyOfThisSub = subscriptionBuy
+                .Where(x => x.SubscriptionId == subscription.Id)
+                .ToList();
+            foreach (var month in months)
+            {
+                var count = 0;
+                foreach (var sub in subscriptionBuyOfThisSub)
+                {
+                    //Console.WriteLine(sub.SubscriptionEndDate.Value.AddMonths(-subscription.ValidMonths).Year);
+                    //Console.WriteLine(month.Year);
+                    //Console.WriteLine(sub.SubscriptionEndDate.Value.Month - subscription.ValidMonths);
+                    if (sub.SubscriptionEndDate.Value.AddMonths(-subscription.ValidMonths).Year == month.Year &&
+                    sub.SubscriptionEndDate.Value.AddMonths(- subscription.ValidMonths).Month == month.Month)
+                    {
+                        count++;
+                    }
+                }
+                monthBuy.Add(count);
+            }
+            res.Add(new {
+                Name = subscription.Name,
+                Data = monthBuy
+            });
+        }
+        return new {
+            Months = monthRes,
+            Data = res
+        };
+    }
 
 }
