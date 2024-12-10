@@ -89,12 +89,13 @@ public class ServiceController : ControllerBase
         {
             var addedService = await _serviceService.AddService(addServiceDto);
             var accounts = await _accountService.GetAll();
+            
             foreach(var account in accounts)
             {
                 await _notificationService.SendDataMessage(account.Id.ToString(), new Dictionary<string, string>
                 {
 					{ "entity", "service" }
-				} );
+				});
             }
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Add service successfully", addedService));
