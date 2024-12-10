@@ -9,4 +9,6 @@ public interface ISubscriptionService
 	Task<SubscriptionDto> GetSubscriptionByProviderId(int providerId);
 	Task<int> AddSubscription(AddSubscriptionDto addSubscriptionDto);
     Task UpdateSubscription(int id, UpdateSubscriptionDto updateSubscriptionDto);
+    Task<object> GetSubscriptionSold(DateTime fromDate, DateTime toDate);
+    Task<decimal> GetRevenue();
 }
