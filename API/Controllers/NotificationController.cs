@@ -263,5 +263,32 @@ public class NotificationController : ControllerBase
 		return Ok(new ApiResponse(StatusCodes.Status200OK, "Send rejection notification and email successfully", response));
 	}
 
+	[HttpPost("account-active/{userId}")]
+	public async Task<IActionResult> AccountActive(int userId)
+	{
+		try
+		{
+			var user = await _accountService.GetAccount(userId);
+			if (user == null)
+			{
+				return BadRequest(new { Message = "User not found." });
+			}
+
+			var notificationTitle = "Account Approved";
+			var notificationMessage = "Your account has been approved, please log in again to use more features. Thank you.";
+			var notificationLink = "/login";
+
+			await _notificationService.SendNotification(user.Id.ToString(), notificationLink, notificationTitle, notificationMessage);
+
+			await _emailService.SendEmailAsync(user.Email, notificationTitle, notificationMessage);
+
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Account activation notification sent successfully", null));
+		}
+		catch (Exception ex)
+		{
+			return BadRequest(new { Message = ex.Message });
+		}
+	}
+
 
 }
