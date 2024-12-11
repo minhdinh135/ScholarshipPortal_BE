@@ -34,18 +34,20 @@ public class ScholarshipContext : DbContext
             {
                 var databaseValues = await entityEntry.GetDatabaseValuesAsync(cancellationToken);
                 var originalValue = databaseValues?.GetValue<DateTime?>(nameof(BaseEntity.UpdatedAt));
-
+                Console.WriteLine((DateTime?)updatedAtProperty.CurrentValue);
                 if (originalValue.HasValue && originalValue.Value != (DateTime?)updatedAtProperty.CurrentValue)
                 {
                     baseEntity.UpdatedAt = (DateTime?)updatedAtProperty.CurrentValue;
                 }
                 else
                 {
+                    Console.WriteLine("Original value is null");
                     baseEntity.UpdatedAt = DateTime.Now;
                 }
             }
             else
             {
+                Console.WriteLine("Original value is not null");
                 baseEntity.UpdatedAt = DateTime.Now;
             }
 

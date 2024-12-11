@@ -121,8 +121,8 @@ namespace Application.Services
                     .FirstOrDefault();
                 if (award == null)
                 {
-                    profile.Status = ApplicationStatusEnum.Awarded.ToString();
-                    await _applicationRepository.Update(profile);
+                    /*profile.Status = ApplicationStatusEnum.Awarded.ToString();
+                    await _applicationRepository.Update(profile);*/
                     return;
                 }
 
@@ -143,6 +143,7 @@ namespace Application.Services
                 if (award == null)
                 {
                     profile.Status = ApplicationStatusEnum.Awarded.ToString();
+                    Console.WriteLine("Profile date"+profile.UpdatedAt);
                     await _applicationRepository.Update(profile);
                     return;
                 }
@@ -241,6 +242,9 @@ namespace Application.Services
 
         public async Task<ApplicationDto> Update(int id, UpdateApplicationStatusRequest dto)
         {
+            if(dto.UpdatedAt == null){
+                dto.UpdatedAt = DateTime.Now;
+            }
             var existingApplication = await _applicationRepository.GetById(id);
             if (existingApplication == null)
                 throw new ServiceException($"Application with id:{id} is not found", new NotFoundException());
