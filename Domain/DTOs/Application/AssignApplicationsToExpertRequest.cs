@@ -6,7 +6,7 @@ public class AssignApplicationsToExpertRequest
     
     public DateTime ReviewDate { get; set; }
     
-    public string Description { get; set; }
+    public bool IsFirstReview { get; set; }
     
     public List<int> ApplicationIds { get; set; }
 }

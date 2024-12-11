@@ -94,7 +94,7 @@ namespace Application.Services
 
                     var review = new ApplicationReview
                     {
-                        Description = request.Description,
+                        Description = request.IsFirstReview ? ApplicationReviewDescription.APPLICATION_REVIEW : ApplicationReviewDescription.INTERVIEW,
                         ApplicationId = applicationId,
                         ReviewDate = request.ReviewDate,
                         ExpertId = request.ExpertId,
