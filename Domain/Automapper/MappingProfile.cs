@@ -255,7 +255,10 @@ public class MappingProfile : Profile
         CreateMap<ApplicationDocument, AddApplicationDocumentDto>().ReverseMap();
         CreateMap<ApplicationDocument, UpdateApplicationDocumentDto>().ReverseMap();
 
-        CreateMap<ApplicationReview, ApplicationReviewDto>().ReverseMap();
+        CreateMap<ApplicationReview, ApplicationReviewDto>()
+            .ForMember(dest => dest.ApplicantName, opt =>
+                opt.MapFrom(src => $"{src.Application.Applicant.ApplicantProfile.FirstName} {src.Application.Applicant.ApplicantProfile.LastName}"))
+            .ReverseMap();
 
         // Service mapping
         CreateMap<Service, ServiceDto>().ReverseMap();

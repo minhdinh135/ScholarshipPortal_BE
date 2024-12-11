@@ -2,21 +2,23 @@
 
 public class ApplicationReviewDto
 {
-    public int? Id { get; set; }
+    public int Id { get; set; }
     
-    public string? Description { get; set; }
+    public string ApplicantName { get; set; }
     
-    public int? Score { get; set; }
-
-    public string? Comment { get; set; }
-
-    public DateTime? ReviewDate { get; set; }
-
-    public string? Status { get; set; }
-
-    public int? ExpertId { get; set; }
+    public string Description { get; set; }
     
-    public int? ApplicationId { get; set; }
+    public int Score { get; set; }
+
+    public string Comment { get; set; }
+
+    public DateTime ReviewDate { get; set; }
+
+    public string Status { get; set; }
+
+    public int ExpertId { get; set; }
+    
+    public int ApplicationId { get; set; }
     
     public DateTime CreatedAt { get; set; }
     
