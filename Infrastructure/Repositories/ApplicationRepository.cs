@@ -107,10 +107,10 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
         var applicationReviews = await _dbContext
             .ApplicationReviews
             .Where(review =>
-                isFirstReview
+                (isFirstReview
                     ? review.Status == ApplicationReviewStatusEnum.Approved.ToString()
-                    : review.Status == ApplicationReviewStatusEnum.Passed.ToString() &&
-                      applicationIds.Contains((int)review.ApplicationId))
+                    : review.Status == ApplicationReviewStatusEnum.Passed.ToString()) &&
+                      applicationIds.Contains(review.ApplicationId))
             .OrderByDescending(review => review.Score)
             .ToListAsync();
 
