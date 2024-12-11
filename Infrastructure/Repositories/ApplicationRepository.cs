@@ -106,6 +106,10 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
 
         var applicationReviews = await _dbContext
             .ApplicationReviews
+            .AsSplitQuery()
+            .Include(review => review.Application)
+            .ThenInclude(application => application.Applicant)
+            .ThenInclude(applicant => applicant.ApplicantProfile)
             .Where(review =>
                 (isFirstReview
                     ? review.Status == ApplicationReviewStatusEnum.Approved.ToString()
