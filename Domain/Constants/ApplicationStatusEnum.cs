@@ -5,7 +5,7 @@ public enum ApplicationStatusEnum
     Submitted,
     Reviewing,
     Rejected,
-    Accepted,
+    Approved,
     NeedExtend,
     Awarded
 }
