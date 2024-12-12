@@ -178,7 +178,7 @@ namespace Application.Services
                 await _applicationReviewRepository.Update(existingApplicationReview);
 
                 var application =
-                    await _applicationRepository.GetApplicationById((int)existingApplicationReview.ApplicationId);
+                    await _applicationRepository.GetApplicationById(existingApplicationReview.ApplicationId);
 
                 if (!updateReviewResultDto.IsPassed)
                 {
