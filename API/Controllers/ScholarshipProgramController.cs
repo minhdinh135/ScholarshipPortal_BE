@@ -143,22 +143,6 @@ public class ScholarshipProgramController : ControllerBase
             new { Id = result }));
     }
 
-    [HttpPost("elastic-seed")]
-    public async Task<IActionResult> SeedElasticSearchData()
-    {
-        try
-        {
-            await _scholarshipProgramService.SeedElasticsearchData();
-
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Seed elasticsearch data successfully"));
-        }
-        catch (ServiceException e)
-        {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
-        }
-    }
-
-
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateScholarshipProgram(int id,
         UpdateScholarshipProgramRequest updateScholarshipProgramRequest)

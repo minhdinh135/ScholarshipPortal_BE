@@ -93,28 +93,7 @@ public class ScholarshipProgramService : IScholarshipProgramService
 
         var createdScholarshipProgram = await _scholarshipProgramRepository.Add(scholarshipProgram);
 
-        var existingScholarshipProgram =
-            await _scholarshipProgramRepository.GetScholarsipProgramById(createdScholarshipProgram.Id);
-        var scholarshipElasticDocument = _mapper.Map<ScholarshipProgramElasticDocument>(existingScholarshipProgram);
-        await _scholarshipElasticService.AddOrUpdateScholarship(scholarshipElasticDocument);
-
         return createdScholarshipProgram.Id;
-    }
-
-    public async Task SeedElasticsearchData()
-    {
-        try
-        {
-            await _scholarshipElasticService.RemoveAllScholarships();
-            var scholarshipPrograms = await _scholarshipProgramRepository.GetAllScholarshipPrograms();
-            var scholarshipElasticDocuments =
-                _mapper.Map<IEnumerable<ScholarshipProgramElasticDocument>>(scholarshipPrograms);
-            await _scholarshipElasticService.AddOrUpdateBulkScholarship(scholarshipElasticDocuments);
-        }
-        catch (Exception e)
-        {
-            throw new ServiceException(e.Message);
-        }
     }
 
     public async Task<int> UpdateScholarshipProgram(int id,
@@ -129,9 +108,6 @@ public class ScholarshipProgramService : IScholarshipProgramService
             await _scholarshipProgramRepository.DeleteScholarshipCertificates(existingScholarshipProgram);
 
             _mapper.Map(updateScholarshipProgramRequest, existingScholarshipProgram);
-
-            var scholarshipElasticDocument = _mapper.Map<ScholarshipProgramElasticDocument>(existingScholarshipProgram);
-            await _scholarshipElasticService.AddOrUpdateScholarship(scholarshipElasticDocument);
 
             var updatedScholarshipProgram = await _scholarshipProgramRepository.Update(existingScholarshipProgram);
 
@@ -172,8 +148,6 @@ public class ScholarshipProgramService : IScholarshipProgramService
         try
         {
             existingScholarshipProgram.Status = status;
-            var scholarshipElasticDocument = _mapper.Map<ScholarshipProgramElasticDocument>(existingScholarshipProgram);
-            await _scholarshipElasticService.AddOrUpdate(scholarshipElasticDocument, "scholarships");
 
             await _scholarshipProgramRepository.Update(existingScholarshipProgram);
         }

@@ -14,7 +14,6 @@ public interface IScholarshipProgramService
     Task<ScholarshipProgramDto> GetScholarshipProgramById(int id);
     Task<IEnumerable<ExpertDetailsDto>> GetScholarshipProgramExperts(int scholarshipProgramId);
     Task<int> CreateScholarshipProgram(CreateScholarshipProgramRequest createScholarshipProgramRequest);
-    Task SeedElasticsearchData();
     Task<int> UpdateScholarshipProgram(int id, UpdateScholarshipProgramRequest updateScholarshipProgramRequest);
     Task UpdateScholarshipProgramName(int id, string name);
     Task<ScholarshipProgramDto> DeleteScholarshipProgramById(int id);
