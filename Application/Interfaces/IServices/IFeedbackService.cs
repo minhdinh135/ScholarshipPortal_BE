@@ -8,5 +8,4 @@ public interface IFeedbackService
     Task<FeedbackDto> GetFeedbackById(int id);
     Task<FeedbackDto> AddFeedback(AddFeedbackDto addFeedbackDto);
     Task<FeedbackDto> UpdateFeedback(int id, UpdateFeedbackDto updateFeedbackDto);
-	Task<bool> FeedbackExists(int applicantId, int serviceId);
 }

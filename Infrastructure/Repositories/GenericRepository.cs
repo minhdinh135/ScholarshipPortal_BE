@@ -99,7 +99,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         if (!string.IsNullOrEmpty(sortBy))
         {
             var orderByExpression = ExpressionUtils.GetOrderByExpression<T>(sortBy);
-            query = sortOrder?.ToLower() == "desc"
+            query = sortOrder.ToLower() == "desc"
                 ? query.OrderByDescending(orderByExpression)
                 : query.OrderBy(orderByExpression);
         }
