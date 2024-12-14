@@ -46,6 +46,7 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
             .AsSplitQuery()
             .Where(a => a.ScholarshipProgramId == scholarshipId)
             .Include(a => a.Applicant)
+            .Include(a => a.ApplicationReviews)
             .ToListAsync();
 
         return application;

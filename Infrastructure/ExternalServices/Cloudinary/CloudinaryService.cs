@@ -12,15 +12,18 @@ namespace Infrastructure.ExternalServices.Cloudinary;
 public class CloudinaryService : ICloudinaryService
 {
     private readonly CloudinaryDotNet.Cloudinary _cloudinary;
+    private readonly IPdfService _pdfService;
 
-    public CloudinaryService(IOptions<CloudinarySettings> cloudinarySettings)
+    public CloudinaryService(IOptions<CloudinarySettings> cloudinarySettings, 
+            IPdfService pdfService)
     {
         var account = new Account(
             cloudinarySettings.Value.CloudName,
             cloudinarySettings.Value.ApiKey,
             cloudinarySettings.Value.ApiSecret
         );
-
+        
+        _pdfService = pdfService;
         _cloudinary = new CloudinaryDotNet.Cloudinary(account);
     }
 
@@ -133,6 +136,44 @@ public class CloudinaryService : ICloudinaryService
             }
         }
     }
+
+    public async Task<string> CreateAndUploadScholarshipContract()
+    {
+        try
+        {
+            // Step 1: Generate the PDF as a byte array
+            var pdfBytes = await _pdfService.GenerateScholarshipContractPdf();
+
+            // Step 2: Create a MemoryStream for the Cloudinary upload
+            using (var stream = new MemoryStream(pdfBytes))
+            {
+                var uploadParams = new RawUploadParams
+                {
+                    File = new FileDescription("Scholarship_Contract.pdf", stream),
+                };
+
+                // Step 3: Upload to Cloudinary
+                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+                // Step 4: Check the upload result
+                if (uploadResult.StatusCode == HttpStatusCode.OK)
+                {
+                    // Return the secure URL of the uploaded file
+                    return uploadResult.SecureUrl.ToString();
+                }
+                else
+                {
+                    throw new Exception($"Cloudinary upload failed: {uploadResult.Error?.Message}");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle errors
+            throw new ServiceException("Error generating and uploading scholarship contract", ex);
+        }
+    }
+
 
 
     public async Task<string> UploadRaw(IFormFile file)
