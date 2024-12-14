@@ -1,9 +1,11 @@
 ﻿using Application.Interfaces.IRepositories;
 using Domain.Constants;
 using Domain.DTOs.Common;
+using Domain.DTOs.ScholarshipProgram;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using NinjaNye.SearchExtensions;
 
 namespace Infrastructure.Repositories;
 
@@ -48,6 +50,33 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
             .FirstOrDefaultAsync(sp => sp.Id == id);
 
         return scholarshipProgram;
+    }
+
+    public async Task<IEnumerable<ScholarshipProgram>> SearchScholarshipPrograms(
+        ScholarshipSearchOptions scholarshipSearchOptions)
+    {
+        var scholarshipPrograms = await _dbContext.ScholarshipPrograms
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Include(sp => sp.Category)
+            .Include(sp => sp.University).ThenInclude(u => u.Country)
+            .Include(sp => sp.ScholarshipProgramCertificates).ThenInclude(spc => spc.Certificate)
+            .Include(sp => sp.Major).ThenInclude(m => m.MajorSkills).ThenInclude(ms => ms.Skill)
+            .Include(sp => sp.Criteria)
+            .Include(sp => sp.ReviewMilestones)
+            .Include(sp => sp.AwardMilestones)
+            .ToListAsync();
+
+        return scholarshipPrograms
+            .Search(s => s.Name)
+            .SetCulture(StringComparison.OrdinalIgnoreCase)
+            .Containing(scholarshipSearchOptions.Name)
+            .Search(s => s.Category.Name)
+            .EqualTo(scholarshipSearchOptions.CategoryName)
+            .Search(s => s.ScholarshipAmount)
+            .Between(scholarshipSearchOptions.ScholarshipMinAmount, scholarshipSearchOptions.ScholarshipMaxAmount)
+            .Search(s => s.Deadline)
+            .LessThanOrEqualTo(scholarshipSearchOptions.Deadline);
     }
 
     public async Task<IEnumerable<ScholarshipProgram>> GetScholarshipProgramByMajorId(int majorId)

@@ -46,6 +46,20 @@ public class ScholarshipProgramService : IScholarshipProgramService
         return _mapper.Map<PaginatedList<ScholarshipProgramDto>>(scholarshipPrograms);
     }
 
+    public async Task<IEnumerable<ScholarshipProgramDto>> SearchScholarshipPrograms(ScholarshipSearchOptions scholarshipSearchOptions)
+    {
+        try
+        {
+            var result = await _scholarshipProgramRepository.SearchScholarshipPrograms(scholarshipSearchOptions);
+
+            return _mapper.Map<IEnumerable<ScholarshipProgramDto>>(result);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
     public async Task<IEnumerable<ScholarshipProgramDto>> GetScholarshipProgramsByFunderId(int funderId)
     {
         var scholarshipPrograms =
