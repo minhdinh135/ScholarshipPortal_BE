@@ -30,26 +30,6 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
         return scholarshipPrograms;
     }
 
-    public async Task<IEnumerable<ScholarshipProgram>> GetAllScholarshipPrograms()
-    {
-        var scholarshipPrograms = await _dbContext.ScholarshipPrograms
-            .AsSplitQuery()
-            .Include(sp => sp.Criteria)
-            .Include(sp => sp.ReviewMilestones)
-            .Include(sp => sp.AwardMilestones)
-            .Include(sp => sp.Category)
-            .Include(sp => sp.University)
-            .ThenInclude(u => u.Country)
-            .Include(sp => sp.Major)
-            .ThenInclude(m => m.MajorSkills)
-            .ThenInclude(ms => ms.Skill)
-            .Include(sp => sp.ScholarshipProgramCertificates)
-            .ThenInclude(spc => spc.Certificate)
-            .ToListAsync();
-
-        return scholarshipPrograms;
-    }
-
     public async Task<ScholarshipProgram> GetScholarsipProgramById(int id)
     {
         var scholarshipProgram = await _dbContext.ScholarshipPrograms

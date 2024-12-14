@@ -18,7 +18,7 @@ public class CertificateController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllCertificates()
     {
-        var certificates = await _certificateService.GetAllCertficates();
+        var certificates = await _certificateService.GetAllCertificates();
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all certificates successfully", certificates));
     }

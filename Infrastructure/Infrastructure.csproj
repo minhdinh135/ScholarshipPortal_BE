@@ -3,7 +3,6 @@
     <!-- <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" /> -->
     <!-- <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" /> -->
     <PackageReference Include="CloudinaryDotNet" Version="1.26.2" />
-    <PackageReference Include="Elastic.Clients.Elasticsearch" Version="8.15.0" />
     <PackageReference Include="FirebaseAdmin" Version="3.0.1" />
     <PackageReference Include="Hangfire" Version="1.8.15" />
     <PackageReference Include="Hangfire.MySqlStorage" Version="2.0.3" />
@@ -17,7 +16,6 @@
     <PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.0" />
     <PackageReference Include="QuestPDF" Version="2024.10.1" />
     <PackageReference Include="Stripe.net" Version="46.2.1" />
-    <PackageReference Include="Twilio" Version="7.5.0" />
     <!-- <PackageReference Include="Newtonsoft.Json" Version="13.0.3" /> -->
   </ItemGroup>
 

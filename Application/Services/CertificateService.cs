@@ -15,7 +15,7 @@ public class CertificateService : ICertificateService
         _mapper = mapper;
         _certificateRepository = certificateRepository;
     }
-    public async Task<IEnumerable<CertificateDto>> GetAllCertficates()
+    public async Task<IEnumerable<CertificateDto>> GetAllCertificates()
     {
         var certificates = await _certificateRepository.GetAll();
 
