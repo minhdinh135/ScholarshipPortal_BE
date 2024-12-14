@@ -4,6 +4,6 @@ namespace Application.Interfaces.IServices;
 
 public interface ICertificateService
 {
-    Task<IEnumerable<CertificateDto>> GetAllCertficates();
+    Task<IEnumerable<CertificateDto>> GetAllCertificates();
     Task<CertificateDto> GetCertificateById(int id);
 }

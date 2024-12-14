@@ -13,16 +13,13 @@ public class ScholarshipProgramService : IScholarshipProgramService
 {
     private readonly IMapper _mapper;
     private readonly IScholarshipProgramRepository _scholarshipProgramRepository;
-    private readonly IElasticService<ScholarshipProgramElasticDocument> _scholarshipElasticService;
     private readonly IFunderService _funderService;
 
     public ScholarshipProgramService(IMapper mapper, IScholarshipProgramRepository scholarshipProgramRepository,
-        IElasticService<ScholarshipProgramElasticDocument> scholarshipElasticService,
         IFunderService funderService)
     {
         _mapper = mapper;
         _scholarshipProgramRepository = scholarshipProgramRepository;
-        _scholarshipElasticService = scholarshipElasticService;
         _funderService = funderService;
     }
 
@@ -128,8 +125,6 @@ public class ScholarshipProgramService : IScholarshipProgramService
         try
         {
             existingScholarshipProgram.Name = name;
-            var scholarshipElasticDocument = _mapper.Map<ScholarshipProgramElasticDocument>(existingScholarshipProgram);
-            await _scholarshipElasticService.AddOrUpdate(scholarshipElasticDocument, "scholarships");
 
             await _scholarshipProgramRepository.Update(existingScholarshipProgram);
         }
@@ -162,20 +157,5 @@ public class ScholarshipProgramService : IScholarshipProgramService
         var deletedScholarshipProgram = await _scholarshipProgramRepository.DeleteById(id);
 
         return _mapper.Map<ScholarshipProgramDto>(deletedScholarshipProgram);
-    }
-
-    public async Task<List<ScholarshipProgramElasticDocument>> SearchScholarships(
-        ScholarshipSearchOptions scholarshipSearchOptions)
-    {
-        var scholarships = await _scholarshipElasticService.SearchScholarships(scholarshipSearchOptions);
-
-        return scholarships;
-    }
-
-    public async Task<List<string>> SuggestScholarships(string input)
-    {
-        var suggestions = await _scholarshipElasticService.SuggestScholarships(input);
-
-        return suggestions;
     }
 }

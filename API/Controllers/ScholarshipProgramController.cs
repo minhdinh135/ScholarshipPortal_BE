@@ -3,6 +3,7 @@ using Application.Interfaces.IServices;
 using Domain.DTOs.Common;
 using Domain.DTOs.ScholarshipProgram;
 using Microsoft.AspNetCore.Mvc;
+using NotImplementedException = System.NotImplementedException;
 
 namespace SSAP.API.Controllers;
 
@@ -33,7 +34,6 @@ public class ScholarshipProgramController : ControllerBase
     [HttpGet("count")]
     public async Task<IActionResult> CountScholarshipPrograms()
     {
-        // var allScholarshipPrograms = await _scholarshipProgramService.GetAllScholarshipPrograms();
         var allScholarshipPrograms = await _scholarshipProgramService.GetAllScholarshipPrograms();
         var count = allScholarshipPrograms.Count();
 
@@ -44,17 +44,7 @@ public class ScholarshipProgramController : ControllerBase
     [HttpGet("search")]
     public async Task<IActionResult> SearchScholarships([FromQuery] ScholarshipSearchOptions scholarshipSearchOptions)
     {
-        var response = await _scholarshipProgramService.SearchScholarships(scholarshipSearchOptions);
-
-        return Ok(new ApiResponse(StatusCodes.Status200OK, "Search successfully", response));
-    }
-
-    [HttpGet("suggest")]
-    public async Task<IActionResult> SuggestScholarships([FromQuery] string input)
-    {
-        var response = await _scholarshipProgramService.SuggestScholarships(input);
-
-        return Ok(new ApiResponse(StatusCodes.Status200OK, "Suggest successfully", response));
+        throw new NotImplementedException();
     }
 
     [HttpGet("by-funder-id/{id}")]
