@@ -9,6 +9,9 @@ public interface IScholarshipProgramService
     Task<PaginatedList<ScholarshipProgramDto>> GetAllPrograms(ListOptions listOptions);
     Task<IEnumerable<ScholarshipProgramDto>> GetAllScholarshipPrograms();
     Task<PaginatedList<ScholarshipProgramDto>> GetScholarshipPrograms(int pageIndex, int pageSize, string sortBy, string sortOrder);
+
+    Task<IEnumerable<ScholarshipProgramDto>> SearchScholarshipPrograms(
+        ScholarshipSearchOptions scholarshipSearchOptions);
     Task<IEnumerable<ScholarshipProgramDto>> GetScholarshipProgramsByFunderId(int funderId);
     Task<IEnumerable<ScholarshipProgramDto>> GetScholarshipProgramsByMajorId(int majorId);
     Task<ScholarshipProgramDto> GetScholarshipProgramById(int id);
