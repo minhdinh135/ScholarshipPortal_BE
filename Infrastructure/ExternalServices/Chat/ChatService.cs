@@ -16,19 +16,19 @@ namespace Infrastructure.ExternalServices.Chat
 			_chatMessageRepository = chatMessageRepository;
 		}
 
-		public async Task<string> SendMessage(int senderId, int receiverId, string message)
+		public async Task<string> SendMessage(int senderId, int receiverId, string message, bool isRead)
 		{
 			try
 			{
 				var messageData = new Message()
 				{
 					Data = new Dictionary<string, string>()
-                    {   
-				        { "SenderId", senderId.ToString() },
-				        { "ReceiverId", receiverId.ToString() },
-				        { "Message", message },
-				        { "SentDate", DateTime.Now.ToString("o") }
-			        },
+			{
+				{ "SenderId", senderId.ToString() },
+				{ "ReceiverId", receiverId.ToString() },
+				{ "Message", message },
+				{ "SentDate", DateTime.Now.ToString("o") }
+			},
 					Topic = $"{receiverId}"
 				};
 
@@ -55,6 +55,7 @@ namespace Infrastructure.ExternalServices.Chat
 				throw;
 			}
 		}
+
 
 		public async Task SaveMessageAsync(Domain.Entities.Chat message)
 		{

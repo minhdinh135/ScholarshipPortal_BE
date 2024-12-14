@@ -38,10 +38,11 @@ namespace SSAP.API.Controllers
 				return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Receiver ID not found", null));
 			}
 
-			var response = await _chatService.SendMessage(request.SenderId, request.ReceiverId, request.Message);
+			var response = await _chatService.SendMessage(request.SenderId, request.ReceiverId, request.Message, false);
 
 			return Ok(new ApiResponse(StatusCodes.Status200OK, "Message sent successfully", response));
 		}
+
 
 		[HttpPost("history")]
 		public async Task<IActionResult> GetChatHistory([FromBody] ChatHistoryRequest request)
