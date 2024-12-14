@@ -10,5 +10,4 @@ public interface IFunderService
     Task<int> UpdateFunderDetails(int funderId, UpdateFunderDetailsDto updateFunderDetailsDto);
     Task<IEnumerable<ExpertDetailsDto>> GetExpertsByFunderId(int id);
 	Task<List<FunderProfileDetails>> GetAllFunderDetails();
-
 }

@@ -8,7 +8,6 @@ using Hangfire;
 using Hangfire.MySql;
 using Infrastructure.ExternalServices.Chat;
 using Infrastructure.ExternalServices.Cloudinary;
-using Infrastructure.ExternalServices.Elastic;
 using Infrastructure.ExternalServices.Email;
 using Infrastructure.ExternalServices.Google;
 using Infrastructure.ExternalServices.Notification;
@@ -110,9 +109,6 @@ public static class ServiceExtension
         services.AddScoped<IEmailService, EmailService>();
 
         services.AddScoped<IPdfService, PdfService>();
-
-        services.Configure<ElasticSettings>(config.GetSection("ElasticSettings"));
-        services.AddSingleton(typeof(IElasticService<>), typeof(ElasticService<>));
 
         services.Configure<StripeSettings>(config.GetSection("StripeSettings"));
         services.AddScoped<IStripeService, StripeService>();

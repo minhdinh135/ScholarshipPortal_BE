@@ -211,11 +211,6 @@ public class MappingProfile : Profile
                 })).ToList()
             );
 
-        CreateMap<ScholarshipProgram, ScholarshipProgramElasticDocument>()
-            .ForMember(dest => dest.CategoryName, opt =>
-                opt.MapFrom(src => src.Category.Name))
-            .ReverseMap();
-
         CreateMap<Skill, SkillDto>().ReverseMap();
 
         CreateMap<Certificate, CertificateDto>().ReverseMap();
@@ -249,7 +244,13 @@ public class MappingProfile : Profile
             .ReverseMap();
         CreateMap<Application, UpdateApplicationDto>().ReverseMap();
         CreateMap<Application, UpdateApplicationStatusRequest>().ReverseMap();
-        CreateMap<Application, ApplicationDto>().ReverseMap();
+        CreateMap<Application, ApplicationDto>()
+            .ForMember(dest => dest.ApplicantName, opt =>
+                opt.MapFrom(src =>
+                    $"{src.Applicant.ApplicantProfile.FirstName} {src.Applicant.ApplicantProfile.LastName}"))
+            .ForMember(dest => dest.ScholarshipName, opt =>
+                opt.MapFrom(src => src.ScholarshipProgram.Name))
+            .ReverseMap();
 
         CreateMap<ApplicationDocument, ApplicationDocumentDto>().ReverseMap();
         CreateMap<ApplicationDocument, AddApplicationDocumentDto>().ReverseMap();
@@ -257,7 +258,8 @@ public class MappingProfile : Profile
 
         CreateMap<ApplicationReview, ApplicationReviewDto>()
             .ForMember(dest => dest.ApplicantName, opt =>
-                opt.MapFrom(src => $"{src.Application.Applicant.ApplicantProfile.FirstName} {src.Application.Applicant.ApplicantProfile.LastName}"))
+                opt.MapFrom(src =>
+                    $"{src.Application.Applicant.ApplicantProfile.FirstName} {src.Application.Applicant.ApplicantProfile.LastName}"))
             .ReverseMap();
 
         // Service mapping

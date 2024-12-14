@@ -1,5 +1,4 @@
 ﻿using Application.Interfaces.IServices;
-using Domain.DTOs.Major;
 using Infrastructure.ExternalServices.Email;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,10 +11,9 @@ public class TestController : ControllerBase
     private readonly ILogger<TestController> _logger;
     private readonly ICloudinaryService _cloudinaryService;
     private readonly IEmailService _emailService;
-    private readonly IElasticService<MajorDto> _elasticService;
 
     public TestController(ILogger<TestController> logger, ICloudinaryService cloudinaryService,
-        IEmailService emailService, IElasticService<MajorDto> elasticService)
+        IEmailService emailService)
     {
         _logger = logger;
         _cloudinaryService = cloudinaryService;
@@ -111,12 +109,5 @@ public class TestController : ControllerBase
         {
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
-    }
-
-    [HttpPost("/elastic")]
-    public async Task<IActionResult> CreateIndex(string indexName)
-    {
-        await _elasticService.CreateIndex(indexName);
-        return Ok($"Index {indexName} created or already exists");
     }
 }

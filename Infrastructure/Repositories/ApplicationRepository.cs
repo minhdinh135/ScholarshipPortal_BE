@@ -87,6 +87,9 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
 
         var applications = await _dbContext.Applications
             .AsSplitQuery()
+            .Include(a => a.Applicant)
+            .ThenInclude(a => a.ApplicantProfile)
+            .Include(a => a.ScholarshipProgram)
             .Include(a => a.ApplicationDocuments)
             .Include(a => a.ApplicationReviews)
             .Where(a => expertAssignedReviewIds.Any(id => a.Id == id))
