@@ -3,7 +3,6 @@ using Application.Interfaces.IServices;
 using Domain.DTOs.Common;
 using Domain.DTOs.ScholarshipProgram;
 using Microsoft.AspNetCore.Mvc;
-using NotImplementedException = System.NotImplementedException;
 
 namespace SSAP.API.Controllers;
 
@@ -24,7 +23,6 @@ public class ScholarshipProgramController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllScholarshipPrograms([FromQuery] ListOptions listOptions)
     {
-        // var allScholarshipPrograms = await _scholarshipProgramService.GetAllScholarshipPrograms();
         var allScholarshipPrograms = await _scholarshipProgramService.GetAllPrograms(listOptions);
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all scholarship programs successfully",
@@ -44,7 +42,16 @@ public class ScholarshipProgramController : ControllerBase
     [HttpGet("search")]
     public async Task<IActionResult> SearchScholarships([FromQuery] ScholarshipSearchOptions scholarshipSearchOptions)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var result = await _scholarshipProgramService.SearchScholarshipPrograms(scholarshipSearchOptions);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Search scholarships successfully", result));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
     }
 
     [HttpGet("by-funder-id/{id}")]
@@ -83,13 +90,6 @@ public class ScholarshipProgramController : ControllerBase
         try
         {
             var scholarshipProgram = await _scholarshipProgramService.GetScholarshipProgramById(id);
-
-            // var userId = HttpContext.User.FindFirst("id")?.Value;
-            // if(userId == null)
-            //     return Ok(new ApiResponse(StatusCodes.Status200OK, "Unauthorized", scholarshipProgram));
-            // Console.WriteLine(userId);
-            // if(scholarshipProgram.FunderId != int.Parse(userId))
-            //     return Ok(new ApiResponse(StatusCodes.Status200OK, "Unauthorized", scholarshipProgram));
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Get scholarship program successfully",
                 scholarshipProgram));
