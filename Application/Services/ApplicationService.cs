@@ -143,7 +143,6 @@ namespace Application.Services
                 if (award == null)
                 {
                     profile.Status = ApplicationStatusEnum.Awarded.ToString();
-                    Console.WriteLine("Profile date"+profile.UpdatedAt);
                     await _applicationRepository.Update(profile);
                     return;
                 }

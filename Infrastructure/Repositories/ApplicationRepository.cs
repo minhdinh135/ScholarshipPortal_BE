@@ -46,6 +46,7 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
             .AsSplitQuery()
             .Where(a => a.ScholarshipProgramId == scholarshipId)
             .Include(a => a.Applicant)
+            .Include(a => a.ApplicationReviews)
             .ToListAsync();
 
         return application;
@@ -113,10 +114,15 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
             .Include(review => review.Application)
             .ThenInclude(application => application.Applicant)
             .ThenInclude(applicant => applicant.ApplicantProfile)
-            .Where(review =>
+            /*.Where(review =>
                 (isFirstReview
                     ? review.Status == ApplicationReviewStatusEnum.Approved.ToString()
                     : review.Status == ApplicationReviewStatusEnum.Passed.ToString()) &&
+                      applicationIds.Contains(review.ApplicationId))*/
+            .Where(review =>
+                (isFirstReview
+                    ? review.Description == "Application Review"
+                    : review.Description == "Interview") &&
                       applicationIds.Contains(review.ApplicationId))
             .OrderByDescending(review => review.Score)
             .ToListAsync();

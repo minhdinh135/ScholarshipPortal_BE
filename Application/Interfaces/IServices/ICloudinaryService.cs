@@ -13,4 +13,6 @@ public interface ICloudinaryService
     Task<string> DeleteImage(string publicId);
 
     Task<string> DeleteFile(string publicId);
+
+    Task<string> CreateAndUploadScholarshipContract();
 }

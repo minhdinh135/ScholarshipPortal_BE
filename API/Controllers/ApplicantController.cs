@@ -12,18 +12,40 @@ public class ApplicantController : ControllerBase
 {
     private readonly IApplicantService _applicantService;
     private readonly IApplicationService _applicationService;
+    private readonly IPdfService _pdfService;
+    private readonly ICloudinaryService _cloudinaryService;
 
     public ApplicantController(IApplicantService applicantService,
-        IApplicationService applicationService)
+        IApplicationService applicationService, IPdfService pdfService,
+        ICloudinaryService cloudinaryService)
     {
         _applicantService = applicantService;
         _applicationService = applicationService;
+        _pdfService = pdfService;
+        _cloudinaryService = cloudinaryService;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAllApplicants()
     {
         var applicants = await _applicantService.GetAllApplicantProfiles();
+
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicants successfully", applicants));
+    }
+
+    [HttpGet("contract")]
+    public async Task<IActionResult> GetContract()
+    {
+        var applicants = await _pdfService.GenerateScholarshipContractPdf();
+        return File(applicants, "application/pdf", "Scholarship_Contract.pdf");
+
+        //return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicants successfully", applicants));
+    }
+
+    [HttpGet("contract-uploaded")]
+    public async Task<IActionResult> GetContractUploaded()
+    {
+        var applicants = await _cloudinaryService.CreateAndUploadScholarshipContract();
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicants successfully", applicants));
     }
