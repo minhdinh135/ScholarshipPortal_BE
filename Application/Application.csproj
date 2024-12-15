@@ -18,6 +18,26 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Validators\Account\" />
+    <Folder Include="Validators\Applicant\" />
+    <Folder Include="Validators\Application\" />
+    <Folder Include="Validators\Authentication\" />
+    <Folder Include="Validators\AwardMilestone\" />
+    <Folder Include="Validators\Expert\" />
+    <Folder Include="Validators\Feedback\" />
+    <Folder Include="Validators\Funder\" />
+    <Folder Include="Validators\Notification\" />
+    <Folder Include="Validators\Payment\" />
+    <Folder Include="Validators\Provider\" />
+    <Folder Include="Validators\Request\" />
+    <Folder Include="Validators\ReviewMilestone\" />
+    <Folder Include="Validators\Role\" />
+    <Folder Include="Validators\Service\" />
+    <Folder Include="Validators\Subscription\" />
+    <Folder Include="Validators\University\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
