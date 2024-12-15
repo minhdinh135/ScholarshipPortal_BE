@@ -38,4 +38,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ExternalServices\PDF\logoSSAP.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

@@ -14,5 +14,9 @@ public interface ICloudinaryService
 
     Task<string> DeleteFile(string publicId);
 
-    Task<string> CreateAndUploadScholarshipContract();
+	Task<string> CreateAndUploadScholarshipContract(
+			string applicantName,
+			string scholarshipAmount,
+			string scholarshipProviderName,
+			DateTime deadline);
 }
