@@ -33,24 +33,44 @@ public class ApplicantController : ControllerBase
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicants successfully", applicants));
     }
 
-    [HttpGet("contract")]
-    public async Task<IActionResult> GetContract()
-    {
-        var applicants = await _pdfService.GenerateScholarshipContractPdf();
-        return File(applicants, "application/pdf", "Scholarship_Contract.pdf");
+	[HttpPost("contract")]
+	public async Task<IActionResult> GetContract([FromBody] ScholarshipContractRequest request)
+	{
+		if (request == null || string.IsNullOrEmpty(request.ApplicantName))
+		{
+			return BadRequest("Invalid input data");
+		}
 
-        //return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicants successfully", applicants));
-    }
+		var pdfBytes = await _pdfService.GenerateScholarshipContractPdf(
+			request.ApplicantName,
+			request.ScholarshipAmount,
+			request.ScholarshipProviderName,
+			request.Deadline
+		);
 
-    [HttpGet("contract-uploaded")]
-    public async Task<IActionResult> GetContractUploaded()
-    {
-        var applicants = await _cloudinaryService.CreateAndUploadScholarshipContract();
+		return File(pdfBytes, "application/pdf", "Scholarship_Contract.pdf");
+	}
 
-        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicants successfully", applicants));
-    }
+	[HttpPost("contract-uploaded")]
+	public async Task<IActionResult> GetContractUploaded([FromBody] ScholarshipContractRequest request)
+	{
+		if (request == null || string.IsNullOrEmpty(request.ApplicantName))
+		{
+			return BadRequest("Invalid input data");
+		}
 
-    [HttpGet("{applicantId}")]
+		var resultUrl = await _cloudinaryService.CreateAndUploadScholarshipContract(
+			request.ApplicantName,
+			request.ScholarshipAmount,
+			request.ScholarshipProviderName,
+			request.Deadline
+		);
+
+		return Ok(new ApiResponse(StatusCodes.Status200OK, "Scholarship contract uploaded successfully", resultUrl));
+	}
+
+
+	[HttpGet("{applicantId}")]
     public async Task<IActionResult> GetApplicantProfile(int applicantId)
     {
         var applicant = await _applicantService.GetApplicantProfile(applicantId);

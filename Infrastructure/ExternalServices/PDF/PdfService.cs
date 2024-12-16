@@ -170,145 +170,118 @@ public class PdfService : IPdfService
 
         return document.GeneratePdf();
     }
-    
-    public async Task<byte[]> GenerateScholarshipContractPdf()
-    {
-        var document = Document.Create(container =>
-        {
-            container.Page(page =>
-            {
-                page.Size(PageSizes.A4);
-                page.Margin(2, Unit.Centimetre);
-                page.PageColor(Colors.White);
-                page.DefaultTextStyle(x => x.FontSize(12));
 
-                // Title and Content
-                page.Content().Column(column =>
-                {
-                    column.Spacing(20);
+	public async Task<byte[]> GenerateScholarshipContractPdf(
+	string applicantName,
+	string scholarshipAmount,
+	string scholarshipProviderName,
+	DateTime deadline)
+	{
+		var document = Document.Create(container =>
+		{
+			container.Page(page =>
+			{
+				page.Size(PageSizes.A4);
+				page.Margin(2, Unit.Centimetre);
+				page.PageColor(Colors.White);
 
-                    // Title
-                    column.Item().Text("SCHOLARSHIP CONTRACT")
-                        .Bold().FontSize(24).AlignCenter().Underline();
+				// Thêm hình nền
+				page.Background()
+			   .PaddingTop(4, Unit.Centimetre) 
+			   .PaddingLeft(0)                
+			   .PaddingRight(0)            
+			   .PaddingBottom(0)            
+			   .Image("SSAPblur.jpg", ImageScaling.FitArea);
 
-                    // Institution Name
-                    column.Item().Text("Tri Do Scholarship Fund")
-                        .Bold().FontSize(18).AlignCenter();
+				page.Content().Column(column =>
+				{
+					column.Spacing(20);
 
-                    // Introduction Section
-                    column.Item().Text("This Scholarship Agreement (the 'Agreement') is made between the following parties:")
-                        .FontSize(12);
-                    column.Item().Text("• The Scholarship Funder: Tri Do Scholarship Fund.")
-                        .FontSize(12);
-                    column.Item().Text("• The Scholarship Recipient: [Student Name], hereinafter referred to as the 'Student'.")
-                        .FontSize(12);
-                    column.Item().Text("The purpose of this Agreement is to set the terms and conditions for the scholarship awarded to the Student for their academic year.")
-                        .FontSize(12);
-                    
-                    column.Spacing(20);
+					column.Item().Text("SCHOLARSHIP CONTRACT")
+						.Bold().FontSize(24).AlignCenter().Underline();
 
-                    // Scholarship Amount Section
-                    column.Item().Text("1. SCHOLARSHIP AMOUNT").Bold().FontSize(14);
-                    column.Item().Text("The Scholarship Fund Provider agrees to provide the Student with a scholarship amount of $100,000 for the current academic year.")
-                        .FontSize(12);
-                    column.Item().Text("The scholarship amount will be equally distributed across the Fall and Spring semesters of the academic year.")
-                        .FontSize(12);
+					column.Item().Text("This Scholarship Agreement (the 'Agreement') is made between the following parties:")
+						.FontSize(12);
+					column.Item().Text($"\u2022 The Scholarship Funder: {scholarshipProviderName}.")
+						.FontSize(12);
+					column.Item().Text($"\u2022 The Scholarship Recipient: {applicantName}, hereinafter referred to as the 'Student'.")
+						.FontSize(12);
+					column.Item().Text("The purpose of this Agreement is to set the terms and conditions for the scholarship awarded to the Student for their academic year.")
+						.FontSize(12);
 
-                    column.Spacing(20);
+					column.Spacing(20);
 
-                    // Fund Payment Commitment Section
-                    column.Item().Text("2. FUND PAYMENT COMMITMENT").Bold().FontSize(14);
-                    column.Item().Text("The Scholarship Fund Provider agrees to disburse the total scholarship amount in a timely manner, ensuring full payment of tuition and other eligible fees directly to the institution or any other entity designated by the Student. Payments shall be made before the start of each semester.")
-                        .FontSize(12);
-                    column.Item().Text("Failure to fulfill this payment commitment will result in the scholarship being revoked and the Student will not be eligible for the scholarship until payments are brought up to date.")
-                        .FontSize(12);
+					column.Item().Text("1. SCHOLARSHIP AMOUNT").Bold().FontSize(14);
+					column.Item().Text($"The Scholarship Fund Provider agrees to provide the Student with a scholarship amount of {scholarshipAmount} for the current academic year.")
+						.FontSize(12);
 
-                    column.Spacing(20);
+					column.Spacing(20);
 
-                    // Academic Requirements Section
-                    column.Item().Text("3. ACADEMIC REQUIREMENTS").Bold().FontSize(14);
-                    column.Item().Text("The Student must maintain a minimum GPA of 3.0 each semester. Should the GPA fall below this threshold, the Student may be placed on probation or the scholarship may be revoked.")
-                        .FontSize(12);
-                    column.Item().Text("The Scholarship Fund Provider reserves the right to review the academic performance of the Student at the end of each semester.")
-                        .FontSize(12);
+					column.Item().Text("2. FUND PAYMENT COMMITMENT").Bold().FontSize(14);
+					column.Item().Text("The Scholarship Fund Provider agrees to disburse the total scholarship amount in a timely manner, ensuring full payment of tuition and other eligible fees directly to the institution or any other entity designated by the Student. Payments shall be made before the start of each semester.")
+						.FontSize(12);
 
-                    column.Spacing(20);
+					column.Spacing(20);
 
-                    // Termination Section
-                    column.Item().Text("4. TERMINATION OF AGREEMENT").Bold().FontSize(14);
-                    column.Item().Text("This Agreement may be terminated under the following circumstances:")
-                        .FontSize(12);
-                    column.Item().Text("• The Student withdraws from or transfers out of the institution.")
-                        .FontSize(12);
-                    column.Item().Text("• The Student fails to comply with the terms of this Agreement.")
-                        .FontSize(12);
-                    column.Item().Text("• The Student's academic performance fails to meet the required standards.")
-                        .FontSize(12);
+					column.Item().Text("3. ACADEMIC REQUIREMENTS").Bold().FontSize(14);
+					column.Item().Text("The Student must maintain a minimum GPA of 3.0 each semester. Should the GPA fall below this threshold, the Student may be placed on probation or the scholarship may be revoked.")
+						.FontSize(12);
 
-                    column.Spacing(20);
+					column.Spacing(20);
 
-                    // Compliance Section
-                    column.Item().Text("5. COMPLIANCE WITH LAWS AND REGULATIONS").Bold().FontSize(14);
-                    column.Item().Text("The Student agrees to abide by all the rules, regulations, and policies of the institution. Failure to comply with these terms may result in termination of the scholarship.")
-                        .FontSize(12);
+					column.Item().Text("4. TERMINATION OF AGREEMENT").Bold().FontSize(14);
+					column.Item().Text("This Agreement may be terminated under the following circumstances:")
+						.FontSize(12);
+					column.Item().Text("\u2022 The Student withdraws from or transfers out of the institution.")
+						.FontSize(12);
+					column.Item().Text("\u2022 The Student fails to comply with the terms of this Agreement.")
+						.FontSize(12);
 
-                    column.Spacing(20);
+					column.Spacing(30);
 
-                    // General Provisions Section
-                    column.Item().Text("6. GENERAL PROVISIONS").Bold().FontSize(14);
-                    column.Item().Text("This Agreement is governed by the laws of [Jurisdiction]. Any disputes arising from this Agreement will be resolved in accordance with the applicable laws of the jurisdiction.")
-                        .FontSize(12);
-                    column.Item().Text("This Agreement constitutes the entire understanding between the parties and supersedes all prior negotiations, representations, or agreements, whether written or oral.")
-                        .FontSize(12);
+					column.Item().Text("SIGNATURES").Bold().FontSize(14);
+					column.Item().Table(table =>
+					{
+						table.ColumnsDefinition(columns =>
+						{
+							columns.RelativeColumn();
+							columns.RelativeColumn();
+						});
 
-                    column.Spacing(30);
+						table.Cell().Text("Scholarship Funder:").FontSize(12);
+						table.Cell().Text(scholarshipProviderName).FontSize(12);
 
-                    // Signature Section
-                    column.Item().Text("SIGNATURES").Bold().FontSize(14);
-                    column.Item().Table(table =>
-                    {
-                        table.ColumnsDefinition(columns =>
-                        {
-                            columns.RelativeColumn();
-                            columns.RelativeColumn();
-                        });
+						table.Cell().Text("Contract creation date:").FontSize(12);
+						table.Cell().Text(DateTime.Now.ToString("MM-dd-yyyy")).FontSize(12);
 
-                        table.Cell().Text("Scholarship Funder:").FontSize(12);
-                        table.Cell().Text("[Scholarship Provider Representative Name]").FontSize(12);
+						table.Cell().Text("Student:").FontSize(12);
+						table.Cell().Text(applicantName).FontSize(12);
 
-                        table.Cell().Text("Signature:").FontSize(12);
-                        table.Cell().Text("[Signature]").FontSize(12);
+						table.Cell().Text("Deadline:").FontSize(12);
+						table.Cell().Text(deadline.ToString("MM-dd-yyyy")).FontSize(12);
+					});
 
-                        table.Cell().Text("Date:").FontSize(12);
-                        table.Cell().Text($"{DateTime.UtcNow:yyyy-MM-dd}").FontSize(12);
+					column.Spacing(30);
+					column.Item().AlignRight().Column(signatureColumn =>
+					{
+						signatureColumn.Spacing(5);
+						signatureColumn.Item().Text("Representative of A (Funder)").FontSize(12).AlignRight();
+						signatureColumn.Item().PaddingBottom(4, Unit.Centimetre);
+						signatureColumn.Item().Text("Signature:").FontSize(12).AlignRight();
+						signatureColumn.Item().Text("______________________").FontSize(12).AlignRight();
+					});
+				});
 
-                        table.Cell().Text("Student:").FontSize(12);
-                        table.Cell().Text("[Student Name]").FontSize(12);
+				page.Footer()
+					.AlignCenter()
+					.Text(x =>
+					{
+						x.Span("Page ");
+						x.CurrentPageNumber();
+					});
+			});
+		});
 
-                        table.Cell().Text("Signature:").FontSize(12);
-                        table.Cell().Text("[Signature]").FontSize(12);
-
-                        table.Cell().Text("Date:").FontSize(12);
-                        table.Cell().Text($"{DateTime.UtcNow:yyyy-MM-dd}").FontSize(12);
-                    });
-
-                    column.Spacing(20);
-
-                });
-
-                // Footer
-                page.Footer()
-                    .AlignCenter()
-                    .Text(x =>
-                    {
-                        x.Span("Page ");
-                        x.CurrentPageNumber();
-                    });
-            });
-        });
-
-        return document.GeneratePdf();
-    }
-
-
-    }
+		return document.GeneratePdf();
+	}
+}

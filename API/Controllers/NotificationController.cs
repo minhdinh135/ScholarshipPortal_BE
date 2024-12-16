@@ -290,5 +290,27 @@ public class NotificationController : ControllerBase
 		}
 	}
 
+	[HttpPost("send-winner-email")]
+	public async Task<IActionResult> SendWinnerEmail([FromQuery] int applicantId, [FromForm] IFormFileCollection contractFiles)
+	{
+		try
+		{
+			var applicant = await _accountService.GetAccount(applicantId);
+			if (applicant == null)
+			{
+				return BadRequest(new { Message = "Applicant not found" });
+			}
 
+			var subject = "Your application has been approved for our scholarship";
+			var message = "This is a contract between you and me, please read it carefully.";
+
+			await _emailService.SendEmailWinnerAsync(applicant.Email, subject, message, contractFiles);
+
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Email sent successfully", null));
+		}
+		catch (Exception ex)
+		{
+			return BadRequest(new { Message = ex.Message });
+		}
+	}
 }

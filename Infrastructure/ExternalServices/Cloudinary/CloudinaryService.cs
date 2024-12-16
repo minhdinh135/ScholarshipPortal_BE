@@ -94,7 +94,7 @@ public class CloudinaryService : ICloudinaryService
         return null;
     }
 
-    private bool IsImage(IFormFile file)
+    private static bool IsImage(IFormFile file)
     {
         if (file == null)
             return false;
@@ -137,46 +137,36 @@ public class CloudinaryService : ICloudinaryService
         }
     }
 
-    public async Task<string> CreateAndUploadScholarshipContract()
-    {
-        try
-        {
-            // Step 1: Generate the PDF as a byte array
-            var pdfBytes = await _pdfService.GenerateScholarshipContractPdf();
+	public async Task<string> CreateAndUploadScholarshipContract(string applicantName, string scholarshipAmount, string providerName, DateTime deadline)
+	{
+		try
+		{
+			var pdfBytes = await _pdfService.GenerateScholarshipContractPdf(applicantName, scholarshipAmount, providerName, deadline);
 
-            // Step 2: Create a MemoryStream for the Cloudinary upload
-            using (var stream = new MemoryStream(pdfBytes))
-            {
-                var uploadParams = new RawUploadParams
-                {
-                    File = new FileDescription("Scholarship_Contract.pdf", stream),
-                };
+			using (var stream = new MemoryStream(pdfBytes))
+			{
+				var uploadParams = new RawUploadParams
+				{
+					File = new FileDescription("Scholarship_Contract.pdf", stream),
+				};
 
-                // Step 3: Upload to Cloudinary
-                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+				var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
-                // Step 4: Check the upload result
-                if (uploadResult.StatusCode == HttpStatusCode.OK)
-                {
-                    // Return the secure URL of the uploaded file
-                    return uploadResult.SecureUrl.ToString();
-                }
-                else
-                {
-                    throw new Exception($"Cloudinary upload failed: {uploadResult.Error?.Message}");
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            // Handle errors
-            throw new ServiceException("Error generating and uploading scholarship contract", ex);
-        }
-    }
+				if (uploadResult.StatusCode == HttpStatusCode.OK)
+				{
+					return uploadResult.SecureUrl.ToString();
+				}
 
+				throw new Exception($"Cloudinary upload failed: {uploadResult.Error?.Message}");
+			}
+		}
+		catch (Exception ex)
+		{
+			throw new ServiceException("Error generating and uploading scholarship contract", ex);
+		}
+	}
 
-
-    public async Task<string> UploadRaw(IFormFile file)
+	public async Task<string> UploadRaw(IFormFile file)
     {
         if (file == null || file.Length == 0)
         {

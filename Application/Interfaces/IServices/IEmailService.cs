@@ -6,5 +6,6 @@ namespace Application.Interfaces.IServices
     {
         Task SendEmailAsync(string email, string subject, string message, IFormFile? file = null);
         Task SendPaymentReceipt(string recipientEmail, decimal amount, string referenceId);
-    }
+		Task SendEmailWinnerAsync(string mail, string subject, string message, IFormFileCollection? files = null);
+	}
 }
