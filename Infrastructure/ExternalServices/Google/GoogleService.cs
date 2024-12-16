@@ -8,16 +8,24 @@ public class GoogleService
   private readonly string _clientId;
   private readonly string _clientSecret;
   private readonly string _redirectUri;
+  private readonly string _redirectMobileUri;
 
-  public GoogleService(string clientId, string clientSecret, string redirectUri)
+  public GoogleService(string clientId, string clientSecret, string redirectUri,
+      string redirectMobileUri)
   {
     _clientId = clientId;
     _clientSecret = clientSecret;
     _redirectUri = redirectUri;
+    _redirectMobileUri = redirectMobileUri;
   }
   public string BuildGoogleOauthUrl()
   {
     return $"https://accounts.google.com/o/oauth2/v2/auth?client_id={_clientId}&scope=email%20profile%20openid&redirect_uri={_redirectUri}&response_type=code";
+  }
+
+  public string BuildMobileGoogleOauthUrl()
+  {
+    return $"https://accounts.google.com/o/oauth2/v2/auth?client_id={_clientId}&scope=email%20profile%20openid&redirect_uri={_redirectMobileUri}&response_type=code";
   }
 
   public async Task<string> ExchangeCodeForToken(string authorizationCode)
