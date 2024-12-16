@@ -65,8 +65,15 @@ public class AuthenticationController : ControllerBase
         return Ok(new { Url = url });
     }
 
+    [HttpGet("auth-google-mobile")]
+    public async Task<IActionResult> AuthGoogleMobile()
+    {
+        var url = _googleService.BuildMobileGoogleOauthUrl();
+        return Ok(new { Url = url });
+    }
+
     [HttpGet("google/callback")]
-    public async Task<IActionResult> Callback([FromQuery] string code)
+    public async Task<IActionResult> Callback([FromQuery] string? code)
     {
         if (string.IsNullOrEmpty(code))
         {
@@ -80,7 +87,7 @@ public class AuthenticationController : ControllerBase
         {
             var (jwt, isNewUser) = await _authService.GoogleAuth(userInfo);
             return Redirect("http://localhost:5173/login-google?result=success&isNewUser=" + isNewUser + "&jwt=" +
-                            jwt.Token);
+                jwt.Token);
             //return Ok(jwt);
         }
         catch (Exception ex)
@@ -89,6 +96,32 @@ public class AuthenticationController : ControllerBase
             //return BadRequest(new { Message = ex.Message });
         }
     }
+
+    [HttpGet("google/callback/mobile")]
+    public async Task<IActionResult> CallbackMobile([FromQuery] string? code)
+    {
+        if (string.IsNullOrEmpty(code))
+        {
+            return Redirect("com.scholarship://login-google?result=fail");
+            //return BadRequest("Authorization code is missing.");
+        }
+    
+        var token = await _googleService.ExchangeCodeForToken(code);
+        var userInfo = await _googleService.GetUserInfo(token);
+        try
+        {
+            var (jwt, isNewUser) = await _authService.GoogleAuth(userInfo);
+            return Redirect("com.scholarship://login-google?result=success&isNewUser=" + isNewUser + "&jwt=" +
+                jwt.Token);
+            //return Ok(jwt);
+        }
+        catch (Exception ex)
+        {
+            return Redirect("com.scholarship://login-google?result=fail");
+            //return BadRequest(new { Message = ex.Message });
+        }
+    }
+
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDto register)
