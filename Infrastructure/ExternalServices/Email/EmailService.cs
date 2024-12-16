@@ -91,4 +91,38 @@ public class EmailService : IEmailService
             await client.DisconnectAsync(true);
         }
     }
+
+	public async Task SendEmailWinnerAsync(string mail, string subject, string message, IFormFileCollection? files = null)
+	{
+		var email = new MimeMessage();
+		email.Sender = MailboxAddress.Parse("portalscholarship6@gmail.com");
+		email.From.Add(MailboxAddress.Parse("portalscholarship6@gmail.com"));
+		email.To.Add(MailboxAddress.Parse(mail));
+		email.Subject = subject;
+
+		var builder = new BodyBuilder
+		{
+			HtmlBody = message
+		};
+
+		if (files != null && files.Count > 0)
+		{
+			foreach (var file in files)
+			{
+				using var stream = new MemoryStream();
+				await file.CopyToAsync(stream);
+				builder.Attachments.Add(file.FileName, stream.ToArray(), ContentType.Parse(file.ContentType));
+			}
+		}
+
+		email.Body = builder.ToMessageBody();
+
+		using var smtp = new SmtpClient();
+		smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTlsWhenAvailable);
+		smtp.Authenticate("portalscholarship6@gmail.com", "mopg jgto lymy jvxw");
+
+		await smtp.SendAsync(email);
+		smtp.Disconnect(true);
+	}
+
 }
