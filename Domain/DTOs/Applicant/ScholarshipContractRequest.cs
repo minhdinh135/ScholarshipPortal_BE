@@ -11,7 +11,6 @@ namespace Domain.DTOs.Applicant
 		public string? ApplicantName { get; set; }
 		public string? ScholarshipAmount { get; set; }
 		public string? ScholarshipProviderName { get; set; }
-		public string? ScholarshipProviderSignature { get; set; }
 		public DateTime Deadline { get; set; }
 	}
 
