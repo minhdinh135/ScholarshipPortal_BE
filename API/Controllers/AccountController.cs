@@ -136,7 +136,6 @@ public class AccountController : ControllerBase
             return BadRequest(new { Message = "New password must be at least 6 characters long" });
         }
 
-        // Update password
         user.HashedPassword = _passwordService.HashPassword(model.NewPassword);
         await _accountService.UpdateAccount(id, new UpdateAccountDto
         {
@@ -148,7 +147,6 @@ public class AccountController : ControllerBase
             AvatarUrl = user.AvatarUrl,
             RoleId = user.RoleId,
             Status = user.Status,
-            //RoleName = user.RoleName,
             LoginWithGoogle = user.LoginWithGoogle,
         });
 
