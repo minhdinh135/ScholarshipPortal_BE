@@ -2,9 +2,9 @@
 
 public class CreateWalletDto
 {
-    public string? BankAccountName { get; set; }
+    public string BankAccountName { get; set; }
 
-    public string? BankAccountNumber { get; set; }
+    public string BankAccountNumber { get; set; }
 
     public decimal Balance { get; set; }
 }
