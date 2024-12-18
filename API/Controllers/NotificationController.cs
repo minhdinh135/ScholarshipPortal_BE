@@ -231,7 +231,7 @@ public class NotificationController : ControllerBase
 
 			var notificationMessage = $"You have successfully purchased the subscription package '{subscription.Name}'.";
 
-			await _notificationService.SendNotification(user.Id.ToString(), "/my-subscriptions", "Subscription Purchased", notificationMessage);
+			await _notificationService.SendNotification(user.Id.ToString(), "/services", "Subscription Purchased", notificationMessage);
 
 			await _emailService.SendEmailAsync(user.Email, "Subscription Purchase Confirmation",
 				$"Dear {user.Username},\n\n{notificationMessage}\n\nThank you for your purchase!");
