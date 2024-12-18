@@ -77,8 +77,9 @@ public class AuthenticationController : ControllerBase
     {
         if (string.IsNullOrEmpty(code))
         {
-            return Redirect("http://localhost:5173/login-google?result=fail");
-            //return BadRequest("Authorization code is missing.");
+            //return Redirect("http://localhost:5173/login-google?result=fail");
+            //return Redirect("https://scholarship-portal-nu.vercel.app/login-google?result=fail");
+            return BadRequest("Authorization code is missing.");
         }
     
         var token = await _googleService.ExchangeCodeForToken(code);
@@ -86,13 +87,16 @@ public class AuthenticationController : ControllerBase
         try
         {
             var (jwt, isNewUser) = await _authService.GoogleAuth(userInfo);
-            return Redirect("http://localhost:5173/login-google?result=success&isNewUser=" + isNewUser + "&jwt=" +
+            //return Redirect("http://localhost:5173/login-google?result=success&isNewUser=" + isNewUser + "&jwt=" +
+            //   jwt.Token);
+            return Redirect("https://scholarship-portal-nu.vercel.app/login-google?result=success&isNewUser=" + isNewUser + "&jwt=" +
                 jwt.Token);
             //return Ok(jwt);
         }
         catch (Exception ex)
         {
-            return Redirect("http://localhost:5173/login-google?result=fail");
+            //return Redirect("http://localhost:5173/login-google?result=fail");
+            return Redirect("https://scholarship-portal-nu.vercel.app/login-google?result=fail");
             //return BadRequest(new { Message = ex.Message });
         }
     }
@@ -102,11 +106,11 @@ public class AuthenticationController : ControllerBase
     {
         if (string.IsNullOrEmpty(code))
         {
-            return Redirect("com.scholarship://login-google?result=fail");
-            //return BadRequest("Authorization code is missing.");
+            //return Redirect("com.scholarship://login-google?result=fail");
+            return BadRequest("Authorization code is missing.");
         }
     
-        var token = await _googleService.ExchangeCodeForToken(code);
+        var token = await _googleService.ExchangeCodeForTokenMobile(code);
         var userInfo = await _googleService.GetUserInfo(token);
         try
         {
