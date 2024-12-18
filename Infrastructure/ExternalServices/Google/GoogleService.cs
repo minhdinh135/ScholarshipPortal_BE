@@ -54,6 +54,32 @@ public class GoogleService
     }
   }
 
+  public async Task<string> ExchangeCodeForTokenMobile(string authorizationCode)
+  {
+    using (var httpClient = new HttpClient())
+    {
+      var content = new FormUrlEncodedContent(new[]
+          {
+          new KeyValuePair<string, string>("grant_type",  
+              "authorization_code"),
+          new KeyValuePair<string, string>("code", authorizationCode),
+          new KeyValuePair<string, string>("client_id", _clientId),
+          new KeyValuePair<string,  
+          string>("client_secret", _clientSecret),
+          new KeyValuePair<string, string>("redirect_uri", _redirectMobileUri)
+          });
+
+      var response = await httpClient.PostAsync("https://oauth2.googleapis.com/token",  
+          content);
+      response.EnsureSuccessStatusCode();
+
+      var responseContent = await response.Content.ReadAsStringAsync();
+      var tokenResponse  
+        = JsonConvert.DeserializeObject<TokenResponse>(responseContent);
+      return tokenResponse.AccessToken;
+    }
+  }
+
   public async Task<Domain.DTOs.Authentication.UserInfo> GetUserInfo(string accessToken)
   {
     using (var httpClient = new HttpClient())

@@ -23,6 +23,8 @@ public class AccountDto
 
     public string? Status { get; set; }
 
+    public WalletDto? Wallet { get; set; }
+
     public int? RoleId { get; set; }
 
     public string? RoleName { get; set; }
