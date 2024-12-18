@@ -231,7 +231,7 @@ public class NotificationController : ControllerBase
 
 			var notificationMessage = $"You have successfully purchased the subscription package '{subscription.Name}'.";
 
-			await _notificationService.SendNotification(user.Id.ToString(), "/my-subscriptions", "Subscription Purchased", notificationMessage);
+			await _notificationService.SendNotification(user.Id.ToString(), "/services", "Subscription Purchased", notificationMessage);
 
 			await _emailService.SendEmailAsync(user.Email, "Subscription Purchase Confirmation",
 				$"Dear {user.Username},\n\n{notificationMessage}\n\nThank you for your purchase!");
@@ -302,11 +302,35 @@ public class NotificationController : ControllerBase
 			}
 
 			var subject = "Your application has been approved for our scholarship";
-			var message = "This is a contract between you and me, please read it carefully.";
+			var message = "This is your contract with our organization, please read it carefully.";
 
 			await _emailService.SendEmailWinnerAsync(applicant.Email, subject, message, contractFiles);
 
 			return Ok(new ApiResponse(StatusCodes.Status200OK, "Email sent successfully", null));
+		}
+		catch (Exception ex)
+		{
+			return BadRequest(new { Message = ex.Message });
+		}
+	}
+
+	[HttpPost("notify-feedback-success")]
+	public async Task<IActionResult> NotifyFeedbackSuccess([FromBody] FeedbackNotificationRequest request)
+	{
+		try
+		{
+			var provider = await _accountService.GetAccount(request.ProviderId);
+
+			if (provider == null)
+				return BadRequest(new { Message = "Invalid provider information." });
+
+			var notificationMessage = $"You have new feedback on the service '{request.ServiceName}'.";
+
+			await _notificationService.SendNotification(provider.Id.ToString(), "/services", "Feedback Submitted", notificationMessage);
+
+			await _emailService.SendEmailAsync(provider.Email, "Feedback Submitted Successfully", notificationMessage);
+
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Feedback notification sent successfully", null));
 		}
 		catch (Exception ex)
 		{

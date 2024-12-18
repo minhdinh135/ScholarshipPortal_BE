@@ -212,7 +212,7 @@ public class PdfService : IPdfService
 					column.Spacing(20);
 
 					column.Item().Text("1. SCHOLARSHIP AMOUNT").Bold().FontSize(14);
-					column.Item().Text($"The Scholarship Fund Provider agrees to provide the Student with a scholarship amount of {scholarshipAmount} for the current academic year.")
+					column.Item().Text($"The Scholarship Funder agrees to provide the Student with a scholarship amount of {scholarshipAmount} for the current academic year.")
 						.FontSize(12);
 
 					column.Spacing(20);
@@ -265,7 +265,7 @@ public class PdfService : IPdfService
 					column.Item().AlignRight().Column(signatureColumn =>
 					{
 						signatureColumn.Spacing(5);
-						signatureColumn.Item().Text("Representative of A (Funder)").FontSize(12).AlignRight();
+						signatureColumn.Item().Text("Representative of Funder").FontSize(12).AlignRight();
 						signatureColumn.Item().PaddingBottom(4, Unit.Centimetre);
 						signatureColumn.Item().Text("Signature:").FontSize(12).AlignRight();
 						signatureColumn.Item().Text("______________________").FontSize(12).AlignRight();
