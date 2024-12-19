@@ -204,8 +204,13 @@ public class AccountController : ControllerBase
 	{
 		try
 		{
-			var otp = _random.Next(100000, 999999).ToString();
+			var accountExists = await _accountService.CheckEmailExistsAsync(model.Email);
+			if (accountExists)
+			{
+				return BadRequest(new { Message = "This email already exists." });
+			}
 
+			var otp = _random.Next(100000, 999999).ToString();
 			_otpStore[model.Email] = otp;
 
 			await _emailService.SendEmailAsync(model.Email, "Your OTP Code", $"Your OTP code is: {otp}");
@@ -215,10 +220,9 @@ public class AccountController : ControllerBase
 		catch (Exception ex)
 		{
 			_logger.LogError($"Failed to send OTP: {ex.Message}");
-			return StatusCode(500, "Error sending OTP.");
+			return StatusCode(500, new { Message = "Error sending OTP." });
 		}
 	}
-
 
 	[HttpPost("verify-otp")]
     public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDto model)

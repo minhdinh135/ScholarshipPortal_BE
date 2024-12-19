@@ -23,5 +23,6 @@ namespace Application.Interfaces.IServices
         Task<WalletDto> CreateWallet(int id, CreateWalletDto createWalletDto);
         Task<WalletDto> UpdateWalletBalance(int userId, decimal balance);
 		Task<WalletDto> UpdateWalletBankInformation(int userId, UpdateWalletBankInformationDto dto);
+		Task<bool> CheckEmailExistsAsync(string email);
 	}
 }
