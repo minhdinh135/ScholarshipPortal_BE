@@ -105,12 +105,12 @@ public class ApplicantService : IApplicantService
             await _applicantRepository.UpdateProfileAchievements(applicant.ApplicantProfile.Id, achievements);
 
             List<ApplicantSkill> skills =
-                updateDetails.Skills.Select(a => new ApplicantSkill { Name = a }).ToList();
+                updateDetails.Skills.Select(a => new ApplicantSkill { Name = a, Type = ""}).ToList();
             skills.ForEach(a => a.ApplicantProfileId = applicant.ApplicantProfile.Id);
             await _applicantRepository.UpdateProfileSkills(applicant.ApplicantProfile.Id, skills);
 
             List<ApplicantCertificate> certificates =
-                updateDetails.Certificates.Select(a => new ApplicantCertificate { Name = a }).ToList();
+                updateDetails.Certificates.Select(a => new ApplicantCertificate { Name = a, Type = ""}).ToList();
             certificates.ForEach(a => a.ApplicantProfileId = applicant.ApplicantProfile.Id);
             await _applicantRepository.UpdateProfileCertificates(applicant.ApplicantProfile.Id, certificates);
 

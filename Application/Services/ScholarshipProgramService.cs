@@ -26,7 +26,7 @@ public class ScholarshipProgramService : IScholarshipProgramService
     public async Task<PaginatedList<ScholarshipProgramDto>> GetAllPrograms(ListOptions listOptions)
     {
         var allScholarshipPrograms = await _scholarshipProgramRepository.GetAllScholarshipPrograms(listOptions);
-
+        
         return _mapper.Map<PaginatedList<ScholarshipProgramDto>>(allScholarshipPrograms);
     }
 

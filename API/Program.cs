@@ -30,8 +30,6 @@ builder.Services.AddControllers(options => options.SuppressInputFormatterBufferi
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-builder.Services.AddSignalR();
-
 builder.Services.AddDbContext<ScholarshipContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("Db") ?? string.Empty));
 
@@ -133,7 +131,7 @@ var app = builder.Build();
 //         dbContext.Database.Migrate();
 //     }
 // }
-//
+
 // using (var scope = app.Services.CreateScope())
 // {
 //     var services = scope.ServiceProvider;
@@ -164,11 +162,11 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-app.MapHealthChecks("/health", new HealthCheckOptions
-{
-    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-});
-app.MapHealthChecksUI(config => config.UIPath="/healthcheck-ui");
+// app.MapHealthChecks("/health", new HealthCheckOptions
+// {
+//     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+// });
+// app.MapHealthChecksUI(config => config.UIPath="/healthcheck-ui");
 
 app.UseCors("MyAllowPolicy");
 
@@ -181,7 +179,7 @@ app.UseExceptionHandler();
 app.MapControllers();
 
 app.UseHangfireDashboard();
-app.MapHangfireDashboard("/hangfire");
+// app.MapHangfireDashboard("/hangfire");
 
 using (var scope = app.Services.CreateScope())
 {
