@@ -203,4 +203,11 @@ public class AccountService : IAccountService
             throw new ServiceException(e.Message);
         }
     }
+
+	public async Task<bool> CheckEmailExistsAsync(string email)
+	{
+		var accounts = await _accountRepository.GetAll();
+		return accounts.Any(a => a.Email == email);
+	}
+
 }
