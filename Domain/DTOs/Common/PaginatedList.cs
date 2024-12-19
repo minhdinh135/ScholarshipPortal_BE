@@ -14,11 +14,4 @@ public class PaginatedList<T>
         PageIndex = pageIndex;
         TotalPages = totalPages;
     }
-    
-    // public static PaginatedList<T> ToPaginatedList(IQueryable<T> source, int pageIndex, int pageSize)
-    // {
-    //     var count = source.Count();
-    //     var items = source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
-    //     return new PaginatedList<T>(items, pageIndex, count);
-    // }    
 }
