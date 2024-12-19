@@ -1,7 +1,7 @@
 ﻿[
   {
     "Id": 1,
-    "Username": "system",
+    "Username": "System",
     "Email": "admin@gmail.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -18,7 +18,7 @@
   },
   {
     "Id": 2,
-    "Username": "ethan",
+    "Username": "Ethan",
     "Email": "ethan@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -40,7 +40,7 @@
   },
   {
     "Id": 3,
-    "Username": "mia",
+    "Username": "Mia",
     "Email": "mia@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -62,7 +62,7 @@
   },
   {
     "Id": 4,
-    "Username": "leo",
+    "Username": "Leo",
     "Email": "leo@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -84,7 +84,7 @@
   },
   {
     "Id": 5,
-    "Username": "zoe",
+    "Username": "Zoe",
     "Email": "zoe@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -108,7 +108,7 @@
   },
   {
     "Id": 6,
-    "Username": "noah",
+    "Username": "Noah",
     "Email": "noah@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -132,7 +132,7 @@
   },
   {
     "Id": 7,
-    "Username": "ava",
+    "Username": "Ava",
     "Email": "ava@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -156,7 +156,7 @@
   },
   {
     "Id": 8,
-    "Username": "lucas",
+    "Username": "Lucas",
     "Email": "lucas@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -180,7 +180,7 @@
   },
   {
     "Id": 9,
-    "Username": "lily",
+    "Username": "Lily",
     "Email": "lily@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -204,7 +204,7 @@
   },
   {
     "Id": 10,
-    "Username": "mason",
+    "Username": "Mason",
     "Email": "mason@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -228,7 +228,7 @@
   },
   {
     "Id": 11,
-    "Username": "chloe",
+    "Username": "Chloe",
     "Email": "chloe@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -250,7 +250,7 @@
   },
   {
     "Id": 12,
-    "Username": "oliver",
+    "Username": "Oliver",
     "Email": "oliver@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -272,7 +272,7 @@
   },
   {
     "Id": 13,
-    "Username": "emma",
+    "Username": "Emma",
     "Email": "emma@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
@@ -294,7 +294,7 @@
   },
   {
     "Id": 14,
-    "Username": "grace",
+    "Username": "Grace",
     "Email": "grace@mailinator.com",
     "PhoneNumber": "0123456789",
     "HashedPassword": "$2a$12$p6dADeZmY.mViBo4/PNzFedqnfWThJKGponbYf/DVDA6pMbi18nXa",
