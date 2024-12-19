@@ -110,10 +110,16 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "MyAllowPolicy", policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "https://scholarship-portal-nu.vercel.app");
-        policy.AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+        // policy.WithOrigins("http://localhost:5173", "https://scholarship-portal-nu.vercel.app");
+        // policy
+        //     .AllowAnyHeader()
+        //     .AllowAnyMethod()
+        //     .AllowCredentials();
+        
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
 
