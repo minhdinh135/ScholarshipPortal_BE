@@ -187,13 +187,13 @@ app.MapControllers();
 app.UseHangfireDashboard();
 // app.MapHangfireDashboard("/hangfire");
 
-using (var scope = app.Services.CreateScope())
-{
-    var serviceProvider = scope.ServiceProvider;
-    var backgroundService = serviceProvider.GetRequiredService<IBackgroundService>();
-
-    RecurringJob.AddOrUpdate("ScheduleScholarshipsAfterDeadline", () => backgroundService.ScheduleScholarshipsAfterDeadline(), Cron.Daily);
-    RecurringJob.AddOrUpdate("ScheduleApplicationsNeedExtend", () => backgroundService.ScheduleApplicationsNeedExtend(), Cron.Daily);
-}
+// using (var scope = app.Services.CreateScope())
+// {
+//     var serviceProvider = scope.ServiceProvider;
+//     var backgroundService = serviceProvider.GetRequiredService<IBackgroundService>();
+//
+//     RecurringJob.AddOrUpdate("ScheduleScholarshipsAfterDeadline", () => backgroundService.ScheduleScholarshipsAfterDeadline(), Cron.Daily);
+//     RecurringJob.AddOrUpdate("ScheduleApplicationsNeedExtend", () => backgroundService.ScheduleApplicationsNeedExtend(), Cron.Daily);
+// }
 
 app.Run();
