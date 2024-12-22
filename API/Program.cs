@@ -168,11 +168,11 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-// app.MapHealthChecks("/health", new HealthCheckOptions
-// {
-//     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-// });
-// app.MapHealthChecksUI(config => config.UIPath="/healthcheck-ui");
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+app.MapHealthChecksUI(config => config.UIPath="/healthcheck-ui");
 
 app.UseCors("MyAllowPolicy");
 
