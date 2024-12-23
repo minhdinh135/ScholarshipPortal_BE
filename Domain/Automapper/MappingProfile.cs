@@ -245,6 +245,8 @@ public class MappingProfile : Profile
         CreateMap<Application, UpdateApplicationDto>().ReverseMap();
         CreateMap<Application, UpdateApplicationStatusRequest>().ReverseMap();
         CreateMap<Application, ApplicationDto>()
+            .ForMember(dest => dest.ApplicantProfile, opt => opt
+                .MapFrom(src => src.Applicant.ApplicantProfile))
             .ForMember(dest => dest.ApplicantName, opt =>
                 opt.MapFrom(src =>
                     $"{src.Applicant.ApplicantProfile.FirstName} {src.Applicant.ApplicantProfile.LastName}"))

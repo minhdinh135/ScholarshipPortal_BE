@@ -168,11 +168,11 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-// app.MapHealthChecks("/health", new HealthCheckOptions
-// {
-//     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-// });
-// app.MapHealthChecksUI(config => config.UIPath="/healthcheck-ui");
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+app.MapHealthChecksUI(config => config.UIPath="/healthcheck-ui");
 
 app.UseCors("MyAllowPolicy");
 
@@ -185,7 +185,7 @@ app.UseExceptionHandler();
 app.MapControllers();
 
 app.UseHangfireDashboard();
-// app.MapHangfireDashboard("/hangfire");
+app.MapHangfireDashboard("/hangfire");
 
 using (var scope = app.Services.CreateScope())
 {

@@ -232,11 +232,13 @@ namespace Application.Services
             }
         }
 
-        public async Task<ApplicationDto> Get(int id)
+        public async Task<ApplicationDto> GetApplicationById(int id)
         {
-            var entity = await _applicationRepository.GetApplicationById(id);
-            if (entity == null) return null;
-            return _mapper.Map<ApplicationDto>(entity);
+            var application = await _applicationRepository.GetApplicationById(id);
+            if (application == null)
+                throw new ServiceException($"Application with ID: {id} is not found", new NotFoundException());
+            
+            return _mapper.Map<ApplicationDto>(application);
         }
 
         public async Task<IEnumerable<ApplicationDto>> GetExpertAssignedApplications(int expertId)

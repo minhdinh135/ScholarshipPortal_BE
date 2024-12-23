@@ -1,3 +1,5 @@
+using Domain.DTOs.Applicant;
+
 namespace Domain.DTOs.Application;
 
 public class ApplicationDto
@@ -17,6 +19,8 @@ public class ApplicationDto
     public string ScholarshipName { get; set; }
 
     public DateTime UpdatedAt { get; set; }
+    
+    public ApplicantProfileDetails ApplicantProfile { get; set; }
     
     public List<ApplicationDocumentDto> ApplicationDocuments { get; set; }
     
