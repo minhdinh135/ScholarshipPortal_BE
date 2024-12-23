@@ -50,11 +50,11 @@ namespace SSAP.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetApplicationById(int id)
         {
             try
             {
-                var profile = await _applicationService.Get(id);
+                var profile = await _applicationService.GetApplicationById(id);
                 if (profile == null) return NotFound("Application not found.");
                 /*if(profile.Status == ApplicationStatusEnum.NeedExtend.ToString())
                 {
