@@ -20,6 +20,9 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
     {
         var application = await _dbContext.Applications
             .AsSplitQuery()
+            .Include(a => a.ScholarshipProgram)
+            .Include(a => a.Applicant)
+            .ThenInclude(a => a.ApplicantProfile)
             .Include(a => a.ApplicationDocuments)
             .Include(a => a.ApplicationReviews)
             .FirstOrDefaultAsync(a => a.Id == id);
