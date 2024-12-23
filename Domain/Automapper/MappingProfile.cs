@@ -253,6 +253,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.ScholarshipName, opt =>
                 opt.MapFrom(src => src.ScholarshipProgram.Name))
             .ReverseMap();
+        CreateMap<Application, ApplicationFullDto>().ReverseMap();
 
         CreateMap<ApplicationDocument, ApplicationDocumentDto>().ReverseMap();
         CreateMap<ApplicationDocument, AddApplicationDocumentDto>().ReverseMap();

@@ -254,10 +254,10 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<ApplicationDto>>(entities);
         }
 
-        public async Task<Domain.Entities.Application> GetWithDocumentsAndAccount(int applicationId)
+        public async Task<ApplicationFullDto> GetWithDocumentsAndAccount(int applicationId)
         {
             var entities = await _applicationRepository.GetWithDocumentsAndAccount(applicationId);
-            return entities;
+            return _mapper.Map<ApplicationFullDto>(entities);
         }
 
         public async Task<PaginatedList<ApplicationDto>> GetAll(int pageIndex, int pageSize, string sortBy,
