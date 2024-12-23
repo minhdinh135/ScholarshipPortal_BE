@@ -137,7 +137,7 @@ namespace SSAP.API.Controllers
             var profile = await _applicationService.GetWithDocumentsAndAccount(id);
             if (profile == null) return NotFound("Application not found.");
 
-            await _applicationService.CheckApplicationAward(profile);
+            //await _applicationService.CheckApplicationAward(profile);
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicantion successfully", profile));
             //}
