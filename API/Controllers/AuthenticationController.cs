@@ -9,39 +9,14 @@ namespace SSAP.API.Controllers;
 [ApiController]
 public class AuthenticationController : ControllerBase
 {
-    private readonly ITokenService _jwtService;
-    private readonly IAccountService _accountService;
-    private readonly IRoleService _roleService;
     private readonly IAuthService _authService;
-    private readonly INotificationService _notificationService;
-    private static readonly Dictionary<string, string> _otpStore = new();
-    private static readonly Random _random = new();
-    private readonly IPasswordService _passwordService;
-    private readonly IEmailService _emailService;
+    private readonly IGoogleService _googleService;
 
-    private readonly IConfiguration _configuration;
-    private readonly GoogleService _googleService;
-
-    public AuthenticationController(ITokenService jwtService,
-        IAccountService userService,
-        IRoleService roleService,
-        IConfiguration configuration,
-        IAuthService authService,
-        INotificationService notificationService,
-        IPasswordService passwordService,
-        IEmailService emailService,
-        GoogleService googleService)
+    public AuthenticationController(IAuthService authService,
+        IGoogleService googleService)
     {
-        _jwtService = jwtService;
-        _accountService = userService;
-        _roleService = roleService;
         _authService = authService;
-        _passwordService = passwordService;
-        _emailService = emailService;
-        _configuration = configuration;
         _googleService = googleService;
-        _authService = authService;
-        _notificationService = notificationService;
     }
 
     [HttpPost("login")]
@@ -81,7 +56,7 @@ public class AuthenticationController : ControllerBase
             //return Redirect("https://scholarship-portal-nu.vercel.app/login-google?result=fail");
             return BadRequest("Authorization code is missing.");
         }
-    
+
         var token = await _googleService.ExchangeCodeForToken(code);
         var userInfo = await _googleService.GetUserInfo(token);
         try
@@ -89,8 +64,9 @@ public class AuthenticationController : ControllerBase
             var (jwt, isNewUser) = await _authService.GoogleAuth(userInfo);
             //return Redirect("http://localhost:5173/login-google?result=success&isNewUser=" + isNewUser + "&jwt=" +
             //   jwt.Token);
-            return Redirect("https://scholarship-portal-nu.vercel.app/login-google?result=success&isNewUser=" + isNewUser + "&jwt=" +
-                jwt.Token);
+            return Redirect("https://scholarship-portal-nu.vercel.app/login-google?result=success&isNewUser=" +
+                            isNewUser + "&jwt=" +
+                            jwt.Token);
             //return Ok(jwt);
         }
         catch (Exception ex)
@@ -109,14 +85,14 @@ public class AuthenticationController : ControllerBase
             //return Redirect("com.scholarship://login-google?result=fail");
             return BadRequest("Authorization code is missing.");
         }
-    
+
         var token = await _googleService.ExchangeCodeForTokenMobile(code);
         var userInfo = await _googleService.GetUserInfo(token);
         try
         {
             var (jwt, isNewUser) = await _authService.GoogleAuth(userInfo);
             return Redirect("com.scholarship://login-google?result=success&isNewUser=" + isNewUser + "&jwt=" +
-                jwt.Token);
+                            jwt.Token);
             //return Ok(jwt);
         }
         catch (Exception ex)
@@ -139,5 +115,5 @@ public class AuthenticationController : ControllerBase
         {
             return BadRequest(new { Message = ex.Message });
         }
-    } 
+    }
 }

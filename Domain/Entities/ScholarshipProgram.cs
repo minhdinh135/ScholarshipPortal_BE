@@ -13,6 +13,9 @@ public class ScholarshipProgram : BaseEntity
     [MaxLength(200)]
     public string Description { get; set; }
     
+    [MaxLength(200)]
+    public string EducationLevel { get; set; }
+    
     public decimal ScholarshipAmount { get; set; }
     
     public int NumberOfAwardMilestones { get; set; }
@@ -40,6 +43,8 @@ public class ScholarshipProgram : BaseEntity
     
     public Major Major { get; set; }
     
+    public ICollection<Assignment>? Assignments { get; set; }
+    
     public ICollection<Application>? Applications { get; set; }
     
     public ICollection<AwardMilestone> AwardMilestones { get; set; }
@@ -47,6 +52,8 @@ public class ScholarshipProgram : BaseEntity
     public ICollection<ReviewMilestone> ReviewMilestones { get; set; }
     
     public ICollection<Criteria> Criteria { get; set; }
+    
+    public ICollection<Document> Documents { get; set; }
     
     public ICollection<ScholarshipProgramCertificate> ScholarshipProgramCertificates { get; set; }
 }

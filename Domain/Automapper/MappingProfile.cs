@@ -163,8 +163,6 @@ public class MappingProfile : Profile
                 .MapFrom(src => src.Applicant.PhoneNumber))
             .ForMember(dest => dest.Address, opt => opt
                 .MapFrom(src => src.Applicant.Address))
-            .ForMember(dest => dest.Achievements, opt => opt
-                .MapFrom(src => src.Achievements.Select(a => a.Name)))
             .ForMember(dest => dest.Skills, opt => opt
                 .MapFrom(src => src.ApplicantSkills.Select(s => s.Name)))
             .ForMember(dest => dest.Experience, opt => opt
@@ -174,10 +172,6 @@ public class MappingProfile : Profile
             .ReverseMap();
         CreateMap<ApplicantProfile, UpdateApplicantProfileDto>().ReverseMap();
         CreateMap<ApplicantProfile, ApplicantProfileDto>().ReverseMap();
-
-        CreateMap<Achievement, AddAchievementDto>().ReverseMap();
-        CreateMap<Achievement, UpdateAchievementDto>().ReverseMap();
-        CreateMap<Achievement, AchievementDto>().ReverseMap();
 
         CreateMap<ApplicantSkill, ApplicantSkillDto>().ReverseMap();
         CreateMap<ApplicantSkill, AddApplicantSkillDto>().ReverseMap();
@@ -259,7 +253,7 @@ public class MappingProfile : Profile
         CreateMap<ApplicationDocument, AddApplicationDocumentDto>().ReverseMap();
         CreateMap<ApplicationDocument, UpdateApplicationDocumentDto>().ReverseMap();
 
-        CreateMap<ApplicationReview, ApplicationReviewDto>()
+        CreateMap<Review, ApplicationReviewDto>()
             .ForMember(dest => dest.ApplicantName, opt =>
                 opt.MapFrom(src =>
                     $"{src.Application.Applicant.ApplicantProfile.FirstName} {src.Application.Applicant.ApplicantProfile.LastName}"))

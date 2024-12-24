@@ -19,7 +19,7 @@ public class GlobalExceptionHandler : IExceptionHandler
 
         var problemDetails = new ProblemDetails
         {
-            Detail = $"API Error {exception.Message}",
+            Detail = $"API Error: {exception.Message}",
             Instance = "API",
             Status = StatusCodes.Status500InternalServerError,
             Title = "API Error",

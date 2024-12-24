@@ -95,14 +95,6 @@ public class ApplicantService : IApplicantService
             applicantProfile.Gender = updateDetails.Gender;
             applicantProfile.Nationality = updateDetails.Nationality;
             applicantProfile.Ethnicity = updateDetails.Ethnicity;
-            applicantProfile.Major = updateDetails.Major;
-            applicantProfile.School = updateDetails.School;
-            applicantProfile.Gpa = updateDetails.Gpa;
-
-            List<Achievement> achievements =
-                updateDetails.Achievements.Select(a => new Achievement { Name = a }).ToList();
-            achievements.ForEach(a => a.ApplicantProfileId = applicant.ApplicantProfile.Id);
-            await _applicantRepository.UpdateProfileAchievements(applicant.ApplicantProfile.Id, achievements);
 
             List<ApplicantSkill> skills =
                 updateDetails.Skills.Select(a => new ApplicantSkill { Name = a, Type = ""}).ToList();
@@ -110,7 +102,7 @@ public class ApplicantService : IApplicantService
             await _applicantRepository.UpdateProfileSkills(applicant.ApplicantProfile.Id, skills);
 
             List<ApplicantCertificate> certificates =
-                updateDetails.Certificates.Select(a => new ApplicantCertificate { Name = a, Type = ""}).ToList();
+                updateDetails.Certificates.Select(a => new ApplicantCertificate { Name = a }).ToList();
             certificates.ForEach(a => a.ApplicantProfileId = applicant.ApplicantProfile.Id);
             await _applicantRepository.UpdateProfileCertificates(applicant.ApplicantProfile.Id, certificates);
 

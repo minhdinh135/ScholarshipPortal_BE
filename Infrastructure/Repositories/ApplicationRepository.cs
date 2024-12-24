@@ -101,7 +101,7 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
         return applications;
     }
 
-    public async Task<IEnumerable<ApplicationReview>> GetApplicationReviewsResult(int scholarshipProgramId,
+    public async Task<IEnumerable<Review>> GetApplicationReviewsResult(int scholarshipProgramId,
         bool isFirstReview)
     {
         var applications = await _dbContext.Applications
@@ -112,7 +112,7 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
         var applicationIds = applications.Select(a => a.Id);
 
         var applicationReviews = await _dbContext
-            .ApplicationReviews
+            .Reviews
             .AsSplitQuery()
             .Include(review => review.Application)
             .ThenInclude(application => application.Applicant)
