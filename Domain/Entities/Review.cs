@@ -2,7 +2,7 @@
 
 namespace Domain.Entities;
 
-public class ApplicationReview : BaseEntity
+public class Review : BaseEntity
 {
     [MaxLength(200)]
     public string? Description { get; set; }

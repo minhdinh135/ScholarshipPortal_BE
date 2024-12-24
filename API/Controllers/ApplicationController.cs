@@ -1,5 +1,4 @@
 using Application.Interfaces.IServices;
-using AutoMapper;
 using Domain.DTOs.Application;
 using Domain.DTOs.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -14,15 +13,13 @@ namespace SSAP.API.Controllers
         private readonly IApplicationService _applicationService;
         private readonly IAwardMilestoneService _awardMilestoneService;
         private readonly ILogger<ApplicationController> _logger;
-        private readonly IMapper _mapper;
 
         public ApplicationController(IApplicationService applicationService, ILogger<ApplicationController> logger,
-            IAwardMilestoneService awardMilestoneService, IMapper mapper)
+            IAwardMilestoneService awardMilestoneService)
         {
             _applicationService = applicationService;
             _logger = logger;
             _awardMilestoneService = awardMilestoneService;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -54,31 +51,13 @@ namespace SSAP.API.Controllers
         {
             try
             {
-                var profile = await _applicationService.GetApplicationById(id);
-                if (profile == null) return NotFound("Application not found.");
-                /*if(profile.Status == ApplicationStatusEnum.NeedExtend.ToString())
-                {
-                    Console.WriteLine("Hello asdasdsadsad");
-                    var awards = await _awardMilestoneService.GetByScholarshipId(profile.ScholarshipProgramId.Value);
-                    var profileEntity = _mapper.Map<Domain.Entities.Application>(profile);
-                    var award = awards.Where(x =>
-                        x.FromDate < profileEntity.UpdatedAt &&
-                        x.ToDate > profile.UpdatedAt)
-                    .FirstOrDefault();
+                var application = await _applicationService.GetApplicationById(id);
 
-                    if(award.ToDate < DateTime.Now){
-                        profileEntity.Status = ApplicationStatusEnum.Rejected.ToString();
-                        var profileUpdateDto = _mapper.Map<UpdateApplicationStatusRequest>(profile);
-                        await _applicationService.Update(profile.Id, profileUpdateDto);
-                    }
-                }*/
-
-                return Ok(profile);
+                return Ok(new ApiResponse(StatusCodes.Status200OK, "Get application successfully", application));
             }
-            catch (Exception ex)
+            catch (ServiceException e)
             {
-                _logger.LogError($"Failed to get applicant profile by id {id}: {ex.Message}");
-                return StatusCode(500, "Error retrieving data from the database.");
+                return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
             }
         }
 

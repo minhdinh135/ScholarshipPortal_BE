@@ -64,10 +64,12 @@ public class Account : BaseEntity
     public ICollection<Request> Requests { get; set; }
     
     public ICollection<ScholarshipProgram>? FunderScholarshipPrograms { get; set; }
+    
+    public ICollection<Assignment>? Assignments { get; set; }
 
     public ICollection<Application>? Applications { get; set; }
 
-    public ICollection<ApplicationReview>? ApplicationReviews { get; set; }
+    public ICollection<Review>? ApplicationReviews { get; set; }
 
     public ICollection<Feedback>? Feedbacks { get; set; }
 }

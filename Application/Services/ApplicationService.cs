@@ -95,7 +95,7 @@ namespace Application.Services
                     application.Status = ApplicationStatusEnum.Reviewing.ToString();
                     await _applicationRepository.Update(application);
 
-                    var review = new ApplicationReview
+                    var review = new Review
                     {
                         Description = request.IsFirstReview ? ApplicationReviewDescription.APPLICATION_REVIEW : ApplicationReviewDescription.INTERVIEW,
                         ApplicationId = applicationId,
