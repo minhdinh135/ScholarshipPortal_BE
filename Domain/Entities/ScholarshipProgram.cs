@@ -14,7 +14,7 @@ public class ScholarshipProgram : BaseEntity
     public string Description { get; set; }
     
     [MaxLength(200)]
-    public string EducationLevel { get; set; }
+    public string? EducationLevel { get; set; }
     
     public decimal ScholarshipAmount { get; set; }
     

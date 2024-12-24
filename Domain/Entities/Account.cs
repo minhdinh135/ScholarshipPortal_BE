@@ -47,7 +47,7 @@ public class Account : BaseEntity
     
     public Wallet? Wallet { get; set; }
 
-    public ApplicantProfile? ApplicantProfile { get; set; }
+    public ApplicantProfile ApplicantProfile { get; set; }
 
     public FunderProfile? FunderProfile { get; set; }
 
