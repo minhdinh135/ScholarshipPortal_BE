@@ -8,7 +8,7 @@ public class ApplicationDto
 
     public DateTime AppliedDate { get; set; }
     
-    public string? Status { get; set; }
+    public string Status { get; set; }
     
     public int ApplicantId { get; set; }
     
