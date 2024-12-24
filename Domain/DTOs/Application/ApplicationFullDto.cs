@@ -1,5 +1,4 @@
 using Domain.DTOs.Account;
-using Domain.DTOs.ScholarshipProgram;
 
 namespace Domain.DTOs.Application;
 
