@@ -24,6 +24,7 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
             q => q.Include(sp => sp.ScholarshipProgramCertificates).ThenInclude(c => c.Certificate),
             q => q.Include(sp => sp.Major).ThenInclude(m => m.MajorSkills).ThenInclude(ms => ms.Skill),
             q => q.Include(sp => sp.Criteria),
+            q => q.Include(sp => sp.Documents),
             q => q.Include(sp => sp.ReviewMilestones),
             q => q.Include(sp => sp.AwardMilestones)
         };
@@ -37,6 +38,7 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
         var scholarshipProgram = await _dbContext.ScholarshipPrograms
             .AsSplitQuery()
             .Include(sp => sp.Criteria)
+            .Include(sp => sp.Documents)
             .Include(sp => sp.ReviewMilestones)
             .Include(sp => sp.AwardMilestones)
             .Include(sp => sp.Category)

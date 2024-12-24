@@ -13,6 +13,8 @@ public class CreateScholarshipProgramRequest
     public int NumberOfScholarships { get; set; }
     
     public int NumberOfAwardMilestones { get; set; }
+    
+    public string EducationLevel { get; set; }
 
     public DateTime Deadline { get; set; }
 
@@ -31,4 +33,6 @@ public class CreateScholarshipProgramRequest
     public List<CriteriaDetails> Criteria { get; set; }
     
     public List<ReviewMilestoneDetails> ReviewMilestones { get; set; }
+    
+    public List<DocumentDto> Documents { get; set; }
 }
