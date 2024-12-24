@@ -9,6 +9,8 @@ public class UpdateScholarshipProgramRequest
     public string? ImageUrl { get; set; }
 
     public string? Description { get; set; }
+    
+    public string EducationLevel { get; set; }
 
     public decimal? ScholarshipAmount { get; set; }
 

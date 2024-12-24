@@ -127,16 +127,16 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Automatically apply pending migrations and update the database.
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<ScholarshipContext>();
-
-    // Check for pending migrations and apply them.
-    if (dbContext.Database.GetPendingMigrations().Any())
-    {
-        dbContext.Database.Migrate();
-    }
-}
+// using (var scope = app.Services.CreateScope())
+// {
+//     var dbContext = scope.ServiceProvider.GetRequiredService<ScholarshipContext>();
+//
+//     // Check for pending migrations and apply them.
+//     if (dbContext.Database.GetPendingMigrations().Any())
+//     {
+//         dbContext.Database.Migrate();
+//     }
+// }
 
 using (var scope = app.Services.CreateScope())
 {
