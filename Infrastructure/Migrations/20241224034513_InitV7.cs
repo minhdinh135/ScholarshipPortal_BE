@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitV6 : Migration
+    public partial class InitV7 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -252,9 +252,6 @@ namespace Infrastructure.Migrations
                     Gender = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
                     Nationality = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
                     Ethnicity = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
-                    Major = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
-                    Gpa = table.Column<double>(type: "double", nullable: true),
-                    School = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
                     ApplicantId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
@@ -435,6 +432,7 @@ namespace Infrastructure.Migrations
                     Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     ImageUrl = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true),
                     Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
+                    EducationLevel = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
                     ScholarshipAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     NumberOfAwardMilestones = table.Column<int>(type: "int", nullable: false),
                     NumberOfScholarships = table.Column<int>(type: "int", nullable: false),
@@ -530,31 +528,6 @@ namespace Infrastructure.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Achievements",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
-                    AchievedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    ApplicantProfileId = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Achievements", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Achievements_applicant_profiles_ApplicantProfileId",
-                        column: x => x.ApplicantProfileId,
-                        principalTable: "applicant_profiles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "applicant_certificates",
                 columns: table => new
                 {
@@ -562,8 +535,8 @@ namespace Infrastructure.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
-                    Type = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
-                    ImageUrl = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true),
+                    Url = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true),
+                    AchievedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ApplicantProfileId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
@@ -606,6 +579,35 @@ namespace Infrastructure.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Educations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    EducationLevel = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    FromYear = table.Column<int>(type: "int", nullable: false),
+                    ToYear = table.Column<int>(type: "int", nullable: false),
+                    Major = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
+                    Gpa = table.Column<double>(type: "double", nullable: false),
+                    School = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
+                    ApplicantProfileId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Educations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Educations_applicant_profiles_ApplicantProfileId",
+                        column: x => x.ApplicantProfileId,
+                        principalTable: "applicant_profiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Experiences",
                 columns: table => new
                 {
@@ -613,6 +615,8 @@ namespace Infrastructure.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    FromDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ToDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ApplicantProfileId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
@@ -711,6 +715,36 @@ namespace Infrastructure.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Assignment",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    ScholarshipProgramId = table.Column<int>(type: "int", nullable: false),
+                    ExpertId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Assignment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Assignment_Accounts_ExpertId",
+                        column: x => x.ExpertId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Assignment_scholarship_programs_ScholarshipProgramId",
+                        column: x => x.ScholarshipProgramId,
+                        principalTable: "scholarship_programs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "award_milestones",
                 columns: table => new
                 {
@@ -753,6 +787,30 @@ namespace Infrastructure.Migrations
                     table.PrimaryKey("PK_Criteria", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Criteria_scholarship_programs_ScholarshipProgramId",
+                        column: x => x.ScholarshipProgramId,
+                        principalTable: "scholarship_programs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Documents",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Type = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
+                    IsRequired = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    ScholarshipProgramId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Documents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Documents_scholarship_programs_ScholarshipProgramId",
                         column: x => x.ScholarshipProgramId,
                         principalTable: "scholarship_programs",
                         principalColumn: "Id",
@@ -933,7 +991,7 @@ namespace Infrastructure.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "application_reviews",
+                name: "Reviews",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -950,15 +1008,15 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_application_reviews", x => x.Id);
+                    table.PrimaryKey("PK_Reviews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_application_reviews_Accounts_ExpertId",
+                        name: "FK_Reviews_Accounts_ExpertId",
                         column: x => x.ExpertId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_application_reviews_Applications_ApplicationId",
+                        name: "FK_Reviews_Applications_ApplicationId",
                         column: x => x.ApplicationId,
                         principalTable: "Applications",
                         principalColumn: "Id",
@@ -1030,11 +1088,6 @@ namespace Infrastructure.Migrations
                 column: "SubscriptionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Achievements_ApplicantProfileId",
-                table: "Achievements",
-                column: "ApplicantProfileId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_applicant_certificates_ApplicantProfileId",
                 table: "applicant_certificates",
                 column: "ApplicantProfileId");
@@ -1056,16 +1109,6 @@ namespace Infrastructure.Migrations
                 column: "ApplicationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_application_reviews_ApplicationId",
-                table: "application_reviews",
-                column: "ApplicationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_application_reviews_ExpertId",
-                table: "application_reviews",
-                column: "ExpertId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Applications_ApplicantId",
                 table: "Applications",
                 column: "ApplicantId");
@@ -1073,6 +1116,16 @@ namespace Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Applications_ScholarshipProgramId",
                 table: "Applications",
+                column: "ScholarshipProgramId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Assignment_ExpertId",
+                table: "Assignment",
+                column: "ExpertId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Assignment_ScholarshipProgramId",
+                table: "Assignment",
                 column: "ScholarshipProgramId");
 
             migrationBuilder.CreateIndex(
@@ -1099,6 +1152,16 @@ namespace Infrastructure.Migrations
                 name: "IX_Criteria_ScholarshipProgramId",
                 table: "Criteria",
                 column: "ScholarshipProgramId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Documents_ScholarshipProgramId",
+                table: "Documents",
+                column: "ScholarshipProgramId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Educations_ApplicantProfileId",
+                table: "Educations",
+                column: "ApplicantProfileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Experiences_ApplicantProfileId",
@@ -1184,6 +1247,16 @@ namespace Infrastructure.Migrations
                 column: "ScholarshipProgramId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reviews_ApplicationId",
+                table: "Reviews",
+                column: "ApplicationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_ExpertId",
+                table: "Reviews",
+                column: "ExpertId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_scholarship_program_certificates_CertificateId",
                 table: "scholarship_program_certificates",
                 column: "CertificateId");
@@ -1239,9 +1312,6 @@ namespace Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Achievements");
-
-            migrationBuilder.DropTable(
                 name: "applicant_certificates");
 
             migrationBuilder.DropTable(
@@ -1251,7 +1321,7 @@ namespace Infrastructure.Migrations
                 name: "application_documents");
 
             migrationBuilder.DropTable(
-                name: "application_reviews");
+                name: "Assignment");
 
             migrationBuilder.DropTable(
                 name: "award_milestone_documents");
@@ -1261,6 +1331,12 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Criteria");
+
+            migrationBuilder.DropTable(
+                name: "Documents");
+
+            migrationBuilder.DropTable(
+                name: "Educations");
 
             migrationBuilder.DropTable(
                 name: "Experiences");
@@ -1290,13 +1366,13 @@ namespace Infrastructure.Migrations
                 name: "review_milestones");
 
             migrationBuilder.DropTable(
+                name: "Reviews");
+
+            migrationBuilder.DropTable(
                 name: "scholarship_program_certificates");
 
             migrationBuilder.DropTable(
                 name: "Transactions");
-
-            migrationBuilder.DropTable(
-                name: "Applications");
 
             migrationBuilder.DropTable(
                 name: "award_milestones");
@@ -1317,19 +1393,25 @@ namespace Infrastructure.Migrations
                 name: "request_details");
 
             migrationBuilder.DropTable(
+                name: "Applications");
+
+            migrationBuilder.DropTable(
                 name: "Certificates");
 
             migrationBuilder.DropTable(
                 name: "Wallets");
 
             migrationBuilder.DropTable(
-                name: "scholarship_programs");
-
-            migrationBuilder.DropTable(
                 name: "Requests");
 
             migrationBuilder.DropTable(
                 name: "Services");
+
+            migrationBuilder.DropTable(
+                name: "scholarship_programs");
+
+            migrationBuilder.DropTable(
+                name: "Accounts");
 
             migrationBuilder.DropTable(
                 name: "Categories");
@@ -1341,16 +1423,13 @@ namespace Infrastructure.Migrations
                 name: "Universities");
 
             migrationBuilder.DropTable(
-                name: "Accounts");
-
-            migrationBuilder.DropTable(
-                name: "Countries");
-
-            migrationBuilder.DropTable(
                 name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Subscriptions");
+
+            migrationBuilder.DropTable(
+                name: "Countries");
         }
     }
 }

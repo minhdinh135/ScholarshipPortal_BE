@@ -25,6 +25,8 @@ public class ScholarshipProgramDto
     public string? Status { get; set; }
 
     public int? FunderId { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
     
     public CategoryDto? Category { get; set; }
 

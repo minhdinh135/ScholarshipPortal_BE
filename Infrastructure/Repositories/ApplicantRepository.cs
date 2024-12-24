@@ -17,22 +17,9 @@ public class ApplicantRepository : GenericRepository<ApplicantProfile>, IApplica
             .AsSplitQuery()
             .Include(a => a.Applicant)
             .Include(a => a.Experiences)
-            .Include(a => a.Achievements)
             .Include(a => a.ApplicantSkills)
             .Include(a => a.ApplicantCertificates)
             .FirstOrDefaultAsync(a => a.ApplicantId == applicantId);
-    }
-
-    public async Task UpdateProfileAchievements(int applicantProfileId, List<Achievement> achievements)
-    {
-        await _dbContext.Achievements
-            .Where(a => a.ApplicantProfileId == applicantProfileId)
-            .ExecuteDeleteAsync();
-
-        await _dbContext.Achievements
-            .AddRangeAsync(achievements);
-
-        await _dbContext.SaveChangesAsync();
     }
 
     public async Task UpdateProfileSkills(int applicantProfileId, List<ApplicantSkill> skills)

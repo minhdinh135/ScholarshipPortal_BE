@@ -10,6 +10,10 @@ public class Experience : BaseEntity
     [MaxLength(200)]
     public string? Description { get; set; }
     
+    public DateTime FromDate { get; set; }
+    
+    public DateTime ToDate { get; set; }
+    
     public int ApplicantProfileId { get; set; }
 
     public ApplicantProfile ApplicantProfile { get; set; } 

@@ -16,7 +16,7 @@ public class ScholarshipContext : DbContext
     {
     }
 
-    
+
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var entries = ChangeTracker
@@ -29,25 +29,24 @@ public class ScholarshipContext : DbContext
         {
             var baseEntity = (BaseEntity)entityEntry.Entity;
 
-            var updatedAtProperty = entityEntry.Properties.FirstOrDefault(p => p.Metadata.Name == nameof(BaseEntity.UpdatedAt));
+            var updatedAtProperty =
+                entityEntry.Properties.FirstOrDefault(p => p.Metadata.Name == nameof(BaseEntity.UpdatedAt));
             if (entityEntry.State == EntityState.Modified && updatedAtProperty != null)
             {
                 var databaseValues = await entityEntry.GetDatabaseValuesAsync(cancellationToken);
                 var originalValue = databaseValues?.GetValue<DateTime?>(nameof(BaseEntity.UpdatedAt));
-                Console.WriteLine((DateTime?)updatedAtProperty.CurrentValue);
+
                 if (originalValue.HasValue && originalValue.Value != (DateTime?)updatedAtProperty.CurrentValue)
                 {
                     baseEntity.UpdatedAt = (DateTime?)updatedAtProperty.CurrentValue;
                 }
                 else
                 {
-                    Console.WriteLine("Original value is null");
                     baseEntity.UpdatedAt = DateTime.Now;
                 }
             }
             else
             {
-                Console.WriteLine("Original value is not null");
                 baseEntity.UpdatedAt = DateTime.Now;
             }
 
@@ -89,7 +88,7 @@ public class ScholarshipContext : DbContext
 
     public virtual DbSet<ExpertProfile> ExpertProfiles { get; set; }
 
-    public virtual DbSet<Achievement> Achievements { get; set; }
+    public virtual DbSet<Education> Educations { get; set; }
 
     public virtual DbSet<Transaction> Transactions { get; set; }
 
@@ -109,7 +108,7 @@ public class ScholarshipContext : DbContext
 
     public virtual DbSet<Domain.Entities.Application> Applications { get; set; }
 
-    public virtual DbSet<ApplicationReview> ApplicationReviews { get; set; }
+    public virtual DbSet<Review> Reviews { get; set; }
 
     public virtual DbSet<ScholarshipProgram> ScholarshipPrograms { get; set; }
 
@@ -120,6 +119,8 @@ public class ScholarshipContext : DbContext
     public virtual DbSet<ReviewMilestone> ReviewMilestones { get; set; }
 
     public virtual DbSet<Criteria> Criteria { get; set; }
+
+    public virtual DbSet<Document> Documents { get; set; }
 
     public virtual DbSet<Certificate> Certificates { get; set; }
 
@@ -190,9 +191,6 @@ public class ScholarshipContext : DbContext
 
         modelBuilder.Entity<RequestDetailFile>()
             .ToTable("request_detail_files");
-
-        modelBuilder.Entity<ApplicationReview>()
-            .ToTable("application_reviews");
 
         modelBuilder.Entity<AwardMilestone>()
             .ToTable("award_milestones");
@@ -288,9 +286,9 @@ public class ScholarshipContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        modelBuilder.Entity<Achievement>()
+        modelBuilder.Entity<Education>()
             .HasOne(achievement => achievement.ApplicantProfile)
-            .WithMany(applicantProfile => applicantProfile.Achievements)
+            .WithMany(applicantProfile => applicantProfile.Educations)
             .HasForeignKey(achievement => achievement.ApplicantProfileId)
             .OnDelete(DeleteBehavior.Restrict);
 
@@ -337,7 +335,7 @@ public class ScholarshipContext : DbContext
             .HasForeignKey(document => document.ApplicationId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<ApplicationReview>(entity =>
+        modelBuilder.Entity<Review>(entity =>
         {
             entity.HasOne(review => review.Expert)
                 .WithMany(expert => expert.ApplicationReviews)
@@ -390,6 +388,12 @@ public class ScholarshipContext : DbContext
             .HasForeignKey(criterion => criterion.ScholarshipProgramId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<Document>()
+            .HasOne(document => document.ScholarshipProgram)
+            .WithMany(scholarshipProgram => scholarshipProgram.Documents)
+            .HasForeignKey(document => document.ScholarshipProgramId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         modelBuilder.Entity<University>()
             .HasOne(university => university.Country)
             .WithMany(country => country.Universities)
@@ -416,6 +420,19 @@ public class ScholarshipContext : DbContext
             entity.HasOne(scholarshipProgram => scholarshipProgram.Major)
                 .WithMany(major => major.ScholarshipPrograms)
                 .HasForeignKey(scholarshipProgram => scholarshipProgram.MajorId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Assignment>(entity =>
+        {
+            entity.HasOne(assignment => assignment.Expert)
+                .WithMany(account => account.Assignments)
+                .HasForeignKey(assignment => assignment.ExpertId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(assignment => assignment.ScholarshipProgram)
+                .WithMany(program => program.Assignments)
+                .HasForeignKey(assignment => assignment.ScholarshipProgramId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 

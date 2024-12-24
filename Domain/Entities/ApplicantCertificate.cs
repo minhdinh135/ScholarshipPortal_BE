@@ -10,11 +10,10 @@ public class ApplicantCertificate : BaseEntity
     [MaxLength(200)]
     public string? Description { get; set; }
     
-    [MaxLength(100)]
-    public string Type { get; set; }
-    
     [MaxLength(1024)]
-    public string? ImageUrl { get; set; }
+    public string? Url { get; set; }
+    
+    public DateTime AchievedDate { get; set; }
     
     public int ApplicantProfileId { get; set; }
     

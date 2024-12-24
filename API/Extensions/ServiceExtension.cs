@@ -96,13 +96,9 @@ public static class ServiceExtension
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<ITransactionRepository, TransactionRepository>();
 
-        services.AddScoped<GoogleService>(s => new GoogleService(
-            config.GetSection("Google").GetSection("ClientId").Value ?? string.Empty,
-            config.GetSection("Google").GetSection("ClientSecret").Value ?? string.Empty,
-            config.GetSection("Google").GetSection("RedirectUri").Value ?? string.Empty,
-            config.GetSection("Google").GetSection("RedirectMobileUri").Value ?? string.Empty
-        ));
-
+        services.Configure<GoogleSettings>(config.GetSection("GoogleSettings"));
+        services.AddScoped<IGoogleService, GoogleService>();
+        
         services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
         services.AddScoped<ICloudinaryService, CloudinaryService>();
 
