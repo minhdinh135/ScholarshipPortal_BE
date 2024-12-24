@@ -196,6 +196,8 @@ public class MappingProfile : Profile
                 opt.MapFrom((src, dest) => src.CertificateIds.Select(id => new ScholarshipProgramCertificate
                     { CertificateId = id, ScholarshipProgramId = dest.Id }).ToList()));
 
+        CreateMap<Document, DocumentDto>().ReverseMap();
+
         CreateMap<List<MajorSkillsDto>, ICollection<MajorSkill>>()
             .ConvertUsing(dtos =>
                 dtos.SelectMany(dto => dto.SkillIds.Select(skillId => new MajorSkill

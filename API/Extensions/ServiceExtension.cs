@@ -121,7 +121,7 @@ public static class ServiceExtension
         services.AddHangfireServer();
         services.AddScoped<IBackgroundService, BackgroundService>();
 
-        FirebaseApp.Create(new AppOptions()
+        FirebaseApp.Create(new AppOptions
         {
             Credential = GoogleCredential.FromFile("./firebase-adminsdk.json"),
         });

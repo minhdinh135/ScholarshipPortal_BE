@@ -11,4 +11,6 @@ public class ApplicationDocumentDto
     public string? FileUrl { get; set; }
 
     public int? ApplicationId { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
 }
