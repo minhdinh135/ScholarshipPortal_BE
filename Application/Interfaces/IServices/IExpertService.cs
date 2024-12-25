@@ -9,5 +9,6 @@ public interface IExpertService
     Task<ExpertProfileDto> CreateExpertProfile(CreateExpertDetailsDto createExpertDetailsDto);
 
     Task<int> UpdateExpertProfile(int expertId, UpdateExpertDetailsDto updateExpertDetailsDto);
+    Task<List<ExpertDetailsDto>> GetAllExpertProfileByExpert();
 
 }

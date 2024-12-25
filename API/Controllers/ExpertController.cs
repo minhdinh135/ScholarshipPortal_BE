@@ -29,10 +29,9 @@ public class ExpertController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllExperts()
     {
-        var applicants = await _accountService.GetAll();
-        applicants = applicants.Where(x => x.RoleName == RoleEnum.Expert.ToString()).ToList();
+        var experts = await _expertService.GetAllExpertProfileByExpert();
 
-        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get experts successfully", applicants));
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get experts successfully", experts));
     }
 
     [HttpGet("{id}")]
