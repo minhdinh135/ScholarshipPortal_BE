@@ -72,18 +72,6 @@ public class ScholarshipProgramController : ControllerBase
             allScholarshipPrograms));
     }
 
-    [HttpGet("paginated")]
-    public async Task<IActionResult> GetScholarshipPrograms([FromQuery] int pageIndex = 1,
-        [FromQuery] int pageSize = 10,
-        [FromQuery] string sortBy = default, [FromQuery] string sortOrder = default)
-    {
-        var scholarshipPrograms =
-            await _scholarshipProgramService.GetScholarshipPrograms(pageIndex, pageSize, sortBy, sortOrder);
-
-        return Ok(
-            new ApiResponse(StatusCodes.Status200OK, "Get scholarship programs successfully", scholarshipPrograms));
-    }
-
     [HttpGet("{id}")]
     public async Task<IActionResult> GetScholarshipProgramById([FromRoute] int id)
     {
@@ -178,33 +166,5 @@ public class ScholarshipProgramController : ControllerBase
         {
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
         }
-    }
-
-    [HttpPut("update-name/{id}")]
-    public async Task<IActionResult> UpdateScholarshipProgramName([FromRoute] int id,
-        [FromBody] string name)
-    {
-        try
-        {
-            await _scholarshipProgramService.UpdateScholarshipProgramName(id, name);
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update scholarship program successfully"));
-        }
-        catch (ServiceException e)
-        {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
-        }
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteScholarshipProgram([FromRoute] int id)
-    {
-        var deletedScholarshipProgram = await _scholarshipProgramService.DeleteScholarshipProgramById(id);
-
-        if (deletedScholarshipProgram == null)
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Delete scholarship program failed",
-                null));
-
-        return Ok(new ApiResponse(StatusCodes.Status200OK, "Delete scholarship program successfully",
-            deletedScholarshipProgram));
     }
 }
