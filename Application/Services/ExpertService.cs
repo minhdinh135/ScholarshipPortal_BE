@@ -20,7 +20,13 @@ public class ExpertService : IExpertService
         _accountRepository = accountRepository;
     }
 
-    public async Task<ExpertDetailsDto> GetExpertProfileByExpertId(int expertId)
+	public async Task<List<ExpertDetailsDto>> GetAllExpertProfileByExpert()
+	{
+		var expert = await _expertRepository.GetAllExpertDetailsByExpert();
+		return _mapper.Map<List<ExpertDetailsDto>>(expert);
+	}
+
+	public async Task<ExpertDetailsDto> GetExpertProfileByExpertId(int expertId)
     {
         var expert = await _expertRepository.GetExpertDetailsByExpertId(expertId);
         if (expert == null)
