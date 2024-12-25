@@ -26,7 +26,15 @@ public class ExpertController : ControllerBase
         _expertService = expertService;
     }
 
-    [HttpGet]
+	[HttpGet("funder/{funderId}")]
+	public async Task<IActionResult> GetAllExpertsByFunder(int funderId)
+	{
+		var experts = await _expertService.GetAllExpertProfilesByFunder(funderId);
+
+		return Ok(new ApiResponse(StatusCodes.Status200OK, "Get experts by funder successfully", experts));
+	}
+
+	[HttpGet]
     public async Task<IActionResult> GetAllExperts()
     {
         var experts = await _expertService.GetAllExpertProfileByExpert();
