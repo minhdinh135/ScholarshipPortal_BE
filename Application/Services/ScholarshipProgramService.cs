@@ -37,15 +37,6 @@ public class ScholarshipProgramService : IScholarshipProgramService
         return _mapper.Map<IEnumerable<ScholarshipProgramDto>>(allScholarshipPrograms);
     }
 
-    public async Task<PaginatedList<ScholarshipProgramDto>> GetScholarshipPrograms(int pageIndex, int pageSize,
-        string sortBy, string sortOrder)
-    {
-        var scholarshipPrograms =
-            await _scholarshipProgramRepository.GetPaginatedList(pageIndex, pageSize, sortBy, sortOrder);
-
-        return _mapper.Map<PaginatedList<ScholarshipProgramDto>>(scholarshipPrograms);
-    }
-
     public async Task<IEnumerable<ScholarshipProgramDto>> SearchScholarshipPrograms(ScholarshipSearchOptions scholarshipSearchOptions)
     {
         try
@@ -140,24 +131,6 @@ public class ScholarshipProgramService : IScholarshipProgramService
         await _scholarshipProgramRepository.Update(existingProgram);
     }
 
-    public async Task UpdateScholarshipProgramName(int id, string name)
-    {
-        var existingScholarshipProgram = await _scholarshipProgramRepository.GetScholarsipProgramById(id);
-        if (existingScholarshipProgram == null)
-            throw new NotFoundException($"Scholarship program with id:{id} is not found");
-
-        try
-        {
-            existingScholarshipProgram.Name = name;
-
-            await _scholarshipProgramRepository.Update(existingScholarshipProgram);
-        }
-        catch (Exception e)
-        {
-            throw new ServiceException(e.Message);
-        }
-    }
-
     public async Task UpdateScholarshipProgramStatus(int id, string status)
     {
         var existingScholarshipProgram = await _scholarshipProgramRepository.GetScholarsipProgramById(id);
@@ -174,12 +147,5 @@ public class ScholarshipProgramService : IScholarshipProgramService
         {
             throw new ServiceException(e.Message);
         }
-    }
-
-    public async Task<ScholarshipProgramDto> DeleteScholarshipProgramById(int id)
-    {
-        var deletedScholarshipProgram = await _scholarshipProgramRepository.DeleteById(id);
-
-        return _mapper.Map<ScholarshipProgramDto>(deletedScholarshipProgram);
     }
 }
