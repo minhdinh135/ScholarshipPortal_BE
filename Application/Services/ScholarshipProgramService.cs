@@ -130,6 +130,16 @@ public class ScholarshipProgramService : IScholarshipProgramService
         }
     }
 
+    public async Task ChangeScholarshipProgramStatus(int id, ChangeScholarshipProgramStatusRequest request)
+    {
+        var existingProgram = await _scholarshipProgramRepository.GetById(id);
+        if (existingProgram == null)
+            throw new ServiceException($"Scholarship program with ID: {id} is not found", new NotFoundException());
+
+        existingProgram.Status = request.Status;
+        await _scholarshipProgramRepository.Update(existingProgram);
+    }
+
     public async Task UpdateScholarshipProgramName(int id, string name)
     {
         var existingScholarshipProgram = await _scholarshipProgramRepository.GetScholarsipProgramById(id);
