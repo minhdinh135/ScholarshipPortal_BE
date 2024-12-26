@@ -1,4 +1,6 @@
-﻿namespace Domain.DTOs.ScholarshipProgram;
+﻿using Domain.DTOs.AwardMilestone;
+
+namespace Domain.DTOs.ScholarshipProgram;
 
 public class CreateScholarshipProgramRequest
 {
@@ -33,6 +35,8 @@ public class CreateScholarshipProgramRequest
     public List<CriteriaDetails> Criteria { get; set; }
     
     public List<ReviewMilestoneDetails> ReviewMilestones { get; set; }
+    
+    public List<AwardMilestoneDetails> AwardMilestones { get; set; }
     
     public List<DocumentDto> Documents { get; set; }
 }
