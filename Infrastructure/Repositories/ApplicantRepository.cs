@@ -16,6 +16,7 @@ public class ApplicantRepository : GenericRepository<ApplicantProfile>, IApplica
         return await _dbContext.ApplicantProfiles
             .AsSplitQuery()
             .Include(a => a.Applicant)
+            .Include(a => a.Educations)
             .Include(a => a.Experiences)
             .Include(a => a.ApplicantSkills)
             .Include(a => a.ApplicantCertificates)

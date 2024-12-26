@@ -15,7 +15,7 @@ public class PdfService : IPdfService
         Settings.License = LicenseType.Community;
     }
 
-    public async Task<byte[]> GenerateProfileInPdf(ApplicantProfileDetails profile)
+    public async Task<byte[]> GenerateProfileInPdf(ApplicantProfileDto profile)
     {
         var document = Document.Create(container =>
         {
@@ -53,7 +53,7 @@ public class PdfService : IPdfService
                             table.Cell().Text($"{profile.Gender}");
 
                             table.Cell().Text("Date of Birth:");
-                            table.Cell().Text($"{profile.Birthdate.ToString("yyyy-MM-dd") ?? "N/A"}");
+                            table.Cell().Text($"{profile.BirthDate?.ToString("yyyy-MM-dd") ?? "N/A"}");
 
                             table.Cell().Text("Address:");
                             table.Cell().Text($"{profile.Address ?? "N/A"}");
@@ -80,53 +80,11 @@ public class PdfService : IPdfService
                                 columns.ConstantColumn(150);
                                 columns.RelativeColumn();
                             });
-
-                            table.Cell().Text("Major");
-                            table.Cell().Text($"{profile.Major}");
-
-                            table.Cell().Text("Current School:");
-                            table.Cell().Text($"{profile.School}");
-
-                            table.Cell().Text("GPA:");
-                            table.Cell().Text($"{profile.Gpa}/4.0");
                         });
 
                         // Achievements
-                        x.Item().Text("Achievements").FontSize(14).SemiBold();
-                        if (profile.Achievements.IsNullOrEmpty())
-                        {
-                            x.Item().Text("N/A");
-                        }
-                        else
-                        {
-                            x.Item().Column(column =>
-                            {
-                                foreach (var achievement in profile.Achievements)
-                                {
-                                    column.Item().Text($"• {achievement}");
-                                }
-                            });
-                        }
-
-
-                        x.Item().Text("Experience").FontSize(14).SemiBold();
-                        if (profile.Experience.IsNullOrEmpty())
-                        {
-                            x.Item().Text("N/A");
-                        }
-                        else
-                        {
-                            x.Item().Column(column =>
-                            {
-                                foreach (var experience in profile.Experience)
-                                {
-                                    column.Item().Text($"• {experience}");
-                                }
-                            });
-                        }
-
                         x.Item().Text("Skills").FontSize(14).SemiBold();
-                        if (profile.Skills.IsNullOrEmpty())
+                        if (profile.ApplicantSkills.IsNullOrEmpty())
                         {
                             x.Item().Text("N/A");
                         }
@@ -134,15 +92,16 @@ public class PdfService : IPdfService
                         {
                             x.Item().Column(column =>
                             {
-                                foreach (var skill in profile.Skills)
+                                foreach (var skill in profile.ApplicantSkills)
                                 {
                                     column.Item().Text($"• {skill}");
                                 }
                             });
                         }
 
-                        x.Item().Text("Certificates").FontSize(14).SemiBold();
-                        if (profile.Certificates.IsNullOrEmpty())
+
+                        x.Item().Text("Experience").FontSize(14).SemiBold();
+                        if (profile.ApplicantExperience.IsNullOrEmpty())
                         {
                             x.Item().Text("N/A");
                         }
@@ -150,7 +109,23 @@ public class PdfService : IPdfService
                         {
                             x.Item().Column(column =>
                             {
-                                foreach (var certificate in profile.Certificates)
+                                foreach (var experience in profile.ApplicantExperience)
+                                {
+                                    column.Item().Text($"• {experience}");
+                                }
+                            });
+                        }
+
+                        x.Item().Text("Certificates").FontSize(14).SemiBold();
+                        if (profile.ApplicantCertificates.IsNullOrEmpty())
+                        {
+                            x.Item().Text("N/A");
+                        }
+                        else
+                        {
+                            x.Item().Column(column =>
+                            {
+                                foreach (var certificate in profile.ApplicantCertificates)
                                 {
                                     column.Item().Text($"• {certificate}");
                                 }
@@ -171,7 +146,7 @@ public class PdfService : IPdfService
         return document.GeneratePdf();
     }
 
-	public async Task<byte[]> GenerateScholarshipContractPdf(
+    public async Task<byte[]> GenerateScholarshipContractPdf(
 	string applicantName,
 	string scholarshipAmount,
 	string scholarshipProviderName,

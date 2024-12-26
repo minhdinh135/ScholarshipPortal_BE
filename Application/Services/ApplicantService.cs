@@ -4,7 +4,6 @@ using Application.Interfaces.IServices;
 using AutoMapper;
 using Domain.DTOs.Applicant;
 using Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using ServiceException = Application.Exceptions.ServiceException;
 
 namespace Application.Services;
@@ -14,17 +13,17 @@ public class ApplicantService : IApplicantService
     private readonly IMapper _mapper;
     private readonly IApplicantRepository _applicantRepository;
     private readonly IPdfService _pdfService;
-    private readonly ICloudinaryService _cloudinaryService;
     private readonly IAccountRepository _accountRepository;
+    private readonly IExperienceRepository _experienceRepository;
 
     public ApplicantService(IMapper mapper, IApplicantRepository applicantRepository, IPdfService pdfService,
-        ICloudinaryService cloudinaryService, IAccountRepository accountRepository)
+        IAccountRepository accountRepository, IExperienceRepository experienceRepository)
     {
         _mapper = mapper;
         _applicantRepository = applicantRepository;
         _pdfService = pdfService;
-        _cloudinaryService = cloudinaryService;
         _accountRepository = accountRepository;
+        _experienceRepository = experienceRepository;
     }
 
     public async Task<IEnumerable<ApplicantProfileDto>> GetAllApplicantProfiles()
@@ -34,21 +33,13 @@ public class ApplicantService : IApplicantService
         return _mapper.Map<IEnumerable<ApplicantProfileDto>>(applicantProfiles);
     }
 
-    public async Task<ApplicantProfileDto> GetApplicantProfile(int applicantId)
+    public async Task<ApplicantProfileDto> GetApplicantProfileDetails(int applicantId)
     {
         var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
-
         if (applicantProfile == null)
-            throw new NotFoundException($"Applicant Profile with applicantId: {applicantId} is not found");
+            throw new ServiceException($"Applicant Profile with ApplicantId: {applicantId} is not found", new NotFoundException());
 
         return _mapper.Map<ApplicantProfileDto>(applicantProfile);
-    }
-
-    public async Task<ApplicantProfileDetails> GetApplicantProfileDetails(int applicantId)
-    {
-        var profile = await _applicantRepository.GetByApplicantId(applicantId);
-
-        return _mapper.Map<ApplicantProfileDetails>(profile);
     }
 
     public async Task<ApplicantProfileDto> AddApplicantProfile(int applicantId, AddApplicantProfileDto dto)
@@ -97,7 +88,7 @@ public class ApplicantService : IApplicantService
             applicantProfile.Ethnicity = updateDetails.Ethnicity;
 
             List<ApplicantSkill> skills =
-                updateDetails.Skills.Select(a => new ApplicantSkill { Name = a, Type = ""}).ToList();
+                updateDetails.Skills.Select(a => new ApplicantSkill { Name = a, Type = "" }).ToList();
             skills.ForEach(a => a.ApplicantProfileId = applicant.ApplicantProfile.Id);
             await _applicantRepository.UpdateProfileSkills(applicant.ApplicantProfile.Id, skills);
 
@@ -119,19 +110,18 @@ public class ApplicantService : IApplicantService
         }
     }
 
-    public async Task UpdateProfileSkills(int applicantId, List<UpdateApplicantSkillDto> dtos)
+    public async Task AddProfileExperience(int applicantId, AddExperienceRequest request)
     {
         var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
         if (applicantProfile == null)
             throw new NotFoundException($"Applicant profile with applicantId:{applicantId} is not found");
 
-        var skills = _mapper.Map<List<ApplicantSkill>>(dtos);
-
-        skills.ForEach(a => a.ApplicantProfileId = applicantProfile.Id);
-
+        var experience = _mapper.Map<Experience>(request);
+        experience.ApplicantProfileId = applicantProfile.Id;
+        
         try
         {
-            await _applicantRepository.UpdateProfileSkills(applicantProfile.Id, skills);
+            await _experienceRepository.Add(experience);
         }
         catch (Exception e)
         {
@@ -139,13 +129,20 @@ public class ApplicantService : IApplicantService
         }
     }
 
+    public async Task UpdateProfileExperience(int applicantId, int experienceId, UpdateExperienceRequest request)
+    {
+        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (applicantProfile == null)
+            throw new NotFoundException($"Applicant profile with applicantId:{applicantId} is not found");
+    }
+
     public async Task<byte[]> ExportApplicantProfileToPdf(int applicantId)
     {
         var profile = await _applicantRepository.GetByApplicantId(applicantId);
         if (profile == null)
-            throw new NotFoundException($"Profile with applicantId: {applicantId} is not found");
-
-        var pdf = await _pdfService.GenerateProfileInPdf(_mapper.Map<ApplicantProfileDetails>(profile));
+            throw new NotFoundException($"Profile with ApplicantId: {applicantId} is not found");
+        
+        var pdf = await _pdfService.GenerateProfileInPdf(_mapper.Map<ApplicantProfileDto>(profile));
 
         return pdf;
     }
