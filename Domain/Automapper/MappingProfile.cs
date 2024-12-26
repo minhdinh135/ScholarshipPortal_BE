@@ -31,9 +31,6 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        // CreateMap<BaseEntity, BaseDto>()
-        //     .ReverseMap();
-
         CreateMap(typeof(PaginatedList<>), typeof(PaginatedList<>));
 
         //Account and Role Mapping
@@ -152,7 +149,7 @@ public class MappingProfile : Profile
 
         // Applicant Profile mapping
         CreateMap<ApplicantProfile, AddApplicantProfileDto>().ReverseMap();
-        CreateMap<ApplicantProfile, ApplicantProfileDetails>()
+        CreateMap<ApplicantProfile, ApplicantProfileDto>()
             .ForMember(dest => dest.Avatar, opt => opt
                 .MapFrom(src => src.Applicant.AvatarUrl))
             .ForMember(dest => dest.Username, opt => opt
@@ -163,15 +160,20 @@ public class MappingProfile : Profile
                 .MapFrom(src => src.Applicant.PhoneNumber))
             .ForMember(dest => dest.Address, opt => opt
                 .MapFrom(src => src.Applicant.Address))
-            .ForMember(dest => dest.Skills, opt => opt
-                .MapFrom(src => src.ApplicantSkills.Select(s => s.Name)))
-            .ForMember(dest => dest.Experience, opt => opt
-                .MapFrom(src => src.Experiences.Select(e => e.Name)))
-            .ForMember(dest => dest.Certificates, opt => opt
-                .MapFrom(src => src.ApplicantCertificates.Select(c => c.Name)))
+            .ForMember(dest => dest.ApplicantEducations, opt => opt
+                .MapFrom(src => src.Educations))
+            .ForMember(dest => dest.ApplicantSkills, opt => opt
+                .MapFrom(src => src.ApplicantSkills))
+            .ForMember(dest => dest.ApplicantExperience, opt => opt
+                .MapFrom(src => src.Experiences))
+            .ForMember(dest => dest.ApplicantCertificates, opt => opt
+                .MapFrom(src => src.ApplicantCertificates))
             .ReverseMap();
         CreateMap<ApplicantProfile, UpdateApplicantProfileDto>().ReverseMap();
-        CreateMap<ApplicantProfile, ApplicantProfileDto>().ReverseMap();
+
+        CreateMap<Experience, ApplicantExperienceDto>().ReverseMap();
+        CreateMap<AddExperienceRequest, Experience>();
+        CreateMap<UpdateExperienceRequest, Experience>();
 
         CreateMap<ApplicantSkill, ApplicantSkillDto>().ReverseMap();
         CreateMap<ApplicantSkill, AddApplicantSkillDto>().ReverseMap();
