@@ -41,6 +41,7 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
             .Include(sp => sp.Documents)
             .Include(sp => sp.ReviewMilestones)
             .Include(sp => sp.AwardMilestones)
+            .ThenInclude(a => a.AwardMilestoneDocuments)
             .Include(sp => sp.Category)
             .Include(sp => sp.University)
             .ThenInclude(u => u.Country)
