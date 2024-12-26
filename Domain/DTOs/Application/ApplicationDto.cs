@@ -20,7 +20,7 @@ public class ApplicationDto
 
     public DateTime UpdatedAt { get; set; }
     
-    public ApplicantProfileDetails ApplicantProfile { get; set; }
+    public ApplicantProfileDto ApplicantProfile { get; set; }
     
     public List<ApplicationDocumentDto> ApplicationDocuments { get; set; }
     

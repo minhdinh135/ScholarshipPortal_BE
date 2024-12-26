@@ -33,47 +33,47 @@ public class ApplicantController : ControllerBase
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicants successfully", applicants));
     }
 
-	[HttpPost("contract")]
-	public async Task<IActionResult> GetContract([FromBody] ScholarshipContractRequest request)
-	{
-		if (request == null || string.IsNullOrEmpty(request.ApplicantName))
-		{
-			return BadRequest("Invalid input data");
-		}
+    [HttpPost("contract")]
+    public async Task<IActionResult> GetContract([FromBody] ScholarshipContractRequest request)
+    {
+        if (request == null || string.IsNullOrEmpty(request.ApplicantName))
+        {
+            return BadRequest("Invalid input data");
+        }
 
-		var pdfBytes = await _pdfService.GenerateScholarshipContractPdf(
-			request.ApplicantName,
-			request.ScholarshipAmount,
-			request.ScholarshipProviderName,
-			request.Deadline
-		);
+        var pdfBytes = await _pdfService.GenerateScholarshipContractPdf(
+            request.ApplicantName,
+            request.ScholarshipAmount,
+            request.ScholarshipProviderName,
+            request.Deadline
+        );
 
-		return File(pdfBytes, "application/pdf", "Scholarship_Contract.pdf");
-	}
+        return File(pdfBytes, "application/pdf", "Scholarship_Contract.pdf");
+    }
 
-	[HttpPost("contract-uploaded")]
-	public async Task<IActionResult> GetContractUploaded([FromBody] ScholarshipContractRequest request)
-	{
-		if (request == null || string.IsNullOrEmpty(request.ApplicantName))
-		{
-			return BadRequest("Invalid input data");
-		}
+    [HttpPost("contract-uploaded")]
+    public async Task<IActionResult> GetContractUploaded([FromBody] ScholarshipContractRequest request)
+    {
+        if (request == null || string.IsNullOrEmpty(request.ApplicantName))
+        {
+            return BadRequest("Invalid input data");
+        }
 
-		var resultUrl = await _cloudinaryService.CreateAndUploadScholarshipContract(
-			request.ApplicantName,
-			request.ScholarshipAmount,
-			request.ScholarshipProviderName,
-			request.Deadline
-		);
+        var resultUrl = await _cloudinaryService.CreateAndUploadScholarshipContract(
+            request.ApplicantName,
+            request.ScholarshipAmount,
+            request.ScholarshipProviderName,
+            request.Deadline
+        );
 
-		return Ok(new ApiResponse(StatusCodes.Status200OK, "Scholarship contract uploaded successfully", resultUrl));
-	}
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Scholarship contract uploaded successfully", resultUrl));
+    }
 
 
-	[HttpGet("{applicantId}")]
+    [HttpGet("{applicantId}")]
     public async Task<IActionResult> GetApplicantProfile(int applicantId)
     {
-        var applicant = await _applicantService.GetApplicantProfile(applicantId);
+        var applicant = await _applicantService.GetApplicantProfileDetails(applicantId);
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicant successfully", applicant));
     }
@@ -143,31 +143,31 @@ public class ApplicantController : ControllerBase
     {
         try
         {
-            var updatedProfile = await _applicantService.UpdateApplicantProfileDetails(applicantId, updateProfileDetails);
+            var updatedProfile =
+                await _applicantService.UpdateApplicantProfileDetails(applicantId, updateProfileDetails);
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Update applicant profile successfully",
                 updatedProfile));
         }
         catch (Exception e)
         {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Update applicant profile failed",
-                null));
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
         }
     }
 
-    [HttpPut("{applicantId}/skills")]
-    public async Task<IActionResult> UpdateProfileSkills(int applicantId,
-        List<UpdateApplicantSkillDto> updateSkillDtos)
+    [HttpPost("{applicantId}/profile/experience")]
+    public async Task<IActionResult> AddProfileExperience(int applicantId,
+        AddExperienceRequest request)
     {
         try
         {
-            await _applicantService.UpdateProfileSkills(applicantId, updateSkillDtos);
+            await _applicantService.AddProfileExperience(applicantId, request);
 
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update skills successfuly", null));
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Add applicant profile experience successfully"));
         }
-        catch (ServiceException e)
+        catch (Exception e)
         {
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message, null));
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
         }
     }
 
