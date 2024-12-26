@@ -21,6 +21,9 @@ public class ApplicantProfile : BaseEntity
     [MaxLength(100)]
     public string? Ethnicity { get; set; }
     
+    [MaxLength(200)]
+    public string? Bio { get; set; }
+    
     public int ApplicantId { get; set; }
     
     public Account Applicant { get; set; }
