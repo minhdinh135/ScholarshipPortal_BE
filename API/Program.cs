@@ -93,9 +93,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = builder.Configuration["Jwt:Audience"],
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? ""
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]! 
                 )),
-            // RoleClaimType = "role",
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
@@ -110,12 +109,6 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "MyAllowPolicy", policy =>
     {
-        // policy.WithOrigins("http://localhost:5173", "https://scholarship-portal-nu.vercel.app");
-        // policy
-        //     .AllowAnyHeader()
-        //     .AllowAnyMethod()
-        //     .AllowCredentials();
-        
         policy
             .AllowAnyOrigin()
             .AllowAnyHeader()
@@ -127,16 +120,16 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Automatically apply pending migrations and update the database.
-// using (var scope = app.Services.CreateScope())
-// {
-//     var dbContext = scope.ServiceProvider.GetRequiredService<ScholarshipContext>();
-//
-//     // Check for pending migrations and apply them.
-//     if (dbContext.Database.GetPendingMigrations().Any())
-//     {
-//         dbContext.Database.Migrate();
-//     }
-// }
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ScholarshipContext>();
+
+    // Check for pending migrations and apply them.
+    if (dbContext.Database.GetPendingMigrations().Any())
+    {
+        dbContext.Database.Migrate();
+    }
+}
 
 using (var scope = app.Services.CreateScope())
 {

@@ -42,15 +42,6 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpGet("paginated")]
-    public async Task<IActionResult> GetAll([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10,
-        [FromQuery] string sortBy = default, [FromQuery] string sortOrder = default)
-    {
-        var categories = await _accountService.GetAll(pageIndex, pageSize, sortBy, sortOrder);
-
-        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get accounts successfully", categories));
-    }
-
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
@@ -273,23 +264,6 @@ public class AccountController : ControllerBase
             "Your password has been reset successfully!");
 
         return Ok(new { Message = "Password reset successfully!" });
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
-    {
-        try
-        {
-            var deletedProfile = await _accountService.DeleteAccount(id);
-            if (deletedProfile == null) return NotFound("Account not found.");
-
-            return Ok(deletedProfile);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Failed to delete applicant profile: {ex.Message}");
-            return StatusCode(500, "Error deleting data from the database.");
-        }
     }
 
 	[HttpGet("wallets")]
