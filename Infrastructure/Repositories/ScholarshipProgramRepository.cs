@@ -50,6 +50,9 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
             .ThenInclude(ms => ms.Skill)
             .Include(sp => sp.ScholarshipProgramCertificates)
             .ThenInclude(spc => spc.Certificate)
+            .Include(sp => sp.AssignedExperts)
+            .ThenInclude(sp => sp.Expert)
+            .ThenInclude(expert => expert.ExpertProfile)
             .FirstOrDefaultAsync(sp => sp.Id == id);
 
         return scholarshipProgram;

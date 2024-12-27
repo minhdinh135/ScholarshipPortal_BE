@@ -185,6 +185,8 @@ public class MappingProfile : Profile
 
         // Scholarship Program mapping
         CreateMap<ScholarshipProgram, ScholarshipProgramDto>()
+            .ForMember(dest => dest.AssignedExperts, opt => opt
+                .MapFrom(src => src.AssignedExperts.Select(programExpert => programExpert.Expert.ExpertProfile)))
             .ForMember(dest => dest.Certificates, opt =>
                 opt.MapFrom(src => src.ScholarshipProgramCertificates.Select(spc => spc.Certificate)))
             .ReverseMap();
