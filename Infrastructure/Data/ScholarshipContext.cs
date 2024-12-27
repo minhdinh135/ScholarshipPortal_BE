@@ -134,6 +134,8 @@ public class ScholarshipContext : DbContext
 
     public virtual DbSet<Major> Majors { get; set; }
 
+    public virtual DbSet<ExpertForProgram> ExpertForPrograms { get; set; }
+
     public virtual DbSet<ScholarshipProgramCertificate> ScholarshipProgramCertificates { get; set; }
 
     public virtual DbSet<MajorSkill> MajorSkills { get; set; }
@@ -206,6 +208,9 @@ public class ScholarshipContext : DbContext
 
         modelBuilder.Entity<ScholarshipProgramCertificate>()
             .ToTable("scholarship_program_certificates");
+
+        modelBuilder.Entity<ExpertForProgram>()
+            .ToTable("expert_for_programs");
 
         modelBuilder.Entity<MajorSkill>()
             .ToTable("major_skills");
@@ -423,18 +428,6 @@ public class ScholarshipContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        modelBuilder.Entity<Assignment>(entity =>
-        {
-            entity.HasOne(assignment => assignment.Expert)
-                .WithMany(account => account.Assignments)
-                .HasForeignKey(assignment => assignment.ExpertId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            entity.HasOne(assignment => assignment.ScholarshipProgram)
-                .WithMany(program => program.Assignments)
-                .HasForeignKey(assignment => assignment.ScholarshipProgramId)
-                .OnDelete(DeleteBehavior.Restrict);
-        });
 
         modelBuilder.Entity<AwardMilestone>()
             .HasOne(awardMilestone => awardMilestone.ScholarshipProgram)
@@ -487,6 +480,21 @@ public class ScholarshipContext : DbContext
             entity.HasOne(spc => spc.Certificate)
                 .WithMany(c => c.ScholarshipProgramCertificates)
                 .HasForeignKey(spc => spc.CertificateId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+        
+        modelBuilder.Entity<ExpertForProgram>(entity =>
+        {
+            entity.HasKey(x => new { x.ScholarshipProgramId, x.ExpertId });
+            
+            entity.HasOne(expertProgram => expertProgram.Expert)
+                .WithMany(account => account.AssignedPrograms)
+                .HasForeignKey(expertProgram => expertProgram.ExpertId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(expertProgram => expertProgram.ScholarshipProgram)
+                .WithMany(program => program.AssignedExperts)
+                .HasForeignKey(expertProgram => expertProgram.ScholarshipProgramId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
     }

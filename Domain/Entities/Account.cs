@@ -65,7 +65,7 @@ public class Account : BaseEntity
     
     public ICollection<ScholarshipProgram>? FunderScholarshipPrograms { get; set; }
     
-    public ICollection<Assignment>? Assignments { get; set; }
+    public ICollection<ExpertForProgram>? AssignedPrograms { get; set; }
 
     public ICollection<Application>? Applications { get; set; }
 

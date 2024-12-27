@@ -13,6 +13,10 @@ public class ApplicantSkill : BaseEntity
     [MaxLength(200)]
     public string? Description { get; set; }
     
+    public int FromYear { get; set; }
+    
+    public int ToYear { get; set; }
+    
     public int ApplicantProfileId { get; set; }
     
     public ApplicantProfile ApplicantProfile { get; set; }
