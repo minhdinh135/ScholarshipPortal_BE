@@ -144,6 +144,21 @@ public class ScholarshipProgramController : ControllerBase
         }
     }
 
+    [HttpDelete("{id}/experts")]
+    public async Task<IActionResult> RemoveExpertsFromScholarshipProgram(int id, RemoveExpertsFromScholarshipProgramRequest request)
+    {
+        try
+        {
+            await _scholarshipProgramService.RemoveExpertsFromScholarshipProgram(id, request.ExpertIds);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Remove experts from scholarship program successfully"));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateScholarshipProgram(int id,
         UpdateScholarshipProgramRequest updateScholarshipProgramRequest)
