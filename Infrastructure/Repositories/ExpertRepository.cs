@@ -11,7 +11,27 @@ public class ExpertRepository : GenericRepository<ExpertProfile>, IExpertReposit
     {
     }
 
-    public async Task<ExpertProfile> GetExpertDetailsByExpertId(int expertId)
+	public async Task<List<ExpertProfile>> GetAllExpertDetailsByFunder(int funderId)
+	{
+		var experts = await _dbContext.ExpertProfiles
+			.AsSplitQuery()
+			.Include(e => e.Expert)
+			.Where(e => e.Expert.FunderId == funderId) 
+			.ToListAsync();
+
+		return experts;
+	}
+
+	public async Task<List<ExpertProfile>> GetAllExpertDetailsByExpert()
+	{
+        var expert = await _dbContext.ExpertProfiles
+            .AsSplitQuery()
+            .Include(e => e.Expert)
+            .ToListAsync();
+		return expert;
+	}
+
+	public async Task<ExpertProfile> GetExpertDetailsByExpertId(int expertId)
     {
         var expert = await _dbContext.ExpertProfiles
             .AsNoTracking()
