@@ -56,6 +56,7 @@ public static class ServiceExtension
 
         services.AddScoped<IScholarshipProgramService, ScholarshipProgramService>();
         services.AddScoped<IScholarshipProgramRepository, ScholarshipProgramRepository>();
+        services.AddScoped<IProgramExpertRepository, ProgramExpertRepository>();
 
         services.AddScoped<ICriteriaService, CriteriaService>();
         services.AddScoped<ICriteriaRepository, CriteriaRepository>();

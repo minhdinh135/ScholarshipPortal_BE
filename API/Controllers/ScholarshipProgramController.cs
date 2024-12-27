@@ -110,15 +110,38 @@ public class ScholarshipProgramController : ControllerBase
     public async Task<IActionResult> CreateScholarshipProgram(
         CreateScholarshipProgramRequest createScholarshipProgramRequest)
     {
-        var result =
-            await _scholarshipProgramService.CreateScholarshipProgram(createScholarshipProgramRequest);
+        try
+        {
+            var result =
+                await _scholarshipProgramService.CreateScholarshipProgram(createScholarshipProgramRequest);
 
-        if (result == null)
-            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, "Create scholarship program failed"));
+            if (result == null)
+                return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest,
+                    "Create scholarship program failed"));
 
-        return Created("api/scholarship-programs/" + result, new ApiResponse(
-            StatusCodes.Status201Created, $"Create scholarship program successfully with id:{result}",
-            new { Id = result }));
+            return Created("api/scholarship-programs/" + result, new ApiResponse(
+                StatusCodes.Status201Created, $"Create scholarship program successfully with id:{result}",
+                new { Id = result }));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
+    [HttpPost("{id}/experts")]
+    public async Task<IActionResult> AssignExpertsToScholarshipProgram(int id, AssignExpertsToProgramRequest request)
+    {
+        try
+        {
+            await _scholarshipProgramService.AssignExpertsToScholarshipProgram(id, request.ExpertIds);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Assign experts to scholarship program successfully"));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
     }
 
     [HttpPut("{id}")]

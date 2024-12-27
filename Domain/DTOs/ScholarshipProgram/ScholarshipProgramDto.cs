@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs.Category;
+using Domain.DTOs.Expert;
 using Domain.DTOs.Major;
 using Domain.DTOs.University;
 
@@ -45,4 +46,6 @@ public class ScholarshipProgramDto
     public List<DocumentDto> Documents { get; set; }
     
     public List<ReviewMilestoneDetails> ReviewMilestones { get; set; }
+    
+    public List<ExpertDetailsDto> AssignedExperts { get; set; }
 }
