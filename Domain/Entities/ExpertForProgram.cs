@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace Domain.Entities;
 
-namespace Domain.Entities;
-
-public class Assignment : BaseEntity
+public class ExpertForProgram 
 {
     public int ScholarshipProgramId { get; set; }
     
@@ -11,7 +9,4 @@ public class Assignment : BaseEntity
     public int ExpertId { get; set; }
     
     public Account Expert { get; set; }
-    
-    [MaxLength(100)]
-    public string Status { get; set; }
 }

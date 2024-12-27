@@ -12,7 +12,11 @@ public class Review : BaseEntity
     [MaxLength(200)]
     public string? Comment { get; set; }
     
-    public DateTime ReviewDate { get; set; }
+    public DateTime? ReviewDate { get; set; }
+    
+    public DateTime DeadlineDate { get; set; }
+    
+    public DateTime AssignedDate { get; set; }
     
     [MaxLength(100)]
     public string Status { get; set; }

@@ -43,7 +43,7 @@ public class ScholarshipProgram : BaseEntity
     
     public Major Major { get; set; }
     
-    public ICollection<Assignment>? Assignments { get; set; }
+    public ICollection<ExpertForProgram>? AssignedExperts { get; set; }
     
     public ICollection<Application>? Applications { get; set; }
     
