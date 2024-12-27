@@ -2,7 +2,7 @@
 
 public class ExpertDetailsDto
 {
-    public int Id { get; set; }
+    public int ExpertId { get; set; }
     
     public string Username { get; set; }
     
