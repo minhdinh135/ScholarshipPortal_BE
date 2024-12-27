@@ -15,14 +15,16 @@ public class ScholarshipProgramService : IScholarshipProgramService
     private readonly IScholarshipProgramRepository _scholarshipProgramRepository;
     private readonly IFunderService _funderService;
     private readonly IProgramExpertRepository _programExpertRepository;
+    private readonly IExpertRepository _expertRepository;
 
     public ScholarshipProgramService(IMapper mapper, IScholarshipProgramRepository scholarshipProgramRepository,
-        IFunderService funderService, IProgramExpertRepository programExpertRepository)
+        IFunderService funderService, IProgramExpertRepository programExpertRepository, IExpertRepository expertRepository)
     {
         _mapper = mapper;
         _scholarshipProgramRepository = scholarshipProgramRepository;
         _funderService = funderService;
         _programExpertRepository = programExpertRepository;
+        _expertRepository = expertRepository;
     }
 
     public async Task<PaginatedList<ScholarshipProgramDto>> GetAllPrograms(ListOptions listOptions)
@@ -84,11 +86,9 @@ public class ScholarshipProgramService : IScholarshipProgramService
 
     public async Task<IEnumerable<ExpertDetailsDto>> GetScholarshipProgramExperts(int scholarshipProgramId)
     {
-        var scholarshipProgram = await _scholarshipProgramRepository.GetScholarsipProgramById(scholarshipProgramId);
-        var funderExperts = await _funderService.GetExpertsByFunderId(scholarshipProgram.FunderId);
-        var scholarshipExperts = funderExperts.Where(e => e.Major == scholarshipProgram.Major.Name);
+        var scholarshipExperts = await _expertRepository.GetExpertsByScholarshipProgramId(scholarshipProgramId);
 
-        return scholarshipExperts;
+        return _mapper.Map<IEnumerable<ExpertDetailsDto>>(scholarshipExperts);
     }
 
     public async Task<int> CreateScholarshipProgram(
@@ -154,6 +154,18 @@ public class ScholarshipProgramService : IScholarshipProgramService
                 };
                 await _programExpertRepository.Add(expertForProgram);
             }
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task RemoveExpertsFromScholarshipProgram(int scholarshipProgramId, List<int> expertIds)
+    {
+        try
+        {
+            await _scholarshipProgramRepository.RemoveExpertsFromScholarshipProgram(scholarshipProgramId, expertIds);
         }
         catch (Exception e)
         {

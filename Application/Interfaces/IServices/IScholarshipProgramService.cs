@@ -18,5 +18,6 @@ public interface IScholarshipProgramService
     Task<int> UpdateScholarshipProgram(int id, UpdateScholarshipProgramRequest updateScholarshipProgramRequest);
     Task ChangeScholarshipProgramStatus(int id, ChangeScholarshipProgramStatusRequest request);
     Task AssignExpertsToScholarshipProgram(int scholarshipProgramId, List<int> expertIds);
+    Task RemoveExpertsFromScholarshipProgram(int scholarshipProgramId, List<int> expertIds);
     Task UpdateScholarshipProgramStatus(int id, string status);
 }

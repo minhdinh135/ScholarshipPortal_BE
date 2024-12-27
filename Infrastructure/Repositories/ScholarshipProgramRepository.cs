@@ -115,4 +115,12 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
         await _dbContext.ScholarshipProgramCertificates.Where(spc => spc.ScholarshipProgramId == scholarshipProgram.Id)
             .ExecuteDeleteAsync();
     }
+
+    public async Task RemoveExpertsFromScholarshipProgram(int scholarshipProgramId, List<int> expertIds)
+    {
+        await _dbContext.ExpertForPrograms.Where(programExpert =>
+                programExpert.ScholarshipProgramId == scholarshipProgramId &&
+                expertIds.Contains(programExpert.ExpertId))
+            .ExecuteDeleteAsync();
+    }
 }
