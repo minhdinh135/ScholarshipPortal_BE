@@ -144,7 +144,7 @@ public class ScholarshipProgramController : ControllerBase
         }
     }
 
-    [HttpDelete("{id}/experts")]
+    [HttpPut("{id}/experts")]
     public async Task<IActionResult> RemoveExpertsFromScholarshipProgram(int id, RemoveExpertsFromScholarshipProgramRequest request)
     {
         try
