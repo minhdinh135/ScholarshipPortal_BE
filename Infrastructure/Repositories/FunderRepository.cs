@@ -7,11 +7,8 @@ namespace Infrastructure.Repositories;
 
 public class FunderRepository : GenericRepository<FunderProfile>, IFunderRepository
 {
-    private readonly IAccountRepository _accountRepository;
-
-    public FunderRepository(ScholarshipContext dbContext, IAccountRepository accountRepository) : base(dbContext)
+    public FunderRepository(ScholarshipContext dbContext) : base(dbContext)
     {
-        _accountRepository = accountRepository;
     }
 
 	public async Task<List<FunderProfile>> GetAllFunderDetails()
@@ -34,13 +31,15 @@ public class FunderRepository : GenericRepository<FunderProfile>, IFunderReposit
         return funder;
     }
 
-    public async Task<IEnumerable<Account>> GetExpertsByFunderId(int funderId)
+    public async Task<IEnumerable<ExpertProfile>> GetExpertsByFunderId(int funderId)
     {
-        var allAccounts = await _accountRepository.GetAll(
-            q => q.Include(x => x.ExpertProfile));
-
-        var experts = allAccounts.Where(a => a.FunderId == funderId);
-
+        var experts = await _dbContext.ExpertProfiles
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Include(expertProfile => expertProfile.Expert)
+            .Where(expertProfile => expertProfile.Expert.FunderId == funderId)
+            .ToListAsync();
+        
         return experts;
     }
 
