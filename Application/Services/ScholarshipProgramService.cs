@@ -14,13 +14,15 @@ public class ScholarshipProgramService : IScholarshipProgramService
     private readonly IMapper _mapper;
     private readonly IScholarshipProgramRepository _scholarshipProgramRepository;
     private readonly IFunderService _funderService;
+    private readonly IProgramExpertRepository _programExpertRepository;
 
     public ScholarshipProgramService(IMapper mapper, IScholarshipProgramRepository scholarshipProgramRepository,
-        IFunderService funderService)
+        IFunderService funderService, IProgramExpertRepository programExpertRepository)
     {
         _mapper = mapper;
         _scholarshipProgramRepository = scholarshipProgramRepository;
         _funderService = funderService;
+        _programExpertRepository = programExpertRepository;
     }
 
     public async Task<PaginatedList<ScholarshipProgramDto>> GetAllPrograms(ListOptions listOptions)
@@ -137,6 +139,26 @@ public class ScholarshipProgramService : IScholarshipProgramService
 
         existingProgram.Status = request.Status;
         await _scholarshipProgramRepository.Update(existingProgram);
+    }
+
+    public async Task AssignExpertsToScholarshipProgram(int scholarshipProgramId, List<int> expertIds)
+    {
+        try
+        {
+            foreach (var expertId in expertIds)
+            {
+                ExpertForProgram expertForProgram = new ExpertForProgram
+                {
+                    ScholarshipProgramId = scholarshipProgramId,
+                    ExpertId = expertId
+                };
+                await _programExpertRepository.Add(expertForProgram);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
     }
 
     public async Task UpdateScholarshipProgramStatus(int id, string status)
