@@ -13,7 +13,7 @@ public class ApplicantCertificate : BaseEntity
     [MaxLength(1024)]
     public string? Url { get; set; }
     
-    public DateTime AchievedDate { get; set; }
+    public int AchievedYear { get; set; }
     
     public int ApplicantProfileId { get; set; }
     
