@@ -53,6 +53,9 @@ public static class ServiceExtension
         services.AddScoped<IApplicantService, ApplicantService>();
         services.AddScoped<IApplicantRepository, ApplicantRepository>();
         services.AddScoped<IExperienceRepository, ExperienceRepository>();
+        services.AddScoped<IEducationRepository, EducationRepository>();
+        services.AddScoped<IApplicantSkillRepository, ApplicantSkillRepository>();
+        services.AddScoped<IApplicantCertificateRepository, ApplicantCertificateRepository>();
 
         services.AddScoped<IScholarshipProgramService, ScholarshipProgramService>();
         services.AddScoped<IScholarshipProgramRepository, ScholarshipProgramRepository>();

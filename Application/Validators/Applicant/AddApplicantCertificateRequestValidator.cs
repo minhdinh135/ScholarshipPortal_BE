@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace Application.Validators.Applicant;
 
-public class AddApplicantSkillDtoValidator : BaseValidator<AddApplicantSkillRequest>
+public class AddApplicantCertificateRequestValidator : BaseValidator<AddApplicantCertificateRequest>
 {
-    public AddApplicantSkillDtoValidator()
+    public AddApplicantCertificateRequestValidator()
     {
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Name must not be empty");

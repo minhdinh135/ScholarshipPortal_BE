@@ -22,14 +22,6 @@ public class UpdateApplicantProfileDetails
 
     public string? Ethnicity { get; set; }
     
-    public string? Major { get; set; }
-    
-    public double? Gpa { get; set; }
-    
-    public string? School { get; set; }
-
-    public List<string>? Achievements { get; set; }
-    
     public List<string>? Skills { get; set; }
 
     public List<string>? Experience { get; set; }
