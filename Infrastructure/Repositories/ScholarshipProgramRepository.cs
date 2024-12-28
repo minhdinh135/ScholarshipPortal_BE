@@ -3,7 +3,6 @@ using Domain.Constants;
 using Domain.DTOs.Common;
 using Domain.DTOs.ScholarshipProgram;
 using Domain.Entities;
-using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using NinjaNye.SearchExtensions;
 
@@ -11,10 +10,6 @@ namespace Infrastructure.Repositories;
 
 public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram>, IScholarshipProgramRepository
 {
-    public ScholarshipProgramRepository(ScholarshipContext dbContext) : base(dbContext)
-    {
-    }
-
     public async Task<PaginatedList<ScholarshipProgram>> GetAllScholarshipPrograms(ListOptions listOptions)
     {
         var includes = new Func<IQueryable<ScholarshipProgram>, IQueryable<ScholarshipProgram>>[]

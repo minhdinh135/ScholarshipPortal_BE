@@ -152,8 +152,8 @@ public class ScholarshipContext : DbContext
             optionsBuilder.UseMySQL(configuration.GetConnectionString("Db") ?? string.Empty);
         }
 
-        optionsBuilder.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
-            .EnableSensitiveDataLogging();
+        // optionsBuilder.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
+        //     .EnableSensitiveDataLogging();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

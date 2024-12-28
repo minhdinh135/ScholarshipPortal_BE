@@ -4,9 +4,4 @@ using Infrastructure.Data;
 
 namespace Infrastructure.Repositories;
 
-public class ReviewMilestoneRepository : GenericRepository<ReviewMilestone>, IReviewMilestoneRepository
-{
-    public ReviewMilestoneRepository(ScholarshipContext dbContext) : base(dbContext)
-    {
-    }
-}
+public class ReviewMilestoneRepository : GenericRepository<ReviewMilestone>, IReviewMilestoneRepository;

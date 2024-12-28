@@ -6,10 +6,8 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Hangfire;
 using HealthChecks.UI.Client;
-using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SSAP.API.Extensions;
@@ -30,8 +28,8 @@ builder.Services.AddControllers(options => options.SuppressInputFormatterBufferi
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-builder.Services.AddDbContext<ScholarshipContext>(options =>
-    options.UseMySQL(builder.Configuration.GetConnectionString("Db") ?? string.Empty));
+// builder.Services.AddDbContext<ScholarshipContext>(options =>
+//     options.UseMySQL(builder.Configuration.GetConnectionString("Db") ?? string.Empty));
 
 builder.Services.AddMapperServices();
 

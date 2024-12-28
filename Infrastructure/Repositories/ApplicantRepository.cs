@@ -1,17 +1,11 @@
 ﻿using Application.Interfaces.IRepositories;
-using Domain.DTOs.Applicant;
 using Domain.Entities;
-using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
 public class ApplicantRepository : GenericRepository<ApplicantProfile>, IApplicantRepository
 {
-    public ApplicantRepository(ScholarshipContext dbContext) : base(dbContext)
-    {
-    }
-
     public async Task<ApplicantProfile> GetByApplicantId(int applicantId)
     {
         return await _dbContext.ApplicantProfiles

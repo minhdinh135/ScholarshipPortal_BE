@@ -1,26 +1,21 @@
 ﻿using Application.Interfaces.IRepositories;
 using Domain.Entities;
-using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
 public class FunderRepository : GenericRepository<FunderProfile>, IFunderRepository
 {
-    public FunderRepository(ScholarshipContext dbContext) : base(dbContext)
+    public async Task<List<FunderProfile>> GetAllFunderDetails()
     {
+        return await _dbContext.FunderProfiles
+            .AsSplitQuery()
+            .Include(f => f.FunderDocuments)
+            .Include(f => f.Funder)
+            .ToListAsync();
     }
 
-	public async Task<List<FunderProfile>> GetAllFunderDetails()
-	{
-		return await _dbContext.FunderProfiles
-			.AsSplitQuery()
-			.Include(f => f.FunderDocuments)
-			.Include(f => f.Funder)
-			.ToListAsync();
-	}
-
-	public async Task<FunderProfile> GetFunderDetailsByFunderId(int funderId)
+    public async Task<FunderProfile> GetFunderDetailsByFunderId(int funderId)
     {
         var funder = await _dbContext.FunderProfiles
             .AsSplitQuery()
@@ -39,7 +34,7 @@ public class FunderRepository : GenericRepository<FunderProfile>, IFunderReposit
             .Include(expertProfile => expertProfile.Expert)
             .Where(expertProfile => expertProfile.Expert.FunderId == funderId)
             .ToListAsync();
-        
+
         return experts;
     }
 
