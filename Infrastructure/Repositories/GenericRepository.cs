@@ -11,9 +11,15 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     protected readonly ScholarshipContext _dbContext;
     private readonly DbSet<T> _dbSet;
 
-    public GenericRepository(ScholarshipContext dbContext)
+    // public GenericRepository(ScholarshipContext dbContext)
+    // {
+    //     _dbContext = dbContext;
+    //     _dbSet = _dbContext.Set<T>();
+    // }
+
+    public GenericRepository()
     {
-        _dbContext = dbContext;
+        _dbContext = new ScholarshipContext();
         _dbSet = _dbContext.Set<T>();
     }
 

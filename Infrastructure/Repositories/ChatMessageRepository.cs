@@ -1,16 +1,11 @@
 ﻿using Application.Interfaces.IRepositories;
 using Domain.Entities;
-using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
     public class ChatMessageRepository : GenericRepository<Chat>, IChatMessageRepository
     {
-        public ChatMessageRepository(ScholarshipContext dbContext) : base(dbContext)
-        {
-        }
-
         public async Task SaveMessageAsync(Chat message)
         {
             await _dbContext.Chats.AddAsync(message);

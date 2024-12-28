@@ -1,7 +1,6 @@
 ﻿using Application.Helper;
 using Application.Interfaces.IRepositories;
 using Domain.DTOs.Common;
-using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Service = Domain.Entities.Service;
 
@@ -9,9 +8,6 @@ namespace Infrastructure.Repositories;
 
 public class ServiceRepository : GenericRepository<Service>, IServiceRepository
 {
-    public ServiceRepository(ScholarshipContext dbContext) : base(dbContext)
-    {
-    }
 	public async Task<PaginatedList<Service>> GetAllServicesByProviderId(int id, int pageIndex, int pageSize, string sortBy, string sortOrder)
 	{
 		var query = _dbContext.Set<Service>().AsNoTracking().AsSplitQuery();

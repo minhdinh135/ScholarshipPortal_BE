@@ -17,7 +17,7 @@ public class Application : BaseEntity
     
     public ScholarshipProgram ScholarshipProgram { get; set; }
     
-    public ICollection<Review>? ApplicationReviews { get; set; }
+    public virtual ICollection<Review>? ApplicationReviews { get; set; }
     
-    public ICollection<ApplicationDocument> ApplicationDocuments { get; set; }
+    public virtual ICollection<ApplicationDocument> ApplicationDocuments { get; set; }
 }

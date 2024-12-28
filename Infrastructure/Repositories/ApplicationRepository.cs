@@ -1,7 +1,5 @@
 using Application.Interfaces.IRepositories;
-using Domain.Constants;
 using Domain.Entities;
-using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
@@ -10,8 +8,7 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
 {
     private readonly IApplicationReviewRepository _applicationReviewRepository;
 
-    public ApplicationRepository(ScholarshipContext dbContext, IApplicationReviewRepository applicationReviewRepository)
-        : base(dbContext)
+    public ApplicationRepository(IApplicationReviewRepository applicationReviewRepository)
     {
         _applicationReviewRepository = applicationReviewRepository;
     }

@@ -1,16 +1,11 @@
 ﻿using Application.Interfaces.IRepositories;
 using Domain.Entities;
-using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
 public class UniversityRepository : GenericRepository<University>, IUniversityRepository
 {
-    public UniversityRepository(ScholarshipContext dbContext) : base(dbContext)
-    {
-    }
-
     public async Task<IEnumerable<University>> GetAllUniversities()
     {
         var universities = await _dbContext.Universities
