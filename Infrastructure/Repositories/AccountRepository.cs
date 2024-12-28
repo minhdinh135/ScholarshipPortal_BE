@@ -9,10 +9,6 @@ namespace Infrastructure.Repositories;
 
 public class AccountRepository : GenericRepository<Account>, IAccountRepository
 {
-    public AccountRepository(ScholarshipContext dbContext) : base(dbContext)
-    {
-    }
-
     public async Task<PaginatedList<Account>> GetAllAppliedToScholarship(int scholarshipId, int pageIndex, int pageSize, string sortBy, string sortOrder)
     {
 

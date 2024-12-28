@@ -1,16 +1,11 @@
 ﻿using Application.Interfaces.IRepositories;
 using Domain.Entities;
-using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
 public class ProviderRepository : GenericRepository<ProviderProfile>, IProviderRepository
 {
-    public ProviderRepository(ScholarshipContext dbContext) : base(dbContext)
-    {
-    }
-
 	public async Task<List<ProviderProfile>> GetAllProviderDetails()
 	{
 		return await _dbContext.ProviderProfiles
