@@ -55,6 +55,7 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
     public async Task<IEnumerable<Domain.Entities.Application>> GetByApplicantId(int applicantId)
     {
         var applications = await _dbContext.Applications
+            .AsNoTracking()
             .AsSplitQuery()
             .Where(a => a.ApplicantId == applicantId)
             .Include(a => a.ApplicationDocuments)
