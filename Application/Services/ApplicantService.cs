@@ -15,15 +15,22 @@ public class ApplicantService : IApplicantService
     private readonly IPdfService _pdfService;
     private readonly IAccountRepository _accountRepository;
     private readonly IExperienceRepository _experienceRepository;
+    private readonly IEducationRepository _educationRepository;
+    private readonly IApplicantSkillRepository _applicantSkillRepository;
+    private readonly IApplicantCertificateRepository _applicantCertificateRepository;
 
     public ApplicantService(IMapper mapper, IApplicantRepository applicantRepository, IPdfService pdfService,
-        IAccountRepository accountRepository, IExperienceRepository experienceRepository)
+        IAccountRepository accountRepository, IExperienceRepository experienceRepository, IEducationRepository educationRepository,
+        IApplicantSkillRepository applicantSkillRepository, IApplicantCertificateRepository applicantCertificateRepository)
     {
         _mapper = mapper;
         _applicantRepository = applicantRepository;
         _pdfService = pdfService;
         _accountRepository = accountRepository;
         _experienceRepository = experienceRepository;
+        _educationRepository = educationRepository;
+        _applicantSkillRepository = applicantSkillRepository;
+        _applicantCertificateRepository = applicantCertificateRepository;
     }
 
     public async Task<IEnumerable<ApplicantProfileDto>> GetAllApplicantProfiles()
@@ -37,7 +44,8 @@ public class ApplicantService : IApplicantService
     {
         var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
         if (applicantProfile == null)
-            throw new ServiceException($"Applicant Profile with ApplicantId: {applicantId} is not found", new NotFoundException());
+            throw new ServiceException($"Applicant Profile with ApplicantId: {applicantId} is not found",
+                new NotFoundException());
 
         return _mapper.Map<ApplicantProfileDto>(applicantProfile);
     }
@@ -118,7 +126,7 @@ public class ApplicantService : IApplicantService
 
         var experience = _mapper.Map<Experience>(request);
         experience.ApplicantProfileId = applicantProfile.Id;
-        
+
         try
         {
             await _experienceRepository.Add(experience);
@@ -133,7 +141,141 @@ public class ApplicantService : IApplicantService
     {
         var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
         if (applicantProfile == null)
+            throw new NotFoundException($"Applicant profile with ApplicantId:{applicantId} is not found");
+
+        var existingExperience = await _experienceRepository.GetById(experienceId);
+        if (existingExperience == null)
+            throw new NotFoundException($"Experience with ID: {experienceId} is not found");
+
+        _mapper.Map(request, existingExperience);
+        try
+        {
+            await _experienceRepository.Update(existingExperience);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task AddProfileEducation(int applicantId, AddEducationRequest request)
+    {
+        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (applicantProfile == null)
             throw new NotFoundException($"Applicant profile with applicantId:{applicantId} is not found");
+
+        var education = _mapper.Map<Education>(request);
+        education.ApplicantProfileId = applicantProfile.Id;
+
+        try
+        {
+            await _educationRepository.Add(education);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task UpdateProfileEducation(int applicantId, int educationId, UpdateEducationRequest request)
+    {
+        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (applicantProfile == null)
+            throw new NotFoundException($"Applicant profile with ApplicantId:{applicantId} is not found");
+
+        var existingEducation = await _educationRepository.GetById(educationId);
+        if (existingEducation == null)
+            throw new NotFoundException($"Education with ID: {educationId} is not found");
+
+        _mapper.Map(request, existingEducation);
+        try
+        {
+            await _educationRepository.Update(existingEducation);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task AddProfileSkill(int applicantId, AddApplicantSkillRequest request)
+    {
+        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (applicantProfile == null)
+            throw new NotFoundException($"Applicant profile with applicantId:{applicantId} is not found");
+
+        var skill = _mapper.Map<ApplicantSkill>(request);
+        skill.ApplicantProfileId = applicantProfile.Id;
+
+        try
+        {
+            await _applicantSkillRepository.Add(skill);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task UpdateProfileSkill(int applicantId, int skillId, UpdateApplicantSkillRequest request)
+    {
+        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (applicantProfile == null)
+            throw new NotFoundException($"Applicant profile with ApplicantId:{applicantId} is not found");
+
+        var existingSkill = await _applicantSkillRepository.GetById(skillId);
+        if (existingSkill == null)
+            throw new NotFoundException($"Applicant skill with ID: {skillId} is not found");
+
+        _mapper.Map(request, existingSkill);
+        try
+        {
+            await _applicantSkillRepository.Update(existingSkill);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task AddProfileCertificate(int applicantId, AddApplicantCertificateRequest request)
+    {
+        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (applicantProfile == null)
+            throw new NotFoundException($"Applicant profile with applicantId:{applicantId} is not found");
+
+        var certificate = _mapper.Map<ApplicantCertificate>(request);
+        certificate.ApplicantProfileId = applicantProfile.Id;
+
+        try
+        {
+            await _applicantCertificateRepository.Add(certificate);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task UpdateProfileCertificate(int applicantId, int certificateId, UpdateApplicantCertificateRequest request)
+    {
+        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (applicantProfile == null)
+            throw new NotFoundException($"Applicant profile with ApplicantId:{applicantId} is not found");
+
+        var existingCertificate = await _applicantCertificateRepository.GetById(certificateId);
+        if (existingCertificate == null)
+            throw new NotFoundException($"Certificate with ID: {certificateId} is not found");
+
+        _mapper.Map(request, existingCertificate);
+        try
+        {
+            await _applicantCertificateRepository.Update(existingCertificate);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
     }
 
     public async Task<byte[]> ExportApplicantProfileToPdf(int applicantId)
@@ -141,7 +283,7 @@ public class ApplicantService : IApplicantService
         var profile = await _applicantRepository.GetByApplicantId(applicantId);
         if (profile == null)
             throw new NotFoundException($"Profile with ApplicantId: {applicantId} is not found");
-        
+
         var pdf = await _pdfService.GenerateProfileInPdf(_mapper.Map<ApplicantProfileDto>(profile));
 
         return pdf;

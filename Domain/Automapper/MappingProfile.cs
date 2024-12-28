@@ -169,19 +169,23 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.ApplicantCertificates, opt => opt
                 .MapFrom(src => src.ApplicantCertificates))
             .ReverseMap();
-        CreateMap<ApplicantProfile, UpdateApplicantProfileDto>().ReverseMap();
+        CreateMap<UpdateApplicantProfileDto, ApplicantProfile>();
+
+        CreateMap<Education, ApplicantEducationDto>().ReverseMap();
+        CreateMap<AddEducationRequest, Education>();
+        CreateMap<UpdateEducationRequest, Education>();
 
         CreateMap<Experience, ApplicantExperienceDto>().ReverseMap();
         CreateMap<AddExperienceRequest, Experience>();
         CreateMap<UpdateExperienceRequest, Experience>();
 
         CreateMap<ApplicantSkill, ApplicantSkillDto>().ReverseMap();
-        CreateMap<ApplicantSkill, AddApplicantSkillDto>().ReverseMap();
-        CreateMap<ApplicantSkill, UpdateApplicantSkillDto>().ReverseMap();
+        CreateMap<AddApplicantSkillRequest, ApplicantSkill>();
+        CreateMap<UpdateApplicantSkillRequest, ApplicantSkill>();
 
         CreateMap<ApplicantCertificate, ApplicantCertificateDto>().ReverseMap();
-        CreateMap<ApplicantCertificate, AddApplicantCertificateDto>().ReverseMap();
-        CreateMap<ApplicantCertificate, UpdateApplicantCertificateDto>().ReverseMap();
+        CreateMap<AddApplicantCertificateRequest, ApplicantCertificate>();
+        CreateMap<UpdateApplicantCertificateRequest, ApplicantCertificate>();
 
         // Scholarship Program mapping
         CreateMap<ScholarshipProgram, ScholarshipProgramDto>()

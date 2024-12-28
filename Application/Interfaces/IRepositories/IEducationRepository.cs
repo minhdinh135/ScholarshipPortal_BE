@@ -2,4 +2,4 @@
 
 namespace Application.Interfaces.IRepositories;
 
-public interface IExperienceRepository: IGenericRepository<Experience>;
+public interface IEducationRepository: IGenericRepository<Education>;

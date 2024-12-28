@@ -75,15 +75,7 @@ public class ApplicantController : ControllerBase
     {
         var applicant = await _applicantService.GetApplicantProfileDetails(applicantId);
 
-        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicant successfully", applicant));
-    }
-
-    [HttpGet("{id}/profile")]
-    public async Task<IActionResult> GetApplicantProfileDetails(int id)
-    {
-        var applicant = await _applicantService.GetApplicantProfileDetails(id);
-
-        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicant successfully", applicant));
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applicant profile successfully", applicant));
     }
 
     [HttpGet("{applicantId}/applications")]
@@ -155,7 +147,7 @@ public class ApplicantController : ControllerBase
         }
     }
 
-    [HttpPost("{applicantId}/profile/experience")]
+    [HttpPost("{applicantId}/profile-experience")]
     public async Task<IActionResult> AddProfileExperience(int applicantId,
         AddExperienceRequest request)
     {
@@ -164,6 +156,118 @@ public class ApplicantController : ControllerBase
             await _applicantService.AddProfileExperience(applicantId, request);
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Add applicant profile experience successfully"));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
+    [HttpPut("{applicantId}/profile-experience/{experienceId}")]
+    public async Task<IActionResult> UpdateProfileExperience(int applicantId, int experienceId,
+        UpdateExperienceRequest request)
+    {
+        try
+        {
+            await _applicantService.UpdateProfileExperience(applicantId, experienceId, request);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update applicant profile experience successfully"));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
+    [HttpPost("{applicantId}/profile-education")]
+    public async Task<IActionResult> AddProfileEducation(int applicantId,
+        AddEducationRequest request)
+    {
+        try
+        {
+            await _applicantService.AddProfileEducation(applicantId, request);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Add applicant profile education successfully"));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
+    [HttpPut("{applicantId}/profile-education/{educationId}")]
+    public async Task<IActionResult> UpdateProfileEducation(int applicantId, int educationId,
+        UpdateEducationRequest request)
+    {
+        try
+        {
+            await _applicantService.UpdateProfileEducation(applicantId, educationId, request);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update applicant profile education successfully"));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
+    [HttpPost("{applicantId}/profile-skill")]
+    public async Task<IActionResult> AddProfileSkill(int applicantId,
+        AddApplicantSkillRequest request)
+    {
+        try
+        {
+            await _applicantService.AddProfileSkill(applicantId, request);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Add applicant profile skill successfully"));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
+    [HttpPut("{applicantId}/profile-skill/{skillId}")]
+    public async Task<IActionResult> UpdateProfileSkill(int applicantId, int skillId,
+        UpdateApplicantSkillRequest request)
+    {
+        try
+        {
+            await _applicantService.UpdateProfileSkill(applicantId, skillId, request);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update applicant profile skill successfully"));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
+    [HttpPost("{applicantId}/profile-certificate")]
+    public async Task<IActionResult> AddProfileCertificate(int applicantId,
+        AddApplicantCertificateRequest request)
+    {
+        try
+        {
+            await _applicantService.AddProfileCertificate(applicantId, request);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Add applicant profile certificate successfully"));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
+    [HttpPut("{applicantId}/profile-certificate/{certifcateId}")]
+    public async Task<IActionResult> UpdateProfileEducation(int applicantId, int certifcateId,
+        UpdateApplicantCertificateRequest request)
+    {
+        try
+        {
+            await _applicantService.UpdateProfileCertificate(applicantId, certifcateId, request);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update applicant profile certificate successfully"));
         }
         catch (Exception e)
         {
