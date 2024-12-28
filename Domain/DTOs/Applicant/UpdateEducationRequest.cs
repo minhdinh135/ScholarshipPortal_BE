@@ -1,9 +1,7 @@
 ﻿namespace Domain.DTOs.Applicant;
 
-public class ApplicantEducationDto
+public class UpdateEducationRequest
 {
-    public int Id { get; set; }
-    
     public string EducationLevel { get; set; }
 
     public string? Description { get; set; }
