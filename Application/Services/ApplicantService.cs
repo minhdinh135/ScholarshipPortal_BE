@@ -20,8 +20,10 @@ public class ApplicantService : IApplicantService
     private readonly IApplicantCertificateRepository _applicantCertificateRepository;
 
     public ApplicantService(IMapper mapper, IApplicantRepository applicantRepository, IPdfService pdfService,
-        IAccountRepository accountRepository, IExperienceRepository experienceRepository, IEducationRepository educationRepository,
-        IApplicantSkillRepository applicantSkillRepository, IApplicantCertificateRepository applicantCertificateRepository)
+        IAccountRepository accountRepository, IExperienceRepository experienceRepository,
+        IEducationRepository educationRepository,
+        IApplicantSkillRepository applicantSkillRepository,
+        IApplicantCertificateRepository applicantCertificateRepository)
     {
         _mapper = mapper;
         _applicantRepository = applicantRepository;
@@ -158,6 +160,18 @@ public class ApplicantService : IApplicantService
         }
     }
 
+    public async Task DeleteProfileExperience(int experienceId)
+    {
+        try
+        {
+            await _experienceRepository.DeleteById(experienceId);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
     public async Task AddProfileEducation(int applicantId, AddEducationRequest request)
     {
         var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
@@ -191,6 +205,18 @@ public class ApplicantService : IApplicantService
         try
         {
             await _educationRepository.Update(existingEducation);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task DeleteProfileEducation(int educationId)
+    {
+        try
+        {
+            await _educationRepository.DeleteById(educationId);
         }
         catch (Exception e)
         {
@@ -238,6 +264,18 @@ public class ApplicantService : IApplicantService
         }
     }
 
+    public async Task DeleteProfileSkill(int skillId)
+    {
+        try
+        {
+            await _applicantSkillRepository.DeleteById(skillId);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
     public async Task AddProfileCertificate(int applicantId, AddApplicantCertificateRequest request)
     {
         var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
@@ -257,7 +295,8 @@ public class ApplicantService : IApplicantService
         }
     }
 
-    public async Task UpdateProfileCertificate(int applicantId, int certificateId, UpdateApplicantCertificateRequest request)
+    public async Task UpdateProfileCertificate(int applicantId, int certificateId,
+        UpdateApplicantCertificateRequest request)
     {
         var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
         if (applicantProfile == null)
@@ -271,6 +310,18 @@ public class ApplicantService : IApplicantService
         try
         {
             await _applicantCertificateRepository.Update(existingCertificate);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
+    public async Task DeleteProfileCertificate(int certificateId)
+    {
+        try
+        {
+            await _applicantCertificateRepository.DeleteById(certificateId);
         }
         catch (Exception e)
         {
