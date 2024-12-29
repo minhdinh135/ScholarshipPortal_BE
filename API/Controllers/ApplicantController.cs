@@ -179,6 +179,21 @@ public class ApplicantController : ControllerBase
         }
     }
 
+    [HttpDelete("profile-experience/{experienceId}")]
+    public async Task<IActionResult> DeleteProfileExperience(int experienceId)
+    {
+        try
+        {
+            await _applicantService.DeleteProfileExperience(experienceId);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Delete applicant profile experience successfully"));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
     [HttpPost("{applicantId}/profile-education")]
     public async Task<IActionResult> AddProfileEducation(int applicantId,
         AddEducationRequest request)
@@ -204,6 +219,21 @@ public class ApplicantController : ControllerBase
             await _applicantService.UpdateProfileEducation(applicantId, educationId, request);
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Update applicant profile education successfully"));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
+    [HttpDelete("profile-education/{educationId}")]
+    public async Task<IActionResult> DeleteProfileEducation(int educationId)
+    {
+        try
+        {
+            await _applicantService.DeleteProfileEducation(educationId);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Delete applicant profile education successfully"));
         }
         catch (Exception e)
         {
@@ -243,6 +273,21 @@ public class ApplicantController : ControllerBase
         }
     }
 
+    [HttpDelete("profile-skill/{skillId}")]
+    public async Task<IActionResult> DeleteProfileSkill(int skillId)
+    {
+        try
+        {
+            await _applicantService.DeleteProfileSkill(skillId);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Delete applicant profile skill successfully"));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
     [HttpPost("{applicantId}/profile-certificate")]
     public async Task<IActionResult> AddProfileCertificate(int applicantId,
         AddApplicantCertificateRequest request)
@@ -260,7 +305,7 @@ public class ApplicantController : ControllerBase
     }
 
     [HttpPut("{applicantId}/profile-certificate/{certifcateId}")]
-    public async Task<IActionResult> UpdateProfileEducation(int applicantId, int certifcateId,
+    public async Task<IActionResult> UpdateProfileCertificate(int applicantId, int certifcateId,
         UpdateApplicantCertificateRequest request)
     {
         try
@@ -268,6 +313,21 @@ public class ApplicantController : ControllerBase
             await _applicantService.UpdateProfileCertificate(applicantId, certifcateId, request);
 
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Update applicant profile certificate successfully"));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
+    [HttpDelete("profile-certificate/{certificateId}")]
+    public async Task<IActionResult> DeleteProfileCertificate(int certificateId)
+    {
+        try
+        {
+            await _applicantService.DeleteProfileCertificate(certificateId);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Delete applicant profile certificate successfully"));
         }
         catch (Exception e)
         {
