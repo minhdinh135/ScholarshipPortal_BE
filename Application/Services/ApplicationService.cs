@@ -232,6 +232,14 @@ namespace Application.Services
             }
         }
 
+        public async Task<IEnumerable<ApplicationDto>> GetApplicationsByApplicantIdAndScholarshipProgramId(int applicantId, int scholarshipProgramId)
+        {
+            var result =
+                await _applicationRepository.GetByApplicantIdAndScholarshipProgramId(applicantId, scholarshipProgramId);
+
+            return _mapper.Map<IEnumerable<ApplicationDto>>(result);
+        }
+
         public async Task<ApplicationDto> GetApplicationById(int id)
         {
             var application = await _applicationRepository.GetApplicationById(id);

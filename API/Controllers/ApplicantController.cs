@@ -90,8 +90,7 @@ public class ApplicantController : ControllerBase
     public async Task<IActionResult> GetApplicationsByApplicantIdAndScholarshipId([FromQuery] int applicantId,
         [FromQuery] int scholarshipId)
     {
-        var applications = await _applicationService.GetApplicationsByApplicantId(applicantId);
-        applications = applications.Where(x => x.ScholarshipProgramId == scholarshipId).ToList();
+        var applications = await _applicationService.GetApplicationsByApplicantIdAndScholarshipProgramId(applicantId, scholarshipId);
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get applications successfully", applications));
     }
