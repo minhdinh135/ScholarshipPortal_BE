@@ -151,6 +151,14 @@ namespace SSAP.API.Controllers
             return Ok(new ApiResponse(StatusCodes.Status200OK, "Get reviews successfully", reviews));
         }
 
+        [HttpGet("reviews-of-applications")]
+        public async Task<IActionResult> GetReviewsOfApplication([FromQuery]List<int> applicationIds)
+        {
+            var reviews = await _applicationService.GetReviewsOfApplicationIds(applicationIds);
+
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Get reviews successfully", reviews));
+        }
+
         [HttpGet("reviews/result")]
         public async Task<IActionResult> GetReviewsResult([FromQuery] int scholarshipProgramId, [FromQuery] bool isFirstReview)
         {
@@ -165,6 +173,23 @@ namespace SSAP.API.Controllers
             try
             {
                 await _applicationService.AssignApplicationsToExpert(request);
+
+                return Ok(new ApiResponse(StatusCodes.Status200OK, "Assign successfully"));
+            }
+            catch (ServiceException e)
+            {
+                return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+            }
+        }
+
+        [HttpPost("reviews/assign-experts-to-application")]
+        public async Task<IActionResult> AssignExpertsToApplication(List<AssignExpertsToApplicationDto> request)
+        {
+            try
+            {
+                foreach (var item in request){
+                    await _applicationService.AssignApplicationsToManyExpert(item);
+                }
 
                 return Ok(new ApiResponse(StatusCodes.Status200OK, "Assign successfully"));
             }

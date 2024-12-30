@@ -22,5 +22,7 @@ namespace Application.Interfaces.IServices
         Task UpdateReviewResult(UpdateReviewResultDto updateReviewResultDto);
         Task<Domain.Entities.Application> ExtendApplication(ExtendApplicationDto extendApplicationDto);
         Task CheckApplicationAward(Domain.Entities.Application profile);
+        Task AssignApplicationsToManyExpert(AssignExpertsToApplicationDto request);
+        Task<IEnumerable<ApplicationReviewDto>> GetReviewsOfApplicationIds(List<int> applicationIds);
     }
 }

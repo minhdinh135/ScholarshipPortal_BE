@@ -72,6 +72,14 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<ApplicationReviewDto>>(reviews);
         }
 
+        public async Task<IEnumerable<ApplicationReviewDto>> GetReviewsOfApplicationIds(List<int> applicationIds)
+        {
+            var reviews = await _applicationReviewRepository.GetAll();
+            reviews = reviews.Where(r => applicationIds.Contains(r.ApplicationId)).ToList();
+
+            return _mapper.Map<IEnumerable<ApplicationReviewDto>>(reviews);
+        }
+
         public async Task<IEnumerable<ApplicationReviewDto>> GetReviewsResult(int scholarshipProgramId, bool isFirstReview)
         {
             var reviews = await _applicationRepository.GetApplicationReviewsResult(scholarshipProgramId, isFirstReview);
@@ -101,6 +109,39 @@ namespace Application.Services
                         ApplicationId = applicationId,
                         ReviewDate = request.ReviewDate,
                         ExpertId = request.ExpertId,
+                        Status = ApplicationReviewStatusEnum.Reviewing.ToString()
+                    };
+                    await _applicationReviewRepository.Add(review);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new ServiceException(e.Message);
+            }
+        }
+
+        public async Task AssignApplicationsToManyExpert(AssignExpertsToApplicationDto request)
+        {
+            try
+            {
+                var application = await _applicationRepository.GetById(request.ApplicationId);
+                if (application == null)
+                        throw new ServiceException($"Application with id {request.ApplicationId} not found.");
+                foreach (var expertId in request.ExpertIds)
+                {
+                    var expert = await _accountService.GetAccount(expertId);
+                    if (expert == null || expert.RoleName != RoleEnum.Expert.ToString())
+                        throw new ServiceException($"User with id {expertId} is not Expert");
+
+                    application.Status = ApplicationStatusEnum.Reviewing.ToString();
+                    await _applicationRepository.Update(application);
+
+                    var review = new Review
+                    {
+                        Description = request.IsFirstReview ? ApplicationReviewDescription.APPLICATION_REVIEW : ApplicationReviewDescription.INTERVIEW,
+                        ApplicationId = request.ApplicationId,
+                        ReviewDate = request.ReviewDate,
+                        ExpertId = expertId,
                         Status = ApplicationReviewStatusEnum.Reviewing.ToString()
                     };
                     await _applicationReviewRepository.Add(review);
