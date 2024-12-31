@@ -4,9 +4,13 @@ public class AssignExpertsToApplicationDto
 {
     public int ApplicationId { get; set; }
     
-    public DateTime ReviewDate { get; set; }
-    
     public bool IsFirstReview { get; set; }
     
-    public List<int> ExpertIds { get; set; }
+    public List<ExpertListDto> ExpertIds { get; set; }
+}
+
+public class ExpertListDto
+{
+    public int Id { get; set; }    
+    public DateTime? ReviewDate { get; set; }
 }
