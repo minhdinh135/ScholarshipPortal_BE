@@ -58,6 +58,21 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
             .AsNoTracking()
             .AsSplitQuery()
             .Where(a => a.ApplicantId == applicantId)
+            .Include(a => a.ScholarshipProgram)
+            .Include(a => a.ApplicationDocuments)
+            .Include(a => a.ApplicationReviews)
+            .ToListAsync();
+
+        return applications;
+    }
+
+    public async Task<IEnumerable<Domain.Entities.Application>> GetByApplicantIdAndScholarshipProgramId(int applicantId, int scholarshipProgramId)
+    {
+        var applications = await _dbContext.Applications
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Where(a => a.ApplicantId == applicantId && a.ScholarshipProgramId == scholarshipProgramId)
+            .Include(a => a.ScholarshipProgram)
             .Include(a => a.ApplicationDocuments)
             .Include(a => a.ApplicationReviews)
             .ToListAsync();

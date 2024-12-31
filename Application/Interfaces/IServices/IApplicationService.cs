@@ -9,6 +9,9 @@ namespace Application.Interfaces.IServices
         Task<PaginatedList<ApplicationDto>> GetAll(int pageIndex, int pageSize, string sortBy, string sortOrder);
         Task<IEnumerable<ApplicationDto>> GetApplicationsByApplicantId(int applicantId);
         Task<IEnumerable<ApplicationDto>> GetApplicationsByScholarshipProgramId(int scholarshipProgramId);
+
+        Task<IEnumerable<ApplicationDto>> GetApplicationsByApplicantIdAndScholarshipProgramId(int applicantId,
+            int scholarshipProgramId);
         Task<ApplicationDto> GetApplicationById(int id);
         Task<IEnumerable<ApplicationDto>> GetExpertAssignedApplications(int expertId);
         Task<ApplicationFullDto> GetWithDocumentsAndAccount(int applicationId);
@@ -22,5 +25,7 @@ namespace Application.Interfaces.IServices
         Task UpdateReviewResult(UpdateReviewResultDto updateReviewResultDto);
         Task<Domain.Entities.Application> ExtendApplication(ExtendApplicationDto extendApplicationDto);
         Task CheckApplicationAward(Domain.Entities.Application profile);
+        Task AssignApplicationsToManyExpert(AssignExpertsToApplicationDto request);
+        Task<IEnumerable<ApplicationReviewDto>> GetReviewsOfApplicationIds(List<int> applicationIds);
     }
 }
