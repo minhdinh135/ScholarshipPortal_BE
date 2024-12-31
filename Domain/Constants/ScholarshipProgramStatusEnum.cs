@@ -8,5 +8,6 @@ public enum ScholarshipProgramStatusEnum
     Cancelled,
     Awarding,
     Completed,
-    Closed
+    Closed,
+	Rejected
 }

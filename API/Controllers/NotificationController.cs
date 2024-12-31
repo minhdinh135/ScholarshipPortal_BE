@@ -263,6 +263,61 @@ public class NotificationController : ControllerBase
 		return Ok(new ApiResponse(StatusCodes.Status200OK, "Send rejection notification and email successfully", response));
 	}
 
+	[HttpPost("notify-funder-scholarship-acceptance")]
+	public async Task<IActionResult> NotifyFunderScholarshipAcceptance(int scholarshipId)
+	{
+		try
+		{
+			var scholarship = await _scholarshipProgramService.GetScholarshipProgramById(scholarshipId);
+			if (scholarship == null)
+				return BadRequest(new { Message = "Scholarship not found." });
+
+			var funder = await _accountService.GetAccount(scholarship.FunderId.Value);
+			if (funder == null)
+				return BadRequest(new { Message = "Funder not found." });
+
+			var notificationMessage = $"Your scholarship program '{scholarship.Name}' has been accepted.";
+
+			await _notificationService.SendNotification(scholarship.FunderId.ToString(), "/", "Scholarship Accepted", notificationMessage);
+
+			await _emailService.SendEmailAsync(funder.Email, "Scholarship Acceptance Notification", notificationMessage);
+
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Scholarship acceptance notification sent successfully", null));
+		}
+		catch (Exception ex)
+		{
+			return BadRequest(new { Message = ex.Message });
+		}
+	}
+
+
+	[HttpPost("notify-funder-scholarship-rejection")]
+	public async Task<IActionResult> NotifyFunderScholarshipRejection(int scholarshipId, string rejectionReason)
+	{
+		try
+		{
+			var scholarship = await _scholarshipProgramService.GetScholarshipProgramById(scholarshipId);
+			if (scholarship == null)
+				return BadRequest(new { Message = "Scholarship not found." });
+
+			var funder = await _accountService.GetAccount(scholarship.FunderId.Value);
+			if (funder == null)
+				return BadRequest(new { Message = "Funder not found." });
+
+			var notificationMessage = $"Your scholarship program '{scholarship.Name}' has been rejected. Reason: {rejectionReason}";
+
+			await _notificationService.SendNotification(scholarship.FunderId.ToString(), "/", "Scholarship Rejection", notificationMessage);
+
+			await _emailService.SendEmailAsync(funder.Email, "Scholarship Rejection Notification", notificationMessage);
+
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Scholarship rejection notification sent successfully", null));
+		}
+		catch (Exception ex)
+		{
+			return BadRequest(new { Message = ex.Message });
+		}
+	}
+
 	[HttpPost("account-active/{userId}")]
 	public async Task<IActionResult> AccountActive(int userId)
 	{
