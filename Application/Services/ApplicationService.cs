@@ -127,11 +127,11 @@ namespace Application.Services
                 var application = await _applicationRepository.GetById(request.ApplicationId);
                 if (application == null)
                         throw new ServiceException($"Application with id {request.ApplicationId} not found.");
-                foreach (var expertId in request.ExpertIds)
+                foreach (var expertRequest in request.ExpertIds)
                 {
-                    var expert = await _accountService.GetAccount(expertId);
+                    var expert = await _accountService.GetAccount(expertRequest.Id);
                     if (expert == null || expert.RoleName != RoleEnum.Expert.ToString())
-                        throw new ServiceException($"User with id {expertId} is not Expert");
+                        throw new ServiceException($"User with id {expertRequest.Id} is not Expert");
 
                     application.Status = ApplicationStatusEnum.Reviewing.ToString();
                     await _applicationRepository.Update(application);
@@ -140,8 +140,8 @@ namespace Application.Services
                     {
                         Description = request.IsFirstReview ? ApplicationReviewDescription.APPLICATION_REVIEW : ApplicationReviewDescription.INTERVIEW,
                         ApplicationId = request.ApplicationId,
-                        ReviewDate = request.ReviewDate,
-                        ExpertId = expertId,
+                        ReviewDate = expertRequest.ReviewDate,
+                        ExpertId = expertRequest.Id,
                         Status = ApplicationReviewStatusEnum.Reviewing.ToString()
                     };
                     await _applicationReviewRepository.Add(review);
