@@ -120,6 +120,24 @@ public class ApplicantService : IApplicantService
         }
     }
 
+    public async Task UpdateProfileGeneralInformation(int applicantId, UpdateApplicantGeneralInformationRequest request)
+    {
+        var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
+        if (applicantProfile == null)
+            throw new NotFoundException($"Applicant profile with applicantId:{applicantId} is not found");
+
+        _mapper.Map(request, applicantProfile);
+
+        try
+        {
+            await _applicantRepository.Update(applicantProfile);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        }
+    }
+
     public async Task AddProfileExperience(int applicantId, AddExperienceRequest request)
     {
         var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
