@@ -12,5 +12,5 @@ public class AssignExpertsToApplicationDto
 public class ExpertListDto
 {
     public int Id { get; set; }    
-    public DateTime? ReviewDate { get; set; }
+    public DateTime? DeadlineDate { get; set; }
 }

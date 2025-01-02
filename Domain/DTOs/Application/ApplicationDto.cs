@@ -18,6 +18,8 @@ public class ApplicationDto
     public string ScholarshipName { get; set; }
 
     public DateTime UpdatedAt { get; set; }
+
+    public int ScholarshipProgramId { get; set; }
     
     public ScholarshipProgramDto ScholarshipProgram { get; set; }
     
