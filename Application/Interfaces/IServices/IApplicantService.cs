@@ -9,6 +9,7 @@ public interface IApplicantService
     Task<ApplicantProfileDto> AddApplicantProfile(int applicantId, AddApplicantProfileDto dto);
     Task<ApplicantProfileDto> UpdateApplicantProfile(int applicantId, UpdateApplicantProfileDto dto);
     Task<int> UpdateApplicantProfileDetails(int applicantId, UpdateApplicantProfileDetails updateDetails);
+    Task UpdateProfileGeneralInformation(int applicantId, UpdateApplicantGeneralInformationRequest request);
     Task AddProfileExperience(int applicantId, AddExperienceRequest request);
     Task UpdateProfileExperience(int applicantId, int experienceId, UpdateExperienceRequest request);
     Task DeleteProfileExperience(int experienceId);

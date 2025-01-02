@@ -146,6 +146,22 @@ public class ApplicantController : ControllerBase
         }
     }
 
+    [HttpPut("{applicantId}/general-info")]
+    public async Task<IActionResult> UpdateProfileGeneralInformation(int applicantId,
+        UpdateApplicantGeneralInformationRequest request)
+    {
+        try
+        {
+            await _applicantService.UpdateProfileGeneralInformation(applicantId, request);
+            
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update applicant profile successfully"));
+        }
+        catch (ServiceException e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
+
     [HttpPost("{applicantId}/profile-experience")]
     public async Task<IActionResult> AddProfileExperience(int applicantId,
         AddExperienceRequest request)
