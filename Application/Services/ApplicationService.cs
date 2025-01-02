@@ -140,7 +140,7 @@ namespace Application.Services
                     {
                         Description = request.IsFirstReview ? ApplicationReviewDescription.APPLICATION_REVIEW : ApplicationReviewDescription.INTERVIEW,
                         ApplicationId = request.ApplicationId,
-                        ReviewDate = expertRequest.ReviewDate,
+                        DeadlineDate = expertRequest.DeadlineDate.Value,
                         ExpertId = expertRequest.Id,
                         Status = ApplicationReviewStatusEnum.Reviewing.ToString()
                     };
