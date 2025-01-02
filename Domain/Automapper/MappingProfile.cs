@@ -170,6 +170,7 @@ public class MappingProfile : Profile
                 .MapFrom(src => src.ApplicantCertificates))
             .ReverseMap();
         CreateMap<UpdateApplicantProfileDto, ApplicantProfile>();
+        CreateMap<UpdateApplicantGeneralInformationRequest, ApplicantProfile>();
 
         CreateMap<Education, ApplicantEducationDto>().ReverseMap();
         CreateMap<AddEducationRequest, Education>();
