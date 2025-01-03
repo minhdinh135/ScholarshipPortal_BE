@@ -7,6 +7,7 @@ namespace Application.Interfaces.IRepositories;
 public interface IScholarshipProgramRepository : IGenericRepository<ScholarshipProgram>
 {
     Task<PaginatedList<ScholarshipProgram>> GetAllScholarshipPrograms(ListOptions listOptions);
+    Task<PaginatedList<ScholarshipProgram>> GetExpertAssignedPrograms(ListOptions listOptions, int expertId);
     Task<PaginatedList<ScholarshipProgram>> GetScholarshipProgramsByFunderId(ListOptions listOptions, int funderId);
     Task<ScholarshipProgram> GetScholarsipProgramById(int id);
     Task<IEnumerable<ScholarshipProgram>> SearchScholarshipPrograms(ScholarshipSearchOptions scholarshipSearchOptions);

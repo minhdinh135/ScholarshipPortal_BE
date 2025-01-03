@@ -54,6 +54,13 @@ public class ScholarshipProgramService : IScholarshipProgramService
         }
     }
 
+    public async Task<PaginatedList<ScholarshipProgramDto>> GetExpertAssignedPrograms(ListOptions listOptions, int expertId)
+    {
+        var result = await _scholarshipProgramRepository.GetExpertAssignedPrograms(listOptions, expertId);
+
+        return _mapper.Map<PaginatedList<ScholarshipProgramDto>>(result);
+    }
+
     public async Task<PaginatedList<ScholarshipProgramDto>> GetScholarshipProgramsByFunderId(ListOptions listOptions, int funderId)
     {
         var scholarshipPrograms =
