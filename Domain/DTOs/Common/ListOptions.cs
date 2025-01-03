@@ -6,7 +6,7 @@ public class ListOptions
 
     public int PageSize { get; set; } = 10;
 
-    public string? SortBy { get; set; } = "Id";
+    public string? SortBy { get; set; } 
 
     public bool IsDescending { get; set; } = false;
 
