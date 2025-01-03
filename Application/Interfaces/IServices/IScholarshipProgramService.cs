@@ -10,7 +10,7 @@ public interface IScholarshipProgramService
     Task<IEnumerable<ScholarshipProgramDto>> GetAllScholarshipPrograms();
     Task<IEnumerable<ScholarshipProgramDto>> SearchScholarshipPrograms(
         ScholarshipSearchOptions scholarshipSearchOptions);
-    Task<IEnumerable<ScholarshipProgramDto>> GetScholarshipProgramsByFunderId(int funderId);
+    Task<PaginatedList<ScholarshipProgramDto>> GetScholarshipProgramsByFunderId(ListOptions listOptions, int funderId);
     Task<IEnumerable<ScholarshipProgramDto>> GetScholarshipProgramsByMajorId(int majorId);
     Task<ScholarshipProgramDto> GetScholarshipProgramById(int id);
     Task<IEnumerable<ExpertDetailsDto>> GetScholarshipProgramExperts(int scholarshipProgramId);

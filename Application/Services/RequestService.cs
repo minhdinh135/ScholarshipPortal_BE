@@ -19,9 +19,9 @@ public class RequestService : IRequestService
         _requestRepository = requestRepository;
     }
 
-    public async Task<IEnumerable<RequestDto>> GetAllRequests(RequestQueryParameters requestQueryParameters)
+    public async Task<IEnumerable<RequestDto>> GetAllRequests(int applicantId)
     {
-        var requests = await _requestRepository.GetAllRequests(requestQueryParameters);
+        var requests = await _requestRepository.GetAllRequests(applicantId);
 
         return _mapper.Map<IEnumerable<RequestDto>>(requests);
     }
