@@ -1,11 +1,12 @@
 ﻿using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SSAP.API.Controllers;
 
 [ApiController]
-[Route("api/skills")]
+[Route(UriConstant.SKILL_BASE_URI)]
 public class SkillController : ControllerBase
 {
     private readonly ISkillService _skillService;

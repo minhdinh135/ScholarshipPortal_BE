@@ -1,4 +1,5 @@
 using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.AwardMilestone;
 using Domain.DTOs.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace SSAP.API.Controllers;
 
 [ApiController]
-[Route("api/award-milestones")]
+[Route(UriConstant.AWARD_MILESTONE_BASE_URI)]
 public class AwardMilestoneController : ControllerBase
 {
     private readonly IAwardMilestoneService _awardMilestoneService;

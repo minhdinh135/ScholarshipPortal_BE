@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Category;
 using Domain.DTOs.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace SSAP.API.Controllers;
 
 [ApiController]
-[Route("api/categories")]
+[Route(UriConstant.CATEGORY_BASE_URI)]
 public class CategoryController : ControllerBase
 {
     private readonly ICategoryService _categoryService;

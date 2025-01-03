@@ -1,11 +1,12 @@
 ﻿using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SSAP.API.Controllers;
 
 [ApiController]
-[Route("api/certificates")]
+[Route(UriConstant.CERTIFICATE_BASE_URI)]
 public class CertificateController : ControllerBase
 {
     private readonly ICertificateService _certificateService;

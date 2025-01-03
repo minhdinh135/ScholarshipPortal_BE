@@ -168,22 +168,4 @@ public class ScholarshipProgramService : IScholarshipProgramService
             throw new ServiceException(e.Message);
         }
     }
-
-    public async Task UpdateScholarshipProgramStatus(int id, string status)
-    {
-        var existingScholarshipProgram = await _scholarshipProgramRepository.GetScholarsipProgramById(id);
-        if (existingScholarshipProgram == null)
-            throw new NotFoundException($"Scholarship program with id:{id} is not found");
-
-        try
-        {
-            existingScholarshipProgram.Status = status;
-
-            await _scholarshipProgramRepository.Update(existingScholarshipProgram);
-        }
-        catch (Exception e)
-        {
-            throw new ServiceException(e.Message);
-        }
-    }
 }

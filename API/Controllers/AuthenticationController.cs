@@ -1,11 +1,11 @@
 using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Authentication;
-using Infrastructure.ExternalServices.Google;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SSAP.API.Controllers;
 
-[Route("api/[controller]")]
+[Route(UriConstant.AUTH_BASE_URI)]
 [ApiController]
 public class AuthenticationController : ControllerBase
 {

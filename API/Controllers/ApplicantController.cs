@@ -1,5 +1,6 @@
 ﻿using Application.Exceptions;
 using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Applicant;
 using Domain.DTOs.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace SSAP.API.Controllers;
 
 [ApiController]
-[Route("api/applicants")]
+[Route(UriConstant.APPLICANT_BASE_URI)]
 public class ApplicantController : ControllerBase
 {
     private readonly IApplicantService _applicantService;

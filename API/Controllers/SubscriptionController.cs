@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Common;
 using Domain.DTOs.Subscription;
 using Microsoft.AspNetCore.Mvc;
@@ -6,17 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace SSAP.API.Controllers;
 
 [ApiController]
-[Route("api/subscriptions")]
+[Route(UriConstant.SUBSCRIPTION_BASE_URI)]
 public class SubscriptionController : ControllerBase
 {
     private readonly ISubscriptionService _subscriptionService;
-    private readonly IAccountService _accountService;
 
-    public SubscriptionController(ISubscriptionService subscriptionService, 
-            IAccountService accountService)
+    public SubscriptionController(ISubscriptionService subscriptionService)
     {
         _subscriptionService = subscriptionService;
-        _accountService = accountService;
     }
 
     [HttpGet]
@@ -73,52 +71,53 @@ public class SubscriptionController : ControllerBase
         }
     }
 
-	[HttpGet("by-provider/{providerId}")]
-	public async Task<IActionResult> GetSubscriptionByProviderId(int providerId)
-	{
-		try
-		{
-			var subscription = await _subscriptionService.GetSubscriptionByProviderId(providerId);
+    [HttpGet("by-provider/{providerId}")]
+    public async Task<IActionResult> GetSubscriptionByProviderId(int providerId)
+    {
+        try
+        {
+            var subscription = await _subscriptionService.GetSubscriptionByProviderId(providerId);
 
-			return Ok(new ApiResponse(StatusCodes.Status200OK, "Get subscription by provider ID successfully", subscription));
-		}
-		catch (Exception e)
-		{
-			return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
-		}
-	}
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Get subscription by provider ID successfully",
+                subscription));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
 
     [HttpGet("subscription-sold")]
-	public async Task<IActionResult> GetSubscriptionSold([FromQuery]DateTime fromDate, 
-        [FromQuery]DateTime toDate)
-	{
-		try
-		{
-			var subscription = await _subscriptionService.GetSubscriptionSold(fromDate, toDate);
+    public async Task<IActionResult> GetSubscriptionSold([FromQuery] DateTime fromDate,
+        [FromQuery] DateTime toDate)
+    {
+        try
+        {
+            var subscription = await _subscriptionService.GetSubscriptionSold(fromDate, toDate);
 
-			return Ok(new ApiResponse(StatusCodes.Status200OK, "Get subscription by provider ID successfully", subscription));
-		}
-		catch (Exception e)
-		{
-			return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
-		}
-	}
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Get subscription by provider ID successfully",
+                subscription));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
+    }
 
     [HttpGet("revenue")]
     public async Task<IActionResult> GetRevenue()
     {
         try
-		{
-			var subscription = await _subscriptionService.GetRevenue();
+        {
+            var subscription = await _subscriptionService.GetRevenue();
 
 
-			return Ok(new ApiResponse(StatusCodes.Status200OK, "Get subscription by provider ID successfully", subscription));
-		}
-		catch (Exception e)
-		{
-			return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
-		}
+            return Ok(new ApiResponse(StatusCodes.Status200OK, "Get subscription by provider ID successfully",
+                subscription));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+        }
     }
-
-
 }

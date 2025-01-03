@@ -1,5 +1,6 @@
 ﻿using Application.Exceptions;
 using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Common;
 using Domain.DTOs.Feedback;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace SSAP.API.Controllers;
 
 [ApiController]
-[Route("api/feedbacks")]
+[Route(UriConstant.FEEDBACK_BASE_URI)]
 public class FeedbackController : ControllerBase
 {
     private readonly IFeedbackService _feedbackService;
