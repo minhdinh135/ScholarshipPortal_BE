@@ -51,6 +51,47 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
             listOptions.PageSize);
     }
 
+    public async Task<PaginatedList<ScholarshipProgram>> GetScholarshipProgramsByFunderId(ListOptions listOptions, int funderId)
+    {
+        var query = _dbContext.ScholarshipPrograms
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Include(sp => sp.Category)
+            .Include(sp => sp.University).ThenInclude(u => u.Country)
+            .Include(sp => sp.ScholarshipProgramCertificates).ThenInclude(c => c.Certificate)
+            .Include(sp => sp.Major).ThenInclude(m => m.MajorSkills).ThenInclude(ms => ms.Skill)
+            .Include(sp => sp.Criteria)
+            .Include(sp => sp.Documents)
+            .Include(sp => sp.ReviewMilestones)
+            .Include(sp => sp.AwardMilestones)
+            .Where(sp => sp.FunderId == funderId)
+            .OrderByDescending(sp => sp.UpdatedAt);
+
+        if (!string.IsNullOrEmpty(listOptions.SortBy))
+        {
+            var orderByExpression = ExpressionUtils.GetOrderByExpression<ScholarshipProgram>(listOptions.SortBy);
+            query = listOptions.IsDescending
+                ? query.OrderByDescending(orderByExpression)
+                : query.OrderBy(orderByExpression);
+        }
+
+        var totalCount = await query.CountAsync();
+
+        if (!listOptions.IsPaging)
+        {
+            var allItems = await query.ToListAsync();
+            return new PaginatedList<ScholarshipProgram>(allItems, totalCount, 1, totalCount);
+        }
+
+        var result = await query
+            .Skip((listOptions.PageIndex - 1) * listOptions.PageSize)
+            .Take(listOptions.PageSize)
+            .ToListAsync();
+
+        return new PaginatedList<ScholarshipProgram>(result, totalCount, listOptions.PageIndex,
+            listOptions.PageSize);
+    }
+
     public async Task<ScholarshipProgram> GetScholarsipProgramById(int id)
     {
         var scholarshipProgram = await _dbContext.ScholarshipPrograms

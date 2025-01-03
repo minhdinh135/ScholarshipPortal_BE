@@ -5,7 +5,7 @@ namespace Application.Interfaces.IServices;
 
 public interface IRequestService
 {
-    Task<IEnumerable<RequestDto>> GetAllRequests(RequestQueryParameters requestQueryParameters);
+    Task<IEnumerable<RequestDto>> GetAllRequests(int applicantId);
 
     Task<RequestDto> GetRequestById(int id);
 	Task<IEnumerable<RequestDto>> GetRequestByApplicantId(int applicantId);

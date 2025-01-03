@@ -13,16 +13,14 @@ public class ScholarshipProgramService : IScholarshipProgramService
 {
     private readonly IMapper _mapper;
     private readonly IScholarshipProgramRepository _scholarshipProgramRepository;
-    private readonly IFunderService _funderService;
     private readonly IProgramExpertRepository _programExpertRepository;
     private readonly IExpertRepository _expertRepository;
 
     public ScholarshipProgramService(IMapper mapper, IScholarshipProgramRepository scholarshipProgramRepository,
-        IFunderService funderService, IProgramExpertRepository programExpertRepository, IExpertRepository expertRepository)
+        IProgramExpertRepository programExpertRepository, IExpertRepository expertRepository)
     {
         _mapper = mapper;
         _scholarshipProgramRepository = scholarshipProgramRepository;
-        _funderService = funderService;
         _programExpertRepository = programExpertRepository;
         _expertRepository = expertRepository;
     }
@@ -56,14 +54,12 @@ public class ScholarshipProgramService : IScholarshipProgramService
         }
     }
 
-    public async Task<IEnumerable<ScholarshipProgramDto>> GetScholarshipProgramsByFunderId(int funderId)
+    public async Task<PaginatedList<ScholarshipProgramDto>> GetScholarshipProgramsByFunderId(ListOptions listOptions, int funderId)
     {
         var scholarshipPrograms =
-            await _scholarshipProgramRepository.GetAll();
-        scholarshipPrograms =
-            scholarshipPrograms.Where(scholarshipProgram => scholarshipProgram.FunderId == funderId);
+            await _scholarshipProgramRepository.GetScholarshipProgramsByFunderId(listOptions, funderId);
 
-        return _mapper.Map<IEnumerable<ScholarshipProgramDto>>(scholarshipPrograms);
+        return _mapper.Map<PaginatedList<ScholarshipProgramDto>>(scholarshipPrograms);
     }
 
 
