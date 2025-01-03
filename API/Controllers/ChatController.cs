@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Chat;
 using Domain.DTOs.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace SSAP.API.Controllers
 {
 	[ApiController]
-	[Route("api/chats")]
+	[Route(UriConstant.CHAT_BASE_URI)]
 	public class ChatController : ControllerBase
 	{
 		private readonly IChatService _chatService;

@@ -1,5 +1,6 @@
 ﻿using Application.Exceptions;
 using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Common;
 using Domain.DTOs.University;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace SSAP.API.Controllers;
 
 [ApiController]
-[Route("api/universities")]
+[Route(UriConstant.UNIVERSITY_BASE_URI)]
 public class UniversityController : ControllerBase
 {
     private readonly IUniversityService _universityService;

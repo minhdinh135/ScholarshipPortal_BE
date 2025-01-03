@@ -1,5 +1,6 @@
 using Application.Exceptions;
 using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Account;
 using Domain.DTOs.Authentication;
 using Domain.DTOs.Common;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace SSAP.API.Controllers;
 
 [ApiController]
-[Route("api/accounts")]
+[Route(UriConstant.ACCOUNT_BASE_URI)]
 public class AccountController : ControllerBase
 {
     private readonly ILogger<AccountController> _logger;

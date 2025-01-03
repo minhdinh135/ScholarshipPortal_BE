@@ -1,5 +1,6 @@
 using Application.Exceptions;
 using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Common;
 using Domain.DTOs.ReviewMilestone;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace SSAP.API.Controllers;
 
 [ApiController]
-[Route("api/review-milestones")]
+[Route(UriConstant.REVIEW_MILESTONE_BASE_URI)]
 public class ReviewMilestoneController : ControllerBase
 {
     private readonly IReviewMilestoneService _reviewMilestoneService;

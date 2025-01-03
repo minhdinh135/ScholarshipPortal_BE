@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Common;
 using Domain.DTOs.Criteria;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace SSAP.API.Controllers;
 
 [ApiController]
-[Route("api/criteria")]
+[Route(UriConstant.CRITERIA_BASE_URI)]
 public class CriteriaController : ControllerBase
 {
     private readonly ICriteriaService _criteriaService;
