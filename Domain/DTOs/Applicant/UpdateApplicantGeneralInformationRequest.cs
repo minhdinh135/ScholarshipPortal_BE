@@ -2,6 +2,8 @@
 
 public class UpdateApplicantGeneralInformationRequest
 {
+    public string AvatarUrl { get; set; }
+    
     public DateTime BirthDate { get; set; }
 
     public string Gender { get; set; }

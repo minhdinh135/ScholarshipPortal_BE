@@ -2,6 +2,7 @@
 using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
+using Domain.Constants;
 using Domain.DTOs.Applicant;
 using Domain.Entities;
 using ServiceException = Application.Exceptions.ServiceException;
@@ -122,14 +123,17 @@ public class ApplicantService : IApplicantService
 
     public async Task UpdateProfileGeneralInformation(int applicantId, UpdateApplicantGeneralInformationRequest request)
     {
+        var account = await _accountRepository.GetById(applicantId);
         var applicantProfile = await _applicantRepository.GetByApplicantId(applicantId);
-        if (applicantProfile == null)
-            throw new NotFoundException($"Applicant profile with applicantId:{applicantId} is not found");
+        if (applicantProfile == null || account == null)
+            throw new ServiceException(MessageConstant.NOT_FOUND, new NotFoundException());
 
+        account.AvatarUrl = request.AvatarUrl;
         _mapper.Map(request, applicantProfile);
 
         try
         {
+            await _accountRepository.Update(account);
             await _applicantRepository.Update(applicantProfile);
         }
         catch (Exception e)
