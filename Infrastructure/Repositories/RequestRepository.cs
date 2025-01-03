@@ -1,5 +1,4 @@
 ﻿using Application.Interfaces.IRepositories;
-using Domain.DTOs.Request;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,7 +6,7 @@ namespace Infrastructure.Repositories;
 
 public class RequestRepository : GenericRepository<Request>, IRequestRepository
 {
-    public async Task<IEnumerable<Request>> GetAllRequests(RequestQueryParameters requestQueryParameters)
+    public async Task<IEnumerable<Request>> GetAllRequests(int applicantId)
     {
         var query = _dbContext.Requests
             .AsNoTracking()
@@ -18,9 +17,9 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
             .ThenInclude(r => r.Service)
             .AsQueryable();
 
-        if (requestQueryParameters.ApplicantId.HasValue)
+        if (applicantId != 0)
         {
-            query = query.Where(r => r.ApplicantId == requestQueryParameters.ApplicantId);
+            query = query.Where(r => r.ApplicantId == applicantId);
         }
 
         return await query.ToListAsync();

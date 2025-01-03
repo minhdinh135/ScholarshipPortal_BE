@@ -55,9 +55,9 @@ public class ScholarshipProgramController : ControllerBase
     }
 
     [HttpGet("by-funder-id/{id}")]
-    public async Task<IActionResult> GetAllScholarshipProgramsByFunderId([FromRoute] int id)
+    public async Task<IActionResult> GetAllScholarshipProgramsByFunderId([FromQuery] ListOptions listOptions, int id)
     {
-        var allScholarshipPrograms = await _scholarshipProgramService.GetScholarshipProgramsByFunderId(id);
+        var allScholarshipPrograms = await _scholarshipProgramService.GetScholarshipProgramsByFunderId(listOptions, id);
 
         return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all scholarship programs successfully",
             allScholarshipPrograms));
