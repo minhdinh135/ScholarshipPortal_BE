@@ -1,11 +1,12 @@
 ﻿using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SSAP.API.Controllers;
 
 [ApiController]
-[Route("api/countries")]
+[Route(UriConstant.COUNTRY_BASE_URI)]
 public class CountryController : ControllerBase
 {
     private readonly ICountryService _countryService;

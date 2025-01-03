@@ -1,12 +1,13 @@
 ﻿using Application.Exceptions;
 using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SSAP.API.Controllers;
 
 [ApiController]
-[Route("api/file-upload")]
+[Route(UriConstant.FILE_UPLOAD_BASE_URI)]
 public class FileUploadController : ControllerBase
 {
     private readonly ILogger<FileUploadController> _logger;

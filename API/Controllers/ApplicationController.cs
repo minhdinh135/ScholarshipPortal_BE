@@ -1,4 +1,5 @@
 using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Application;
 using Domain.DTOs.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ using ServiceException = Application.Exceptions.ServiceException;
 namespace SSAP.API.Controllers
 {
     [ApiController]
-    [Route("api/applications")]
+    [Route(UriConstant.APPLICATION_BASE_URI)]
     public class ApplicationController : ControllerBase
     {
         private readonly IApplicationService _applicationService;

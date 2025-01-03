@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace SSAP.API.Controllers;
 
 [ApiController]
-[Route("api/notifications")]
+[Route(UriConstant.NOTIFICATION_BASE_URI)]
 public class NotificationController : ControllerBase
 {
     private readonly INotificationService _notificationService;

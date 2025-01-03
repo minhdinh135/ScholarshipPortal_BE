@@ -1,4 +1,5 @@
 using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Common;
 using Domain.DTOs.Role;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace SSAP.API.Controllers
 {
 	[ApiController]
-	[Route("api/roles")]
+	[Route(UriConstant.ROLE_BASE_URI)]
 	public class RoleController : ControllerBase
 	{
 		private readonly IRoleService _roleService;

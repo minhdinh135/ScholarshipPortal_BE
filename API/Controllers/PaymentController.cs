@@ -1,5 +1,6 @@
 ﻿using Application.Exceptions;
 using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Common;
 using Domain.DTOs.Payment;
 using Infrastructure.ExternalServices.Stripe;
@@ -12,7 +13,7 @@ using TransferRequest = Domain.DTOs.Payment.TransferRequest;
 namespace SSAP.API.Controllers;
 
 [ApiController]
-[Route("api/payments")]
+[Route(UriConstant.PAYMENT_BASE_URI)]
 public class PaymentController : ControllerBase
 {
     private readonly StripeSettings _stripeSettings;

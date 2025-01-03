@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.IServices;
+using Domain.Constants;
 using Domain.DTOs.Common;
 using Domain.DTOs.Major;
 using Microsoft.AspNetCore.Mvc;
@@ -6,16 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace SSAP.API.Controllers;
 
 [ApiController]
-[Route("api/majors")]
+[Route(UriConstant.MAJOR_BASE_URI)]
 public class MajorController : ControllerBase
 {
     private readonly IMajorService _majorService;
-    private readonly ISkillService _skillService;
 
-    public MajorController(IMajorService majorService, ISkillService skillService)
+    public MajorController(IMajorService majorService)
     {
         _majorService = majorService;
-        _skillService = skillService;
     }
 
     [HttpGet]
