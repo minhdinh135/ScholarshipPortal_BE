@@ -23,10 +23,10 @@ public class ScholarshipProgramController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllScholarshipPrograms([FromQuery] ListOptions listOptions)
     {
-        var allScholarshipPrograms = await _scholarshipProgramService.GetAllPrograms(listOptions);
+        var result = await _scholarshipProgramService.GetAllPrograms(listOptions);
 
-        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get all scholarship programs successfully",
-            allScholarshipPrograms));
+        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get scholarship programs successfully",
+            result));
     }
 
     [HttpGet("count")]
