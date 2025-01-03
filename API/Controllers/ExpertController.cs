@@ -15,13 +15,15 @@ public class ExpertController : ControllerBase
     private readonly IAccountService _accountService;
     private readonly IApplicationService _applicationService;
     private readonly IExpertService _expertService;
+    private readonly IScholarshipProgramService _scholarshipProgramService;
 
     public ExpertController(IAccountService accountService,
-        IApplicationService applicationService, IExpertService expertService)
+        IApplicationService applicationService, IExpertService expertService, IScholarshipProgramService scholarshipProgramService)
     {
         _accountService = accountService;
         _applicationService = applicationService;
         _expertService = expertService;
+        _scholarshipProgramService = scholarshipProgramService;
     }
 
     [HttpGet("funder/{funderId}")]
@@ -29,7 +31,7 @@ public class ExpertController : ControllerBase
     {
         var experts = await _expertService.GetAllExpertProfilesByFunder(funderId);
 
-        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get experts by funder successfully", experts));
+        return Ok(new ApiResponse(StatusCodes.Status200OK, MessageConstant.SUCCESSFUL, experts));
     }
 
     [HttpGet]
@@ -37,7 +39,7 @@ public class ExpertController : ControllerBase
     {
         var experts = await _expertService.GetAllExpertProfileByExpert();
 
-        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get experts successfully", experts));
+        return Ok(new ApiResponse(StatusCodes.Status200OK, MessageConstant.SUCCESSFUL, experts));
     }
 
     [HttpGet("{id}")]
@@ -45,15 +47,23 @@ public class ExpertController : ControllerBase
     {
         var expert = await _expertService.GetExpertProfileByExpertId(id);
 
-        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get Expert details successfully", expert));
+        return Ok(new ApiResponse(StatusCodes.Status200OK, MessageConstant.SUCCESSFUL, expert));
     }
+    
+    [HttpGet("{id}/assigned-programs")]
+        public async Task<IActionResult> GetExpertAssignedPrograms([FromQuery] ListOptions listOptions, int id)
+        {
+            var result = await _scholarshipProgramService.GetExpertAssignedPrograms(listOptions, id);
+    
+            return Ok(new ApiResponse(StatusCodes.Status200OK, MessageConstant.SUCCESSFUL, result));
+        }
 
     [HttpGet("{id}/assigned-applications")]
     public async Task<IActionResult> GetExpertAssignedApplications(int id)
     {
         var assignedApplications = await _applicationService.GetExpertAssignedApplications(id);
 
-        return Ok(new ApiResponse(StatusCodes.Status200OK, "Get Expert assigned applications successfully",
+        return Ok(new ApiResponse(StatusCodes.Status200OK, MessageConstant.SUCCESSFUL,
             assignedApplications));
     }
 
@@ -78,7 +88,7 @@ public class ExpertController : ControllerBase
             dto.ExpertId = addedProfile.Id;
             var createdExpertDetails = await _expertService.CreateExpertProfile(dto);
 
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Create expert details successully",
+            return Ok(new ApiResponse(StatusCodes.Status200OK, MessageConstant.SUCCESSFUL,
                 createdExpertDetails));
         }
         catch (ServiceException e)
@@ -94,7 +104,7 @@ public class ExpertController : ControllerBase
         {
             var updatedExpertDetails = await _expertService.UpdateExpertProfile(id, updateExpertDetailsDto);
 
-            return Ok(new ApiResponse(StatusCodes.Status200OK, "Update expert details successfully",
+            return Ok(new ApiResponse(StatusCodes.Status200OK, MessageConstant.SUCCESSFUL,
                 updatedExpertDetails));
         }
         catch (ServiceException e)
