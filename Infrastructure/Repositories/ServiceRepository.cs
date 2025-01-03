@@ -8,41 +8,62 @@ namespace Infrastructure.Repositories;
 
 public class ServiceRepository : GenericRepository<Service>, IServiceRepository
 {
-	public async Task<PaginatedList<Service>> GetAllServicesByProviderId(int id, int pageIndex, int pageSize, string sortBy, string sortOrder)
-	{
-		var query = _dbContext.Set<Service>().AsNoTracking().AsSplitQuery();
-
-		if (!string.IsNullOrEmpty(sortBy))
-		{
-			var orderByExpression = ExpressionUtils.GetOrderByExpression<Service>(sortBy);
-			query = sortOrder.ToLower() == "desc"
-				? query.OrderByDescending(orderByExpression)
-				: query.OrderBy(orderByExpression);
-		}
-
-		var items = await query
-            .Where(x => x.ProviderId == id)
-			.Skip((pageIndex - 1) * pageSize)
-			.Take(pageSize)
-			.ToListAsync();
-
-		var totalCount = await _dbContext.Set<Service>().Where(x => x.ProviderId == id).CountAsync();
-		var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-
-		return new PaginatedList<Service>(items, pageIndex, totalPages);
-	}
-
-	public async Task<PaginatedList<Service>> GetAllServices(ListOptions listOptions)
+    public async Task<PaginatedList<Service>> GetAllServicesByProviderId(int id, int pageIndex, int pageSize,
+        string sortBy, string sortOrder)
     {
-        var includes = new Func<IQueryable<Service>, IQueryable<Service>>[]
-        {
-            q => q.Include(s => s.Feedbacks),
-            q => q.Include(s => s.RequestDetails)
-        };
+        var query = _dbContext.Set<Service>().AsNoTracking().AsSplitQuery();
 
-        var services = await GetPaginatedList(includes, listOptions);
-        
-        return services;
+        if (!string.IsNullOrEmpty(sortBy))
+        {
+            var orderByExpression = ExpressionUtils.GetOrderByExpression<Service>(sortBy);
+            query = sortOrder.ToLower() == "desc"
+                ? query.OrderByDescending(orderByExpression)
+                : query.OrderBy(orderByExpression);
+        }
+
+        var items = await query
+            .Where(x => x.ProviderId == id)
+            .Skip((pageIndex - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var totalCount = await _dbContext.Set<Service>().Where(x => x.ProviderId == id).CountAsync();
+
+        return new PaginatedList<Service>(items, totalCount, pageIndex, pageSize);
+    }
+
+    public async Task<PaginatedList<Service>> GetAllServices(ListOptions listOptions)
+    {
+        var query = _dbContext.Services
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Include(s => s.Feedbacks)
+            .Include(s => s.RequestDetails)
+            .OrderByDescending(s => s.UpdatedAt);
+
+        if (!string.IsNullOrEmpty(listOptions.SortBy))
+        {
+            var orderByExpression = ExpressionUtils.GetOrderByExpression<Service>(listOptions.SortBy);
+            query = listOptions.IsDescending
+                ? query.OrderByDescending(orderByExpression)
+                : query.OrderBy(orderByExpression);
+        }
+
+        var totalCount = await query.CountAsync();
+
+        if (!listOptions.IsPaging)
+        {
+            var allItems = await query.ToListAsync();
+            return new PaginatedList<Service>(allItems, totalCount, 1, totalCount);
+        }
+
+        var result = await query
+            .Skip((listOptions.PageIndex - 1) * listOptions.PageSize)
+            .Take(listOptions.PageSize)
+            .ToListAsync();
+
+        return new PaginatedList<Service>(result, totalCount, listOptions.PageIndex,
+            listOptions.PageSize);
     }
 
     public async Task<Service> GetServiceById(int id)
@@ -70,27 +91,27 @@ public class ServiceRepository : GenericRepository<Service>, IServiceRepository
         return services;
     }
 
-	public async Task<PaginatedList<Service>> GetAllActiveServices(int pageIndex, int pageSize, string sortBy, string sortOrder)
-	{
-		var query = _dbContext.Set<Service>().AsNoTracking().AsSplitQuery();
+    public async Task<PaginatedList<Service>> GetAllActiveServices(int pageIndex, int pageSize, string sortBy,
+        string sortOrder)
+    {
+        var query = _dbContext.Set<Service>().AsNoTracking().AsSplitQuery();
 
-		if (!string.IsNullOrEmpty(sortBy))
-		{
-			var orderByExpression = ExpressionUtils.GetOrderByExpression<Service>(sortBy);
-			query = sortOrder?.ToLower() == "desc"
-				? query.OrderByDescending(orderByExpression)
-				: query.OrderBy(orderByExpression);
-		}
+        if (!string.IsNullOrEmpty(sortBy))
+        {
+            var orderByExpression = ExpressionUtils.GetOrderByExpression<Service>(sortBy);
+            query = sortOrder?.ToLower() == "desc"
+                ? query.OrderByDescending(orderByExpression)
+                : query.OrderBy(orderByExpression);
+        }
 
-		var items = await query
-			.Where(x => x.Status == "Active")
-			.Skip((pageIndex - 1) * pageSize)
-			.Take(pageSize)
-			.ToListAsync();
+        var items = await query
+            .Where(x => x.Status == "Active")
+            .Skip((pageIndex - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
 
-		var totalCount = await _dbContext.Set<Service>().Where(x => x.Status == "Active").CountAsync();
-		var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        var totalCount = await _dbContext.Set<Service>().Where(x => x.Status == "Active").CountAsync();
 
-		return new PaginatedList<Service>(items, pageIndex, totalPages);
-	}
+        return new PaginatedList<Service>(items, totalCount, pageIndex, pageSize);
+    }
 }

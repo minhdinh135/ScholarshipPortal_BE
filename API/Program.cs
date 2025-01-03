@@ -28,9 +28,6 @@ builder.Services.AddControllers(options => options.SuppressInputFormatterBufferi
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-// builder.Services.AddDbContext<ScholarshipContext>(options =>
-//     options.UseMySQL(builder.Configuration.GetConnectionString("Db") ?? string.Empty));
-
 builder.Services.AddMapperServices();
 
 // Add FluentValidation validators

@@ -2,7 +2,6 @@
 using Application.Interfaces.IRepositories;
 using Domain.DTOs.Common;
 using Domain.Entities;
-using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
@@ -32,9 +31,8 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
             .ToListAsync();
 
         var totalCount = await query.CountAsync();
-        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
-        return new PaginatedList<Account>(items, pageIndex, totalPages);
+        return new PaginatedList<Account>(items, totalCount, pageIndex, pageSize);
 
     }
 

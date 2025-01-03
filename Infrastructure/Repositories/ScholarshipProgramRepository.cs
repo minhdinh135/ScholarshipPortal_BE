@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.IRepositories;
+﻿using Application.Helper;
+using Application.Interfaces.IRepositories;
 using Domain.Constants;
 using Domain.DTOs.Common;
 using Domain.DTOs.ScholarshipProgram;
@@ -12,20 +13,42 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
 {
     public async Task<PaginatedList<ScholarshipProgram>> GetAllScholarshipPrograms(ListOptions listOptions)
     {
-        var includes = new Func<IQueryable<ScholarshipProgram>, IQueryable<ScholarshipProgram>>[]
-        {
-            q => q.Include(sp => sp.Category),
-            q => q.Include(sp => sp.University).ThenInclude(u => u.Country),
-            q => q.Include(sp => sp.ScholarshipProgramCertificates).ThenInclude(c => c.Certificate),
-            q => q.Include(sp => sp.Major).ThenInclude(m => m.MajorSkills).ThenInclude(ms => ms.Skill),
-            q => q.Include(sp => sp.Criteria),
-            q => q.Include(sp => sp.Documents),
-            q => q.Include(sp => sp.ReviewMilestones),
-            q => q.Include(sp => sp.AwardMilestones)
-        };
-        var scholarshipPrograms = await GetPaginatedList(includes, listOptions);
+        var query = _dbContext.ScholarshipPrograms
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Include(sp => sp.Category)
+            .Include(sp => sp.University).ThenInclude(u => u.Country)
+            .Include(sp => sp.ScholarshipProgramCertificates).ThenInclude(c => c.Certificate)
+            .Include(sp => sp.Major).ThenInclude(m => m.MajorSkills).ThenInclude(ms => ms.Skill)
+            .Include(sp => sp.Criteria)
+            .Include(sp => sp.Documents)
+            .Include(sp => sp.ReviewMilestones)
+            .Include(sp => sp.AwardMilestones)
+            .OrderByDescending(sp => sp.UpdatedAt);
 
-        return scholarshipPrograms;
+        if (!string.IsNullOrEmpty(listOptions.SortBy))
+        {
+            var orderByExpression = ExpressionUtils.GetOrderByExpression<ScholarshipProgram>(listOptions.SortBy);
+            query = listOptions.IsDescending
+                ? query.OrderByDescending(orderByExpression)
+                : query.OrderBy(orderByExpression);
+        }
+
+        var totalCount = await query.CountAsync();
+
+        if (!listOptions.IsPaging)
+        {
+            var allItems = await query.ToListAsync();
+            return new PaginatedList<ScholarshipProgram>(allItems, totalCount, 1, totalCount);
+        }
+
+        var result = await query
+            .Skip((listOptions.PageIndex - 1) * listOptions.PageSize)
+            .Take(listOptions.PageSize)
+            .ToListAsync();
+
+        return new PaginatedList<ScholarshipProgram>(result, totalCount, listOptions.PageIndex,
+            listOptions.PageSize);
     }
 
     public async Task<ScholarshipProgram> GetScholarsipProgramById(int id)
@@ -107,7 +130,8 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
 
     public async Task DeleteScholarshipCertificates(ScholarshipProgram scholarshipProgram)
     {
-        await _dbContext.ScholarshipProgramCertificates.Where(spc => spc.ScholarshipProgramId == scholarshipProgram.Id)
+        await _dbContext.ScholarshipProgramCertificates
+            .Where(spc => spc.ScholarshipProgramId == scholarshipProgram.Id)
             .ExecuteDeleteAsync();
     }
 
