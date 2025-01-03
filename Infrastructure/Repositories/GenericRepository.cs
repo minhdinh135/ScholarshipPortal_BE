@@ -11,12 +11,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     protected readonly ScholarshipContext _dbContext;
     private readonly DbSet<T> _dbSet;
 
-    // public GenericRepository(ScholarshipContext dbContext)
-    // {
-    //     _dbContext = dbContext;
-    //     _dbSet = _dbContext.Set<T>();
-    // }
-
     public GenericRepository()
     {
         _dbContext = new ScholarshipContext();
@@ -39,46 +33,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         await _dbContext.SaveChangesAsync();
 
         return entity;
-    }
-
-    public async Task<PaginatedList<T>> GetPaginatedList(Func<IQueryable<T>, IQueryable<T>>[] includes,
-        ListOptions listOptions)
-    {
-        var query = _dbContext.Set<T>()
-            .AsNoTracking()
-            .AsSplitQuery();
-
-        if (includes != null)
-        {
-            foreach (var include in includes)
-            {
-                query = include(query);
-            }
-        }
-
-        if (!string.IsNullOrEmpty(listOptions.SortBy))
-        {
-            var orderByExpression = ExpressionUtils.GetOrderByExpression<T>(listOptions.SortBy);
-            query = listOptions.IsDescending
-                ? query.OrderByDescending(orderByExpression)
-                : query.OrderBy(orderByExpression);
-        }
-
-        if (!listOptions.IsPaging)
-        {
-            var allItems = await query.ToListAsync();
-            return new PaginatedList<T>(allItems, 1, 1);
-        }
-
-        var items = await query
-            .Skip((listOptions.PageIndex - 1) * listOptions.PageSize)
-            .Take(listOptions.PageSize)
-            .ToListAsync();
-
-        var totalCount = await _dbContext.Set<T>().CountAsync();
-        var totalPages = (int)Math.Ceiling((double)totalCount / listOptions.PageSize);
-
-        return new PaginatedList<T>(items, listOptions.PageIndex, totalPages);
     }
 
     public async Task<IEnumerable<T>> GetAll(params Func<IQueryable<T>, IQueryable<T>>[] includes)
@@ -116,9 +70,8 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
             .ToListAsync();
 
         var totalCount = await _dbContext.Set<T>().CountAsync();
-        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
-        return new PaginatedList<T>(items, pageIndex, totalPages);
+        return new PaginatedList<T>(items, totalCount, pageIndex, pageSize);
     }
 
     public async Task<T> GetById(params int[] keys)

@@ -15,7 +15,6 @@ public class ScholarshipContext : DbContext
     {
     }
 
-
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var entries = ChangeTracker
@@ -153,9 +152,6 @@ public class ScholarshipContext : DbContext
         {
             optionsBuilder.UseMySQL(configuration.GetConnectionString("Db") ?? string.Empty);
         }
-
-        // optionsBuilder.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
-        //     .EnableSensitiveDataLogging();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
