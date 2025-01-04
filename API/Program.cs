@@ -6,8 +6,10 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Hangfire;
 using HealthChecks.UI.Client;
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SSAP.API.Extensions;
@@ -25,6 +27,9 @@ builder.Services.AddControllers(options => options.SuppressInputFormatterBufferi
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         options.JsonSerializerOptions.MaxDepth = 64;
     });
+
+builder.Services.AddDbContext<ScholarshipContext>(options =>
+    options.UseMySQL(builder.Configuration.GetConnectionString("Db")));
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
