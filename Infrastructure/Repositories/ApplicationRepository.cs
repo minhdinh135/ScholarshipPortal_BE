@@ -58,6 +58,8 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
             .AsNoTracking()
             .AsSplitQuery()
             .Where(a => a.ApplicantId == applicantId)
+            .Include(a => a.Applicant)
+            .ThenInclude(a => a.ApplicantProfile)
             .Include(a => a.ScholarshipProgram)
             .Include(a => a.ApplicationDocuments)
             .Include(a => a.ApplicationReviews)
@@ -66,7 +68,8 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
         return applications;
     }
 
-    public async Task<IEnumerable<Domain.Entities.Application>> GetByApplicantIdAndScholarshipProgramId(int applicantId, int scholarshipProgramId)
+    public async Task<IEnumerable<Domain.Entities.Application>> GetByApplicantIdAndScholarshipProgramId(int applicantId,
+        int scholarshipProgramId)
     {
         var applications = await _dbContext.Applications
             .AsNoTracking()
@@ -139,7 +142,7 @@ public class ApplicationRepository : GenericRepository<Domain.Entities.Applicati
                 (isFirstReview
                     ? review.Description == "Application Review"
                     : review.Description == "Interview") &&
-                      applicationIds.Contains(review.ApplicationId))
+                applicationIds.Contains(review.ApplicationId))
             .OrderByDescending(review => review.Score)
             .ToListAsync();
 

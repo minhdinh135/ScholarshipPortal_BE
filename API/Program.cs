@@ -28,6 +28,9 @@ builder.Services.AddControllers(options => options.SuppressInputFormatterBufferi
         options.JsonSerializerOptions.MaxDepth = 64;
     });
 
+builder.Services.AddDbContext<ScholarshipContext>(options =>
+    options.UseMySQL(builder.Configuration.GetConnectionString("Db")));
+
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 builder.Services.AddDbContext<ScholarshipContext>(options =>
