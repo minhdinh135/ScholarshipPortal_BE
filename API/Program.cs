@@ -6,8 +6,10 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Hangfire;
 using HealthChecks.UI.Client;
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SSAP.API.Extensions;
@@ -27,6 +29,9 @@ builder.Services.AddControllers(options => options.SuppressInputFormatterBufferi
     });
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
+builder.Services.AddDbContext<ScholarshipContext>(options =>
+    options.UseMySQL(builder.Configuration.GetConnectionString("Db") ?? string.Empty));
 
 builder.Services.AddMapperServices();
 
@@ -115,33 +120,33 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Automatically apply pending migrations and update the database.
-// using (var scope = app.Services.CreateScope())
-// {
-//     var dbContext = scope.ServiceProvider.GetRequiredService<ScholarshipContext>();
-//
-//     // Check for pending migrations and apply them.
-//     if (dbContext.Database.GetPendingMigrations().Any())
-//     {
-//         dbContext.Database.Migrate();
-//     }
-// }
-//
-// using (var scope = app.Services.CreateScope())
-// {
-//     var services = scope.ServiceProvider;
-//     var context = services.GetRequiredService<ScholarshipContext>();
-//     var logger = services.GetService<ILogger<Program>>();
-//
-//     try
-//     {
-//         await context.Database.MigrateAsync();
-//         await ScholarshipContextSeed.SeedAsync(context);
-//     }
-//     catch (Exception ex)
-//     {
-//         logger.LogError(ex, "An error occurred during migration or seeding.");
-//     }
-// }
+/* using (var scope = app.Services.CreateScope())
+ {
+     var dbContext = scope.ServiceProvider.GetRequiredService<ScholarshipContext>();
+
+     // Check for pending migrations and apply them.
+     if (dbContext.Database.GetPendingMigrations().Any())
+     {
+         dbContext.Database.Migrate();
+     }
+ }*/
+
+ using (var scope = app.Services.CreateScope())
+ {
+     var services = scope.ServiceProvider;
+     var context = services.GetRequiredService<ScholarshipContext>();
+     var logger = services.GetService<ILogger<Program>>();
+
+     try
+     {
+         await context.Database.MigrateAsync();
+         await ScholarshipContextSeed.SeedAsync(context);
+     }
+     catch (Exception ex)
+     {
+         logger.LogError(ex, "An error occurred during migration or seeding.");
+     }
+ }
 
 //Configure the HTTP request pipeline.
 // if (app.Environment.IsDevelopment())
