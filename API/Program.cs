@@ -33,9 +33,6 @@ builder.Services.AddDbContext<ScholarshipContext>(options =>
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-builder.Services.AddDbContext<ScholarshipContext>(options =>
-    options.UseMySQL(builder.Configuration.GetConnectionString("Db") ?? string.Empty));
-
 builder.Services.AddMapperServices();
 
 // Add FluentValidation validators
@@ -134,7 +131,7 @@ var app = builder.Build();
      }
  }*/
 
- using (var scope = app.Services.CreateScope())
+ /*using (var scope = app.Services.CreateScope())
  {
      var services = scope.ServiceProvider;
      var context = services.GetRequiredService<ScholarshipContext>();
@@ -149,7 +146,7 @@ var app = builder.Build();
      {
          logger.LogError(ex, "An error occurred during migration or seeding.");
      }
- }
+ }*/
 
 //Configure the HTTP request pipeline.
 // if (app.Environment.IsDevelopment())
