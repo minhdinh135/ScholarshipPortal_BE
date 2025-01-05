@@ -2,6 +2,7 @@ using Application.Interfaces.IServices;
 using AutoMapper;
 using Domain.Constants;
 using Domain.DTOs.Account;
+using Domain.DTOs.Applicant;
 using Domain.DTOs.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -13,19 +14,22 @@ public class AuthService : IAuthService
     private readonly ITokenService _tokenService;
     private readonly IPasswordService _passwordService;
     private readonly IAccountService _accountService;
+    private readonly IApplicantService _applicantService;
     private readonly IConfiguration _configuration;
     private readonly AdminAccount _adminAccount;
 
     public AuthService(ITokenService tokenService,
         IPasswordService passwordService,
         IAccountService accountService,
-        IConfiguration configuration, IOptions<AdminAccount> adminAccount)
+        IConfiguration configuration, IOptions<AdminAccount> adminAccount,
+        IApplicantService applicantService)
     {
         _tokenService = tokenService;
         _passwordService = passwordService;
         _accountService = accountService;
         _configuration = configuration;
         _adminAccount = adminAccount.Value;
+        _applicantService = applicantService;
     }
 
     public async Task<JwtDto> Login(LoginDto login)
@@ -102,6 +106,11 @@ public class AuthService : IAuthService
             Status = AccountStatusEnum.Active.ToString()
         };
         var user = await _accountService.AddAccount(userDto);
+        var profileDto = new AddApplicantProfileDto{
+            FirstName = userInfo.Name,
+            LastName = "",
+        };
+        var profile = await _applicantService.AddApplicantProfile(user.Id, profileDto);
         JwtDto jwt1 = _tokenService.CreateToken(_configuration, user, RoleEnum.Applicant.ToString());
 
         return (jwt1, true);

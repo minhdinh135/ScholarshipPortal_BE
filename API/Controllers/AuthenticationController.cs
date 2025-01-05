@@ -11,12 +11,15 @@ public class AuthenticationController : ControllerBase
 {
     private readonly IAuthService _authService;
     private readonly IGoogleService _googleService;
+    private readonly IConfiguration _configuration;
 
     public AuthenticationController(IAuthService authService,
-        IGoogleService googleService)
+        IGoogleService googleService,
+        IConfiguration configuration)
     {
         _authService = authService;
         _googleService = googleService;
+        _configuration = configuration;
     }
 
     [HttpPost("login")]
@@ -52,9 +55,9 @@ public class AuthenticationController : ControllerBase
     {
         if (string.IsNullOrEmpty(code))
         {
-            //return Redirect("http://localhost:5173/login-google?result=fail");
+            return Redirect(_configuration["GoogleSettings:ReturnWebUri"]+"?result=fail");
             //return Redirect("https://scholarship-portal-nu.vercel.app/login-google?result=fail");
-            return BadRequest("Authorization code is missing.");
+            //return BadRequest("Authorization code is missing.");
         }
 
         var token = await _googleService.ExchangeCodeForToken(code);
@@ -64,7 +67,7 @@ public class AuthenticationController : ControllerBase
             var (jwt, isNewUser) = await _authService.GoogleAuth(userInfo);
             //return Redirect("http://localhost:5173/login-google?result=success&isNewUser=" + isNewUser + "&jwt=" +
             //   jwt.Token);
-            return Redirect("https://scholarship-portal-nu.vercel.app/login-google?result=success&isNewUser=" +
+            return Redirect(_configuration["GoogleSettings:ReturnWebUri"]+"?result=success&isNewUser=" +
                             isNewUser + "&jwt=" +
                             jwt.Token);
             //return Ok(jwt);
@@ -72,7 +75,7 @@ public class AuthenticationController : ControllerBase
         catch (Exception ex)
         {
             //return Redirect("http://localhost:5173/login-google?result=fail");
-            return Redirect("https://scholarship-portal-nu.vercel.app/login-google?result=fail");
+            return Redirect(_configuration["GoogleSettings:ReturnWebUri"]+"?result=fail");
             //return BadRequest(new { Message = ex.Message });
         }
     }
@@ -82,8 +85,8 @@ public class AuthenticationController : ControllerBase
     {
         if (string.IsNullOrEmpty(code))
         {
-            //return Redirect("com.scholarship://login-google?result=fail");
-            return BadRequest("Authorization code is missing.");
+            return Redirect(_configuration["GoogleSettings:RedirectMobileUri"]+"?result=fail");
+            //return BadRequest("Authorization code is missing.");
         }
 
         var token = await _googleService.ExchangeCodeForTokenMobile(code);
@@ -91,13 +94,13 @@ public class AuthenticationController : ControllerBase
         try
         {
             var (jwt, isNewUser) = await _authService.GoogleAuth(userInfo);
-            return Redirect("com.scholarship://login-google?result=success&isNewUser=" + isNewUser + "&jwt=" +
+            return Redirect(_configuration["GoogleSettings:RedirectMobileUri"]+"?result=success&isNewUser=" + isNewUser + "&jwt=" +
                             jwt.Token);
             //return Ok(jwt);
         }
         catch (Exception ex)
         {
-            return Redirect("com.scholarship://login-google?result=fail");
+            return Redirect(_configuration["GoogleSettings:RedirectMobileUri"]+"?result=fail");
             //return BadRequest(new { Message = ex.Message });
         }
     }

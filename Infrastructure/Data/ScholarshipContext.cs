@@ -140,12 +140,12 @@ public class ScholarshipContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "";
+        //string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "";
  
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
             .AddJsonFile("appsettings.json", true, true)
-            .AddJsonFile($"appsettings.{environment}.json", true, true)
+            //.AddJsonFile($"appsettings.{environment}.json", true, true)
             .Build();
 
         if (!optionsBuilder.IsConfigured)
@@ -156,6 +156,7 @@ public class ScholarshipContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        
         base.OnModelCreating(modelBuilder);
 
         // Configure table names
