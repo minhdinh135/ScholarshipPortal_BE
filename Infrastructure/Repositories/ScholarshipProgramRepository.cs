@@ -1,4 +1,5 @@
-﻿using Application.Helper;
+﻿using Application.Exceptions;
+using Application.Helper;
 using Application.Interfaces.IRepositories;
 using Domain.Constants;
 using Domain.DTOs.Common;
@@ -51,7 +52,40 @@ public class ScholarshipProgramRepository : GenericRepository<ScholarshipProgram
             listOptions.PageSize);
     }
 
-    public async Task<PaginatedList<ScholarshipProgram>> GetExpertAssignedPrograms(ListOptions listOptions,
+	public async Task DeleteScholarshipProgram(int scholarshipProgramId)
+	{
+        var scholarshipProgram = await _dbContext.ScholarshipPrograms
+            .Include(sp => sp.Criteria)
+            .Include(sp => sp.ScholarshipProgramCertificates)
+            .Include(sp => sp.Documents)
+			.Include(sp => sp.ReviewMilestones)
+			.Include(sp => sp.AwardMilestones)
+            .ThenInclude(sp => sp.AwardMilestoneDocuments)
+			.FirstOrDefaultAsync(sp => sp.Id == scholarshipProgramId);
+
+		if (scholarshipProgram == null)
+		{
+			throw new NotFoundException($"Scholarship Program with ID {scholarshipProgramId} not found.");
+		}
+
+		// Remove related entities
+		_dbContext.Criteria.RemoveRange(scholarshipProgram.Criteria);
+        _dbContext.Documents.RemoveRange(scholarshipProgram.Documents);
+        _dbContext.ScholarshipProgramCertificates.RemoveRange(scholarshipProgram.ScholarshipProgramCertificates);
+		_dbContext.ReviewMilestones.RemoveRange(scholarshipProgram.ReviewMilestones);
+        foreach( var item in scholarshipProgram.AwardMilestones)
+        {
+			_dbContext.AwardMilestoneDocuments.RemoveRange(item.AwardMilestoneDocuments);
+		}
+		_dbContext.AwardMilestones.RemoveRange(scholarshipProgram.AwardMilestones);
+
+		// Remove the scholarship program
+		_dbContext.ScholarshipPrograms.Remove(scholarshipProgram);
+
+		await _dbContext.SaveChangesAsync();
+	}
+
+	public async Task<PaginatedList<ScholarshipProgram>> GetExpertAssignedPrograms(ListOptions listOptions,
         int expertId)
     {
         var query = _dbContext.ScholarshipPrograms
