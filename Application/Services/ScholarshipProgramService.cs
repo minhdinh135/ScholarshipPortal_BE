@@ -39,7 +39,23 @@ public class ScholarshipProgramService : IScholarshipProgramService
         return _mapper.Map<IEnumerable<ScholarshipProgramDto>>(allScholarshipPrograms);
     }
 
-    public async Task<IEnumerable<ScholarshipProgramDto>> SearchScholarshipPrograms(
+	public async Task DeleteScholarshipProgram(int scholarshipProgramId)
+	{
+		//try
+		//{
+			await _scholarshipProgramRepository.DeleteScholarshipProgram(scholarshipProgramId);
+		//}
+		//catch (NotFoundException ex)
+		//{
+		//	throw new ServiceException($"Delete failed: {ex.Message}", ex);
+		//}
+		//catch (Exception ex)
+		//{
+		//	throw new ServiceException("An error occurred while deleting the scholarship program.", ex);
+		//}
+	}
+
+	public async Task<IEnumerable<ScholarshipProgramDto>> SearchScholarshipPrograms(
         ScholarshipSearchOptions scholarshipSearchOptions)
     {
         try

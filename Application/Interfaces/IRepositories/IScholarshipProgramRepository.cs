@@ -10,6 +10,7 @@ public interface IScholarshipProgramRepository : IGenericRepository<ScholarshipP
     Task<PaginatedList<ScholarshipProgram>> GetExpertAssignedPrograms(ListOptions listOptions, int expertId);
     Task<PaginatedList<ScholarshipProgram>> GetScholarshipProgramsByFunderId(ListOptions listOptions, int funderId);
     Task<ScholarshipProgram> GetScholarsipProgramById(int id);
+	Task DeleteScholarshipProgram(int scholarshipProgramId);
     Task<IEnumerable<ScholarshipProgram>> SearchScholarshipPrograms(ScholarshipSearchOptions scholarshipSearchOptions);
     Task<IEnumerable<ScholarshipProgram>> GetScholarshipProgramByMajorId(int majorId);
     Task<IEnumerable<ScholarshipProgram>> GetOpenScholarshipPrograms();
