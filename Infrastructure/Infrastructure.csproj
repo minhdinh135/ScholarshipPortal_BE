@@ -20,12 +20,6 @@
     <!-- <PackageReference Include="Newtonsoft.Json" Version="13.0.3" /> -->
     </ItemGroup>
 
-<ItemGroup>
-  <Content Include="appsettings.json">
-    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-  </Content>
-  </ItemGroup>
-
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>    

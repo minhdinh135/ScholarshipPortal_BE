@@ -120,18 +120,18 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Automatically apply pending migrations and update the database.
-/* using (var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
  {
-     var dbContext = scope.ServiceProvider.GetRequiredService<ScholarshipContext>();
+     var dbcontext = scope.ServiceProvider.GetRequiredService<ScholarshipContext>();
 
-     // Check for pending migrations and apply them.
-     if (dbContext.Database.GetPendingMigrations().Any())
+     // check for pending migrations and apply them.
+     if (dbcontext.Database.GetPendingMigrations().Any())
      {
-         dbContext.Database.Migrate();
+         dbcontext.Database.Migrate();
      }
- }*/
+ }
 
- /*using (var scope = app.Services.CreateScope())
+ using (var scope = app.Services.CreateScope())
  {
      var services = scope.ServiceProvider;
      var context = services.GetRequiredService<ScholarshipContext>();
@@ -144,9 +144,9 @@ var app = builder.Build();
      }
      catch (Exception ex)
      {
-         logger.LogError(ex, "An error occurred during migration or seeding.");
+         logger.LogError(ex, "an error occurred during migration or seeding.");
      }
- }*/
+ }
 
 //Configure the HTTP request pipeline.
 // if (app.Environment.IsDevelopment())

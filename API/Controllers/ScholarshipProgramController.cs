@@ -176,7 +176,27 @@ public class ScholarshipProgramController : ControllerBase
         }
     }
 
-    [HttpPut("{id}/status")]
+	[HttpDelete("{id}")]
+	public async Task<IActionResult> DeleteScholarshipProgram([FromRoute] int id)
+	{
+		//try
+		//{
+			await _scholarshipProgramService.DeleteScholarshipProgram(id);
+
+			return Ok(new ApiResponse(StatusCodes.Status200OK, "Scholarship program deleted successfully."));
+		//}
+		//catch (ServiceException e)
+		//{
+		//	return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
+		//}
+		//catch (Exception e)
+		//{
+		//	return StatusCode(StatusCodes.Status500InternalServerError,
+		//		new ApiResponse(StatusCodes.Status500InternalServerError, "An unexpected error occurred."));
+		//}
+	}
+
+	[HttpPut("{id}/status")]
     public async Task<IActionResult> ChangeScholarshipProgramStatus(int id,
         ChangeScholarshipProgramStatusRequest request)
     {
@@ -191,6 +211,7 @@ public class ScholarshipProgramController : ControllerBase
             return BadRequest(new ApiResponse(StatusCodes.Status400BadRequest, e.Message));
         }
     }
+
 
     // [HttpPut("update-status/{id}")]
     // public async Task<IActionResult> UpdateScholarshipProgramStatus([FromRoute] int id,
