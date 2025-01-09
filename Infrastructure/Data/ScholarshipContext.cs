@@ -157,9 +157,18 @@ public class ScholarshipContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         
+        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        {
+            // Set table name to lowercase
+            entity.SetTableName(entity.GetTableName().ToLowerInvariant());
+        }
+        
         base.OnModelCreating(modelBuilder);
 
         // Configure table names
+        modelBuilder.Entity<Account>()
+            .ToTable("accounts");
+        
         modelBuilder.Entity<ApplicantProfile>()
             .ToTable("applicant_profiles");
 
