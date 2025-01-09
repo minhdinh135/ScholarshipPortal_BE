@@ -140,12 +140,12 @@ public class ScholarshipContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        //string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "";
+        string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "";
  
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
             .AddJsonFile("appsettings.json", true, true)
-            //.AddJsonFile($"appsettings.{environment}.json", true, true)
+            .AddJsonFile($"appsettings.{environment}.json", true, true)
             .Build();
 
         if (!optionsBuilder.IsConfigured)
@@ -157,9 +157,18 @@ public class ScholarshipContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         
+        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        {
+            // Set table name to lowercase
+            entity.SetTableName(entity.GetTableName().ToLowerInvariant());
+        }
+        
         base.OnModelCreating(modelBuilder);
 
         // Configure table names
+        modelBuilder.Entity<Account>()
+            .ToTable("accounts");
+        
         modelBuilder.Entity<ApplicantProfile>()
             .ToTable("applicant_profiles");
 
