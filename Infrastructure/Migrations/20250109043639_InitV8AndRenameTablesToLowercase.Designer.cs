@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ScholarshipContext))]
-    [Migration("20241226035701_AdjustDateToYearForExperience")]
-    partial class AdjustDateToYearForExperience
+    [Migration("20250109043639_InitV8AndRenameTablesToLowercase")]
+    partial class InitV8AndRenameTablesToLowercase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -90,7 +90,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("SubscriptionId");
 
-                    b.ToTable("Accounts");
+                    b.ToTable("accounts", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ApplicantCertificate", b =>
@@ -99,8 +99,8 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("AchievedDate")
-                        .HasColumnType("datetime(6)");
+                    b.Property<int>("AchievedYear")
+                        .HasColumnType("int");
 
                     b.Property<int>("ApplicantProfileId")
                         .HasColumnType("int");
@@ -199,10 +199,16 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
+                    b.Property<int>("FromYear")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
+
+                    b.Property<int>("ToYear")
+                        .HasColumnType("int");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -251,7 +257,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ScholarshipProgramId");
 
-                    b.ToTable("Applications");
+                    b.ToTable("applications");
                 });
 
             modelBuilder.Entity("Domain.Entities.ApplicationDocument", b =>
@@ -289,38 +295,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("ApplicationId");
 
                     b.ToTable("application_documents", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Entities.Assignment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("ExpertId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ScholarshipProgramId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExpertId");
-
-                    b.HasIndex("ScholarshipProgramId");
-
-                    b.ToTable("Assignment");
                 });
 
             modelBuilder.Entity("Domain.Entities.AwardMilestone", b =>
@@ -408,7 +382,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("categories");
                 });
 
             modelBuilder.Entity("Domain.Entities.Certificate", b =>
@@ -439,7 +413,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Certificates");
+                    b.ToTable("certificates");
                 });
 
             modelBuilder.Entity("Domain.Entities.Chat", b =>
@@ -476,7 +450,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Chats");
+                    b.ToTable("chats");
                 });
 
             modelBuilder.Entity("Domain.Entities.Country", b =>
@@ -501,7 +475,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Countries");
+                    b.ToTable("countries");
                 });
 
             modelBuilder.Entity("Domain.Entities.Criteria", b =>
@@ -532,7 +506,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ScholarshipProgramId");
 
-                    b.ToTable("Criteria");
+                    b.ToTable("criteria");
                 });
 
             modelBuilder.Entity("Domain.Entities.Document", b =>
@@ -562,7 +536,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ScholarshipProgramId");
 
-                    b.ToTable("Documents");
+                    b.ToTable("documents");
                 });
 
             modelBuilder.Entity("Domain.Entities.Education", b =>
@@ -612,7 +586,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ApplicantProfileId");
 
-                    b.ToTable("Educations");
+                    b.ToTable("educations");
                 });
 
             modelBuilder.Entity("Domain.Entities.Experience", b =>
@@ -649,7 +623,22 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ApplicantProfileId");
 
-                    b.ToTable("Experiences");
+                    b.ToTable("experiences");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ExpertForProgram", b =>
+                {
+                    b.Property<int>("ScholarshipProgramId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ExpertId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ScholarshipProgramId", "ExpertId");
+
+                    b.HasIndex("ExpertId");
+
+                    b.ToTable("expert_for_programs", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ExpertProfile", b =>
@@ -724,7 +713,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Feedbacks");
+                    b.ToTable("feedbacks");
                 });
 
             modelBuilder.Entity("Domain.Entities.FunderDocument", b =>
@@ -824,7 +813,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ParentMajorId");
 
-                    b.ToTable("Majors");
+                    b.ToTable("majors");
                 });
 
             modelBuilder.Entity("Domain.Entities.MajorSkill", b =>
@@ -871,7 +860,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ReceiverId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("notifications");
                 });
 
             modelBuilder.Entity("Domain.Entities.ProviderDocument", b =>
@@ -975,7 +964,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ApplicantId");
 
-                    b.ToTable("Requests");
+                    b.ToTable("requests");
                 });
 
             modelBuilder.Entity("Domain.Entities.RequestDetail", b =>
@@ -1053,11 +1042,17 @@ namespace Infrastructure.Migrations
                     b.Property<int>("ApplicationId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("AssignedDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Comment")
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DeadlineDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
@@ -1067,7 +1062,7 @@ namespace Infrastructure.Migrations
                     b.Property<int>("ExpertId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ReviewDate")
+                    b.Property<DateTime?>("ReviewDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<int?>("Score")
@@ -1087,7 +1082,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ExpertId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("reviews");
                 });
 
             modelBuilder.Entity("Domain.Entities.ReviewMilestone", b =>
@@ -1142,7 +1137,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("roles");
                 });
 
             modelBuilder.Entity("Domain.Entities.ScholarshipProgram", b =>
@@ -1274,7 +1269,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ProviderId");
 
-                    b.ToTable("Services");
+                    b.ToTable("services");
                 });
 
             modelBuilder.Entity("Domain.Entities.Skill", b =>
@@ -1305,7 +1300,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Skills");
+                    b.ToTable("skills");
                 });
 
             modelBuilder.Entity("Domain.Entities.Subscription", b =>
@@ -1340,7 +1335,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subscriptions");
+                    b.ToTable("subscriptions");
                 });
 
             modelBuilder.Entity("Domain.Entities.Transaction", b =>
@@ -1392,7 +1387,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("WalletSenderId");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("transactions");
                 });
 
             modelBuilder.Entity("Domain.Entities.University", b =>
@@ -1428,7 +1423,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("Universities");
+                    b.ToTable("universities");
                 });
 
             modelBuilder.Entity("Domain.Entities.Wallet", b =>
@@ -1464,7 +1459,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("AccountId")
                         .IsUnique();
 
-                    b.ToTable("Wallets");
+                    b.ToTable("wallets");
                 });
 
             modelBuilder.Entity("Domain.Entities.Account", b =>
@@ -1555,25 +1550,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Application");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Assignment", b =>
-                {
-                    b.HasOne("Domain.Entities.Account", "Expert")
-                        .WithMany("Assignments")
-                        .HasForeignKey("ExpertId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
-                        .WithMany("Assignments")
-                        .HasForeignKey("ScholarshipProgramId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Expert");
-
-                    b.Navigation("ScholarshipProgram");
-                });
-
             modelBuilder.Entity("Domain.Entities.AwardMilestone", b =>
                 {
                     b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
@@ -1657,6 +1633,25 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("ApplicantProfile");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ExpertForProgram", b =>
+                {
+                    b.HasOne("Domain.Entities.Account", "Expert")
+                        .WithMany("AssignedPrograms")
+                        .HasForeignKey("ExpertId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.ScholarshipProgram", "ScholarshipProgram")
+                        .WithMany("AssignedExperts")
+                        .HasForeignKey("ScholarshipProgramId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Expert");
+
+                    b.Navigation("ScholarshipProgram");
                 });
 
             modelBuilder.Entity("Domain.Entities.ExpertProfile", b =>
@@ -1959,7 +1954,7 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("Applications");
 
-                    b.Navigation("Assignments");
+                    b.Navigation("AssignedPrograms");
 
                     b.Navigation("ExpertProfile");
 
@@ -2063,7 +2058,7 @@ namespace Infrastructure.Migrations
                 {
                     b.Navigation("Applications");
 
-                    b.Navigation("Assignments");
+                    b.Navigation("AssignedExperts");
 
                     b.Navigation("AwardMilestones");
 

@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitV7 : Migration
+    public partial class InitV8AndRenameTablesToLowercase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,7 +16,7 @@ namespace Infrastructure.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "categories",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -28,12 +28,12 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.PrimaryKey("PK_categories", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Certificates",
+                name: "certificates",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -46,12 +46,12 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Certificates", x => x.Id);
+                    table.PrimaryKey("PK_certificates", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Countries",
+                name: "countries",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -63,12 +63,12 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Countries", x => x.Id);
+                    table.PrimaryKey("PK_countries", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Majors",
+                name: "majors",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -81,18 +81,18 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Majors", x => x.Id);
+                    table.PrimaryKey("PK_majors", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Majors_Majors_ParentMajorId",
+                        name: "FK_majors_majors_ParentMajorId",
                         column: x => x.ParentMajorId,
-                        principalTable: "Majors",
+                        principalTable: "majors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Roles",
+                name: "roles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -103,12 +103,12 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Roles", x => x.Id);
+                    table.PrimaryKey("PK_roles", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Skills",
+                name: "skills",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -121,12 +121,12 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Skills", x => x.Id);
+                    table.PrimaryKey("PK_skills", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Subscriptions",
+                name: "subscriptions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -141,12 +141,12 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Subscriptions", x => x.Id);
+                    table.PrimaryKey("PK_subscriptions", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Universities",
+                name: "universities",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -160,11 +160,11 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Universities", x => x.Id);
+                    table.PrimaryKey("PK_universities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Universities_Countries_CountryId",
+                        name: "FK_universities_countries_CountryId",
                         column: x => x.CountryId,
-                        principalTable: "Countries",
+                        principalTable: "countries",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
@@ -181,22 +181,22 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_major_skills", x => new { x.MajorId, x.SkillId });
                     table.ForeignKey(
-                        name: "FK_major_skills_Majors_MajorId",
+                        name: "FK_major_skills_majors_MajorId",
                         column: x => x.MajorId,
-                        principalTable: "Majors",
+                        principalTable: "majors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_major_skills_Skills_SkillId",
+                        name: "FK_major_skills_skills_SkillId",
                         column: x => x.SkillId,
-                        principalTable: "Skills",
+                        principalTable: "skills",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Accounts",
+                name: "accounts",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -218,23 +218,23 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Accounts", x => x.Id);
+                    table.PrimaryKey("PK_accounts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Accounts_Accounts_FunderId",
+                        name: "FK_accounts_accounts_FunderId",
                         column: x => x.FunderId,
-                        principalTable: "Accounts",
+                        principalTable: "accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Accounts_Roles_RoleId",
+                        name: "FK_accounts_roles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "Roles",
+                        principalTable: "roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Accounts_Subscriptions_SubscriptionId",
+                        name: "FK_accounts_subscriptions_SubscriptionId",
                         column: x => x.SubscriptionId,
-                        principalTable: "Subscriptions",
+                        principalTable: "subscriptions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
@@ -252,6 +252,7 @@ namespace Infrastructure.Migrations
                     Gender = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
                     Nationality = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
                     Ethnicity = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    Bio = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
                     ApplicantId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
@@ -260,16 +261,16 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_applicant_profiles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_applicant_profiles_Accounts_ApplicantId",
+                        name: "FK_applicant_profiles_accounts_ApplicantId",
                         column: x => x.ApplicantId,
-                        principalTable: "Accounts",
+                        principalTable: "accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Chats",
+                name: "chats",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -284,17 +285,17 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Chats", x => x.Id);
+                    table.PrimaryKey("PK_chats", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Chats_Accounts_ReceiverId",
+                        name: "FK_chats_accounts_ReceiverId",
                         column: x => x.ReceiverId,
-                        principalTable: "Accounts",
+                        principalTable: "accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Chats_Accounts_SenderId",
+                        name: "FK_chats_accounts_SenderId",
                         column: x => x.SenderId,
-                        principalTable: "Accounts",
+                        principalTable: "accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
@@ -317,9 +318,9 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_expert_profiles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_expert_profiles_Accounts_ExpertId",
+                        name: "FK_expert_profiles_accounts_ExpertId",
                         column: x => x.ExpertId,
-                        principalTable: "Accounts",
+                        principalTable: "accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
@@ -341,16 +342,16 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_funder_profiles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_funder_profiles_Accounts_FunderId",
+                        name: "FK_funder_profiles_accounts_FunderId",
                         column: x => x.FunderId,
-                        principalTable: "Accounts",
+                        principalTable: "accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Notifications",
+                name: "notifications",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -364,11 +365,11 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Notifications", x => x.Id);
+                    table.PrimaryKey("PK_notifications", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Notifications_Accounts_ReceiverId",
+                        name: "FK_notifications_accounts_ReceiverId",
                         column: x => x.ReceiverId,
-                        principalTable: "Accounts",
+                        principalTable: "accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
@@ -390,16 +391,16 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_provider_profiles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_provider_profiles_Accounts_ProviderId",
+                        name: "FK_provider_profiles_accounts_ProviderId",
                         column: x => x.ProviderId,
-                        principalTable: "Accounts",
+                        principalTable: "accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Requests",
+                name: "requests",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -413,11 +414,11 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Requests", x => x.Id);
+                    table.PrimaryKey("PK_requests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Requests_Accounts_ApplicantId",
+                        name: "FK_requests_accounts_ApplicantId",
                         column: x => x.ApplicantId,
-                        principalTable: "Accounts",
+                        principalTable: "accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -449,34 +450,34 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_scholarship_programs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_scholarship_programs_Accounts_FunderId",
+                        name: "FK_scholarship_programs_accounts_FunderId",
                         column: x => x.FunderId,
-                        principalTable: "Accounts",
+                        principalTable: "accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_scholarship_programs_Categories_CategoryId",
+                        name: "FK_scholarship_programs_categories_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "Categories",
+                        principalTable: "categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_scholarship_programs_Majors_MajorId",
+                        name: "FK_scholarship_programs_majors_MajorId",
                         column: x => x.MajorId,
-                        principalTable: "Majors",
+                        principalTable: "majors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_scholarship_programs_Universities_UniversityId",
+                        name: "FK_scholarship_programs_universities_UniversityId",
                         column: x => x.UniversityId,
-                        principalTable: "Universities",
+                        principalTable: "universities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Services",
+                name: "services",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -492,18 +493,18 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Services", x => x.Id);
+                    table.PrimaryKey("PK_services", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Services_Accounts_ProviderId",
+                        name: "FK_services_accounts_ProviderId",
                         column: x => x.ProviderId,
-                        principalTable: "Accounts",
+                        principalTable: "accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Wallets",
+                name: "wallets",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -517,11 +518,11 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Wallets", x => x.Id);
+                    table.PrimaryKey("PK_wallets", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Wallets_Accounts_AccountId",
+                        name: "FK_wallets_accounts_AccountId",
                         column: x => x.AccountId,
-                        principalTable: "Accounts",
+                        principalTable: "accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
@@ -536,7 +537,7 @@ namespace Infrastructure.Migrations
                     Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
                     Url = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true),
-                    AchievedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    AchievedYear = table.Column<int>(type: "int", nullable: false),
                     ApplicantProfileId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
@@ -562,6 +563,8 @@ namespace Infrastructure.Migrations
                     Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     Type = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    FromYear = table.Column<int>(type: "int", nullable: false),
+                    ToYear = table.Column<int>(type: "int", nullable: false),
                     ApplicantProfileId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
@@ -579,7 +582,7 @@ namespace Infrastructure.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Educations",
+                name: "educations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -597,9 +600,9 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Educations", x => x.Id);
+                    table.PrimaryKey("PK_educations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Educations_applicant_profiles_ApplicantProfileId",
+                        name: "FK_educations_applicant_profiles_ApplicantProfileId",
                         column: x => x.ApplicantProfileId,
                         principalTable: "applicant_profiles",
                         principalColumn: "Id",
@@ -608,24 +611,24 @@ namespace Infrastructure.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Experiences",
+                name: "experiences",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
-                    FromDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    ToDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    FromYear = table.Column<int>(type: "int", nullable: false),
+                    ToYear = table.Column<int>(type: "int", nullable: false),
                     ApplicantProfileId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Experiences", x => x.Id);
+                    table.PrimaryKey("PK_experiences", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Experiences_applicant_profiles_ApplicantProfileId",
+                        name: "FK_experiences_applicant_profiles_ApplicantProfileId",
                         column: x => x.ApplicantProfileId,
                         principalTable: "applicant_profiles",
                         principalColumn: "Id",
@@ -684,7 +687,7 @@ namespace Infrastructure.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Applications",
+                name: "applications",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -698,45 +701,15 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Applications", x => x.Id);
+                    table.PrimaryKey("PK_applications", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Applications_Accounts_ApplicantId",
+                        name: "FK_applications_accounts_ApplicantId",
                         column: x => x.ApplicantId,
-                        principalTable: "Accounts",
+                        principalTable: "accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Applications_scholarship_programs_ScholarshipProgramId",
-                        column: x => x.ScholarshipProgramId,
-                        principalTable: "scholarship_programs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Assignment",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    ScholarshipProgramId = table.Column<int>(type: "int", nullable: false),
-                    ExpertId = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Assignment", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Assignment_Accounts_ExpertId",
-                        column: x => x.ExpertId,
-                        principalTable: "Accounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Assignment_scholarship_programs_ScholarshipProgramId",
+                        name: "FK_applications_scholarship_programs_ScholarshipProgramId",
                         column: x => x.ScholarshipProgramId,
                         principalTable: "scholarship_programs",
                         principalColumn: "Id",
@@ -771,7 +744,7 @@ namespace Infrastructure.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Criteria",
+                name: "criteria",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -784,9 +757,9 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Criteria", x => x.Id);
+                    table.PrimaryKey("PK_criteria", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Criteria_scholarship_programs_ScholarshipProgramId",
+                        name: "FK_criteria_scholarship_programs_ScholarshipProgramId",
                         column: x => x.ScholarshipProgramId,
                         principalTable: "scholarship_programs",
                         principalColumn: "Id",
@@ -795,7 +768,7 @@ namespace Infrastructure.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Documents",
+                name: "documents",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -808,9 +781,34 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Documents", x => x.Id);
+                    table.PrimaryKey("PK_documents", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Documents_scholarship_programs_ScholarshipProgramId",
+                        name: "FK_documents_scholarship_programs_ScholarshipProgramId",
+                        column: x => x.ScholarshipProgramId,
+                        principalTable: "scholarship_programs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "expert_for_programs",
+                columns: table => new
+                {
+                    ScholarshipProgramId = table.Column<int>(type: "int", nullable: false),
+                    ExpertId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_expert_for_programs", x => new { x.ScholarshipProgramId, x.ExpertId });
+                    table.ForeignKey(
+                        name: "FK_expert_for_programs_accounts_ExpertId",
+                        column: x => x.ExpertId,
+                        principalTable: "accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_expert_for_programs_scholarship_programs_ScholarshipProgramId",
                         column: x => x.ScholarshipProgramId,
                         principalTable: "scholarship_programs",
                         principalColumn: "Id",
@@ -854,9 +852,9 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_scholarship_program_certificates", x => new { x.ScholarshipProgramId, x.CertificateId });
                     table.ForeignKey(
-                        name: "FK_scholarship_program_certificates_Certificates_CertificateId",
+                        name: "FK_scholarship_program_certificates_certificates_CertificateId",
                         column: x => x.CertificateId,
-                        principalTable: "Certificates",
+                        principalTable: "certificates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -869,7 +867,7 @@ namespace Infrastructure.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Feedbacks",
+                name: "feedbacks",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -884,17 +882,17 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Feedbacks", x => x.Id);
+                    table.PrimaryKey("PK_feedbacks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Feedbacks_Accounts_ApplicantId",
+                        name: "FK_feedbacks_accounts_ApplicantId",
                         column: x => x.ApplicantId,
-                        principalTable: "Accounts",
+                        principalTable: "accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Feedbacks_Services_ServiceId",
+                        name: "FK_feedbacks_services_ServiceId",
                         column: x => x.ServiceId,
-                        principalTable: "Services",
+                        principalTable: "services",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
@@ -916,22 +914,22 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_request_details", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_request_details_Requests_RequestId",
+                        name: "FK_request_details_requests_RequestId",
                         column: x => x.RequestId,
-                        principalTable: "Requests",
+                        principalTable: "requests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_request_details_Services_ServiceId",
+                        name: "FK_request_details_services_ServiceId",
                         column: x => x.ServiceId,
-                        principalTable: "Services",
+                        principalTable: "services",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Transactions",
+                name: "transactions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -949,17 +947,17 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Transactions", x => x.Id);
+                    table.PrimaryKey("PK_transactions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Transactions_Wallets_WalletReceiverId",
+                        name: "FK_transactions_wallets_WalletReceiverId",
                         column: x => x.WalletReceiverId,
-                        principalTable: "Wallets",
+                        principalTable: "wallets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Transactions_Wallets_WalletSenderId",
+                        name: "FK_transactions_wallets_WalletSenderId",
                         column: x => x.WalletSenderId,
-                        principalTable: "Wallets",
+                        principalTable: "wallets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
@@ -982,16 +980,16 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_application_documents", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_application_documents_Applications_ApplicationId",
+                        name: "FK_application_documents_applications_ApplicationId",
                         column: x => x.ApplicationId,
-                        principalTable: "Applications",
+                        principalTable: "applications",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Reviews",
+                name: "reviews",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -999,7 +997,9 @@ namespace Infrastructure.Migrations
                     Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
                     Score = table.Column<int>(type: "int", nullable: true),
                     Comment = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
-                    ReviewDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ReviewDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    DeadlineDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    AssignedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Status = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     ExpertId = table.Column<int>(type: "int", nullable: false),
                     ApplicationId = table.Column<int>(type: "int", nullable: false),
@@ -1008,17 +1008,17 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reviews", x => x.Id);
+                    table.PrimaryKey("PK_reviews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reviews_Accounts_ExpertId",
+                        name: "FK_reviews_accounts_ExpertId",
                         column: x => x.ExpertId,
-                        principalTable: "Accounts",
+                        principalTable: "accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Reviews_Applications_ApplicationId",
+                        name: "FK_reviews_applications_ApplicationId",
                         column: x => x.ApplicationId,
-                        principalTable: "Applications",
+                        principalTable: "applications",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
@@ -1073,18 +1073,18 @@ namespace Infrastructure.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Accounts_FunderId",
-                table: "Accounts",
+                name: "IX_accounts_FunderId",
+                table: "accounts",
                 column: "FunderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Accounts_RoleId",
-                table: "Accounts",
+                name: "IX_accounts_RoleId",
+                table: "accounts",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Accounts_SubscriptionId",
-                table: "Accounts",
+                name: "IX_accounts_SubscriptionId",
+                table: "accounts",
                 column: "SubscriptionId");
 
             migrationBuilder.CreateIndex(
@@ -1109,23 +1109,13 @@ namespace Infrastructure.Migrations
                 column: "ApplicationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Applications_ApplicantId",
-                table: "Applications",
+                name: "IX_applications_ApplicantId",
+                table: "applications",
                 column: "ApplicantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Applications_ScholarshipProgramId",
-                table: "Applications",
-                column: "ScholarshipProgramId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Assignment_ExpertId",
-                table: "Assignment",
-                column: "ExpertId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Assignment_ScholarshipProgramId",
-                table: "Assignment",
+                name: "IX_applications_ScholarshipProgramId",
+                table: "applications",
                 column: "ScholarshipProgramId");
 
             migrationBuilder.CreateIndex(
@@ -1139,34 +1129,39 @@ namespace Infrastructure.Migrations
                 column: "ScholarshipProgramId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chats_ReceiverId",
-                table: "Chats",
+                name: "IX_chats_ReceiverId",
+                table: "chats",
                 column: "ReceiverId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chats_SenderId",
-                table: "Chats",
+                name: "IX_chats_SenderId",
+                table: "chats",
                 column: "SenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Criteria_ScholarshipProgramId",
-                table: "Criteria",
+                name: "IX_criteria_ScholarshipProgramId",
+                table: "criteria",
                 column: "ScholarshipProgramId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Documents_ScholarshipProgramId",
-                table: "Documents",
+                name: "IX_documents_ScholarshipProgramId",
+                table: "documents",
                 column: "ScholarshipProgramId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Educations_ApplicantProfileId",
-                table: "Educations",
+                name: "IX_educations_ApplicantProfileId",
+                table: "educations",
                 column: "ApplicantProfileId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Experiences_ApplicantProfileId",
-                table: "Experiences",
+                name: "IX_experiences_ApplicantProfileId",
+                table: "experiences",
                 column: "ApplicantProfileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_expert_for_programs_ExpertId",
+                table: "expert_for_programs",
+                column: "ExpertId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_expert_profiles_ExpertId",
@@ -1175,13 +1170,13 @@ namespace Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Feedbacks_ApplicantId",
-                table: "Feedbacks",
+                name: "IX_feedbacks_ApplicantId",
+                table: "feedbacks",
                 column: "ApplicantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Feedbacks_ServiceId",
-                table: "Feedbacks",
+                name: "IX_feedbacks_ServiceId",
+                table: "feedbacks",
                 column: "ServiceId");
 
             migrationBuilder.CreateIndex(
@@ -1201,13 +1196,13 @@ namespace Infrastructure.Migrations
                 column: "SkillId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Majors_ParentMajorId",
-                table: "Majors",
+                name: "IX_majors_ParentMajorId",
+                table: "majors",
                 column: "ParentMajorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notifications_ReceiverId",
-                table: "Notifications",
+                name: "IX_notifications_ReceiverId",
+                table: "notifications",
                 column: "ReceiverId");
 
             migrationBuilder.CreateIndex(
@@ -1237,8 +1232,8 @@ namespace Infrastructure.Migrations
                 column: "ServiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Requests_ApplicantId",
-                table: "Requests",
+                name: "IX_requests_ApplicantId",
+                table: "requests",
                 column: "ApplicantId");
 
             migrationBuilder.CreateIndex(
@@ -1247,13 +1242,13 @@ namespace Infrastructure.Migrations
                 column: "ScholarshipProgramId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_ApplicationId",
-                table: "Reviews",
+                name: "IX_reviews_ApplicationId",
+                table: "reviews",
                 column: "ApplicationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_ExpertId",
-                table: "Reviews",
+                name: "IX_reviews_ExpertId",
+                table: "reviews",
                 column: "ExpertId");
 
             migrationBuilder.CreateIndex(
@@ -1282,28 +1277,28 @@ namespace Infrastructure.Migrations
                 column: "UniversityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Services_ProviderId",
-                table: "Services",
+                name: "IX_services_ProviderId",
+                table: "services",
                 column: "ProviderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_WalletReceiverId",
-                table: "Transactions",
+                name: "IX_transactions_WalletReceiverId",
+                table: "transactions",
                 column: "WalletReceiverId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_WalletSenderId",
-                table: "Transactions",
+                name: "IX_transactions_WalletSenderId",
+                table: "transactions",
                 column: "WalletSenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Universities_CountryId",
-                table: "Universities",
+                name: "IX_universities_CountryId",
+                table: "universities",
                 column: "CountryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Wallets_AccountId",
-                table: "Wallets",
+                name: "IX_wallets_AccountId",
+                table: "wallets",
                 column: "AccountId",
                 unique: true);
         }
@@ -1321,31 +1316,31 @@ namespace Infrastructure.Migrations
                 name: "application_documents");
 
             migrationBuilder.DropTable(
-                name: "Assignment");
-
-            migrationBuilder.DropTable(
                 name: "award_milestone_documents");
 
             migrationBuilder.DropTable(
-                name: "Chats");
+                name: "chats");
 
             migrationBuilder.DropTable(
-                name: "Criteria");
+                name: "criteria");
 
             migrationBuilder.DropTable(
-                name: "Documents");
+                name: "documents");
 
             migrationBuilder.DropTable(
-                name: "Educations");
+                name: "educations");
 
             migrationBuilder.DropTable(
-                name: "Experiences");
+                name: "experiences");
+
+            migrationBuilder.DropTable(
+                name: "expert_for_programs");
 
             migrationBuilder.DropTable(
                 name: "expert_profiles");
 
             migrationBuilder.DropTable(
-                name: "Feedbacks");
+                name: "feedbacks");
 
             migrationBuilder.DropTable(
                 name: "funder_documents");
@@ -1354,7 +1349,7 @@ namespace Infrastructure.Migrations
                 name: "major_skills");
 
             migrationBuilder.DropTable(
-                name: "Notifications");
+                name: "notifications");
 
             migrationBuilder.DropTable(
                 name: "provider_documents");
@@ -1366,13 +1361,13 @@ namespace Infrastructure.Migrations
                 name: "review_milestones");
 
             migrationBuilder.DropTable(
-                name: "Reviews");
+                name: "reviews");
 
             migrationBuilder.DropTable(
                 name: "scholarship_program_certificates");
 
             migrationBuilder.DropTable(
-                name: "Transactions");
+                name: "transactions");
 
             migrationBuilder.DropTable(
                 name: "award_milestones");
@@ -1384,7 +1379,7 @@ namespace Infrastructure.Migrations
                 name: "funder_profiles");
 
             migrationBuilder.DropTable(
-                name: "Skills");
+                name: "skills");
 
             migrationBuilder.DropTable(
                 name: "provider_profiles");
@@ -1393,43 +1388,43 @@ namespace Infrastructure.Migrations
                 name: "request_details");
 
             migrationBuilder.DropTable(
-                name: "Applications");
+                name: "applications");
 
             migrationBuilder.DropTable(
-                name: "Certificates");
+                name: "certificates");
 
             migrationBuilder.DropTable(
-                name: "Wallets");
+                name: "wallets");
 
             migrationBuilder.DropTable(
-                name: "Requests");
+                name: "requests");
 
             migrationBuilder.DropTable(
-                name: "Services");
+                name: "services");
 
             migrationBuilder.DropTable(
                 name: "scholarship_programs");
 
             migrationBuilder.DropTable(
-                name: "Accounts");
+                name: "accounts");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "categories");
 
             migrationBuilder.DropTable(
-                name: "Majors");
+                name: "majors");
 
             migrationBuilder.DropTable(
-                name: "Universities");
+                name: "universities");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "roles");
 
             migrationBuilder.DropTable(
-                name: "Subscriptions");
+                name: "subscriptions");
 
             migrationBuilder.DropTable(
-                name: "Countries");
+                name: "countries");
         }
     }
 }
