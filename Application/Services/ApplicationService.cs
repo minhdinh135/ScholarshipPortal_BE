@@ -249,9 +249,10 @@ namespace Application.Services
             existingApplicationReview.Score = updateReviewResultDto.Score;
             existingApplicationReview.Comment = updateReviewResultDto.Comment;
             existingApplicationReview.Status = updateReviewResultDto.IsPassed
-                ? updateReviewResultDto.IsFirstReview
+                /*? updateReviewResultDto.IsFirstReview
                     ? ApplicationReviewStatusEnum.Approved.ToString()
-                    : ApplicationReviewStatusEnum.Passed.ToString()
+                    : ApplicationReviewStatusEnum.Passed.ToString()*/
+                ? ApplicationReviewStatusEnum.Approved.ToString()
                 : ApplicationReviewStatusEnum.Failed.ToString();
 
             try
@@ -261,10 +262,34 @@ namespace Application.Services
                 var application =
                     await _applicationRepository.GetApplicationById(existingApplicationReview.ApplicationId);
 
-                if (!updateReviewResultDto.IsPassed)
+                if (updateReviewResultDto.IsFirstReview && !updateReviewResultDto.IsPassed)
                 {
                     application.Status = ApplicationStatusEnum.Rejected.ToString();
                     await _applicationRepository.Update(application);
+                }
+                else if(!updateReviewResultDto.IsFirstReview)
+                {
+                    var interviewReviews = await _applicationReviewRepository.GetAll();
+                    interviewReviews= interviewReviews.Where(x => x.ApplicationId == application.Id
+                            && x.Description == "Interview").ToList();
+                    int count = 0;
+                    foreach (var review in interviewReviews)
+                    {
+                        if(review.Score == null) return;
+                        if (review.Status == ApplicationReviewStatusEnum.Failed.ToString())
+                        {
+                            count--;
+                        }
+                        else
+                        {
+                            count++;
+                        }
+                    }
+                    if(count < 0)
+                    {
+                        application.Status = ApplicationStatusEnum.Rejected.ToString();
+                        await _applicationRepository.Update(application);
+                    }
                 }
             }
             catch (Exception e)
