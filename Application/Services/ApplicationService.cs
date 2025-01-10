@@ -249,9 +249,10 @@ namespace Application.Services
             existingApplicationReview.Score = updateReviewResultDto.Score;
             existingApplicationReview.Comment = updateReviewResultDto.Comment;
             existingApplicationReview.Status = updateReviewResultDto.IsPassed
-                ? updateReviewResultDto.IsFirstReview
+                /*? updateReviewResultDto.IsFirstReview
                     ? ApplicationReviewStatusEnum.Approved.ToString()
-                    : ApplicationReviewStatusEnum.Passed.ToString()
+                    : ApplicationReviewStatusEnum.Passed.ToString()*/
+                ? ApplicationReviewStatusEnum.Approved.ToString()
                 : ApplicationReviewStatusEnum.Failed.ToString();
 
             try
