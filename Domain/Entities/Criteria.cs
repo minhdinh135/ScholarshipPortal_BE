@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities;
 
@@ -10,6 +9,8 @@ public class Criteria : BaseEntity
     
     [MaxLength(200)]
     public string? Description { get; set; }
+    
+    public double Percentage { get; set; }
     
     public int ScholarshipProgramId { get; set; }
     
