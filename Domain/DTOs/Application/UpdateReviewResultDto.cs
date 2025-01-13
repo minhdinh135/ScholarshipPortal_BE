@@ -7,7 +7,7 @@ public class UpdateReviewResultDto
     
     public bool IsPassed { get; set; }
 
-    public int Score { get; set; }
+    public float Score { get; set; }
     
     public bool IsFirstReview { get; set; }
 }

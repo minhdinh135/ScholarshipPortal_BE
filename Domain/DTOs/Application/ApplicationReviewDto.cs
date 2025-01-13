@@ -8,7 +8,7 @@ public class ApplicationReviewDto
     
     public string Description { get; set; }
     
-    public int Score { get; set; }
+    public float Score { get; set; }
 
     public string Comment { get; set; }
 
