@@ -7,7 +7,7 @@ public class Review : BaseEntity
     [MaxLength(200)]
     public string? Description { get; set; }
     
-    public int? Score { get; set; }
+    public float? Score { get; set; }
     
     [MaxLength(200)]
     public string? Comment { get; set; }

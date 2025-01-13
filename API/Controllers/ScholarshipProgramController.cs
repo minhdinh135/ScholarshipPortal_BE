@@ -30,6 +30,13 @@ public class ScholarshipProgramController : ControllerBase
             result));
     }
 
+    [HttpGet("education-level")]
+    public IActionResult GetAllEducationLevel()
+    {
+        var roles = Enum.GetNames(typeof(EducationLevelEnum));
+        return Ok(roles);
+    }
+
     [HttpGet("count")]
     public async Task<IActionResult> CountScholarshipPrograms()
     {
