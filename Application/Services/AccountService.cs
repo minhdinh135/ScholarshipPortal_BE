@@ -77,6 +77,24 @@ public class AccountService : IAccountService
         return _mapper.Map<AccountDto>(entity);
     }
 
+    public async Task ChangePassword(int id, string password)
+    {
+        var existingAccount = await _accountRepository.GetAccountById(id);
+        if (existingAccount == null)
+            throw new ServiceException($"Account with ID: {id} is not found", new NotFoundException());
+
+        existingAccount.HashedPassword = _passwordService.HashPassword(password);
+
+        try
+        {
+            await _accountRepository.Update(existingAccount);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e.Message);
+        } 
+    }
+
     public async Task<bool> UpdateAvatar(int id, IFormFile avatar)
     {
         var uploadedAvatar = await _cloudinaryService.UploadImage(avatar);
