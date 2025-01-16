@@ -13,6 +13,7 @@ namespace Application.Interfaces.IServices
         Task<AccountDto> GetAccount(int id);
         Task<AccountDto> AddAccount(RegisterDto dto);
         Task<AccountDto> UpdateAccount(int id, UpdateAccountDto dto);
+        Task ChangePassword(int id, string password);
         Task<bool> UpdateAvatar(int id, IFormFile avatar);
 		Task<List<WalletDto>> GetAllWallets();
 		Task<WalletDto> GetWalletByUserId(int userId);

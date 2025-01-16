@@ -129,21 +129,10 @@ public class AccountController : ControllerBase
         }
 
         user.HashedPassword = _passwordService.HashPassword(model.NewPassword);
-        await _accountService.UpdateAccount(id, new UpdateAccountDto
-        {
-            Username = user.Username,
-            Email = user.Email,
-            PhoneNumber = user.PhoneNumber,
-            HashedPassword = user.HashedPassword,
-            Address = user.Address,
-            AvatarUrl = user.AvatarUrl,
-            RoleId = user.RoleId,
-            Status = user.Status,
-            LoginWithGoogle = user.LoginWithGoogle,
-        });
-
+        
         try
         {
+            await _accountService.ChangePassword(id, model.NewPassword);
             await _emailService.SendEmailAsync(user.Email, "Password Changed",
                 "Change password successfully. Thank you!");
         }
