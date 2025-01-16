@@ -185,7 +185,10 @@ using (var scope = app.Services.CreateScope())
     var backgroundService = serviceProvider.GetRequiredService<IBackgroundService>();
 
     RecurringJob.AddOrUpdate("ScheduleScholarshipsAfterDeadline", () => backgroundService.ScheduleScholarshipsAfterDeadline(), Cron.Daily);
+    //RecurringJob.AddOrUpdate("ScheduleScholarshipsAwarding", () => backgroundService.ScheduleScholarshipsAwarding(), Cron.Daily);
+    //RecurringJob.AddOrUpdate("ScheduleScholarshipsCompleted", () => backgroundService.ScheduleScholarshipsCompleted(), Cron.Daily);
     RecurringJob.AddOrUpdate("ScheduleApplicationsNeedExtend", () => backgroundService.ScheduleApplicationsNeedExtend(), Cron.Daily);
+    RecurringJob.AddOrUpdate("ScheduleApplicationsRejectedInAward", () => backgroundService.ScheduleApplicationsRejectedInAward(), Cron.Daily);
 }
 
 app.Run();

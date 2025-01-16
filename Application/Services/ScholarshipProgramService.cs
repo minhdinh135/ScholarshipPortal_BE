@@ -2,6 +2,7 @@
 using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using AutoMapper;
+using Domain.Constants;
 using Domain.DTOs.Common;
 using Domain.DTOs.Expert;
 using Domain.DTOs.ScholarshipProgram;
@@ -99,6 +100,18 @@ public class ScholarshipProgramService : IScholarshipProgramService
 
         if (scholarshipProgram == null)
             throw new ServiceException($"Scholarship Program with id:{id} is not found", new NotFoundException());
+        if(scholarshipProgram.ReviewMilestones.Any(x => x.FromDate <= DateTime.Now && x.ToDate >= DateTime.Now)){
+            scholarshipProgram.Status = ScholarshipProgramStatusEnum.Reviewing.ToString();
+            await _scholarshipProgramRepository.Update(scholarshipProgram);
+        }
+        else if(scholarshipProgram.AwardMilestones.Any(x => x.FromDate <= DateTime.Now && x.ToDate >= DateTime.Now)){
+            scholarshipProgram.Status = ScholarshipProgramStatusEnum.Awarding.ToString();
+            await _scholarshipProgramRepository.Update(scholarshipProgram);
+        }
+        else if(scholarshipProgram.AwardMilestones.All(x => x.ToDate < DateTime.Now)){
+            scholarshipProgram.Status = ScholarshipProgramStatusEnum.Completed.ToString();
+            await _scholarshipProgramRepository.Update(scholarshipProgram);
+        }
 
         return _mapper.Map<ScholarshipProgramDto>(scholarshipProgram);
     }
