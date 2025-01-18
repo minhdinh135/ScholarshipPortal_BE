@@ -65,7 +65,7 @@ public class GoogleService : IGoogleService
                 new KeyValuePair<string, string>("client_id", _googleSettings.ClientId),
                 new KeyValuePair<string,
                     string>("client_secret", _googleSettings.ClientSecret),
-                new KeyValuePair<string, string>("redirect_uri", _googleSettings.RedirectUri)
+                new KeyValuePair<string, string>("redirect_uri", _googleSettings.RedirectMobileUri)
             });
 
             var response = await httpClient.PostAsync("https://oauth2.googleapis.com/token",
