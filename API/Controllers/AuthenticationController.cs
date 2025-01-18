@@ -85,7 +85,7 @@ public class AuthenticationController : ControllerBase
     {
         if (string.IsNullOrEmpty(code))
         {
-            return Redirect(_configuration["GoogleSettings:RedirectMobileUri"]+"?result=fail");
+            return Redirect(_configuration["GoogleSettings:ReturnMobileUri"]+"?result=fail");
             //return BadRequest("Authorization code is missing.");
         }
 
@@ -94,13 +94,14 @@ public class AuthenticationController : ControllerBase
         try
         {
             var (jwt, isNewUser) = await _authService.GoogleAuth(userInfo);
-            return Redirect(_configuration["GoogleSettings:RedirectMobileUri"]+"?result=success&isNewUser=" + isNewUser + "&jwt=" +
+            return Redirect(_configuration["GoogleSettings:ReturnMobileUri"]+"?result=success&isNewUser=" + isNewUser + "&jwt=" +
                             jwt.Token);
             //return Ok(jwt);
         }
         catch (Exception ex)
         {
-            return Redirect(_configuration["GoogleSettings:RedirectMobileUri"]+"?result=fail");
+            Console.WriteLine(ex.Message);
+            return Redirect(_configuration["GoogleSettings:ReturnMobileUri"]+"?result=fail");
             //return BadRequest(new { Message = ex.Message });
         }
     }
