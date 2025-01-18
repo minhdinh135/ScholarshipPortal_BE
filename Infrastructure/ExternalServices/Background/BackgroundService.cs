@@ -59,7 +59,7 @@ public class BackgroundService : IBackgroundService
                 var isCompleted = openScholarshipProgram.AwardMilestones
                         .OrderByDescending(x => x.FromDate)
                         .FirstOrDefault();
-                TimeSpan delayedTimeSpan;
+                TimeSpan delayedTimeSpan = TimeSpan.MaxValue;
                 if(isCompleted != null) {
                     if(openScholarshipProgram.Status == ScholarshipProgramStatusEnum.Completed.ToString())
                         continue;
@@ -69,7 +69,7 @@ public class BackgroundService : IBackgroundService
                     BackgroundJob.Schedule(() => UpdateScholarshipCompleted(openScholarshipProgram),
                             delayedTimeSpan);
                 }
-                if(isAwarding != null) {
+                if(isAwarding != null && delayedTimeSpan > TimeSpan.Zero) {
                     if(openScholarshipProgram.Status == ScholarshipProgramStatusEnum.Awarding.ToString())
                         continue;
                     delayedTimeSpan = (TimeSpan)(isAwarding.FromDate - DateTime.Now);
@@ -78,7 +78,8 @@ public class BackgroundService : IBackgroundService
                     BackgroundJob.Schedule(() => UpdateScholarshipAwarding(openScholarshipProgram),
                             delayedTimeSpan);
                 }
-                if(openScholarshipProgram.Status == ScholarshipProgramStatusEnum.Reviewing.ToString())
+                if(delayedTimeSpan > TimeSpan.Zero){
+                    if(openScholarshipProgram.Status == ScholarshipProgramStatusEnum.Reviewing.ToString())
                         continue;
                     delayedTimeSpan = (TimeSpan)(openScholarshipProgram.Deadline - DateTime.Now);
                     openScholarshipProgram.Status = ScholarshipProgramStatusEnum.Reviewing.ToString();
@@ -87,7 +88,7 @@ public class BackgroundService : IBackgroundService
                         delayedTimeSpan);
                     _logger.LogInformation(
                         $"Scholarship program with id:{openScholarshipProgram.Id} is scheduled for updating status after {delayedTimeSpan}");
-
+                }
             }
         }
         catch (Exception e)
@@ -256,13 +257,20 @@ public class BackgroundService : IBackgroundService
     public async Task UpdateScholarshipReviewing(ScholarshipProgram scholarshipProgram)
     {
         var scholarship = await _scholarshipProgramRepository.GetById(scholarshipProgram.Id);
+        if(scholarship.Status == ScholarshipProgramStatusEnum.Reviewing.ToString())
+            return;
+
         scholarship.Status = ScholarshipProgramStatusEnum.Reviewing.ToString();
+
         await _scholarshipProgramRepository.Update(scholarshipProgram);
     }
 
     public async Task UpdateScholarshipAwarding(ScholarshipProgram scholarshipProgram)
     {
         var scholarship = await _scholarshipProgramRepository.GetById(scholarshipProgram.Id);
+        if(scholarship.Status == ScholarshipProgramStatusEnum.Awarding.ToString())
+            return;
+
         scholarship.Status = ScholarshipProgramStatusEnum.Awarding.ToString();
         await _scholarshipProgramRepository.Update(scholarshipProgram);
     }
@@ -270,6 +278,8 @@ public class BackgroundService : IBackgroundService
     public async Task UpdateScholarshipCompleted(ScholarshipProgram scholarshipProgram)
     {
         var scholarship = await _scholarshipProgramRepository.GetById(scholarshipProgram.Id);
+        if(scholarship.Status == ScholarshipProgramStatusEnum.Completed.ToString())
+            return;
         scholarship.Status = ScholarshipProgramStatusEnum.Completed.ToString();
         await _scholarshipProgramRepository.Update(scholarshipProgram);
     }

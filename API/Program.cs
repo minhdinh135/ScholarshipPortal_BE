@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json.Serialization;
+using API.Extensions;
 using Application.Common;
 using Application.Interfaces.IServices;
 using FluentValidation;
@@ -176,8 +177,11 @@ app.UseExceptionHandler();
 
 app.MapControllers();
 
-app.UseHangfireDashboard();
-app.MapHangfireDashboard("/hangfire");
+//app.UseHangfireDashboard();
+app.MapHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = new[] { new AllowAllDashboardAuthorizationFilter() }
+});
 
 using (var scope = app.Services.CreateScope())
 {
