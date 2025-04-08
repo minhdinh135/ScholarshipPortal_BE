@@ -1,0 +1,253 @@
+﻿[
+  {
+    "Id": 1,
+    "Name": "Global Excellence Scholarship",
+    "ImageUrl": "https://example.com/images/global_excellence.jpg",
+    "Description": "Awarded to outstanding students demonstrating academic excellence and leadership potential.",
+    "ScholarshipAmount": 10000.00,
+    "NumberOfScholarships": 5,
+    "Deadline": "2024-12-15T23:59:59Z",
+    "Status": "Open",
+    "EducationLevel" :  "12",
+    "FunderId": 1,
+    "CategoryId": 2,
+    "UniversityId": 3,
+    "MajorId": 5,
+    "CreatedAt": "2024-11-23T15:09:38Z",
+    "UpdatedAt": "2024-11-23T15:09:38Z",
+    "NumberOfAwardMilestones": 3,
+    "ScholarshipProgramCertificates": [
+      {
+        "CertificateId": 2
+      }
+    ],
+    "AwardMilestones": [
+      {
+        "FromDate": "2024-12-27T13:53:00Z",
+        "ToDate": "2024-12-29T13:54:00Z",
+        "Amount": 5000.00,
+        "CreatedAt": "2024-11-25T13:54:23Z",
+        "UpdatedAt": "2024-11-25T13:54:23Z"
+      },
+      {
+        "FromDate": "2025-01-02T13:54:00Z",
+        "ToDate": "2025-01-25T13:54:00Z",
+        "Amount": 5000.00,
+        "CreatedAt": "2024-11-25T13:54:23Z",
+        "UpdatedAt": "2024-11-25T13:54:23Z"
+      }
+    ]
+  },
+  {
+    "Id": 2,
+    "Name": "Future Innovators Fellowship",
+    "ImageUrl": "https://example.com/images/future_innovators.jpg",
+    "Description": "Supporting aspiring scientists and engineers working on innovative projects.",
+    "ScholarshipAmount": 15000.00,
+    "NumberOfScholarships": 3,
+    "Deadline": "2025-01-20T23:59:59Z",
+    "Status": "Open",
+    "EducationLevel": "12",
+    "FunderId": 2,
+    "CategoryId": 1,
+    "UniversityId": 4,
+    "MajorId": 2,
+    "CreatedAt": "2024-11-23T15:10:04Z",
+    "UpdatedAt": "2024-11-23T15:10:04Z",
+    "NumberOfAwardMilestones": 3,
+    "ScholarshipProgramCertificates": [
+      {
+        "CertificateId": 3
+      }
+    ],
+    "AwardMilestones": [
+      {
+        "FromDate": "2025-01-25T13:55:00Z",
+        "ToDate": "2025-01-28T13:56:00Z",
+        "Amount": 10000.00,
+        "CreatedAt": "2024-11-25T13:56:13Z",
+        "UpdatedAt": "2024-11-25T13:56:13Z"
+      },
+      {
+        "FromDate": "2025-01-30T13:56:00Z",
+        "ToDate": "2025-02-08T13:56:00Z",
+        "Amount": 5000.00,
+        "CreatedAt": "2024-11-25T13:56:31Z",
+        "UpdatedAt": "2024-11-25T13:56:31Z"
+      }
+    ]
+  },
+  {
+    "Id": 3,
+    "Name": "Global Women in STEM Award",
+    "ImageUrl": "https://example.com/images/women_in_stem.jpg",
+    "Description": "Encouraging women to pursue careers in STEM fields through financial aid and mentorship.",
+    "ScholarshipAmount": 12000.00,
+    "NumberOfScholarships": 10,
+    "Deadline": "2024-11-30T23:59:59Z",
+    "Status": "Open",
+    "FunderId": 3,
+    "CategoryId": 3,
+    "EducationLevel": "12",
+    "UniversityId": 2,
+    "MajorId": 7,
+    "CreatedAt": "2024-11-23T15:10:25Z",
+    "UpdatedAt": "2024-11-23T15:10:25Z",
+    "NumberOfAwardMilestones": 3,
+    "ScholarshipProgramCertificates": [
+      {
+        "CertificateId": 3
+      },
+      {
+        "CertificateId": 4
+      }
+    ],
+    "AwardMilestones": [
+      {
+        "FromDate": "2024-12-01T13:56:00Z",
+        "ToDate": "2024-12-10T13:57:00Z",
+        "Amount": 10000.00,
+        "CreatedAt": "2024-11-25T13:57:12Z",
+        "UpdatedAt": "2024-11-25T13:57:12Z"
+      },
+      {
+        "FromDate": "2024-12-11T13:57:00Z",
+        "ToDate": "2024-12-20T13:57:00Z",
+        "Amount": 2000.00,
+        "CreatedAt": "2024-11-25T13:57:31Z",
+        "UpdatedAt": "2024-11-25T13:57:31Z"
+      }
+    ]
+  },
+  {
+    "Id": 4,
+    "Name": "Global Change-Maker Scholarship",
+    "ImageUrl": "https://example.com/images/change_maker.jpg",
+    "Description": "Recognizing students with initiatives addressing global challenges.",
+    "ScholarshipAmount": 10000.00,
+    "NumberOfScholarships": 8,
+    "Deadline": "2024-12-25T23:59:59Z",
+    "Status": "Open",
+    "FunderId": 6,
+    "CategoryId": 2,
+    "EducationLevel": "12",
+    "UniversityId": 5,
+    "MajorId": 8,
+    "CreatedAt": "2024-11-23T15:13:45Z",
+    "UpdatedAt": "2024-11-23T15:13:45Z",
+    "NumberOfAwardMilestones": 3,
+    "ScholarshipProgramCertificates": [
+      {
+        "CertificateId": 2
+      }
+    ],
+    "AwardMilestones": [
+      {
+        "FromDate": "2025-01-01T13:58:00Z",
+        "ToDate": "2025-01-10T13:58:00Z",
+        "Amount": 5000.00,
+        "CreatedAt": "2024-11-25T13:58:22Z",
+        "UpdatedAt": "2024-11-25T13:58:22Z"
+      },
+      {
+        "FromDate": "2025-01-18T13:58:00Z",
+        "ToDate": "2025-01-25T13:58:00Z",
+        "Amount": 5000.00,
+        "CreatedAt": "2024-11-25T13:58:42Z",
+        "UpdatedAt": "2024-11-25T13:58:42Z"
+      }
+    ]
+  },
+  {
+    "Id": 5,
+    "Name": "PhD Research Excellence Award",
+    "ImageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQmkvlHDU2Ut2U_rlwukwpHtnQCF0f2b_1bw&s",
+    "Description": "Supporting PhD students with outstanding research proposals.",
+    "ScholarshipAmount": 25000.00,
+    "NumberOfScholarships": 3,
+    "Deadline": "2024-11-09T00:00:00Z",
+    "Status": "FINISHED",
+    "FunderId": 2,
+    "CategoryId": 1,
+    "EducationLevel": "12",
+    "UniversityId": 1,
+    "MajorId": 1,
+    "CreatedAt": "2024-11-24T17:35:03Z",
+    "UpdatedAt": "2024-11-24T17:41:09Z",
+    "NumberOfAwardMilestones": 3,
+    "ScholarshipProgramCertificates": [
+      {
+        "CertificateId": 1
+      }
+    ],
+    "AwardMilestones": [
+      {
+        "FromDate": "2024-11-11T17:35:00Z",
+        "ToDate": "2025-11-30T17:35:00Z",
+        "Amount": 8300.00,
+        "CreatedAt": "2024-11-24T17:35:57Z",
+        "UpdatedAt": "2024-11-24T17:35:57Z"
+      },
+      {
+        "FromDate": "2025-12-01T17:36:00Z",
+        "ToDate": "2026-12-03T17:36:00Z",
+        "Amount": 8300.00,
+        "CreatedAt": "2024-11-24T17:36:25Z",
+        "UpdatedAt": "2024-11-24T17:36:25Z"
+      },
+      {
+        "FromDate": "2026-12-08T17:36:00Z",
+        "ToDate": "2027-12-11T17:36:00Z",
+        "Amount": 8400.00,
+        "CreatedAt": "2024-11-24T17:37:21Z",
+        "UpdatedAt": "2024-11-24T17:37:21Z"
+      }
+    ]
+  },
+  {
+    "Id": 6,
+    "Name": "Community Leadership Scholarship",
+    "ImageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQmkvlHDU2Ut2U_rlwukwpHtnQCF0f2b_1bw&s",
+    "Description": "Awarded to students showing significant community impact.",
+    "ScholarshipAmount": 7000.00,
+    "NumberOfScholarships": 3,
+    "Deadline": "2024-11-09T00:00:00Z",
+    "Status": "FINISHED",
+    "FunderId": 2,
+    "CategoryId": 1,
+    "EducationLevel": "12",
+    "UniversityId": 1,
+    "MajorId": 1,
+    "CreatedAt": "2024-11-24T17:51:58Z",
+    "UpdatedAt": "2024-11-24T17:57:06Z",
+    "NumberOfAwardMilestones": 3,
+    "ScholarshipProgramCertificates": [
+      {
+        "CertificateId": 1
+      }
+    ],
+    "AwardMilestones": [
+      {
+        "FromDate": "2023-11-27T17:52:00Z",
+        "ToDate": "2024-11-22T17:52:00Z",
+        "Amount": 2000.00,
+        "CreatedAt": "2024-11-24T17:52:26Z",
+        "UpdatedAt": "2024-11-24T17:52:26Z"
+      },
+      {
+        "FromDate": "2024-11-23T19:07:00Z",
+        "ToDate": "2025-12-03T17:52:00Z",
+        "Amount": 2500.00,
+        "CreatedAt": "2024-11-24T17:52:40Z",
+        "UpdatedAt": "2024-11-24T17:52:40Z"
+      },
+      {
+        "FromDate": "2025-12-08T17:52:00Z",
+        "ToDate": "2026-12-10T17:52:00Z",
+        "Amount": 2500.00,
+        "CreatedAt": "2024-11-24T17:52:56Z",
+        "UpdatedAt": "2024-11-24T17:52:56Z"
+      }
+    ]
+  }
+]

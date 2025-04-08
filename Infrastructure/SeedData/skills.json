@@ -1,0 +1,122 @@
+﻿[
+  {
+    "Id": 1,
+    "Name": "Leadership",
+    "Description": "Ability to guide, inspire, and manage a team towards achieving objectives.",
+    "Type": "Soft Skill"
+  },
+  {
+    "Id": 2,
+    "Name": "Project Management",
+    "Description": "Skills in planning, organizing, and managing resources to achieve project goals.",
+    "Type": "Soft Skill"
+  },
+  {
+    "Id": 3,
+    "Name": "Data Analysis",
+    "Description": "Ability to analyze data and interpret patterns, trends, and insights.",
+    "Type": "Technical Skill"
+  },
+  {
+    "Id": 4,
+    "Name": "Financial Modeling",
+    "Description": "Ability to create financial representations of real-world scenarios for decision-making.",
+    "Type": "Technical Skill"
+  },
+  {
+    "Id": 5,
+    "Name": "Financial Analysis",
+    "Description": "Ability to evaluate financial data and make informed financial decisions.",
+    "Type": "Technical Skill"
+  },
+  {
+    "Id": 6,
+    "Name": "Public Speaking",
+    "Description": "Skill in presenting information effectively to an audience.",
+    "Type": "Soft Skill"
+  },
+  {
+    "Id": 7,
+    "Name": "Digital Marketing",
+    "Description": "Proficiency in using online platforms to promote products and services.",
+    "Type": "Technical Skill"
+  },
+  {
+    "Id": 8,
+    "Name": "Market Research",
+    "Description": "Ability to gather and analyze data about market trends and consumer behavior.",
+    "Type": "Technical Skill"
+  },
+  {
+    "Id": 9,
+    "Name": "Patient Care",
+    "Description": "Skills in providing direct healthcare and support to patients.",
+    "Type": "Technical Skill"
+  },
+  {
+    "Id": 10,
+    "Name": "Communication",
+    "Description": "Ability to effectively communicate with patients and healthcare teams.",
+    "Type": "Soft Skill"
+  },
+  {
+    "Id": 11,
+    "Name": "Research",
+    "Description": "Experience in conducting systematic investigation to establish facts and conclusions.",
+    "Type": "Technical Skill"
+  },
+  {
+    "Id": 12,
+    "Name": "Problem Solving",
+    "Description": "Ability to identify issues and implement effective solutions.",
+    "Type": "Soft Skill"
+  },
+  {
+    "Id": 13,
+    "Name": "Health Policy",
+    "Description": "Understanding of policies that impact public health and wellness.",
+    "Type": "Technical Skill"
+  },
+  {
+    "Id": 14,
+    "Name": "Community Outreach",
+    "Description": "Ability to engage and educate communities on health issues.",
+    "Type": "Soft Skill"
+  },
+  {
+    "Id": 15,
+    "Name": "Pharmacology",
+    "Description": "Understanding of the effects of drugs on the human body.",
+    "Type": "Technical Skill"
+  },
+  {
+    "Id": 16,
+    "Name": "Attention to Detail",
+    "Description": "Ability to carefully analyze prescriptions and drug interactions.",
+    "Type": "Soft Skill"
+  },
+  {
+    "Id": 17,
+    "Name": "Psychological Assessment",
+    "Description": "Ability to assess and diagnose mental health conditions.",
+    "Type": "Technical Skill"
+  },
+  {
+    "Id": 18,
+    "Name": "Counseling",
+    "Description": "Skills in providing support and guidance to individuals facing mental health challenges.",
+    "Type": "Soft Skill"
+  },
+  {
+    "Id": 19,
+    "Name": "Social Research",
+    "Description": "Ability to design and conduct research related to social behaviors and societal trends.",
+    "Type": "Technical Skill"
+  },
+  {
+    "Id": 20,
+    "Name": "Critical Thinking",
+    "Description": "Ability to analyze societal issues and propose solutions based on evidence.",
+    "Type": "Soft Skill"
+  }
+]

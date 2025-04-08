@@ -1,0 +1,23 @@
+[
+  { "Id": 1, "Name": "United States", "Code": 1 },
+  { "Id": 2, "Name": "China", "Code": 86 },
+  { "Id": 3, "Name": "India", "Code": 91 },
+  { "Id": 4, "Name": "United Kingdom", "Code": 44 },
+  { "Id": 5, "Name": "Germany", "Code": 49 },
+  { "Id": 6, "Name": "France", "Code": 33 },
+  { "Id": 7, "Name": "Japan", "Code": 81 },
+  { "Id": 8, "Name": "Canada", "Code": 1 },
+  { "Id": 9, "Name": "Australia", "Code": 61 },
+  { "Id": 10, "Name": "Brazil", "Code": 55 },
+  { "Id": 11, "Name": "Russia", "Code": 7 },
+  { "Id": 12, "Name": "South Africa", "Code": 27 },
+  { "Id": 13, "Name": "Mexico", "Code": 52 },
+  { "Id": 14, "Name": "Italy", "Code": 39 },
+  { "Id": 15, "Name": "South Korea", "Code": 82 },
+  { "Id": 16, "Name": "Spain", "Code": 34 },
+  { "Id": 17, "Name": "Argentina", "Code": 54 },
+  { "Id": 18, "Name": "Saudi Arabia", "Code": 966 },
+  { "Id": 19, "Name": "Indonesia", "Code": 62 },
+  { "Id": 20, "Name": "Turkey", "Code": 90 },
+  { "Id": 21, "Name": "Viet Nam", "Code": 50 }
+]

@@ -1,0 +1,104 @@
+﻿[
+  {
+    "AppliedDate": "2024-11-24T17:37:54Z",
+    "Status": "Approved",
+    "ApplicantId": 14,
+    "ScholarshipProgramId": 5,
+    "CreatedAt": "2024-11-24T17:37:54Z",
+    "UpdatedAt": "2024-11-24T14:09:29Z",
+    "ApplicationDocuments": [
+      {
+        "Name": "CV",
+        "Type": "Research Proposal",
+        "FileUrl": "https://res.cloudinary.com/djiztef3a/raw/upload/v1732444673/rxfpb53czhsxiygsuvwx.pdf",
+        "CreatedAt": "2024-11-24T17:37:54Z",
+        "UpdatedAt": "2024-11-24T17:37:54Z"
+      }
+    ]
+  },
+  {
+    "AppliedDate": "2024-11-24T17:38:42Z",
+    "Status": "Approved",
+    "ApplicantId": 13,
+    "ScholarshipProgramId": 5,
+    "CreatedAt": "2024-11-24T17:38:42Z",
+    "UpdatedAt": "2024-12-12T10:36:00Z",
+    "ApplicationDocuments": [
+      {
+        "Name": "Schôl",
+        "Type": "Portfolio",
+        "FileUrl": "https://res.cloudinary.com/djiztef3a/raw/upload/v1732444721/lg4gpjrejwanbcxiqhww.pdf",
+        "CreatedAt": "2024-11-24T17:38:42",
+        "UpdatedAt": "2024-11-24T17:38:42Z"
+      }
+    ]
+  },
+  {
+    "AppliedDate": "2024-11-08T17:40:52Z",
+    "Status": "Submitted",
+    "ApplicantId": 12,
+    "ScholarshipProgramId": 5,
+    "CreatedAt": "2024-11-24T17:40:52Z",
+    "UpdatedAt": "2024-11-08T17:41:09Z",
+    "ApplicationDocuments": [
+      {
+        "Name": "CV",
+        "Type": "Personal Statement",
+        "FileUrl": "https://res.cloudinary.com/djiztef3a/raw/upload/v1732444851/wgc2pcyhgctynhjpysww.pdf",
+        "CreatedAt": "2024-11-24T17:40:52",
+        "UpdatedAt": "2024-11-24T17:40:52Z"
+      }
+    ]
+  },
+  {
+    "AppliedDate": "2024-11-08T17:55:25Z",
+    "Status": "NeedExtend",
+    "ApplicantId": 13,
+    "ScholarshipProgramId": 6,
+    "CreatedAt": "2024-11-24T17:55:25Z",
+    "UpdatedAt": "2024-11-21T14:17:22Z",
+    "ApplicationDocuments": [
+      {
+        "Name": "emma",
+        "Type": "Academic Transcript",
+        "FileUrl": "https://res.cloudinary.com/djiztef3a/raw/upload/v1732447467/kakxnfdvvelolgnmuv8i.pdf",
+        "CreatedAt": "2024-11-24T17:56:16Z",
+        "UpdatedAt": "2024-11-24T17:56:16Z"
+      }
+    ]
+  },
+  {
+    "AppliedDate": "2024-11-27T17:56:16",
+    "Status": "NeedExtend",
+    "ApplicantId": 14,
+    "ScholarshipProgramId": 6,
+    "CreatedAt": "2024-11-24T17:56:16Z",
+    "UpdatedAt": "2024-11-24T14:15:24Z",
+    "ApplicationDocuments": [
+      {
+        "Name": "grace",
+        "Type": "CV/Resume",
+        "FileUrl": "https://res.cloudinary.com/djiztef3a/raw/upload/v1732445775/iple0mwdsoakdzlqoq93.pdf",
+        "CreatedAt": "2024-11-24T17:56:51Z",
+        "UpdatedAt": "2024-11-24T17:56:51Z"
+      }
+    ]
+  },
+  {
+    "AppliedDate": "2024-11-08T17:56:51Z",
+    "Status": "Approved",
+    "ApplicantId": 12,
+    "ScholarshipProgramId": 6,
+    "CreatedAt": "2024-11-24T17:56:51Z",
+    "UpdatedAt": "2024-11-21T18:23:39Z",
+    "ApplicationDocuments": [
+      {
+        "Name": "oliver",
+        "Type": "CV/Resume",
+        "FileUrl": "https://res.cloudinary.com/djiztef3a/raw/upload/v1732445810/aqxoszew6c5nvyuad7r3.pdf",
+        "CreatedAt": "2024-11-24T17:37:54Z",
+        "UpdatedAt": "2024-11-24T17:37:54Z"
+      }
+    ]
+  }
+]

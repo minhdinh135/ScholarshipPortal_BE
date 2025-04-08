@@ -1,18 +1,20 @@
-using System.Text.Json.Serialization;
-using AutoMapper;
-using Domain.Automapper;
-using Infrastructure.Data;
-using Application.ExternalService;
-using Application.ExternalService.Google;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using Application.Interfaces.IServices;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Application.Interfaces.IRepositories;
-using Application.Services;
+using System.Text.Json.Serialization;
+using API.Extensions;
+using Application.Common;
+using Application.Interfaces.IServices;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Hangfire;
+using HealthChecks.UI.Client;
+using Infrastructure.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using SSAP.API.Extensions;
+using SSAP.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,59 +22,42 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers(options => options.SuppressInputFormatterBuffering = true)
-  .AddJsonOptions(options => {
-      options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-      options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-      options.JsonSerializerOptions.MaxDepth = 64;
-  });
-
-//Not throw errors imidiately
-builder.Services.Configure<ApiBehaviorOptions>(options
-    => options.SuppressModelStateInvalidFilter = true);
-
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Scholarship API", Version = "v1" });
-});
-
-//Add dbContext
-builder.Services.AddScholarshipDbContext(builder.Configuration);
-
-//Add autoMapper
-builder.Services.AddSingleton<IMapper>(sp =>
+    .AddJsonOptions(options =>
     {
-    var config = new MapperConfiguration(cfg =>
-        {
-        // Configure your mapping profiles
-        cfg.AddProfile<MappingProfile>();
-        });
-
-    return config.CreateMapper();
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.MaxDepth = 64;
     });
-//Repository injection
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-//Service injection
-builder.Services.AddScoped(typeof(IGenericService<,,>), typeof(GenericService<,,>));
-builder.Services.AddScoped<JwtService>();
-builder.Services.AddScoped<AuthService>();
 
-builder.Services.AddHttpClient<GeminiService>();
-builder.Services.AddSingleton(sp => new GeminiService(
-    sp.GetRequiredService<HttpClient>(),
-    builder.Configuration["OpenAI:ApiKey"]
-));
+builder.Services.AddDbContext<ScholarshipContext>(options =>
+    options.UseMySQL(builder.Configuration.GetConnectionString("Db")));
 
-builder.Services.AddScoped<GoogleService>(s => new GoogleService(
-      builder.Configuration["Google:ClientId"],
-      builder.Configuration["Google:ClientSecret"],
-      builder.Configuration["Google:RedirectUri"]
-  ));
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
+builder.Services.AddMapperServices();
+
+// Add FluentValidation validators
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
+
+// Register services and inject dependencies
+builder.Services.AddApplicationServices(builder.Configuration);
+
+// Register exception handler service
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
+// Add health check
+builder.Services.AddHealthChecks()
+    .AddMySql(builder.Configuration.GetConnectionString("Db")!, tags: ["database"]);
+builder.Services.AddHealthChecksUI()
+    .AddInMemoryStorage();
+    
 //Add Jwt
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(
-    c => {
+    c =>
+    {
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Scholarship API", Version = "v1" });
         c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
             In = ParameterLocation.Header,
@@ -104,58 +89,110 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
-        options.TokenValidationParameters = new TokenValidationParameters()
+        options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidAudience = builder.Configuration["Jwt:Audience"],
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]
-            )),
-            // RoleClaimType = "role",
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]! 
+                )),
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
         };
     });
-//Add Cors
-builder.Services.AddCors(options => {
-    options.AddPolicy(name: "MyAllowPolicy", policy =>{
-            //policy.WithOrigins("https://locovn.azurewebsites.net", "https://test-payment.momo.vn")
-            policy.AllowAnyOrigin()
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-            });  
-});
 
 builder.Services.AddAuthorization();
+
+//Add Cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "MyAllowPolicy", policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 
 var app = builder.Build();
 
 // Automatically apply pending migrations and update the database.
 using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<ScholarshipContext>();
+ {
+     var dbcontext = scope.ServiceProvider.GetRequiredService<ScholarshipContext>();
 
-    // Check for pending migrations and apply them.
-    if (dbContext.Database.GetPendingMigrations().Any())
-    {
-        dbContext.Database.Migrate();
-    }
-}
+     // check for pending migrations and apply them.
+     if (dbcontext.Database.GetPendingMigrations().Any())
+     {
+         dbcontext.Database.Migrate();
+     }
+ }
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-app.UseCors("MyAllowPolicy");
+ using (var scope = app.Services.CreateScope())
+ {
+     var services = scope.ServiceProvider;
+     var context = services.GetRequiredService<ScholarshipContext>();
+     var logger = services.GetService<ILogger<Program>>();
+
+     try
+     {
+         await context.Database.MigrateAsync();
+         await ScholarshipContextSeed.SeedAsync(context);
+     }
+     catch (Exception ex)
+     {
+         logger.LogError(ex, "an error occurred during migration or seeding.");
+     }
+ }
+
+//Configure the HTTP request pipeline.
+// if (app.Environment.IsDevelopment())
+// {
+//     app.UseSwagger();
+//app.UseSwaggerUI();
+// }
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseHttpsRedirection();
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+app.MapHealthChecksUI(config => config.UIPath="/healthcheck-ui");
+
+app.UseCors("MyAllowPolicy");
 
 app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseExceptionHandler();
+
 app.MapControllers();
+
+//app.UseHangfireDashboard();
+app.MapHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = new[] { new AllowAllDashboardAuthorizationFilter() }
+});
+
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+    var backgroundService = serviceProvider.GetRequiredService<IBackgroundService>();
+
+    RecurringJob.AddOrUpdate("ScheduleScholarshipsAfterDeadline", () => backgroundService.ScheduleScholarshipsAfterDeadline(), Cron.Daily);
+    //RecurringJob.AddOrUpdate("ScheduleScholarshipsAwarding", () => backgroundService.ScheduleScholarshipsAwarding(), Cron.Daily);
+    //RecurringJob.AddOrUpdate("ScheduleScholarshipsCompleted", () => backgroundService.ScheduleScholarshipsCompleted(), Cron.Daily);
+    RecurringJob.AddOrUpdate("ScheduleApplicationsNeedExtend", () => backgroundService.ScheduleApplicationsNeedExtend(), Cron.Daily);
+    RecurringJob.AddOrUpdate("ScheduleApplicationsRejectedInAward", () => backgroundService.ScheduleApplicationsRejectedInAward(), Cron.Daily);
+}
+
 app.Run();

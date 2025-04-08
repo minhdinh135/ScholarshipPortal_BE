@@ -1,0 +1,68 @@
+[
+  {
+    "Name": "Harvard University",
+    "Description": "A prestigious Ivy League university known for its strong programs in law, business, and medicine.",
+    "City": "Cambridge",
+    "CountryId": 2
+  },
+  {
+    "Name": "Stanford University",
+    "Description": "Renowned for its entrepreneurial spirit and leading programs in technology and engineering.",
+    "City": "Stanford",
+    "CountryId": 2
+  },
+  {
+    "Name": "University of Oxford",
+    "Description": "One of the oldest universities in the world, known for its strong research and liberal arts programs.",
+    "City": "Oxford",
+    "CountryId": 1
+  },
+  {
+    "Name": "University of Cambridge",
+    "Description": "A historic institution known for its academic excellence in sciences and humanities.",
+    "City": "Cambridge",
+    "CountryId": 1
+  },
+  {
+    "Name": "Massachusetts Institute of Technology (MIT)",
+    "Description": "A world leader in scientific and technological education and research.",
+    "City": "Cambridge",
+    "CountryId": 2
+  },
+  {
+    "Name": "California Institute of Technology (Caltech)",
+    "Description": "A small but highly focused institution known for its cutting-edge research in science and engineering.",
+    "City": "Pasadena",
+    "CountryId": 2
+  },
+  {
+    "Name": "University of Tokyo",
+    "Description": "Japan’s leading university, excelling in research and education across various fields.",
+    "City": "Tokyo",
+    "CountryId": 3
+  },
+  {
+    "Name": "Peking University",
+    "Description": "One of China's top universities, recognized for its strong liberal arts and research programs.",
+    "City": "Beijing",
+    "CountryId": 4
+  },
+  {
+    "Name": "ETH Zurich",
+    "Description": "A leading science and technology university in Switzerland, known for engineering and natural sciences.",
+    "City": "Zurich",
+    "CountryId": 5
+  },
+  {
+    "Name": "University of Melbourne",
+    "Description": "Australia's top university, with strong research programs in medicine, engineering, and social sciences.",
+    "City": "Melbourne",
+    "CountryId": 6
+  },
+  {
+    "Name": "FPT University",
+    "Description": "Vietnam's top university, with strong research programs in medicine, engineering, and social sciences.",
+    "City": "Ho Chi Minh City",
+    "CountryId": 21
+  }
+]
